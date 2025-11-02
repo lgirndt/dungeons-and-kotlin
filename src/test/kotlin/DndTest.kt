@@ -1,3 +1,5 @@
+import com.natpryce.hamkrest.assertion.assertThat
+import com.natpryce.hamkrest.equalTo
 import org.example.Character
 import org.example.CharacterClass
 import org.example.Dnd2025CharacterClass
@@ -8,6 +10,7 @@ import org.example.StatBlock
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
+import kotlin.test.Asserter
 
 const val DEFAULT_STAT_VALUE = 10u;
 
@@ -35,14 +38,14 @@ class DndTest {
     @Test
     fun `a modifier should return the correct value`() {
         assertAll(
-            { assertEquals(-1, Stat(8u).modifier) },
-            { assertEquals(-1, Stat(9u).modifier) },
+            { assertThat(Stat(8u).modifier, equalTo(-1)) },
+            { assertThat(Stat(9u).modifier, equalTo(-1)) },
 
-            { assertEquals(0, Stat(10u).modifier) },
-            { assertEquals(0, Stat(11u).modifier) },
+            { assertThat(Stat(10u).modifier, equalTo(0)) },
+            { assertThat(Stat(11u).modifier, equalTo(0)) },
 
-            { assertEquals(1, Stat(12u).modifier) },
-            { assertEquals(1, Stat(13u).modifier) },
+            { assertThat(Stat(12u).modifier, equalTo(1)) },
+            { assertThat(Stat(13u).modifier, equalTo(1)) },
         )
     }
 
@@ -50,12 +53,12 @@ class DndTest {
     fun `overloaded ctor should assign values correctly`() {
         val statBlocks = StatBlock(10u, 11u, 12u, 13u, 14u, 15u)
         assertAll(
-            { assertEquals(10u, statBlocks.str.value) },
-            { assertEquals(11u, statBlocks.dex.value) },
-            { assertEquals(12u, statBlocks.con.value) },
-            { assertEquals(13u, statBlocks.int.value) },
-            { assertEquals(14u, statBlocks.wis.value) },
-            { assertEquals(15u, statBlocks.cha.value) },
+            { assertThat(statBlocks.str.value, equalTo(10u)) },
+            { assertThat(statBlocks.dex.value, equalTo(11u)) },
+            { assertThat(statBlocks.con.value, equalTo(12u)) },
+            { assertThat(statBlocks.int.value, equalTo(13u)) },
+            { assertThat(statBlocks.wis.value, equalTo(14u)) },
+            { assertThat(statBlocks.cha.value, equalTo(15u)) },
         )
     }
 
@@ -63,20 +66,20 @@ class DndTest {
     fun `some StatBlock`() {
         val dexBlock = StatBlock.create(dex = 12u)
         assertAll(
-            { assertEquals(12u, dexBlock.dex.value) },
-            { assertEquals(DEFAULT_STAT_VALUE, dexBlock.str.value) },
+            { assertThat(dexBlock.dex.value, equalTo(12u)) },
+            { assertThat(dexBlock.str.value, equalTo(DEFAULT_STAT_VALUE)) },
         )
     }
 
     @Test
     fun `CharacterClasses have the proper name`() {
-        assertEquals("Barbarian", Barbarian.name)
+        assertThat(Barbarian.name, equalTo("Barbarian"))
     }
 
     @Test
     fun `create a Warlock`() {
         val warlock = Character.create(characterClass = Warlock)
-        assertEquals(Warlock, warlock.characterClass)
+        assertThat(warlock.characterClass, equalTo(Warlock))
     }
 
     @Test
@@ -86,8 +89,8 @@ class DndTest {
             stats = StatBlock.create(dex = 12u, con = 14u),
         )
         assertAll(
-            { assertEquals(12u, myCharacter.stats.dex.value) },
-            { assertEquals(Warlock, myCharacter.characterClass) },
+            { assertThat(myCharacter.stats.dex.value, equalTo(12u)) },
+            { assertThat(myCharacter.characterClass, equalTo(Warlock)) },
         )
     }
 }
