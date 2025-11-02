@@ -33,11 +33,6 @@ data class StatBlock(
     companion object {}
 }
 
-//interface CharacterClass {
-//    val name: String
-//    val hitDie: HitDie
-//}
-
 sealed class CharacterClass(
     val hitDie: Die
 )  {
