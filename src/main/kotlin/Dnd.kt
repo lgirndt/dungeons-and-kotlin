@@ -33,32 +33,29 @@ data class StatBlock(
     companion object {}
 }
 
-interface CharacterClass {
-    val name: String
+//interface CharacterClass {
+//    val name: String
+//    val hitDie: HitDie
+//}
+
+sealed class CharacterClass(
     val hitDie: HitDie
-}
-
-sealed class Dnd2025CharacterClass(
-
-    override val hitDie: HitDie
-
-
-) : CharacterClass {
-    override val name: String
+)  {
+   val name: String
         get() = this.javaClass.simpleName
 
-    object Fighter: Dnd2025CharacterClass(HitDie.D10)
-    object Cleric: Dnd2025CharacterClass(HitDie.D8)
-    object Druid: Dnd2025CharacterClass(HitDie.D8)
-    object Barbarian: Dnd2025CharacterClass(HitDie.D12)
-    object Paladin: Dnd2025CharacterClass(HitDie.D10)
-    object Ranger: Dnd2025CharacterClass(HitDie.D10)
-    object Rogue: Dnd2025CharacterClass(HitDie.D8)
-    object Warlock: Dnd2025CharacterClass(HitDie.D8)
-    object Monk: Dnd2025CharacterClass(HitDie.D8)
-    object Sorcerer: Dnd2025CharacterClass(HitDie.D6)
-    object Bard: Dnd2025CharacterClass(HitDie.D8)
-    object Wizard: Dnd2025CharacterClass(HitDie.D8)
+    object Fighter: CharacterClass(HitDie.D10)
+    object Cleric: CharacterClass(HitDie.D8)
+    object Druid: CharacterClass(HitDie.D8)
+    object Barbarian: CharacterClass(HitDie.D12)
+    object Paladin: CharacterClass(HitDie.D10)
+    object Ranger: CharacterClass(HitDie.D10)
+    object Rogue: CharacterClass(HitDie.D8)
+    object Warlock: CharacterClass(HitDie.D8)
+    object Monk: CharacterClass(HitDie.D8)
+    object Sorcerer: CharacterClass(HitDie.D6)
+    object Bard: CharacterClass(HitDie.D8)
+    object Wizard: CharacterClass(HitDie.D8)
 }
 
 data class Character(

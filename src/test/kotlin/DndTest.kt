@@ -1,8 +1,8 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.example.*
-import org.example.Dnd2025CharacterClass.Barbarian
-import org.example.Dnd2025CharacterClass.Warlock
+import org.example.CharacterClass.Barbarian
+import org.example.CharacterClass.Warlock
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Test
 
@@ -21,7 +21,7 @@ fun StatBlock.Companion.create(
 
 fun Character.Companion.create(
     name: String = "My Name",
-    characterClass: CharacterClass = Dnd2025CharacterClass.Fighter,
+    characterClass: CharacterClass = CharacterClass.Fighter,
     stats: StatBlock = StatBlock.create(),
     level: Int = 1,
 ): Character {
