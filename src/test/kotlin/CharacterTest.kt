@@ -50,16 +50,17 @@ class CharacterTest {
     @Nested
     inner class AttackTest {
 
-        lateinit var attacker : Character;
-
-        @BeforeEach
-        fun beforeEach() {
-            attacker = Character.create()
+        fun aCharacterWithWeapon(str: UInt = 10u): Character {
+            val char = Character.create(
+                stats = StatBlock.create(str = str)
+            )
+            char.equip(Weapon.LONGSWORD)
+            return char
         }
 
         @Test
         fun `an attacker without a weapon cannot not attack`() {
-
+            val attacker = Character.create()
             val opponent = Character.create(hitPoints = 20)
 
             every { diceRoller.rollDie(Die.D20) } returns 10
@@ -67,25 +68,33 @@ class CharacterTest {
 
             val outcome = attacker.attack(opponent, diceRoller)
 
-            assertThat(opponent.hitPoints, equalTo(20))
-            assertThat(outcome, equalTo(AttackOutcome.MISS))
+            assertAll(
+                { assertThat(opponent.hitPoints, equalTo(20)) },
+                { assertThat(outcome, equalTo(AttackOutcome.MISS)) }
+            )
         }
 
         @Test
         fun `an attacker who does not meet AC misses the attack`() {
-            val target = Character.create(stats = StatBlock.create(str = 13u))
+            val target = aCharacterWithWeapon(str = 13u)
             target.equip(Weapon.LONGSWORD)
-            val opponent = Character.create(
-                hitPoints = 20,
-                armour = { _ -> 18 })
+            val opponent = Character.create(armour = { _ -> 18 })
 
             every { diceRoller.rollDie(Die.D20) } returns 10
 
             val outcome = target.attack(opponent, diceRoller)
 
-            assertThat(outcome.hasBeenHit, equalTo(false))
-            assertThat("Hit Roll misses as d20 + str mod + prof bonus does not match AC",
-                outcome.hitRoll, equalTo(10 + 1 + 1))
+            assertAll(
+                { assertThat(outcome.hasBeenHit, equalTo(false)) },
+                {
+                    assertThat(
+                        "Hit Roll misses as d20 + str mod + prof bonus does not match AC",
+                        outcome.hitRoll, equalTo(10 + 1 + 1)
+                    )
+                }
+            )
+
+
         }
 
     }
