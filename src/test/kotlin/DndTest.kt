@@ -24,8 +24,9 @@ fun Character.Companion.create(
     characterClass: CharacterClass = CharacterClass.Fighter,
     stats: StatBlock = StatBlock.create(),
     level: Int = 1,
+    damageModifiers: DamageModifiers = DamageModifiers.NONE,
 ): Character {
-    return Character(name, characterClass, stats, level)
+    return Character(name, characterClass, stats, level, damageModifiers)
 }
 
 class DndTest {

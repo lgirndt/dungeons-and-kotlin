@@ -53,11 +53,22 @@ sealed class CharacterClass(
     object Wizard: CharacterClass(Die.D8)
 }
 
+data class DamageModifiers(
+    val resistances: Set<DamageType> = emptySet(),
+    val immunities: Set<DamageType> = emptySet(),
+    val vulnerabilities: Set<DamageType> = emptySet(),
+) {
+    companion object {
+        val NONE = DamageModifiers()
+    }
+}
+
 data class Character(
     val name: String,
     val characterClass: CharacterClass,
     val stats : StatBlock,
     val level: Int = 1,
+    val damageModifiers: DamageModifiers = DamageModifiers.NONE,
 ) {
     companion object
 }
@@ -69,4 +80,20 @@ data class Die(val numberOfFaces: Int) {
         val D10 = Die(10)
         val D12 = Die(12)
     }
+}
+
+enum class DamageType {
+    Slashing,
+    Piercing,
+    Bludgeoning,
+    Fire,
+    Cold,
+    Lightning,
+    Acid,
+    Poison,
+    Psychic,
+    Necrotic,
+    Radiant,
+    Thunder,
+    Force,
 }
