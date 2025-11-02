@@ -93,10 +93,7 @@ class CharacterTest {
                     )
                 }
             )
-
-
         }
-
     }
 
 
