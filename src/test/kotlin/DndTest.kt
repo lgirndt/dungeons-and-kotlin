@@ -1,16 +1,10 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import org.example.Character
-import org.example.CharacterClass
-import org.example.Dnd2025CharacterClass
+import org.example.*
 import org.example.Dnd2025CharacterClass.Barbarian
 import org.example.Dnd2025CharacterClass.Warlock
-import org.example.Stat
-import org.example.StatBlock
 import org.junit.jupiter.api.Assertions.assertAll
-import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import kotlin.test.Asserter
 
 const val DEFAULT_STAT_VALUE = 10u;
 
@@ -28,9 +22,9 @@ fun StatBlock.Companion.create(
 fun Character.Companion.create(
     name: String = "My Name",
     characterClass: CharacterClass = Dnd2025CharacterClass.Fighter,
-    stats : StatBlock = StatBlock.create(),
+    stats: StatBlock = StatBlock.create(),
     level: Int = 1,
-) : Character {
+): Character {
     return Character(name, characterClass, stats, level)
 }
 
