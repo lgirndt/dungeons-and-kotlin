@@ -35,23 +35,13 @@ class CharacterTest {
 
     @Test
     fun `proficiency bonus at various levels`() {
-        assertThat(
-            Character.create(level = 1).proficiencyBonus, equalTo(1),
-        )
-        assertThat(
-            Character.create(level = 2).proficiencyBonus, equalTo(1),
-        )
-        assertThat(
-            Character.create(level = 4).proficiencyBonus, equalTo(1),
-        )
-        assertThat(
-            Character.create(level = 5).proficiencyBonus, equalTo(2),
-        )
-        assertThat(
-            Character.create(level = 8).proficiencyBonus, equalTo(2),
-        )
-        assertThat(
-            Character.create(level = 9).proficiencyBonus, equalTo(3),
+        assertAll(
+            { assertThat(Character.create(level = 1).proficiencyBonus, equalTo(1)) },
+            { assertThat(Character.create(level = 2).proficiencyBonus, equalTo(1)) },
+            { assertThat(Character.create(level = 4).proficiencyBonus, equalTo(1)) },
+            { assertThat(Character.create(level = 5).proficiencyBonus, equalTo(2)) },
+            { assertThat(Character.create(level = 8).proficiencyBonus, equalTo(2)) },
+            { assertThat(Character.create(level = 9).proficiencyBonus, equalTo(3)) },
         )
     }
 
