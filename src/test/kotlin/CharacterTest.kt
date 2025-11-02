@@ -77,21 +77,32 @@ class CharacterTest {
         @Test
         fun `an attacker who does not meet AC misses the attack`() {
             val target = aCharacterWithWeapon(str = 13u)
-            target.equip(Weapon.LONGSWORD)
-            val opponent = Character.create(armour = { _ -> 18 })
+            val opponent = Character.create(armour = { _ -> 13 })
 
             every { diceRoller.rollDie(Die.D20) } returns 10
 
             val outcome = target.attack(opponent, diceRoller)
 
-            assertAll(
-                { assertThat(outcome.hasBeenHit, equalTo(false)) },
-                {
-                    assertThat(
-                        "Hit Roll misses as d20 + str mod + prof bonus does not match AC",
-                        outcome.hitRoll, equalTo(10 + 1 + 1)
-                    )
-                }
+            assertThat(outcome.hasBeenHit, equalTo(false))
+            assertThat(
+                "Hit Roll misses as d20 + str mod + prof bonus does not match AC",
+                outcome.hitRoll, equalTo(10 + 1 + 1)
+            )
+        }
+
+        @Test
+        fun `an attacker who meets AC hits the attack`() {
+            val target = aCharacterWithWeapon(str = 13u)
+            val opponent = Character.create(armour = { _ -> 10 + 1 + 1 })
+
+            every { diceRoller.rollDie(Die.D20) } returns 10
+
+            val outcome = target.attack(opponent, diceRoller)
+
+            assertThat(outcome.hasBeenHit, equalTo(true))
+            assertThat(
+                "Hit Roll hits as d20 + str mod + prof bonus  matches AC",
+                outcome.hitRoll, equalTo(10 + 1 + 1)
             )
         }
     }
