@@ -178,6 +178,24 @@ private class StrengthModifierStrategy : WeaponModifierStrategy {
     }
 }
 
+interface DamageRoll {
+    fun roll(diceRoller: DiceRoller): Int
+}
+
+class SimpleDamageRoll(
+    private val numberOfDice: Int,
+    private val die: Die,
+    private val bonus: Int = 0,
+) : DamageRoll {
+    override fun roll(diceRoller: DiceRoller): Int {
+        var total = bonus
+        repeat(numberOfDice) {
+            total += diceRoller.rollDie(die)
+        }
+        return total
+    }
+}
+
 sealed class Weapon {
 
     abstract val name: String
@@ -185,6 +203,7 @@ sealed class Weapon {
     abstract val damageType: DamageType
 
     abstract fun receiveModifier(statBlock: StatBlock): Int
+    abstract fun dealDamage(stats: StatBlock): Int
 
     companion object {
         val LONGSWORD = WeaponHolder(
@@ -204,6 +223,11 @@ sealed class Weapon {
 
         override fun receiveModifier(statBlock: StatBlock): Int {
             return modifierStrategy.getModifier(statBlock).modifier
+        }
+
+        override fun dealDamage(stats: StatBlock): Int {
+            // TODO
+            return -1
         }
 
     }

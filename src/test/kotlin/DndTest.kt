@@ -1,14 +1,12 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import io.mockk.every
-import io.mockk.impl.annotations.MockK
-import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
+import io.mockk.verify
 import org.example.*
 import org.example.CharacterClass.Barbarian
-import org.example.CharacterClass.Warlock
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.extension.ExtendWith
 
 
 class DndTest {
@@ -55,5 +53,15 @@ class DndTest {
         assertThat(Barbarian.name, equalTo("Barbarian"))
     }
 
+    @Test
+    fun `SimpleDamageRoll for 1d6 should roll correctly`() {
+        val diceRoller = mockk<DiceRoller>()
+        val simpleDamageRoll = SimpleDamageRoll(2, Die.D6, 7)
+
+        every { diceRoller.rollDie(Die.D6) } returns 5 andThen 3
+
+        val result = simpleDamageRoll.roll(diceRoller)
+        assertThat(result, equalTo(5 + 3 + 7))
+    }
 }
 
