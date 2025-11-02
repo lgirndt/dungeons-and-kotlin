@@ -5,6 +5,9 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.example.*
 import org.example.CharacterClass.Barbarian
+import org.example.Die.Companion.D20
+import org.example.Die.Companion.D6
+import org.example.Die.Companion.D8
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Test
 
@@ -56,13 +59,16 @@ class DndTest {
     @Test
     fun `SimpleDamageRoll for 1d6 should roll correctly`() {
         val diceRoller = mockk<DiceRoller>()
-        val simpleDamageRoll = SimpleDamageRoll(2, Die.D6, 7)
+        val simpleDamageRoll = SimpleDamageRoll(2, D6, 7)
 
-        every { diceRoller.rollDie(Die.D6) } returns 5 andThen 3
+        expectDiceRolls(diceRoller,
+            D6 rolls 5,
+            D6 rolls 3,
+        )
 
         val result = simpleDamageRoll.roll(diceRoller)
         assertThat(result, equalTo(5 + 3 + 7))
-        verify(exactly = 2) { diceRoller.rollDie(Die.D6) }
+        verify(exactly = 2) { diceRoller.rollDie(D6) }
     }
 
     @Test
@@ -71,12 +77,12 @@ class DndTest {
         val longsword = Weapon.LONGSWORD
         val stats = StatBlock.create(str = 16u)
 
-        every { diceRoller.rollDie(Die.D8) } returns 6
+        every { diceRoller.rollDie(D8) } returns 6
 
         val damage = longsword.dealDamage( stats, diceRoller)
 
         assertThat(damage, equalTo(6 + 3)) // 3 is the modifier for str 16
-        verify(exactly = 1) { diceRoller.rollDie(Die.D8) }
+        verify(exactly = 1) { diceRoller.rollDie(D8) }
     }
 }
 

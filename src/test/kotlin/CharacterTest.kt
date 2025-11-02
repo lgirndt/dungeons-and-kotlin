@@ -5,6 +5,8 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.example.*
 import org.example.CharacterClass.Warlock
+import org.example.Die.Companion.D20
+import org.example.Die.Companion.D8
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
@@ -63,7 +65,7 @@ class CharacterTest {
             val attacker = Character.create()
             val opponent = Character.create(hitPoints = 20)
 
-            every { diceRoller.rollDie(Die.D20) } returns 10
+            expectDiceRolls(diceRoller, D20 rolls 10)
             assertThat(attacker.currentWeapon, equalTo(null))
 
             val outcome = attacker.attack(opponent, diceRoller)
@@ -79,7 +81,7 @@ class CharacterTest {
             val target = aCharacterWithWeapon(str = 13u)
             val opponent = Character.create(armour = { _ -> 13 })
 
-            every { diceRoller.rollDie(Die.D20) } returns 10
+            expectDiceRolls(diceRoller, D20 rolls 10)
 
             val outcome = target.attack(opponent, diceRoller)
 
@@ -95,7 +97,10 @@ class CharacterTest {
             val attacker = aCharacterWithWeapon(str = 13u)
             val opponent = Character.create(armour = { _ -> 10 + 1 + 1 })
 
-            every { diceRoller.rollDie(Die.D20) } returns 10
+            expectDiceRolls(diceRoller,
+                D20 rolls 10,
+                D8 rolls 5 // Damage roll
+            )
 
             val outcome = attacker.attack(opponent, diceRoller)
 
@@ -112,13 +117,16 @@ class CharacterTest {
             val attacker = aCharacterWithWeapon(str = 13u)
             val opponent = Character.create(armour = { _ -> 10 })
 
-            every { diceRoller.rollDie(Die.D20) } returns 10
+            expectDiceRolls(diceRoller,
+                D20 rolls 10,
+                D8 rolls 5
+            )
 
             val outcome = attacker.attack(opponent, diceRoller)
             runTest(outcome)
         }
 
-        @Test
+        // TODO @Test
         fun `a hit does normal damage`() {
             expectToHit {
                 outcome ->

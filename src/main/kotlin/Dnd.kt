@@ -106,8 +106,7 @@ data class Character(
         val currentWeapon = this.currentWeapon ?: return AttackOutcome.MISS
         val hitRoll = rollToHit(currentWeapon, diceRoller)
         if(hitRoll >= opponent.armourClass) {
-            // TODO
-            val damage = 10;
+            val damage = currentWeapon.dealDamage(stats, diceRoller)
             val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
             return AttackOutcome(true, receivedDamage, hitRoll)
         }
