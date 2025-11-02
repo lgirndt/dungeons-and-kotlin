@@ -84,7 +84,8 @@ class CharacterTest {
             val outcome = target.attack(opponent, diceRoller)
 
             assertThat(outcome.hasBeenHit, equalTo(false))
-            assertThat(outcome.hitRoll, equalTo(10 + 1 + 1)) // d20 + str mod + prof bonus
+            assertThat("Hit Roll misses as d20 + str mod + prof bonus does not match AC",
+                outcome.hitRoll, equalTo(10 + 1 + 1))
         }
 
     }
