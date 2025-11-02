@@ -203,7 +203,7 @@ sealed class Weapon {
     abstract val damageType: DamageType
 
     abstract fun receiveModifier(statBlock: StatBlock): Int
-    abstract fun dealDamage(stats: StatBlock): Int
+    abstract fun dealDamage(stats: StatBlock, diceRoller : DiceRoller): Int
 
     companion object {
         val LONGSWORD = WeaponHolder(
@@ -211,6 +211,7 @@ sealed class Weapon {
             attackType = AttackType.Melee,
             damageType = DamageType.Slashing,
             modifierStrategy = StrengthModifierStrategy(),
+            damageRoll = SimpleDamageRoll(1, Die.D8)
         )
     }
 
@@ -219,15 +220,17 @@ sealed class Weapon {
         override val attackType: AttackType,
         override val damageType: DamageType,
         private val modifierStrategy: WeaponModifierStrategy,
+        private val damageRoll: DamageRoll
     ) : Weapon() {
 
         override fun receiveModifier(statBlock: StatBlock): Int {
             return modifierStrategy.getModifier(statBlock).modifier
         }
 
-        override fun dealDamage(stats: StatBlock): Int {
-            // TODO
-            return -1
+        override fun dealDamage(stats: StatBlock, diceRoller : DiceRoller): Int {
+            val modifier = modifierStrategy.getModifier(stats)
+            val rolledDamage = damageRoll.roll(diceRoller)
+            return rolledDamage + modifier.modifier.toInt()
         }
 
     }

@@ -62,6 +62,21 @@ class DndTest {
 
         val result = simpleDamageRoll.roll(diceRoller)
         assertThat(result, equalTo(5 + 3 + 7))
+        verify(exactly = 2) { diceRoller.rollDie(Die.D6) }
+    }
+
+    @Test
+    fun `a weapon deals proper damage`() {
+        val diceRoller = mockk<DiceRoller>()
+        val longsword = Weapon.LONGSWORD
+        val stats = StatBlock.create(str = 16u)
+
+        every { diceRoller.rollDie(Die.D8) } returns 6
+
+        val damage = longsword.dealDamage( stats, diceRoller)
+
+        assertThat(damage, equalTo(6 + 3)) // 3 is the modifier for str 16
+        verify(exactly = 1) { diceRoller.rollDie(Die.D8) }
     }
 }
 
