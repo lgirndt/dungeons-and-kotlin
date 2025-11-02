@@ -111,16 +111,29 @@ class CharacterTest {
 
         fun hitting(
             attackerStr: Int,
+            hitRoll : Int = 10,
             damageRoll: Int,
+            runTest: (outcome: AttackOutcome)->Unit
+        ) {
+           hitting(attackerStr, hitRoll, listOf(damageRoll), runTest)
+        }
+
+        fun hitting(
+            attackerStr: Int,
+            hitRoll : Int = 10,
+            damageRolls: List<Int>,
             runTest: (outcome: AttackOutcome)->Unit
         ) {
             val attacker = aCharacterWithWeapon(str = 13)
             val opponent = Character.create(armour = { _ -> 10 })
 
-            expectDiceRolls(diceRoller,
-                D20 rolls 10,
-                D8 rolls 5
-            )
+            val diceRolls = mutableListOf<DieRoll>()
+            diceRolls.add(D20 rolls hitRoll)
+            damageRolls.forEach { damageRoll ->
+                diceRolls.add(D8 rolls damageRoll)
+            }
+
+            expectDiceRolls(diceRoller, *diceRolls.toTypedArray())
 
             val outcome = attacker.attack(opponent, diceRoller)
             runTest(outcome)
@@ -133,6 +146,18 @@ class CharacterTest {
                 assertThat(outcome.damageDealt, equalTo(5 + 1))
             }
         }
+
+        @Test
+        fun `a critical hit does double damage dice`() {
+            hitting(
+                attackerStr = 13,
+                hitRoll = 20,
+                damageRolls = listOf(5, 8)) {
+                outcome ->
+                assertThat(outcome.damageDealt, equalTo(5 + 8 + 1))
+            }
+        }
+
     }
 
     @Test

@@ -83,5 +83,22 @@ class DndTest {
         assertThat(damage, equalTo(6 + 3)) // 3 is the modifier for str 16
         verify(exactly = 1) { diceRoller.rollDie(D8) }
     }
+
+    @Test
+    fun `a crit deals double damage`() {
+        val diceRoller = mockk<DiceRoller>()
+        val longsword = Weapon.LONGSWORD
+        val stats = StatBlock.create(str = 16)
+
+        expectDiceRolls(diceRoller,
+            D8 rolls 4,
+            D8 rolls 7,
+        )
+
+        val damage = longsword.dealDamage(stats, diceRoller, true)
+
+        assertThat(damage, equalTo(4 + 7 + 3)) // 3 is the modifier for str 16
+        verify(exactly = 2) { diceRoller.rollDie(D8) }
+    }
 }
 
