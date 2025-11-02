@@ -1,6 +1,5 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import io.mockk.every
 import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.example.*
@@ -8,7 +7,6 @@ import org.example.CharacterClass.Warlock
 import org.example.Die.Companion.D20
 import org.example.Die.Companion.D8
 import org.junit.jupiter.api.Assertions.assertAll
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -111,7 +109,9 @@ class CharacterTest {
             )
         }
 
-        fun expectToHit(
+        fun hitting(
+            attackerStr: UInt,
+            damageRoll: Int,
             runTest: (outcome: AttackOutcome)->Unit
         ) {
             val attacker = aCharacterWithWeapon(str = 13u)
@@ -126,18 +126,14 @@ class CharacterTest {
             runTest(outcome)
         }
 
-        // TODO @Test
+        @Test
         fun `a hit does normal damage`() {
-            expectToHit {
+            hitting(attackerStr = 13u, damageRoll = 5) {
                 outcome ->
-                assertThat(
-                    "Damage dealt is 10 as per TODO",
-                    outcome.damageDealt, equalTo(10)
-                )
+                assertThat(outcome.damageDealt, equalTo(5 + 1))
             }
         }
     }
-
 
     @Test
     fun `a character can equip a weapon`() {
