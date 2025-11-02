@@ -103,15 +103,20 @@ data class Character(
     }
 
     fun attack(opponent: Attackable, diceRoller: DiceRoller) : AttackOutcome {
+        // to hit
         val currentWeapon = this.currentWeapon ?: return AttackOutcome.MISS
-        val hitRollD20 = diceRoller.rollDie(D20)
         val modifier = currentWeapon.receiveModifier(stats)
+
+        val hitRollD20 = diceRoller.rollDie(D20)
         val proficiencyModifier = if (isProficientWith(currentWeapon)) proficiencyBonus else 0
         val hitRoll = hitRollD20 + modifier + proficiencyModifier
+
         if(hitRoll >= opponent.armourClass) {
+            // damage
             val isCritical = hitRollD20 == 20
             val damage = currentWeapon.dealDamage(stats, diceRoller, isCritical)
             val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
+
             return AttackOutcome(true, receivedDamage, hitRoll)
         }
         return AttackOutcome(false, 0, hitRoll)
