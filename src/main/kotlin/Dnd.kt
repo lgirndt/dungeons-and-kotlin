@@ -3,9 +3,9 @@ package org.example
 import org.example.Die.Companion.D20
 
 
-data  class Stat(val value: UInt) {
+data class Stat(val value: Int) {
     val modifier : Int
-        get() = value.toInt() / 2 - 5
+        get() = value / 2 - 5
 }
 
 data class StatBlock(
@@ -17,12 +17,12 @@ data class StatBlock(
     val cha : Stat,
 ) {
     constructor(
-        str: UInt,
-        dex: UInt,
-        con: UInt,
-        int: UInt,
-        wis: UInt,
-        cha: UInt)
+        str: Int,
+        dex: Int,
+        con: Int,
+        int: Int,
+        wis: Int,
+        cha: Int)
             : this(
         Stat(str),
         Stat(dex),
@@ -238,7 +238,7 @@ sealed class Weapon {
 class Armours {
     companion object {
         val CHAIN_MAIL = { _: StatBlock -> 16 }
-        val LEATHER_ARMOUR = { stats: StatBlock -> 11 + stats.dex.value.toInt() }
+        val LEATHER_ARMOUR = { stats: StatBlock -> 11 + stats.dex.value }
     }
 }
 

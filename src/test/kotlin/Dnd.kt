@@ -9,15 +9,15 @@ import org.example.StatBlock
 import org.example.Weapon
 import kotlin.math.exp
 
-const val DEFAULT_STAT_VALUE = 10u
+const val DEFAULT_STAT_VALUE = 10
 
 fun StatBlock.Companion.create(
-    str: UInt = DEFAULT_STAT_VALUE,
-    dex: UInt = DEFAULT_STAT_VALUE,
-    con: UInt = DEFAULT_STAT_VALUE,
-    int: UInt = DEFAULT_STAT_VALUE,
-    wis: UInt = DEFAULT_STAT_VALUE,
-    cha: UInt = DEFAULT_STAT_VALUE,
+    str: Int = DEFAULT_STAT_VALUE,
+    dex: Int = DEFAULT_STAT_VALUE,
+    con: Int = DEFAULT_STAT_VALUE,
+    int: Int = DEFAULT_STAT_VALUE,
+    wis: Int = DEFAULT_STAT_VALUE,
+    cha: Int = DEFAULT_STAT_VALUE,
 ): StatBlock {
     return StatBlock(str, dex, con, int, wis, cha)
 }

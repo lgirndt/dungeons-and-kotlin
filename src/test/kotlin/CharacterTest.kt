@@ -27,10 +27,10 @@ class CharacterTest {
     fun `a character with custom stats and class`() {
         val myCharacter = Character.create(
             characterClass = Warlock,
-            stats = StatBlock.create(dex = 12u, con = 14u),
+            stats = StatBlock.create(dex = 12, con = 14),
         )
         assertAll(
-            { assertThat(myCharacter.stats.dex.value, equalTo(12u)) },
+            { assertThat(myCharacter.stats.dex.value, equalTo(12)) },
             { assertThat(myCharacter.characterClass, equalTo(Warlock)) },
         )
     }
@@ -50,7 +50,7 @@ class CharacterTest {
     @Nested
     inner class AttackTest {
 
-        fun aCharacterWithWeapon(str: UInt = 10u): Character {
+        fun aCharacterWithWeapon(str: Int = 10): Character {
             val char = Character.create(
                 stats = StatBlock.create(str = str)
             )
@@ -76,7 +76,7 @@ class CharacterTest {
 
         @Test
         fun `an attacker who does not meet AC misses the attack`() {
-            val target = aCharacterWithWeapon(str = 13u)
+            val target = aCharacterWithWeapon(str = 13)
             val opponent = Character.create(armour = { _ -> 13 })
 
             expectDiceRolls(diceRoller, D20 rolls 10)
@@ -92,7 +92,7 @@ class CharacterTest {
 
         @Test
         fun `an attacker who meets AC hits the attack`() {
-            val attacker = aCharacterWithWeapon(str = 13u)
+            val attacker = aCharacterWithWeapon(str = 13)
             val opponent = Character.create(armour = { _ -> 10 + 1 + 1 })
 
             expectDiceRolls(diceRoller,
@@ -110,11 +110,11 @@ class CharacterTest {
         }
 
         fun hitting(
-            attackerStr: UInt,
+            attackerStr: Int,
             damageRoll: Int,
             runTest: (outcome: AttackOutcome)->Unit
         ) {
-            val attacker = aCharacterWithWeapon(str = 13u)
+            val attacker = aCharacterWithWeapon(str = 13)
             val opponent = Character.create(armour = { _ -> 10 })
 
             expectDiceRolls(diceRoller,
@@ -128,7 +128,7 @@ class CharacterTest {
 
         @Test
         fun `a hit does normal damage`() {
-            hitting(attackerStr = 13u, damageRoll = 5) {
+            hitting(attackerStr = 13, damageRoll = 5) {
                 outcome ->
                 assertThat(outcome.damageDealt, equalTo(5 + 1))
             }
