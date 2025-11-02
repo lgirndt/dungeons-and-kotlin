@@ -1,5 +1,8 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import io.mockk.MockK
+import io.mockk.every
+import io.mockk.mockk
 import org.example.*
 import org.example.CharacterClass.Barbarian
 import org.example.CharacterClass.Warlock
@@ -25,8 +28,11 @@ fun Character.Companion.create(
     stats: StatBlock = StatBlock.create(),
     level: Int = 1,
     damageModifiers: DamageModifiers = DamageModifiers.NONE,
+    currentWeapon: Weapon? = null,
+    hitPoints: Int = 10,
+    armour: (StatBlock) -> Int = { 10 },
 ): Character {
-    return Character(name, characterClass, stats, level, damageModifiers)
+    return Character(name, characterClass, stats, level, damageModifiers, currentWeapon, hitPoints, armour)
 }
 
 class DndTest {
@@ -87,6 +93,53 @@ class DndTest {
             { assertThat(myCharacter.stats.dex.value, equalTo(12u)) },
             { assertThat(myCharacter.characterClass, equalTo(Warlock)) },
         )
+    }
+
+    @Test
+    fun `proficiency bonus at various levels`() {
+        assertThat(
+            Character.create(level = 1).proficiencyBonus, equalTo(1),
+        )
+        assertThat(
+            Character.create(level = 2).proficiencyBonus, equalTo(1),
+        )
+        assertThat(
+            Character.create(level = 4).proficiencyBonus, equalTo(1),
+        )
+        assertThat(
+            Character.create(level = 5).proficiencyBonus, equalTo(2),
+        )
+        assertThat(
+            Character.create(level = 8).proficiencyBonus, equalTo(2),
+        )
+        assertThat(
+            Character.create(level = 9).proficiencyBonus, equalTo(3),
+        )
+    }
+
+    @Test
+    fun `an attacker without a weapon cannot not attack`() {
+        val target = Character.create(stats = StatBlock.create(str = 13u))
+        val opponent = Character.create(
+            hitPoints = 20,
+            armour = { _ -> 10 })
+
+        val diceRoller = mockk<DiceRoller>()
+        every { diceRoller.rollDie(Die.D20) } returns 10
+        assertThat(target.currentWeapon, equalTo(null))
+
+        val outcome = target.attack(opponent, diceRoller)
+
+        assertThat(opponent.hitPoints, equalTo(20))
+        assertThat(outcome, equalTo(AttackOutcome.MISS))
+    }
+
+    @Test
+    fun `character can equip a weapon`() {
+        val character = Character.create()
+        assertThat(character.currentWeapon, equalTo(null))
+        character.equip(Weapon.LONGSWORD)
+        assertThat(character.currentWeapon, equalTo(Weapon.LONGSWORD))
     }
 }
 
