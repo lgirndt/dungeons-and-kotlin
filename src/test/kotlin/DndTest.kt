@@ -6,7 +6,7 @@ import org.example.Dnd2025CharacterClass.Warlock
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Test
 
-const val DEFAULT_STAT_VALUE = 10u;
+const val DEFAULT_STAT_VALUE = 10u
 
 fun StatBlock.Companion.create(
     str: UInt = DEFAULT_STAT_VALUE,
