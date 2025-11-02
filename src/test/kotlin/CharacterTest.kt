@@ -6,6 +6,8 @@ import io.mockk.junit5.MockKExtension
 import org.example.*
 import org.example.CharacterClass.Warlock
 import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 
@@ -16,7 +18,7 @@ class CharacterTest {
     lateinit var diceRoller: DiceRoller
 
     @Test
-    fun `create a Warlock`() {
+    fun `creating a Warlock should have the proper characterClass`() {
         val warlock = Character.create(characterClass = Warlock)
         assertThat(warlock.characterClass, equalTo(Warlock))
     }
@@ -34,7 +36,7 @@ class CharacterTest {
     }
 
     @Test
-    fun `proficiency bonus at various levels`() {
+    fun `proficiency bonus at various levels should be correct`() {
         assertAll(
             { assertThat(Character.create(level = 1).proficiencyBonus, equalTo(1)) },
             { assertThat(Character.create(level = 2).proficiencyBonus, equalTo(1)) },
@@ -45,35 +47,48 @@ class CharacterTest {
         )
     }
 
-    @Test
-    fun `an attacker without a weapon cannot not attack`() {
-        val target = Character.create(stats = StatBlock.create())
-        val opponent = Character.create(hitPoints = 20)
+    @Nested
+    inner class AttackTest {
 
-        every { diceRoller.rollDie(Die.D20) } returns 10
-        assertThat(target.currentWeapon, equalTo(null))
+        lateinit var attacker : Character;
 
-        val outcome = target.attack(opponent, diceRoller)
+        @BeforeEach
+        fun beforeEach() {
+            attacker = Character.create()
+        }
 
-        assertThat(opponent.hitPoints, equalTo(20))
-        assertThat(outcome, equalTo(AttackOutcome.MISS))
+        @Test
+        fun `an attacker without a weapon cannot not attack`() {
+
+            val opponent = Character.create(hitPoints = 20)
+
+            every { diceRoller.rollDie(Die.D20) } returns 10
+            assertThat(attacker.currentWeapon, equalTo(null))
+
+            val outcome = attacker.attack(opponent, diceRoller)
+
+            assertThat(opponent.hitPoints, equalTo(20))
+            assertThat(outcome, equalTo(AttackOutcome.MISS))
+        }
+
+        @Test
+        fun `an attacker who does not meet AC misses the attack`() {
+            val target = Character.create(stats = StatBlock.create(str = 13u))
+            target.equip(Weapon.LONGSWORD)
+            val opponent = Character.create(
+                hitPoints = 20,
+                armour = { _ -> 18 })
+
+            every { diceRoller.rollDie(Die.D20) } returns 10
+
+            val outcome = target.attack(opponent, diceRoller)
+
+            assertThat(outcome.hasBeenHit, equalTo(false))
+            assertThat(outcome.hitRoll, equalTo(10 + 1 + 1)) // d20 + str mod + prof bonus
+        }
+
     }
 
-    @Test
-    fun `an attacker who does not meet AC misses the attack`() {
-        val target = Character.create(stats = StatBlock.create(str = 13u))
-        target.equip(Weapon.LONGSWORD)
-        val opponent = Character.create(
-            hitPoints = 20,
-            armour = { _ -> 18 })
-
-        every { diceRoller.rollDie(Die.D20) } returns 10
-
-        val outcome = target.attack(opponent, diceRoller)
-
-        assertThat(outcome.hasBeenHit, equalTo(false))
-        assertThat(outcome.hitRoll, equalTo(10 + 1 + 1)) // d20 + str mod + prof bonus
-    }
 
     @Test
     fun `a character can equip a weapon`() {
