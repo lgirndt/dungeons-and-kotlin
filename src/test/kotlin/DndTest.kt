@@ -1,13 +1,14 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import io.mockk.MockK
 import io.mockk.every
-import io.mockk.mockk
+import io.mockk.impl.annotations.MockK
+import io.mockk.junit5.MockKExtension
 import org.example.*
 import org.example.CharacterClass.Barbarian
 import org.example.CharacterClass.Warlock
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.extension.ExtendWith
 
 const val DEFAULT_STAT_VALUE = 10u
 
@@ -35,7 +36,12 @@ fun Character.Companion.create(
     return Character(name, characterClass, stats, level, damageModifiers, currentWeapon, hitPoints, armour)
 }
 
+@ExtendWith(MockKExtension::class)
 class DndTest {
+
+    @MockK
+    lateinit var diceRoller: DiceRoller
+
     @Test
     fun `a modifier should return the correct value`() {
         assertAll(
@@ -119,12 +125,9 @@ class DndTest {
 
     @Test
     fun `an attacker without a weapon cannot not attack`() {
-        val target = Character.create(stats = StatBlock.create(str = 13u))
-        val opponent = Character.create(
-            hitPoints = 20,
-            armour = { _ -> 10 })
+        val target = Character.create(stats = StatBlock.create())
+        val opponent = Character.create(hitPoints = 20)
 
-        val diceRoller = mockk<DiceRoller>()
         every { diceRoller.rollDie(Die.D20) } returns 10
         assertThat(target.currentWeapon, equalTo(null))
 
@@ -132,6 +135,22 @@ class DndTest {
 
         assertThat(opponent.hitPoints, equalTo(20))
         assertThat(outcome, equalTo(AttackOutcome.MISS))
+    }
+
+    @Test
+    fun `an attacker who does not hit misses the attack`() {
+        val target = Character.create(stats = StatBlock.create(str = 13u))
+        target.equip(Weapon.LONGSWORD)
+        val opponent = Character.create(
+            hitPoints = 20,
+            armour = { _ -> 18 })
+
+        every { diceRoller.rollDie(Die.D20) } returns 10
+
+        val outcome = target.attack(opponent, diceRoller)
+
+        assertThat(outcome.hasBeenHit, equalTo(false))
+        assertThat(outcome.hitRoll, equalTo(10 + 1 + 1)) // d20 + str mod + prof bonus
     }
 
     @Test

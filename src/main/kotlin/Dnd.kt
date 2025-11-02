@@ -73,6 +73,7 @@ interface Attackable {
 data class AttackOutcome(
     val hasBeenHit: Boolean,
     val damageDealt: Int,
+    val hitRoll: Int = 0,
 ) {
     companion object {
         val MISS = AttackOutcome(false, 0)
@@ -103,13 +104,14 @@ data class Character(
 
     fun attack(opponent: Attackable, diceRoller: DiceRoller) : AttackOutcome {
         val currentWeapon = this.currentWeapon ?: return AttackOutcome.MISS
-        if(rollToHit(currentWeapon, opponent.armourClass, diceRoller)) {
+        val hitRoll = rollToHit(currentWeapon, diceRoller)
+        if(hitRoll >= opponent.armourClass) {
             // TODO
             val damage = 10;
             val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
-            return AttackOutcome(true, receivedDamage)
+            return AttackOutcome(true, receivedDamage, hitRoll)
         }
-        return AttackOutcome.MISS
+        return AttackOutcome(false, 0, hitRoll)
     }
 
     override fun receiveDamage(amount: Int, damageType: DamageType) : Int {
@@ -122,12 +124,12 @@ data class Character(
         return true
     }
 
-    private fun rollToHit(currentWeapon: Weapon, opponentArmourClass: Int, diceRoller: DiceRoller): Boolean {
+    private fun rollToHit(currentWeapon: Weapon, diceRoller: DiceRoller): Int {
         val modifier = currentWeapon.receiveModifier(stats)
         val proficiencyModifier = if(isProficientWith(currentWeapon)) proficiencyBonus else 0
-        val attackRoll = diceRoller.rollDie(D20) + modifier.modifier + proficiencyModifier
+        val attackRoll = diceRoller.rollDie(D20) + modifier + proficiencyModifier
 
-        return (attackRoll >= opponentArmourClass)
+        return attackRoll
     }
 }
 
@@ -182,7 +184,7 @@ sealed class Weapon {
     abstract val attackType: AttackType
     abstract val damageType: DamageType
 
-    abstract fun receiveModifier(statBlock: StatBlock): Stat
+    abstract fun receiveModifier(statBlock: StatBlock): Int
 
     companion object {
         val LONGSWORD = WeaponHolder(
@@ -200,8 +202,8 @@ sealed class Weapon {
         private val modifierStrategy: WeaponModifierStrategy,
     ) : Weapon() {
 
-        override fun receiveModifier(statBlock: StatBlock): Stat {
-            return modifierStrategy.getModifier(statBlock)
+        override fun receiveModifier(statBlock: StatBlock): Int {
+            return modifierStrategy.getModifier(statBlock).modifier
         }
 
     }
