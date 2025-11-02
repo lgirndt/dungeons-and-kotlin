@@ -39,23 +39,23 @@ data class StatBlock(
 //}
 
 sealed class CharacterClass(
-    val hitDie: HitDie
+    val hitDie: Die
 )  {
    val name: String
         get() = this.javaClass.simpleName
 
-    object Fighter: CharacterClass(HitDie.D10)
-    object Cleric: CharacterClass(HitDie.D8)
-    object Druid: CharacterClass(HitDie.D8)
-    object Barbarian: CharacterClass(HitDie.D12)
-    object Paladin: CharacterClass(HitDie.D10)
-    object Ranger: CharacterClass(HitDie.D10)
-    object Rogue: CharacterClass(HitDie.D8)
-    object Warlock: CharacterClass(HitDie.D8)
-    object Monk: CharacterClass(HitDie.D8)
-    object Sorcerer: CharacterClass(HitDie.D6)
-    object Bard: CharacterClass(HitDie.D8)
-    object Wizard: CharacterClass(HitDie.D8)
+    object Fighter: CharacterClass(Die.D10)
+    object Cleric: CharacterClass(Die.D8)
+    object Druid: CharacterClass(Die.D8)
+    object Barbarian: CharacterClass(Die.D12)
+    object Paladin: CharacterClass(Die.D10)
+    object Ranger: CharacterClass(Die.D10)
+    object Rogue: CharacterClass(Die.D8)
+    object Warlock: CharacterClass(Die.D8)
+    object Monk: CharacterClass(Die.D8)
+    object Sorcerer: CharacterClass(Die.D6)
+    object Bard: CharacterClass(Die.D8)
+    object Wizard: CharacterClass(Die.D8)
 }
 
 data class Character(
@@ -67,11 +67,11 @@ data class Character(
     companion object
 }
 
-data class HitDie(val numberOfFaces: Int) {
+data class Die(val numberOfFaces: Int) {
     companion object {
-        val D6 = HitDie(6)
-        val D8 = HitDie(8)
-        val D10 = HitDie(10)
-        val D12 = HitDie(12)
+        val D6 = Die(6)
+        val D8 = Die(8)
+        val D10 = Die(10)
+        val D12 = Die(12)
     }
 }
