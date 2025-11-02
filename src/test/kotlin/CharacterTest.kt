@@ -92,18 +92,41 @@ class CharacterTest {
 
         @Test
         fun `an attacker who meets AC hits the attack`() {
-            val target = aCharacterWithWeapon(str = 13u)
+            val attacker = aCharacterWithWeapon(str = 13u)
             val opponent = Character.create(armour = { _ -> 10 + 1 + 1 })
 
             every { diceRoller.rollDie(Die.D20) } returns 10
 
-            val outcome = target.attack(opponent, diceRoller)
+            val outcome = attacker.attack(opponent, diceRoller)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(
                 "Hit Roll hits as d20 + str mod + prof bonus  matches AC",
                 outcome.hitRoll, equalTo(10 + 1 + 1)
             )
+        }
+
+        fun expectToHit(
+            runTest: (outcome: AttackOutcome)->Unit
+        ) {
+            val attacker = aCharacterWithWeapon(str = 13u)
+            val opponent = Character.create(armour = { _ -> 10 })
+
+            every { diceRoller.rollDie(Die.D20) } returns 10
+
+            val outcome = attacker.attack(opponent, diceRoller)
+            runTest(outcome)
+        }
+
+        @Test
+        fun `a hit does normal damage`() {
+            expectToHit {
+                outcome ->
+                assertThat(
+                    "Damage dealt is 10 as per TODO",
+                    outcome.damageDealt, equalTo(10)
+                )
+            }
         }
     }
 

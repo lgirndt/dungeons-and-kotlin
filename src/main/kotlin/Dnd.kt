@@ -116,7 +116,7 @@ data class Character(
 
     override fun receiveDamage(amount: Int, damageType: DamageType) : Int {
         // TODO
-        return 0
+        return amount
     }
 
     private fun isProficientWith(weapon: Weapon): Boolean {
