@@ -104,9 +104,13 @@ data class Character(
 
     fun attack(opponent: Attackable, diceRoller: DiceRoller) : AttackOutcome {
         val currentWeapon = this.currentWeapon ?: return AttackOutcome.MISS
-        val hitRoll = rollToHit(currentWeapon, diceRoller)
+        val hitRollD20 = diceRoller.rollDie(D20)
+        val modifier = currentWeapon.receiveModifier(stats)
+        val proficiencyModifier = if (isProficientWith(currentWeapon)) proficiencyBonus else 0
+        val hitRoll = hitRollD20 + modifier + proficiencyModifier
         if(hitRoll >= opponent.armourClass) {
-            val damage = currentWeapon.dealDamage(stats, diceRoller)
+            val isCritical = hitRollD20 == 20
+            val damage = currentWeapon.dealDamage(stats, diceRoller, isCritical)
             val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
             return AttackOutcome(true, receivedDamage, hitRoll)
         }
@@ -123,13 +127,6 @@ data class Character(
         return true
     }
 
-    private fun rollToHit(currentWeapon: Weapon, diceRoller: DiceRoller): Int {
-        val modifier = currentWeapon.receiveModifier(stats)
-        val proficiencyModifier = if(isProficientWith(currentWeapon)) proficiencyBonus else 0
-        val attackRoll = diceRoller.rollDie(D20) + modifier + proficiencyModifier
-
-        return attackRoll
-    }
 }
 
 data class Die(val numberOfFaces: Int) {
@@ -178,7 +175,7 @@ private class StrengthModifierStrategy : WeaponModifierStrategy {
 }
 
 interface DamageRoll {
-    fun roll(diceRoller: DiceRoller): Int
+    fun roll(diceRoller: DiceRoller, isCritical: Boolean): Int
 }
 
 class SimpleDamageRoll(
@@ -186,9 +183,10 @@ class SimpleDamageRoll(
     private val die: Die,
     private val bonus: Int = 0,
 ) : DamageRoll {
-    override fun roll(diceRoller: DiceRoller): Int {
+    override fun roll(diceRoller: DiceRoller, isCritical: Boolean): Int {
         var total = bonus
-        repeat(numberOfDice) {
+        val critMultiplier = if (isCritical) 2 else 1
+        repeat(numberOfDice * critMultiplier) {
             total += diceRoller.rollDie(die)
         }
         return total
@@ -202,7 +200,7 @@ sealed class Weapon {
     abstract val damageType: DamageType
 
     abstract fun receiveModifier(statBlock: StatBlock): Int
-    abstract fun dealDamage(stats: StatBlock, diceRoller : DiceRoller): Int
+    abstract fun dealDamage(stats: StatBlock, diceRoller: DiceRoller, isCritical: Boolean): Int
 
     companion object {
         val LONGSWORD = WeaponHolder(
@@ -226,10 +224,11 @@ sealed class Weapon {
             return modifierStrategy.getModifier(statBlock).modifier
         }
 
-        override fun dealDamage(stats: StatBlock, diceRoller : DiceRoller): Int {
+        override fun dealDamage(stats: StatBlock, diceRoller: DiceRoller, isCritical: Boolean): Int {
             val modifier = modifierStrategy.getModifier(stats)
-            val rolledDamage = damageRoll.roll(diceRoller)
-            return rolledDamage + modifier.modifier.toInt()
+            val rolledDamage = damageRoll.roll(diceRoller, isCritical)
+
+            return rolledDamage + modifier.modifier
         }
 
     }
