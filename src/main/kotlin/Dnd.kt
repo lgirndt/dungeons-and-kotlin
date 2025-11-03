@@ -198,44 +198,35 @@ class SimpleDamageRoll(
     }
 }
 
-sealed class Weapon {
+data class Weapon(
+    val name: String,
+    val attackType: AttackType,
+    val damageType: DamageType,
+    private val modifierStrategy: WeaponModifierStrategy,
+    private val damageRoll: DamageRoll
+) {
 
-    abstract val name: String
-    abstract val attackType: AttackType
-    abstract val damageType: DamageType
+    fun receiveModifier(statBlock: StatBlock): Int {
+        return modifierStrategy.getModifier(statBlock).modifier
+    }
 
-    abstract fun receiveModifier(statBlock: StatBlock): Int
-    abstract fun dealDamage(stats: StatBlock, diceRoller: DiceRoller, isCritical: Boolean): Int
+    fun dealDamage(stats: StatBlock, diceRoller: DiceRoller, isCritical: Boolean): Int {
+        val modifier = modifierStrategy.getModifier(stats)
+        val rolledDamage = damageRoll.roll(diceRoller, isCritical)
 
+        return rolledDamage + modifier.modifier
+    }
+}
+
+class Weapons {
     companion object {
-        val LONGSWORD = WeaponHolder(
+        val LONGSWORD = Weapon(
             name = "Longsword",
             attackType = AttackType.Melee,
             damageType = DamageType.Slashing,
             modifierStrategy = StrengthModifierStrategy(),
             damageRoll = SimpleDamageRoll(1, Die.D8)
         )
-    }
-
-    data class WeaponHolder(
-        override val name: String,
-        override val attackType: AttackType,
-        override val damageType: DamageType,
-        private val modifierStrategy: WeaponModifierStrategy,
-        private val damageRoll: DamageRoll
-    ) : Weapon() {
-
-        override fun receiveModifier(statBlock: StatBlock): Int {
-            return modifierStrategy.getModifier(statBlock).modifier
-        }
-
-        override fun dealDamage(stats: StatBlock, diceRoller: DiceRoller, isCritical: Boolean): Int {
-            val modifier = modifierStrategy.getModifier(stats)
-            val rolledDamage = damageRoll.roll(diceRoller, isCritical)
-
-            return rolledDamage + modifier.modifier
-        }
-
     }
 }
 

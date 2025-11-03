@@ -54,7 +54,7 @@ class CharacterTest {
             val char = Character.create(
                 stats = StatBlock.create(str = str)
             )
-            char.equip(Weapon.LONGSWORD)
+            char.equip(Weapons.LONGSWORD)
             return char
         }
 
@@ -164,8 +164,8 @@ class CharacterTest {
     fun `a character can equip a weapon`() {
         val character = Character.create()
         assertThat(character.currentWeapon, equalTo(null))
-        character.equip(Weapon.LONGSWORD)
-        assertThat(character.currentWeapon, equalTo(Weapon.LONGSWORD))
+        character.equip(Weapons.LONGSWORD)
+        assertThat(character.currentWeapon, equalTo(Weapons.LONGSWORD))
     }
 
 }

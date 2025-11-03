@@ -73,7 +73,7 @@ class DndTest {
     @Test
     fun `a weapon deals proper damage`() {
         val diceRoller = mockk<DiceRoller>()
-        val longsword = Weapon.LONGSWORD
+        val longsword = Weapons.LONGSWORD
         val stats = StatBlock.create(str = 16)
 
         every { diceRoller.rollDie(D8) } returns 6
@@ -87,7 +87,7 @@ class DndTest {
     @Test
     fun `a crit deals double damage`() {
         val diceRoller = mockk<DiceRoller>()
-        val longsword = Weapon.LONGSWORD
+        val longsword = Weapons.LONGSWORD
         val stats = StatBlock.create(str = 16)
 
         expectDiceRolls(diceRoller,
