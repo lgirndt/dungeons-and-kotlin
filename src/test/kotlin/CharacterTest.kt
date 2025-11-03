@@ -4,6 +4,7 @@ import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.example.*
 import org.example.CharacterClass.Warlock
+import org.example.Die.Companion.D10
 import org.example.Die.Companion.D20
 import org.example.Die.Companion.D8
 import org.junit.jupiter.api.Assertions.assertAll
@@ -54,7 +55,7 @@ class CharacterTest {
             val char = Character.create(
                 stats = StatBlock.create(str = str)
             )
-            char.equip(Weapons.LONGSWORD)
+            char.equip(Weapon.create(damageDie = damageDie))
             return char
         }
 
@@ -92,12 +93,13 @@ class CharacterTest {
 
         @Test
         fun `an attacker who meets AC hits the attack`() {
-            val attacker = aCharacterWithWeapon(str = 13)
+            val damageDie = D8
+            val attacker = aCharacterWithWeapon(str = 13, damageDie = damageDie)
             val opponent = Character.create(armour = { _ -> 10 + 1 + 1 })
 
             expectDiceRolls(diceRoller,
                 D20 rolls 10,
-                D8 rolls 5 // Damage roll
+                damageDie rolls 5
             )
 
             val outcome = attacker.attack(opponent, diceRoller)
@@ -124,13 +126,14 @@ class CharacterTest {
             damageRolls: List<Int>,
             runTest: (outcome: AttackOutcome)->Unit
         ) {
-            val attacker = aCharacterWithWeapon(str = 13)
+            val damageDie  = D10
+            val attacker = aCharacterWithWeapon(str = attackerStr, damageDie)
             val opponent = Character.create(armour = { _ -> 10 })
 
             val diceRolls = mutableListOf<DieRoll>()
             diceRolls.add(D20 rolls hitRoll)
             damageRolls.forEach { damageRoll ->
-                diceRolls.add(D8 rolls damageRoll)
+                diceRolls.add(damageDie rolls damageRoll)
             }
 
             expectDiceRolls(diceRoller, *diceRolls.toTypedArray())
