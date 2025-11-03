@@ -50,7 +50,7 @@ class CharacterTest {
     @Nested
     inner class AttackTest {
 
-        fun aCharacterWithWeapon(str: Int = 10): Character {
+        fun aCharacterWithWeapon(str: Int = 10, damageDie : Die = D8): Character {
             val char = Character.create(
                 stats = StatBlock.create(str = str)
             )

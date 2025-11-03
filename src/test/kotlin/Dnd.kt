@@ -1,12 +1,18 @@
 import com.google.common.collect.ImmutableListMultimap
 import io.mockk.every
+import org.example.AttackType
 import org.example.Character
 import org.example.CharacterClass
 import org.example.DamageModifiers
+import org.example.DamageRoll
+import org.example.DamageType
 import org.example.DiceRoller
 import org.example.Die
+import org.example.SimpleDamageRoll
 import org.example.StatBlock
+import org.example.StrengthModifierStrategy
 import org.example.Weapon
+import org.example.WeaponModifierStrategy
 import kotlin.math.exp
 
 const val DEFAULT_STAT_VALUE = 10
@@ -33,6 +39,16 @@ fun Character.Companion.create(
     armour: (StatBlock) -> Int = { 10 },
 ): Character {
     return Character(name, characterClass, stats, level, damageModifiers, currentWeapon, hitPoints, armour)
+}
+
+fun Weapon.Companion.create(
+    name : String = "Longsword",
+    attackType : AttackType = AttackType.Melee,
+    damageType : DamageType = DamageType.Slashing,
+    modifierStrategy : WeaponModifierStrategy = StrengthModifierStrategy(),
+    damageRoll : DamageRoll = SimpleDamageRoll(1, Die.D8)
+): Weapon {
+    return Weapon(name, attackType, damageType, modifierStrategy, damageRoll)
 }
 
 data class DieRoll(val die: Die, val result: Int)

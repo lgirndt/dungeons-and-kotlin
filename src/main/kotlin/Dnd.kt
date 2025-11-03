@@ -173,7 +173,7 @@ interface WeaponModifierStrategy {
     fun getModifier(statBlock: StatBlock): Stat
 }
 
-private class StrengthModifierStrategy : WeaponModifierStrategy {
+internal class StrengthModifierStrategy : WeaponModifierStrategy {
     override fun getModifier(statBlock: StatBlock): Stat {
         return statBlock.str
     }
@@ -205,6 +205,7 @@ data class Weapon(
     private val modifierStrategy: WeaponModifierStrategy,
     private val damageRoll: DamageRoll
 ) {
+    companion object
 
     fun receiveModifier(statBlock: StatBlock): Int {
         return modifierStrategy.getModifier(statBlock).modifier
