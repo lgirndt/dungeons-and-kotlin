@@ -46,9 +46,9 @@ fun Weapon.Companion.create(
     attackType : AttackType = AttackType.Melee,
     damageType : DamageType = DamageType.Slashing,
     modifierStrategy : WeaponModifierStrategy = StrengthModifierStrategy(),
-    damageRoll : DamageRoll = SimpleDamageRoll(1, Die.D8)
+    damageDie : Die = Die.D8,
 ): Weapon {
-    return Weapon(name, attackType, damageType, modifierStrategy, damageRoll)
+    return Weapon(name, attackType, damageType, modifierStrategy, SimpleDamageRoll(1, damageDie))
 }
 
 data class DieRoll(val die: Die, val result: Int)
