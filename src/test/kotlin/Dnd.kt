@@ -42,7 +42,7 @@ fun Character.Companion.create(
 }
 
 fun Weapon.Companion.create(
-    name : String = "Longsword",
+    name : String = "Surgebinder",
     attackType : AttackType = AttackType.Melee,
     damageType : DamageType = DamageType.Slashing,
     modifierStrategy : WeaponModifierStrategy = StrengthModifierStrategy(),
