@@ -100,5 +100,52 @@ class DndTest {
         assertThat(damage, equalTo(4 + 7 + 3)) // 3 is the modifier for str 16
         verify(exactly = 2) { diceRoller.rollDie(D8) }
     }
+
+    @Test
+    fun `a character receives normal damage`() {
+        val character = Character.create(
+            hitPoints = 20
+        )
+
+        character.receiveDamage(8, DamageType.Force)
+
+        assertThat(character.hitPoints, equalTo(20 - 8))
+    }
+
+    @Test
+    fun `a character receives half damage from resistance`() {
+        val character = Character.create(
+            hitPoints = 20,
+            damageModifiers = DamageModifiers(
+                resistances = setOf(DamageType.Force)
+            )
+        )
+        character.receiveDamage(9, DamageType.Force)
+        assertThat(character.hitPoints, equalTo(20 - 4)) // half damage rounded down
+    }
+
+    @Test
+    fun `a character receives double damage from vulnerability`() {
+        val character = Character.create(
+            hitPoints = 20,
+            damageModifiers = DamageModifiers(
+                vulnerabilities = setOf(DamageType.Force)
+            )
+        )
+        character.receiveDamage(6, DamageType.Force)
+        assertThat(character.hitPoints, equalTo(20 - 6 * 2)) // double damage
+    }
+
+    @Test
+    fun `a character receives no damage from immunity`() {
+        val character = Character.create(
+            hitPoints = 20,
+            damageModifiers = DamageModifiers(
+                immunities = setOf(DamageType.Force)
+            )
+        )
+        character.receiveDamage(15, DamageType.Force)
+        assertThat(character.hitPoints, equalTo(20)) // no damage
+    }
 }
 

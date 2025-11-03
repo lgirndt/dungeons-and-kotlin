@@ -1,6 +1,7 @@
 package org.example
 
 import org.example.Die.Companion.D20
+import kotlin.math.max
 
 
 data class Stat(val value: Int) {
@@ -123,8 +124,16 @@ data class Character(
     }
 
     override fun receiveDamage(amount: Int, damageType: DamageType) : Int {
-        // TODO
-        return amount
+        val adjustedAmount = when(damageType) {
+            in damageModifiers.immunities -> 0
+            in damageModifiers.resistances -> amount / 2
+            in damageModifiers.vulnerabilities -> amount * 2
+            else -> amount
+        }
+
+        hitPoints = max(hitPoints  - adjustedAmount, 0)
+
+        return adjustedAmount
     }
 
     private fun isProficientWith(weapon: Weapon): Boolean {
