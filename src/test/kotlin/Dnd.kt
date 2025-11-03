@@ -56,6 +56,14 @@ fun Weapon.Companion.create(
     return Weapon(name, attackType, damageType, modifierStrategy, SimpleDamageRoll(1, damageDie))
 }
 
+fun DamageModifiers.Companion.create(
+    resistances: Set<DamageType> = emptySet(),
+    immunities: Set<DamageType> = emptySet(),
+    vulnerabilities: Set<DamageType> = emptySet(),
+): DamageModifiers {
+    return DamageModifiers(resistances, immunities, vulnerabilities)
+}
+
 data class DieRoll(val die: Die, val result: Int)
 
 infix fun Die.rolls(result: Int) = DieRoll(this, result)

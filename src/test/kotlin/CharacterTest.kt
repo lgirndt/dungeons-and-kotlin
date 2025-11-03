@@ -51,11 +51,15 @@ class CharacterTest {
     @Nested
     inner class AttackTest {
 
-        fun aCharacterWithWeapon(strMod: Int = 10, damageDie : Die = D8): Character {
+        fun aCharacterWithWeapon(
+            strMod: Int = 10,
+            damageDie : Die = D8,
+            damageType: DamageType = DamageType.Slashing
+        ): Character {
             val char = Character.create(
                 stats = StatBlock.createWithModifiers(strMod = strMod)
             )
-            char.equip(Weapon.create(damageDie = damageDie))
+            char.equip(Weapon.create(damageDie = damageDie, damageType = damageType))
             return char
         }
 
@@ -113,22 +117,46 @@ class CharacterTest {
 
         fun hitting(
             attackerStrMod: Int,
+            opponentHitPoints : Int = 20,
             hitRoll : Int = 10,
             damageRoll: Int,
-            runTest: (outcome: AttackOutcome)->Unit
+            damageType: DamageType = DamageType.Slashing,
+            opponentVulnerableTo: DamageType? = null,
+            runTest: (outcome: AttackOutcome, opponent: Character)->Unit
         ) {
-           hitting(attackerStrMod, hitRoll, listOf(damageRoll), runTest)
+           hitting(
+               attackerStrMod,
+               opponentHitPoints,
+               hitRoll,
+               listOf(damageRoll),
+               damageType,
+               opponentVulnerableTo,
+               runTest
+           )
         }
 
         fun hitting(
             attackerStrMod: Int,
+            opponentHitPoints : Int = 20,
             hitRoll : Int = 10,
             damageRolls: List<Int>,
-            runTest: (outcome: AttackOutcome)->Unit
+            damageType: DamageType = DamageType.Slashing,
+            opponentVulnerableTo: DamageType? = null,
+            runTest: (outcome: AttackOutcome, opponent: Character)->Unit
         ) {
             val damageDie  = D10
-            val attacker = aCharacterWithWeapon(strMod = attackerStrMod, damageDie)
-            val opponent = Character.create(armour = { _ -> 10 })
+            val attacker = aCharacterWithWeapon(
+                strMod = attackerStrMod,
+                damageType = damageType,
+                damageDie = damageDie
+            )
+            val opponent = Character.create(
+                hitPoints = opponentHitPoints,
+                armour = { _ -> 10 },
+                damageModifiers = DamageModifiers.create(
+                    vulnerabilities = if (opponentVulnerableTo != null) setOf(opponentVulnerableTo) else emptySet()
+                )
+            )
 
             val diceRolls = mutableListOf<DieRoll>()
             diceRolls.add(D20 rolls hitRoll)
@@ -139,13 +167,13 @@ class CharacterTest {
             expectDiceRolls(diceRoller, *diceRolls.toTypedArray())
 
             val outcome = attacker.attack(opponent, diceRoller)
-            runTest(outcome)
+            runTest(outcome, opponent)
         }
 
         @Test
         fun `a hit does normal damage`() {
             hitting(attackerStrMod = 1, damageRoll = 5) {
-                outcome ->
+                outcome, _ ->
                 assertThat(outcome.damageDealt, equalTo(5 + 1))
             }
         }
@@ -156,8 +184,34 @@ class CharacterTest {
                 attackerStrMod = 1,
                 hitRoll = 20,
                 damageRolls = listOf(5, 8)) {
-                outcome ->
+                outcome, _ ->
                 assertThat(outcome.damageDealt, equalTo(5 + 8 + 1))
+            }
+        }
+
+        @Test
+        fun `an opponent receives damage properly`() {
+            hitting(
+                attackerStrMod = 2,
+                opponentHitPoints = 30,
+                damageRoll = 6) {
+                _, opponent ->
+                assertThat(opponent.hitPoints, equalTo(30 - 6 - 2))
+            }
+        }
+
+        @Test
+        fun `one hitting with a crit on vulnerability`() {
+            hitting(
+                attackerStrMod = 2,
+                opponentHitPoints = 38,
+                hitRoll = 20,
+                damageRolls = listOf(8, 9),
+                damageType = DamageType.Slashing,
+                opponentVulnerableTo = DamageType.Slashing
+            ) {
+                _, opponent ->
+                assertThat(opponent.hitPoints, equalTo(0))
             }
         }
 
