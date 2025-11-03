@@ -51,9 +51,9 @@ class CharacterTest {
     @Nested
     inner class AttackTest {
 
-        fun aCharacterWithWeapon(str: Int = 10, damageDie : Die = D8): Character {
+        fun aCharacterWithWeapon(strMod: Int = 10, damageDie : Die = D8): Character {
             val char = Character.create(
-                stats = StatBlock.create(str = str)
+                stats = StatBlock.createWithModifiers(strMod = strMod)
             )
             char.equip(Weapon.create(damageDie = damageDie))
             return char
@@ -77,7 +77,7 @@ class CharacterTest {
 
         @Test
         fun `an attacker who does not meet AC misses the attack`() {
-            val target = aCharacterWithWeapon(str = 13)
+            val target = aCharacterWithWeapon(strMod = 1)
             val opponent = Character.create(armour = { _ -> 13 })
 
             expectDiceRolls(diceRoller, D20 rolls 10)
@@ -94,7 +94,7 @@ class CharacterTest {
         @Test
         fun `an attacker who meets AC hits the attack`() {
             val damageDie = D8
-            val attacker = aCharacterWithWeapon(str = 13, damageDie = damageDie)
+            val attacker = aCharacterWithWeapon(strMod = 1, damageDie = damageDie)
             val opponent = Character.create(armour = { _ -> 10 + 1 + 1 })
 
             expectDiceRolls(diceRoller,
@@ -112,22 +112,22 @@ class CharacterTest {
         }
 
         fun hitting(
-            attackerStr: Int,
+            attackerStrMod: Int,
             hitRoll : Int = 10,
             damageRoll: Int,
             runTest: (outcome: AttackOutcome)->Unit
         ) {
-           hitting(attackerStr, hitRoll, listOf(damageRoll), runTest)
+           hitting(attackerStrMod, hitRoll, listOf(damageRoll), runTest)
         }
 
         fun hitting(
-            attackerStr: Int,
+            attackerStrMod: Int,
             hitRoll : Int = 10,
             damageRolls: List<Int>,
             runTest: (outcome: AttackOutcome)->Unit
         ) {
             val damageDie  = D10
-            val attacker = aCharacterWithWeapon(str = attackerStr, damageDie)
+            val attacker = aCharacterWithWeapon(strMod = attackerStrMod, damageDie)
             val opponent = Character.create(armour = { _ -> 10 })
 
             val diceRolls = mutableListOf<DieRoll>()
@@ -144,7 +144,7 @@ class CharacterTest {
 
         @Test
         fun `a hit does normal damage`() {
-            hitting(attackerStr = 13, damageRoll = 5) {
+            hitting(attackerStrMod = 1, damageRoll = 5) {
                 outcome ->
                 assertThat(outcome.damageDealt, equalTo(5 + 1))
             }
@@ -153,7 +153,7 @@ class CharacterTest {
         @Test
         fun `a critical hit does double damage dice`() {
             hitting(
-                attackerStr = 13,
+                attackerStrMod = 1,
                 hitRoll = 20,
                 damageRolls = listOf(5, 8)) {
                 outcome ->

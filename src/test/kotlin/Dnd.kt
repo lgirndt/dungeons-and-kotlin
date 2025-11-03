@@ -28,6 +28,24 @@ fun StatBlock.Companion.create(
     return StatBlock(str, dex, con, int, wis, cha)
 }
 
+fun StatBlock.Companion.createWithModifiers(
+    strMod: Int = 0,
+    dexMod: Int = 0,
+    conMod: Int = 0,
+    intMod: Int = 0,
+    wisMod: Int = 0,
+    chaMod: Int = 0,
+): StatBlock {
+    return StatBlock(
+        DEFAULT_STAT_VALUE + strMod * 2,
+        DEFAULT_STAT_VALUE + dexMod * 2,
+        DEFAULT_STAT_VALUE + conMod * 2,
+        DEFAULT_STAT_VALUE + intMod * 2,
+        DEFAULT_STAT_VALUE + wisMod * 2,
+        DEFAULT_STAT_VALUE + chaMod * 2,
+    )
+}
+
 fun Character.Companion.create(
     name: String = "My Name",
     characterClass: CharacterClass = CharacterClass.Fighter,
@@ -42,11 +60,11 @@ fun Character.Companion.create(
 }
 
 fun Weapon.Companion.create(
-    name : String = "Surgebinder",
-    attackType : AttackType = AttackType.Melee,
-    damageType : DamageType = DamageType.Slashing,
-    modifierStrategy : WeaponModifierStrategy = StrengthModifierStrategy(),
-    damageDie : Die = Die.D8,
+    name: String = "Surgebinder",
+    attackType: AttackType = AttackType.Melee,
+    damageType: DamageType = DamageType.Slashing,
+    modifierStrategy: WeaponModifierStrategy = StrengthModifierStrategy(),
+    damageDie: Die = Die.D8,
 ): Weapon {
     return Weapon(name, attackType, damageType, modifierStrategy, SimpleDamageRoll(1, damageDie))
 }
@@ -63,8 +81,8 @@ fun expectDiceRolls(
         builder.put(dieRoll.die, dieRoll.result)
     }.build()
 
-    for(die in  multimap.keySet()) {
-        val results : List<Int> = multimap.get(die)
+    for (die in multimap.keySet()) {
+        val results: List<Int> = multimap.get(die)
         every { diceRoller.rollDie(die) } returnsMany results
     }
 }
