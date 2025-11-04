@@ -45,18 +45,18 @@ sealed class CharacterClass(
     val name: String
         get() = this::class.simpleName!!
 
-    object Fighter : CharacterClass(Die.D10)
-    object Cleric : CharacterClass(Die.D8)
-    object Druid : CharacterClass(Die.D8)
-    object Barbarian : CharacterClass(Die.D12)
-    object Paladin : CharacterClass(Die.D10)
-    object Ranger : CharacterClass(Die.D10)
-    object Rogue : CharacterClass(Die.D8)
-    object Warlock : CharacterClass(Die.D8)
-    object Monk : CharacterClass(Die.D8)
-    object Sorcerer : CharacterClass(Die.D6)
-    object Bard : CharacterClass(Die.D8)
-    object Wizard : CharacterClass(Die.D8)
+    data object Fighter : CharacterClass(Die.D10)
+    data object Cleric : CharacterClass(Die.D8)
+    data object Druid : CharacterClass(Die.D8)
+    data object Barbarian : CharacterClass(Die.D12)
+    data object Paladin : CharacterClass(Die.D10)
+    data object Ranger : CharacterClass(Die.D10)
+    data object Rogue : CharacterClass(Die.D8)
+    data object Warlock : CharacterClass(Die.D8)
+    data object Monk : CharacterClass(Die.D8)
+    data object Sorcerer : CharacterClass(Die.D6)
+    data object Bard : CharacterClass(Die.D8)
+    data object Wizard : CharacterClass(Die.D8)
 }
 
 data class DamageModifiers(
@@ -134,7 +134,7 @@ data class Character(
             else -> amount
         }
 
-        hitPoints = max(hitPoints - adjustedAmount, 0)
+        hitPoints = (hitPoints - adjustedAmount).coerceAtLeast(0)
 
         return adjustedAmount
     }
