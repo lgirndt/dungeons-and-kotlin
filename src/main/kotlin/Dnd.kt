@@ -188,15 +188,9 @@ enum class AttackType {
     Ranged,
 }
 
-interface WeaponModifierStrategy {
-    fun getModifier(statBlock: StatBlock): Stat
-}
+typealias WeaponModifierStrategy = (StatBlock) -> Stat
 
-internal object StrengthModifierStrategy : WeaponModifierStrategy {
-    override fun getModifier(statBlock: StatBlock): Stat {
-        return statBlock.str
-    }
-}
+val StrengthModifierStrategy : WeaponModifierStrategy = StatBlock::str
 
 interface DamageRoll {
     fun roll(isCritical: Boolean): Int
@@ -225,10 +219,10 @@ data class Weapon(
     companion object
 
     fun receiveModifier(statBlock: StatBlock): Int =
-        modifierStrategy.getModifier(statBlock).modifier
+        modifierStrategy(statBlock).modifier
 
     fun dealDamage(stats: StatBlock, isCritical: Boolean): Int {
-        val modifier = modifierStrategy.getModifier(stats)
+        val modifier = modifierStrategy(stats)
         val rolledDamage = damageRoll.roll(isCritical)
 
         return rolledDamage + modifier.modifier
