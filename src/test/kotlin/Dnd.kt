@@ -85,7 +85,6 @@ fun withFixedDice(
     vararg expectedRolls: DieRoll,
     runWithFixedDice : () -> Unit
 ) {
-    // TODO i don't get it
     val multimap = ImmutableListMultimap.builder<Die, Int>().apply {
         expectedRolls.forEach { put(it.die, it.result) }
     }.build()
