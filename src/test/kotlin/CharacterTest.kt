@@ -55,7 +55,10 @@ class CharacterTest {
             val char = SOME_CHARACTER.copy(
                 stats = StatBlock.createWithModifiers(strMod = strMod)
             )
-            char.equip(Weapon.create(damageDie = damageDie, damageType = damageType))
+            char.equip(SOME_WEAPON.copy(
+                damageRoll = SimpleDamageRoll(1,damageDie),
+                damageType = damageType
+            ))
             return char
         }
 

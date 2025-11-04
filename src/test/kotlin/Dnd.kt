@@ -63,15 +63,13 @@ val SOME_CHARACTER = Character(
     armour =  { 10 },
 )
 
-fun Weapon.Companion.create(
-    name: String = "Surgebinder",
-    attackType: AttackType = AttackType.Melee,
-    damageType: DamageType = DamageType.Slashing,
-    modifierStrategy: WeaponModifierStrategy = StrengthModifierStrategy(),
-    damageDie: Die = Die.D8,
-): Weapon {
-    return Weapon(name, attackType, damageType, modifierStrategy, SimpleDamageRoll(1, damageDie))
-}
+val SOME_WEAPON = Weapon(
+    name = "Surgebinder",
+    attackType = AttackType.Melee,
+    damageType = DamageType.Slashing,
+    modifierStrategy = StrengthModifierStrategy(),
+    damageRoll = SimpleDamageRoll(1, Die.D8),
+)
 
 fun DamageModifiers.Companion.create(
     resistances: Set<DamageType> = emptySet(),
