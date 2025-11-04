@@ -27,7 +27,7 @@ class DndTest {
 
     @Test
     fun `overloaded ctor should assign values correctly`() {
-        val statBlocks = StatBlock(10, 11, 12, 13, 14, 15)
+        val statBlocks = SOME_STAT_BOCK.copy(10, 11, 12, 13, 14, 15)
         assertAll(
             { assertThat(statBlocks.str.value, equalTo(10)) },
             { assertThat(statBlocks.dex.value, equalTo(11)) },
@@ -40,7 +40,7 @@ class DndTest {
 
     @Test
     fun `some StatBlock`() {
-        val dexBlock = StatBlock.create(dex = 12)
+        val dexBlock = SOME_STAT_BOCK.copy(dex = 12)
         assertAll(
             { assertThat(dexBlock.dex.value, equalTo(12)) },
             { assertThat(dexBlock.str.value, equalTo(DEFAULT_STAT_VALUE)) },
@@ -69,7 +69,7 @@ class DndTest {
     @Test
     fun `a weapon deals proper damage`() {
         val longsword = Weapons.LONGSWORD
-        val stats = StatBlock.create(str = 16)
+        val stats = SOME_STAT_BOCK.copy(str = 16)
 
         withFixedDice(D8 rolls 6) {
             val damage = longsword.dealDamage(stats, false)
@@ -82,7 +82,7 @@ class DndTest {
     @Test
     fun `a crit deals double damage`() {
         val longsword = Weapons.LONGSWORD
-        val stats = StatBlock.create(str = 16)
+        val stats = SOME_STAT_BOCK.copy(str = 16)
 
         withFixedDice(
             D8 rolls 4,

@@ -1,3 +1,4 @@
+import DEFAULT_STAT_VALUE
 import com.google.common.collect.ImmutableListMultimap
 import io.mockk.every
 import io.mockk.mockkObject
@@ -6,15 +7,31 @@ import org.example.*
 
 const val DEFAULT_STAT_VALUE = 10
 
-fun StatBlock.Companion.create(
-    str: Int = DEFAULT_STAT_VALUE,
-    dex: Int = DEFAULT_STAT_VALUE,
-    con: Int = DEFAULT_STAT_VALUE,
-    int: Int = DEFAULT_STAT_VALUE,
-    wis: Int = DEFAULT_STAT_VALUE,
-    cha: Int = DEFAULT_STAT_VALUE,
+val SOME_STAT_BOCK = StatBlock(
+    str = Stat(DEFAULT_STAT_VALUE),
+    dex = Stat(DEFAULT_STAT_VALUE),
+    con = Stat(DEFAULT_STAT_VALUE),
+    int = Stat(DEFAULT_STAT_VALUE),
+    wis = Stat(DEFAULT_STAT_VALUE),
+    cha = Stat(DEFAULT_STAT_VALUE),
+)
+
+fun StatBlock.copy(
+    str: Int = this.str.value,
+    dex: Int = this.dex.value,
+    con: Int = this.con.value,
+    int: Int = this.int.value,
+    wis: Int = this.wis.value,
+    cha: Int = this.cha.value,
 ): StatBlock {
-    return StatBlock(str, dex, con, int, wis, cha)
+    return StatBlock(
+        Stat(str),
+        Stat(dex),
+        Stat(con),
+        Stat(int),
+        Stat(wis),
+        Stat(cha),
+    )
 }
 
 fun StatBlock.Companion.createWithModifiers(
@@ -26,19 +43,19 @@ fun StatBlock.Companion.createWithModifiers(
     chaMod: Int = 0,
 ): StatBlock {
     return StatBlock(
-        DEFAULT_STAT_VALUE + strMod * 2,
-        DEFAULT_STAT_VALUE + dexMod * 2,
-        DEFAULT_STAT_VALUE + conMod * 2,
-        DEFAULT_STAT_VALUE + intMod * 2,
-        DEFAULT_STAT_VALUE + wisMod * 2,
-        DEFAULT_STAT_VALUE + chaMod * 2,
+        Stat(DEFAULT_STAT_VALUE + strMod * 2),
+        Stat(DEFAULT_STAT_VALUE + dexMod * 2),
+        Stat(DEFAULT_STAT_VALUE + conMod * 2),
+        Stat(DEFAULT_STAT_VALUE + intMod * 2),
+        Stat(DEFAULT_STAT_VALUE + wisMod * 2),
+        Stat(DEFAULT_STAT_VALUE + chaMod * 2),
     )
 }
 
 fun Character.Companion.create(
     name: String = "My Name",
     characterClass: CharacterClass = CharacterClass.Fighter,
-    stats: StatBlock = StatBlock.create(),
+    stats: StatBlock = SOME_STAT_BOCK.copy(),
     level: Int = 1,
     damageModifiers: DamageModifiers = DamageModifiers.NONE,
     currentWeapon: Weapon? = null,

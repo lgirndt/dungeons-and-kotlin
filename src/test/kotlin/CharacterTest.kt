@@ -24,7 +24,7 @@ class CharacterTest {
     fun `a character with custom stats and class`() {
         val myCharacter = Character.create(
             characterClass = Warlock,
-            stats = StatBlock.create(dex = 12, con = 14),
+            stats = SOME_STAT_BOCK.copy(dex = 12, con = 14),
         )
         assertAll(
             { assertThat(myCharacter.stats.dex.value, equalTo(12)) },

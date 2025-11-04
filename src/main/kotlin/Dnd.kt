@@ -17,23 +17,26 @@ data class StatBlock(
     val wis : Stat,
     val cha : Stat,
 ) {
-    constructor(
-        str: Int,
-        dex: Int,
-        con: Int,
-        int: Int,
-        wis: Int,
-        cha: Int)
-            : this(
-        Stat(str),
-        Stat(dex),
-        Stat(con),
-        Stat(int),
-        Stat(wis),
-        Stat(cha),
-    )
 
-    companion object {}
+    companion object {
+        fun create(
+            str: Int,
+            dex: Int,
+            con: Int,
+            int: Int,
+            wis: Int,
+            cha: Int,
+        ): StatBlock {
+            return StatBlock(
+                Stat(str),
+                Stat(dex),
+                Stat(con),
+                Stat(int),
+                Stat(wis),
+                Stat(cha),
+            )
+        }
+    }
 }
 
 sealed class CharacterClass(
