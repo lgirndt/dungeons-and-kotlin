@@ -85,8 +85,9 @@ fun withFixedDice(
     vararg expectedRolls: DieRoll,
     runWithFixedDice : () -> Unit
 ) {
-    val multimap = expectedRolls.fold(ImmutableListMultimap.builder<Die, Int>()) { builder, dieRoll ->
-        builder.put(dieRoll.die, dieRoll.result)
+    // TODO i don't get it
+    val multimap = ImmutableListMultimap.builder<Die, Int>().apply {
+        expectedRolls.forEach { put(it.die, it.result) }
     }.build()
 
     val mockedDice = mutableListOf<Die>()
