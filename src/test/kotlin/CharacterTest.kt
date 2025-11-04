@@ -10,6 +10,8 @@ import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 
 @ExtendWith(MockKExtension::class)
 class CharacterTest {
@@ -32,16 +34,17 @@ class CharacterTest {
         )
     }
 
-    @Test
-    fun `proficiency bonus at various levels should be correct`() {
-        assertAll(
-            { assertThat(SOME_CHARACTER.copy(level = 1).proficiencyBonus, equalTo(1)) },
-            { assertThat(SOME_CHARACTER.copy(level = 2).proficiencyBonus, equalTo(1)) },
-            { assertThat(SOME_CHARACTER.copy(level = 4).proficiencyBonus, equalTo(1)) },
-            { assertThat(SOME_CHARACTER.copy(level = 5).proficiencyBonus, equalTo(2)) },
-            { assertThat(SOME_CHARACTER.copy(level = 8).proficiencyBonus, equalTo(2)) },
-            { assertThat(SOME_CHARACTER.copy(level = 9).proficiencyBonus, equalTo(3)) },
-        )
+    @ParameterizedTest
+    @CsvSource(
+        "1, 1",
+        "2, 1",
+        "4, 1",
+        "5, 2",
+        "8, 2",
+        "9, 3"
+    )
+    fun `proficiency bonus at various levels should be correct`(level: Int, expectedBonus: Int) {
+        assertThat(SOME_CHARACTER.copy(level = level).proficiencyBonus, equalTo(expectedBonus))
     }
 
     @Nested
