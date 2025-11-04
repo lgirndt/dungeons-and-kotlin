@@ -16,13 +16,13 @@ class CharacterTest {
 
     @Test
     fun `creating a Warlock should have the proper characterClass`() {
-        val warlock = Character.create(characterClass = Warlock)
+        val warlock = SOME_CHARACTER.copy(characterClass = Warlock)
         assertThat(warlock.characterClass, equalTo(Warlock))
     }
 
     @Test
     fun `a character with custom stats and class`() {
-        val myCharacter = Character.create(
+        val myCharacter = SOME_CHARACTER.copy(
             characterClass = Warlock,
             stats = SOME_STAT_BOCK.copy(dex = 12, con = 14),
         )
@@ -35,12 +35,12 @@ class CharacterTest {
     @Test
     fun `proficiency bonus at various levels should be correct`() {
         assertAll(
-            { assertThat(Character.create(level = 1).proficiencyBonus, equalTo(1)) },
-            { assertThat(Character.create(level = 2).proficiencyBonus, equalTo(1)) },
-            { assertThat(Character.create(level = 4).proficiencyBonus, equalTo(1)) },
-            { assertThat(Character.create(level = 5).proficiencyBonus, equalTo(2)) },
-            { assertThat(Character.create(level = 8).proficiencyBonus, equalTo(2)) },
-            { assertThat(Character.create(level = 9).proficiencyBonus, equalTo(3)) },
+            { assertThat(SOME_CHARACTER.copy(level = 1).proficiencyBonus, equalTo(1)) },
+            { assertThat(SOME_CHARACTER.copy(level = 2).proficiencyBonus, equalTo(1)) },
+            { assertThat(SOME_CHARACTER.copy(level = 4).proficiencyBonus, equalTo(1)) },
+            { assertThat(SOME_CHARACTER.copy(level = 5).proficiencyBonus, equalTo(2)) },
+            { assertThat(SOME_CHARACTER.copy(level = 8).proficiencyBonus, equalTo(2)) },
+            { assertThat(SOME_CHARACTER.copy(level = 9).proficiencyBonus, equalTo(3)) },
         )
     }
 
@@ -52,7 +52,7 @@ class CharacterTest {
             damageDie : Die = D8,
             damageType: DamageType = DamageType.Slashing
         ): Character {
-            val char = Character.create(
+            val char = SOME_CHARACTER.copy(
                 stats = StatBlock.createWithModifiers(strMod = strMod)
             )
             char.equip(Weapon.create(damageDie = damageDie, damageType = damageType))
@@ -61,8 +61,8 @@ class CharacterTest {
 
         @Test
         fun `an attacker without a weapon cannot not attack`() {
-            val attacker = Character.create()
-            val opponent = Character.create(hitPoints = 20)
+            val attacker = SOME_CHARACTER.copy()
+            val opponent = SOME_CHARACTER.copy(hitPoints = 20)
 
             assertThat(attacker.currentWeapon, equalTo(null))
             val outcome = attacker.attack(opponent)
@@ -74,7 +74,7 @@ class CharacterTest {
         @Test
         fun `an attacker who does not meet AC misses the attack`() {
             val target = aCharacterWithWeapon(strMod = 1)
-            val opponent = Character.create(armour = { _ -> 13 })
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 13 })
 
             withFixedDice(D20 rolls 10) {
                 val outcome = target.attack(opponent)
@@ -92,7 +92,7 @@ class CharacterTest {
         fun `an attacker who meets AC hits the attack`() {
             val damageDie = D8
             val attacker = aCharacterWithWeapon(strMod = 1, damageDie = damageDie)
-            val opponent = Character.create(armour = { _ -> 10 + 1 + 1 })
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 + 1 + 1 })
 
             withFixedDice(
                 D20 rolls 10,
@@ -144,7 +144,7 @@ class CharacterTest {
                 damageType = damageType,
                 damageDie = damageDie
             )
-            val opponent = Character.create(
+            val opponent = SOME_CHARACTER.copy(
                 hitPoints = opponentHitPoints,
                 armour = { _ -> 10 },
                 damageModifiers = DamageModifiers.create(
@@ -214,7 +214,7 @@ class CharacterTest {
 
     @Test
     fun `a character can equip a weapon`() {
-        val character = Character.create()
+        val character = SOME_CHARACTER.copy()
         assertThat(character.currentWeapon, equalTo(null))
         character.equip(Weapons.LONGSWORD)
         assertThat(character.currentWeapon, equalTo(Weapons.LONGSWORD))

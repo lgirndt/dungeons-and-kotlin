@@ -97,7 +97,7 @@ class DndTest {
 
     @Test
     fun `a character receives normal damage`() {
-        val character = Character.create(
+        val character = SOME_CHARACTER.copy(
             hitPoints = 20
         )
 
@@ -108,7 +108,7 @@ class DndTest {
 
     @Test
     fun `a character receives half damage from resistance`() {
-        val character = Character.create(
+        val character = SOME_CHARACTER.copy(
             hitPoints = 20,
             damageModifiers = DamageModifiers(
                 resistances = setOf(DamageType.Force)
@@ -120,7 +120,7 @@ class DndTest {
 
     @Test
     fun `a character receives double damage from vulnerability`() {
-        val character = Character.create(
+        val character = SOME_CHARACTER.copy(
             hitPoints = 20,
             damageModifiers = DamageModifiers(
                 vulnerabilities = setOf(DamageType.Force)
@@ -132,7 +132,7 @@ class DndTest {
 
     @Test
     fun `a character receives no damage from immunity`() {
-        val character = Character.create(
+        val character = SOME_CHARACTER.copy(
             hitPoints = 20,
             damageModifiers = DamageModifiers(
                 immunities = setOf(DamageType.Force)

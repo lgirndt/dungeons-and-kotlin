@@ -52,18 +52,16 @@ fun StatBlock.Companion.createWithModifiers(
     )
 }
 
-fun Character.Companion.create(
-    name: String = "My Name",
-    characterClass: CharacterClass = CharacterClass.Fighter,
-    stats: StatBlock = SOME_STAT_BOCK.copy(),
-    level: Int = 1,
-    damageModifiers: DamageModifiers = DamageModifiers.NONE,
-    currentWeapon: Weapon? = null,
-    hitPoints: Int = 10,
-    armour: (StatBlock) -> Int = { 10 },
-): Character {
-    return Character(name, characterClass, stats, level, damageModifiers, currentWeapon, hitPoints, armour)
-}
+val SOME_CHARACTER = Character(
+    name = "My Name",
+    characterClass = CharacterClass.Fighter,
+    stats = SOME_STAT_BOCK.copy(),
+    level = 1,
+    damageModifiers = DamageModifiers.NONE,
+    currentWeapon = null,
+    hitPoints = 10,
+    armour =  { 10 },
+)
 
 fun Weapon.Companion.create(
     name: String = "Surgebinder",
