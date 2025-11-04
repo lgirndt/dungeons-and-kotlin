@@ -67,7 +67,7 @@ val SOME_WEAPON = Weapon(
     name = "Surgebinder",
     attackType = AttackType.Melee,
     damageType = DamageType.Slashing,
-    modifierStrategy = StrengthModifierStrategy(),
+    modifierStrategy = StrengthModifierStrategy,
     damageRoll = SimpleDamageRoll(1, Die.D8),
 )
 
