@@ -1,8 +1,5 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import io.mockk.every
-import io.mockk.mockk
-import io.mockk.verify
 import org.example.*
 import org.example.CharacterClass.Barbarian
 import org.example.Die.Companion.D6
@@ -59,7 +56,7 @@ class DndTest {
     fun `SimpleDamageRoll for 1d6 should roll correctly`() {
         val simpleDamageRoll = SimpleDamageRoll(2, D6, 7)
 
-        expectDiceRolls(
+        withFixedDice(
             D6 rolls 5,
             D6 rolls 3,
         ) {
@@ -74,7 +71,7 @@ class DndTest {
         val longsword = Weapons.LONGSWORD
         val stats = StatBlock.create(str = 16)
 
-        expectDiceRolls(D8 rolls 6) {
+        withFixedDice(D8 rolls 6) {
             val damage = longsword.dealDamage(stats, false)
 
             assertThat(damage, equalTo(6 + 3)) // 3 is the modifier for str 16
@@ -87,7 +84,7 @@ class DndTest {
         val longsword = Weapons.LONGSWORD
         val stats = StatBlock.create(str = 16)
 
-        expectDiceRolls(
+        withFixedDice(
             D8 rolls 4,
             D8 rolls 7,
         ) {

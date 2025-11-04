@@ -1,6 +1,5 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import io.mockk.impl.annotations.MockK
 import io.mockk.junit5.MockKExtension
 import org.example.*
 import org.example.CharacterClass.Warlock
@@ -77,7 +76,7 @@ class CharacterTest {
             val target = aCharacterWithWeapon(strMod = 1)
             val opponent = Character.create(armour = { _ -> 13 })
 
-            expectDiceRolls(D20 rolls 10) {
+            withFixedDice(D20 rolls 10) {
                 val outcome = target.attack(opponent)
 
                 assertThat(outcome.hasBeenHit, equalTo(false))
@@ -95,7 +94,7 @@ class CharacterTest {
             val attacker = aCharacterWithWeapon(strMod = 1, damageDie = damageDie)
             val opponent = Character.create(armour = { _ -> 10 + 1 + 1 })
 
-            expectDiceRolls(
+            withFixedDice(
                 D20 rolls 10,
                 damageDie rolls 5
             ) {
@@ -159,7 +158,7 @@ class CharacterTest {
                 diceRolls.add(damageDie rolls damageRoll)
             }
 
-            expectDiceRolls(*diceRolls.toTypedArray()) {
+            withFixedDice(*diceRolls.toTypedArray()) {
                 val outcome = attacker.attack(opponent)
                 runTest(outcome, opponent)
             }
