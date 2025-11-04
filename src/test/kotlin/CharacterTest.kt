@@ -150,7 +150,7 @@ class CharacterTest {
             val opponent = SOME_CHARACTER.copy(
                 hitPoints = opponentHitPoints,
                 armour = { _ -> 10 },
-                damageModifiers = DamageModifiers.create(
+                damageModifiers = SOME_DAMAGE_MODIFIERS.copy(
                     vulnerabilities = if (opponentVulnerableTo != null) setOf(opponentVulnerableTo) else emptySet()
                 )
             )

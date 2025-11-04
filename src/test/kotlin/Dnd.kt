@@ -71,13 +71,11 @@ val SOME_WEAPON = Weapon(
     damageRoll = SimpleDamageRoll(1, Die.D8),
 )
 
-fun DamageModifiers.Companion.create(
-    resistances: Set<DamageType> = emptySet(),
-    immunities: Set<DamageType> = emptySet(),
-    vulnerabilities: Set<DamageType> = emptySet(),
-): DamageModifiers {
-    return DamageModifiers(resistances, immunities, vulnerabilities)
-}
+val SOME_DAMAGE_MODIFIERS = DamageModifiers(
+    resistances = emptySet(),
+    immunities = emptySet(),
+    vulnerabilities = emptySet(),
+)
 
 data class DieRoll(val die: Die, val result: Int)
 
