@@ -43,7 +43,7 @@ sealed class CharacterClass(
     val hitDie: Die
 ) {
     val name: String
-        get() = this.javaClass.simpleName
+        get() = this::class.simpleName!!
 
     object Fighter : CharacterClass(Die.D10)
     object Cleric : CharacterClass(Die.D8)
