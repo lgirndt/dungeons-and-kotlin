@@ -3,8 +3,8 @@ package org.example
 import org.example.Die.Companion.D20
 import kotlin.math.max
 
-
-data class Stat(val value: Int) {
+@JvmInline
+value class Stat(val value: Int) {
     val modifier : Int
         get() = value / 2 - 5
 }
