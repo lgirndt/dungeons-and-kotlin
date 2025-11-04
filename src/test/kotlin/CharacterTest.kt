@@ -49,16 +49,18 @@ class CharacterTest {
 
         fun aCharacterWithWeapon(
             strMod: Int = 10,
-            damageDie : Die = D8,
+            damageDie: Die = D8,
             damageType: DamageType = DamageType.Slashing
         ): Character {
             val char = SOME_CHARACTER.copy(
                 stats = StatBlock.createWithModifiers(strMod = strMod)
             )
-            char.equip(SOME_WEAPON.copy(
-                damageRoll = SimpleDamageRoll(1,damageDie),
-                damageType = damageType
-            ))
+            char.equip(
+                SOME_WEAPON.copy(
+                    damageRoll = SimpleDamageRoll(1, damageDie),
+                    damageType = damageType
+                )
+            )
             return char
         }
 
@@ -114,34 +116,34 @@ class CharacterTest {
 
         fun hitting(
             attackerStrMod: Int,
-            opponentHitPoints : Int = 20,
-            hitRoll : Int = 10,
+            opponentHitPoints: Int = 20,
+            hitRoll: Int = 10,
             damageRoll: Int,
             damageType: DamageType = DamageType.Slashing,
             opponentVulnerableTo: DamageType? = null,
-            runTest: (outcome: AttackOutcome, opponent: Character)->Unit
+            runTest: (outcome: AttackOutcome, opponent: Character) -> Unit
         ) {
-           hitting(
-               attackerStrMod,
-               opponentHitPoints,
-               hitRoll,
-               listOf(damageRoll),
-               damageType,
-               opponentVulnerableTo,
-               runTest
-           )
+            hitting(
+                attackerStrMod,
+                opponentHitPoints,
+                hitRoll,
+                listOf(damageRoll),
+                damageType,
+                opponentVulnerableTo,
+                runTest
+            )
         }
 
         fun hitting(
             attackerStrMod: Int,
-            opponentHitPoints : Int = 20,
-            hitRoll : Int = 10,
+            opponentHitPoints: Int = 20,
+            hitRoll: Int = 10,
             damageRolls: List<Int>,
             damageType: DamageType = DamageType.Slashing,
             opponentVulnerableTo: DamageType? = null,
-            runTest: (outcome: AttackOutcome, opponent: Character)->Unit
+            runTest: (outcome: AttackOutcome, opponent: Character) -> Unit
         ) {
-            val damageDie  = D10
+            val damageDie = D10
             val attacker = aCharacterWithWeapon(
                 strMod = attackerStrMod,
                 damageType = damageType,
@@ -170,8 +172,7 @@ class CharacterTest {
 
         @Test
         fun `a hit does normal damage`() {
-            hitting(attackerStrMod = 1, damageRoll = 5) {
-                outcome, _ ->
+            hitting(attackerStrMod = 1, damageRoll = 5) { outcome, _ ->
                 assertThat(outcome.damageDealt, equalTo(5 + 1))
             }
         }
@@ -181,8 +182,8 @@ class CharacterTest {
             hitting(
                 attackerStrMod = 1,
                 hitRoll = 20,
-                damageRolls = listOf(5, 8)) {
-                outcome, _ ->
+                damageRolls = listOf(5, 8)
+            ) { outcome, _ ->
                 assertThat(outcome.damageDealt, equalTo(5 + 8 + 1))
             }
         }
@@ -192,8 +193,8 @@ class CharacterTest {
             hitting(
                 attackerStrMod = 2,
                 opponentHitPoints = 30,
-                damageRoll = 6) {
-                _, opponent ->
+                damageRoll = 6
+            ) { _, opponent ->
                 assertThat(opponent.hitPoints, equalTo(30 - 6 - 2))
             }
         }
@@ -207,8 +208,7 @@ class CharacterTest {
                 damageRolls = listOf(8, 9),
                 damageType = DamageType.Slashing,
                 opponentVulnerableTo = DamageType.Slashing
-            ) {
-                _, opponent ->
+            ) { _, opponent ->
                 assertThat(opponent.hitPoints, equalTo(0))
             }
         }
