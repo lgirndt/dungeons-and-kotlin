@@ -15,9 +15,6 @@ import org.junit.jupiter.api.extension.ExtendWith
 @ExtendWith(MockKExtension::class)
 class CharacterTest {
 
-    @MockK
-    lateinit var diceRoller: DiceRoller
-
     @Test
     fun `creating a Warlock should have the proper characterClass`() {
         val warlock = Character.create(characterClass = Warlock)
@@ -68,15 +65,15 @@ class CharacterTest {
             val attacker = Character.create()
             val opponent = Character.create(hitPoints = 20)
 
-            expectDiceRolls(diceRoller, D20 rolls 10)
-            assertThat(attacker.currentWeapon, equalTo(null))
+            expectDiceRolls(D20 rolls 10) {
+                assertThat(attacker.currentWeapon, equalTo(null))
+                val outcome = attacker.attack(opponent)
 
-            val outcome = attacker.attack(opponent, diceRoller)
-
-            assertAll(
-                { assertThat(opponent.hitPoints, equalTo(20)) },
-                { assertThat(outcome, equalTo(AttackOutcome.MISS)) }
-            )
+                assertAll(
+                    { assertThat(opponent.hitPoints, equalTo(20)) },
+                    { assertThat(outcome, equalTo(AttackOutcome.MISS)) }
+                )
+            }
         }
 
         @Test
@@ -84,15 +81,16 @@ class CharacterTest {
             val target = aCharacterWithWeapon(strMod = 1)
             val opponent = Character.create(armour = { _ -> 13 })
 
-            expectDiceRolls(diceRoller, D20 rolls 10)
+            expectDiceRolls(D20 rolls 10) {
+                val outcome = target.attack(opponent)
 
-            val outcome = target.attack(opponent, diceRoller)
+                assertThat(outcome.hasBeenHit, equalTo(false))
+                assertThat(
+                    "Hit Roll misses as d20 + str mod + prof bonus does not match AC",
+                    outcome.hitRoll, equalTo(10 + 1 + 1)
+                )
+            }
 
-            assertThat(outcome.hasBeenHit, equalTo(false))
-            assertThat(
-                "Hit Roll misses as d20 + str mod + prof bonus does not match AC",
-                outcome.hitRoll, equalTo(10 + 1 + 1)
-            )
         }
 
         @Test
@@ -101,18 +99,19 @@ class CharacterTest {
             val attacker = aCharacterWithWeapon(strMod = 1, damageDie = damageDie)
             val opponent = Character.create(armour = { _ -> 10 + 1 + 1 })
 
-            expectDiceRolls(diceRoller,
+            expectDiceRolls(
                 D20 rolls 10,
                 damageDie rolls 5
-            )
+            ) {
+                val outcome = attacker.attack(opponent)
 
-            val outcome = attacker.attack(opponent, diceRoller)
+                assertThat(outcome.hasBeenHit, equalTo(true))
+                assertThat(
+                    "Hit Roll hits as d20 + str mod + prof bonus  matches AC",
+                    outcome.hitRoll, equalTo(10 + 1 + 1)
+                )
+            }
 
-            assertThat(outcome.hasBeenHit, equalTo(true))
-            assertThat(
-                "Hit Roll hits as d20 + str mod + prof bonus  matches AC",
-                outcome.hitRoll, equalTo(10 + 1 + 1)
-            )
         }
 
         fun hitting(
@@ -164,10 +163,11 @@ class CharacterTest {
                 diceRolls.add(damageDie rolls damageRoll)
             }
 
-            expectDiceRolls(diceRoller, *diceRolls.toTypedArray())
+            expectDiceRolls(*diceRolls.toTypedArray()) {
+                val outcome = attacker.attack(opponent)
+                runTest(outcome, opponent)
+            }
 
-            val outcome = attacker.attack(opponent, diceRoller)
-            runTest(outcome, opponent)
         }
 
         @Test

@@ -57,48 +57,45 @@ class DndTest {
 
     @Test
     fun `SimpleDamageRoll for 1d6 should roll correctly`() {
-        val diceRoller = mockk<DiceRoller>()
         val simpleDamageRoll = SimpleDamageRoll(2, D6, 7)
 
-        expectDiceRolls(diceRoller,
+        expectDiceRolls(
             D6 rolls 5,
             D6 rolls 3,
-        )
+        ) {
+            val result = simpleDamageRoll.roll(false)
+            assertThat(result, equalTo(5 + 3 + 7))
+        }
 
-        val result = simpleDamageRoll.roll(diceRoller, false)
-        assertThat(result, equalTo(5 + 3 + 7))
-        verify(exactly = 2) { diceRoller.rollDie(D6) }
     }
 
     @Test
     fun `a weapon deals proper damage`() {
-        val diceRoller = mockk<DiceRoller>()
         val longsword = Weapons.LONGSWORD
         val stats = StatBlock.create(str = 16)
 
-        every { diceRoller.rollDie(D8) } returns 6
+        expectDiceRolls(D8 rolls 6) {
+            val damage = longsword.dealDamage(stats, false)
 
-        val damage = longsword.dealDamage(stats, diceRoller, false)
+            assertThat(damage, equalTo(6 + 3)) // 3 is the modifier for str 16
+        }
 
-        assertThat(damage, equalTo(6 + 3)) // 3 is the modifier for str 16
-        verify(exactly = 1) { diceRoller.rollDie(D8) }
     }
 
     @Test
     fun `a crit deals double damage`() {
-        val diceRoller = mockk<DiceRoller>()
         val longsword = Weapons.LONGSWORD
         val stats = StatBlock.create(str = 16)
 
-        expectDiceRolls(diceRoller,
+        expectDiceRolls(
             D8 rolls 4,
             D8 rolls 7,
-        )
+        ) {
+            val damage = longsword.dealDamage(stats, true)
 
-        val damage = longsword.dealDamage(stats, diceRoller, true)
+            assertThat(damage, equalTo(4 + 7 + 3)) // 3 is the modifier for str 16
+        }
 
-        assertThat(damage, equalTo(4 + 7 + 3)) // 3 is the modifier for str 16
-        verify(exactly = 2) { diceRoller.rollDie(D8) }
     }
 
     @Test

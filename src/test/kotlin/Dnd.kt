@@ -1,5 +1,7 @@
 import com.google.common.collect.ImmutableListMultimap
 import io.mockk.every
+import io.mockk.mockkObject
+import io.mockk.unmockkObject
 import org.example.*
 
 const val DEFAULT_STAT_VALUE = 10
@@ -69,15 +71,33 @@ data class DieRoll(val die: Die, val result: Int)
 infix fun Die.rolls(result: Int) = DieRoll(this, result)
 
 fun expectDiceRolls(
-    diceRoller: DiceRoller,
-    vararg expectedRolls: DieRoll
+    vararg expectedRolls: DieRoll,
+    runWithFixedDice : () -> Unit
 ) {
     val multimap = expectedRolls.fold(ImmutableListMultimap.builder<Die, Int>()) { builder, dieRoll ->
         builder.put(dieRoll.die, dieRoll.result)
     }.build()
 
-    for (die in multimap.keySet()) {
-        val results: List<Int> = multimap.get(die)
-        every { diceRoller.rollDie(die) } returnsMany results
+    val mockedDice = mutableListOf<Die>()
+    try {
+        // expect
+        for (die in multimap.keySet()) {
+            mockkObject(die)
+            val allRolls = multimap.get(die)
+            every { die.roll() } returnsMany allRolls
+            mockedDice.add(die)
+        }
+        runWithFixedDice()
+
+        // verify
+        for (die in multimap.keySet()) {
+            val allRolls = multimap.get(die)
+            io.mockk.verify(exactly = allRolls.size) { die.roll() }
+        }
+
+    } finally {
+        for (die in mockedDice) {
+            unmockkObject(die)
+        }
     }
 }
