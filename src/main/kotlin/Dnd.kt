@@ -224,9 +224,8 @@ data class Weapon(
 ) {
     companion object
 
-    fun receiveModifier(statBlock: StatBlock): Int {
-        return modifierStrategy.getModifier(statBlock).modifier
-    }
+    fun receiveModifier(statBlock: StatBlock): Int =
+        modifierStrategy.getModifier(statBlock).modifier
 
     fun dealDamage(stats: StatBlock, isCritical: Boolean): Int {
         val modifier = modifierStrategy.getModifier(stats)
