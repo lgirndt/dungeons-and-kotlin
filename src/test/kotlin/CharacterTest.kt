@@ -65,15 +65,11 @@ class CharacterTest {
             val attacker = Character.create()
             val opponent = Character.create(hitPoints = 20)
 
-            expectDiceRolls(D20 rolls 10) {
-                assertThat(attacker.currentWeapon, equalTo(null))
-                val outcome = attacker.attack(opponent)
+            assertThat(attacker.currentWeapon, equalTo(null))
+            val outcome = attacker.attack(opponent)
 
-                assertAll(
-                    { assertThat(opponent.hitPoints, equalTo(20)) },
-                    { assertThat(outcome, equalTo(AttackOutcome.MISS)) }
-                )
-            }
+            assertThat(opponent.hitPoints, equalTo(20))
+            assertThat(outcome, equalTo(AttackOutcome.MISS))
         }
 
         @Test
