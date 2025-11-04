@@ -92,7 +92,7 @@ data class Character(
     val damageModifiers: DamageModifiers = DamageModifiers.NONE,
     var currentWeapon: Weapon? = null,
     var hitPoints: Int,
-    val armour: ((StatBlock) -> Int)
+    val armour: (StatBlock) -> Int
 ) : Attackable {
     companion object
 
