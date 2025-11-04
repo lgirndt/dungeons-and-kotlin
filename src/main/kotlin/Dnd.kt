@@ -207,10 +207,9 @@ class SimpleDamageRoll(
     override fun roll(isCritical: Boolean): Int {
         var total = bonus
         val critMultiplier = if (isCritical) 2 else 1
-        repeat(numberOfDice * critMultiplier) {
-            total += die.roll()
+        return (1..(numberOfDice * critMultiplier)).fold(bonus) { total, _ ->
+            total + die.roll()
         }
-        return total
     }
 }
 
