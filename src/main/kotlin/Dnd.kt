@@ -3,9 +3,11 @@ package org.example
 import org.example.Die.Companion.D20
 
 @JvmInline
-value class Stat(val value: Int) {
+value class Stat(private val value: Int) {
     val modifier: Int
         get() = value / 2 - 5
+
+    fun toInt(): Int = value
 }
 
 data class StatBlock(
@@ -239,6 +241,6 @@ object Weapons {
 object Armours {
 
     val CHAIN_MAIL = { _: StatBlock -> 16 }
-    val LEATHER_ARMOUR = { stats: StatBlock -> 11 + stats.dex.value }
+    val LEATHER_ARMOUR = { stats: StatBlock -> 11 + stats.dex.toInt() }
 }
 

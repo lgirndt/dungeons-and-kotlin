@@ -17,12 +17,12 @@ val SOME_STAT_BOCK = StatBlock(
 )
 
 fun StatBlock.copy(
-    str: Int = this.str.value,
-    dex: Int = this.dex.value,
-    con: Int = this.con.value,
-    int: Int = this.int.value,
-    wis: Int = this.wis.value,
-    cha: Int = this.cha.value,
+    str: Int = this.str.toInt(),
+    dex: Int = this.dex.toInt(),
+    con: Int = this.con.toInt(),
+    int: Int = this.int.toInt(),
+    wis: Int = this.wis.toInt(),
+    cha: Int = this.cha.toInt(),
 ): StatBlock {
     return StatBlock(
         Stat(str),

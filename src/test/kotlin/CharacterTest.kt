@@ -32,7 +32,7 @@ class CharacterTest {
             stats = SOME_STAT_BOCK.copy(dex = 12, con = 14),
         )
         assertAll(
-            { assertThat(myCharacter.stats.dex.value, equalTo(12)) },
+            { assertThat(myCharacter.stats.dex, equalTo(Stat(12))) },
             { assertThat(myCharacter.characterClass, equalTo(Warlock)) },
         )
     }

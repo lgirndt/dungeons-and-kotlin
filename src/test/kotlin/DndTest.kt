@@ -29,12 +29,12 @@ class DndTest {
     fun `overloaded ctor should assign values correctly`() {
         val statBlocks = SOME_STAT_BOCK.copy(10, 11, 12, 13, 14, 15)
         assertAll(
-            { assertThat(statBlocks.str.value, equalTo(10)) },
-            { assertThat(statBlocks.dex.value, equalTo(11)) },
-            { assertThat(statBlocks.con.value, equalTo(12)) },
-            { assertThat(statBlocks.int.value, equalTo(13)) },
-            { assertThat(statBlocks.wis.value, equalTo(14)) },
-            { assertThat(statBlocks.cha.value, equalTo(15)) },
+            { assertThat(statBlocks.str, equalTo(Stat(10))) },
+            { assertThat(statBlocks.dex, equalTo(Stat(11))) },
+            { assertThat(statBlocks.con, equalTo(Stat(12))) },
+            { assertThat(statBlocks.int, equalTo(Stat(13))) },
+            { assertThat(statBlocks.wis, equalTo(Stat(14))) },
+            { assertThat(statBlocks.cha, equalTo(Stat(15))) },
         )
     }
 
@@ -42,8 +42,8 @@ class DndTest {
     fun `some StatBlock`() {
         val dexBlock = SOME_STAT_BOCK.copy(dex = 12)
         assertAll(
-            { assertThat(dexBlock.dex.value, equalTo(12)) },
-            { assertThat(dexBlock.str.value, equalTo(DEFAULT_STAT_VALUE)) },
+            { assertThat(dexBlock.dex, equalTo(Stat(12))) },
+            { assertThat(dexBlock.str.toInt(), equalTo(DEFAULT_STAT_VALUE)) },
         )
     }
 
