@@ -212,7 +212,7 @@ class CharacterTest {
 
     @Test
     fun `let's understand property oneline assignments`() {
-        var armour = mockk<(StatBlock) -> Int>()
+        val armour = mockk<(StatBlock) -> Int>()
         every { armour(any()) } returnsMany  listOf(15, 18)
         val character = SOME_CHARACTER.copy(armour = armour)
         assertThat(character.armourClass, equalTo(15))
@@ -225,9 +225,7 @@ class CharacterTest {
         val character = SOME_CHARACTER.copy(
             hitPoints = 20
         )
-
         character.receiveDamage(8, DamageType.Force)
-
         assertThat(character.hitPoints, equalTo(20 - 8))
     }
 
