@@ -225,7 +225,8 @@ class CharacterTest {
         val character = SOME_CHARACTER.copy(
             hitPoints = 20
         )
-        character.receiveDamage(8, DamageType.Force)
+        val damageReceived = character.receiveDamage(8, DamageType.Force)
+        assertThat(damageReceived, equalTo(8))
         assertThat(character.hitPoints, equalTo(20 - 8))
     }
 
@@ -237,7 +238,8 @@ class CharacterTest {
                 resistances = setOf(DamageType.Force)
             )
         )
-        character.receiveDamage(9, DamageType.Force)
+        val damageReceived = character.receiveDamage(9, DamageType.Force)
+        assertThat(damageReceived, equalTo(4))
         assertThat(character.hitPoints, equalTo(20 - 4)) // half damage rounded down
     }
 
@@ -249,7 +251,8 @@ class CharacterTest {
                 vulnerabilities = setOf(DamageType.Force)
             )
         )
-        character.receiveDamage(6, DamageType.Force)
+        val damageReceived = character.receiveDamage(6, DamageType.Force)
+        assertThat(damageReceived, equalTo(12))
         assertThat(character.hitPoints, equalTo(20 - 6 * 2)) // double damage
     }
 
@@ -261,7 +264,8 @@ class CharacterTest {
                 immunities = setOf(DamageType.Force)
             )
         )
-        character.receiveDamage(15, DamageType.Force)
+        val damageReceived = character.receiveDamage(15, DamageType.Force)
+        assertThat(damageReceived, equalTo(0))
         assertThat(character.hitPoints, equalTo(20)) // no damage
     }
 
