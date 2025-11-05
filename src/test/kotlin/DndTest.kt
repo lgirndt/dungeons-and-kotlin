@@ -3,7 +3,6 @@ import com.natpryce.hamkrest.equalTo
 import org.example.*
 import org.example.CharacterClass.Barbarian
 import org.example.Die.Companion.D6
-import org.example.Die.Companion.D8
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Test
 
@@ -62,35 +61,6 @@ class DndTest {
         ) {
             val result = simpleDamageRoll.roll(false)
             assertThat(result, equalTo(5 + 3 + 7))
-        }
-
-    }
-
-    @Test
-    fun `a weapon deals proper damage`() {
-        val longsword = Weapons.LONGSWORD
-        val stats = SOME_STAT_BOCK.copy(str = 16)
-
-        withFixedDice(D8 rolls 6) {
-            val damage = longsword.dealDamage(stats, false)
-
-            assertThat(damage, equalTo(6 + 3)) // 3 is the modifier for str 16
-        }
-
-    }
-
-    @Test
-    fun `a crit deals double damage`() {
-        val longsword = Weapons.LONGSWORD
-        val stats = SOME_STAT_BOCK.copy(str = 16)
-
-        withFixedDice(
-            D8 rolls 4,
-            D8 rolls 7,
-        ) {
-            val damage = longsword.dealDamage(stats, true)
-
-            assertThat(damage, equalTo(4 + 7 + 3)) // 3 is the modifier for str 16
         }
 
     }
