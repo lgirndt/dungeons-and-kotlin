@@ -107,8 +107,6 @@ inline fun withFixedDice(
         }
 
     } finally {
-        for (die in mockedDice) {
-            unmockkObject(die)
-        }
+        mockedDice.forEach { verify(exactly = 1) { it.roll() } }
     }
 }
