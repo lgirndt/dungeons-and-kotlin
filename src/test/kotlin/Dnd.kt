@@ -81,7 +81,7 @@ data class DieRoll(val die: Die, val result: Int)
 
 infix fun Die.rolls(result: Int) = DieRoll(this, result)
 
-fun withFixedDice(
+inline fun withFixedDice(
     vararg expectedRolls: DieRoll,
     runWithFixedDice : () -> Unit
 ) {

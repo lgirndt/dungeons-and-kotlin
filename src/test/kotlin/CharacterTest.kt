@@ -140,7 +140,7 @@ class CharacterTest {
             )
         }
 
-        fun hitting(
+        inline fun hitting(
             attackerStrMod: Int,
             opponentHitPoints: Int = 20,
             hitRoll: Int = 10,
