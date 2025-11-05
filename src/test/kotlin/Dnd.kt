@@ -66,6 +66,7 @@ val SOME_CHARACTER = Character(
 
 val SOME_WEAPON = Weapon(
     name = "Surgebinder",
+    category = WeaponCategory.MartialMelee,
     attackType = AttackType.Melee,
     damageType = DamageType.Slashing,
     modifierStrategy = StrengthModifierStrategy,

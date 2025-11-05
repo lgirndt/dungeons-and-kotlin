@@ -4,9 +4,16 @@ typealias WeaponModifierStrategy = (StatBlock) -> Stat
 
 internal val StrengthModifierStrategy : WeaponModifierStrategy = StatBlock::str
 
+enum class WeaponCategory {
+    SimpleMelee,
+    SimpleRanged,
+    MartialMelee,
+    MartialRanged,
+}
 
 data class Weapon(
     val name: String,
+    val category: WeaponCategory,
     val attackType: AttackType,
     val damageType: DamageType,
     private val modifierStrategy: WeaponModifierStrategy,
@@ -26,6 +33,7 @@ data class Weapon(
 object Weapons {
     val LONGSWORD = Weapon(
         name = "Longsword",
+        category = WeaponCategory.MartialMelee,
         attackType = AttackType.Melee,
         damageType = DamageType.Slashing,
         modifierStrategy = StrengthModifierStrategy,
