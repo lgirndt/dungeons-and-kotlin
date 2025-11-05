@@ -68,6 +68,21 @@ class CharacterTest {
     }
 
     @Nested
+    inner class CharacterClassTest {
+
+        @Test
+        fun `Fighter should be proficient with all weapons`() {
+            val fighter = CharacterClass.Fighter
+            fighter.isProficientWith(SOME_WEAPON.copy(category = WeaponCategory.SimpleMelee)).let {
+                assertThat(it, equalTo(true))
+            }
+            fighter.isProficientWith(SOME_WEAPON.copy(category = WeaponCategory.MartialMelee)).let {
+                assertThat(it, equalTo(true))
+            }
+        }
+    }
+
+    @Nested
     inner class AttackTest {
 
         @Test

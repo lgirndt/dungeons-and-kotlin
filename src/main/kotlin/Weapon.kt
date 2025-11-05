@@ -8,7 +8,13 @@ enum class WeaponCategory {
     SimpleMelee,
     SimpleRanged,
     MartialMelee,
-    MartialRanged,
+    MartialRanged;
+
+    companion object {
+        val ALL = entries.toSet()
+        val SIMPLE  = setOf(SimpleMelee, SimpleRanged)
+        val MARTIAL = setOf(MartialMelee, MartialRanged)
+    }
 }
 
 data class Weapon(

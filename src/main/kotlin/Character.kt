@@ -17,23 +17,34 @@ data class AttackOutcome(
     }
 }
 
+typealias WeaponProficiency = (WeaponCategory, Weapon) -> Boolean
+
+internal object WeaponProficiencies {
+    val all : WeaponProficiency = { _ , _ -> true }
+    val simple : WeaponProficiency = { category, _ -> category in WeaponCategory.SIMPLE }
+    val none : WeaponProficiency = { _, _ -> false }
+}
+
 sealed class CharacterClass(
-    val hitDie: Die
+    val hitDie: Die,
+    val weaponProficiency: WeaponProficiency = WeaponProficiencies.none
 ) {
     val name: String
         get() = this::class.simpleName!!
 
-    data object Fighter : CharacterClass(Die.D10)
-    data object Cleric : CharacterClass(Die.D8)
-    data object Druid : CharacterClass(Die.D8)
-    data object Barbarian : CharacterClass(Die.D12)
+    fun isProficientWith(weapon: Weapon): Boolean = weaponProficiency(weapon.category, weapon)
+
+    data object Fighter : CharacterClass(Die.D10, WeaponProficiencies.all)
+    data object Cleric : CharacterClass(Die.D8, WeaponProficiencies.simple)
+    data object Druid : CharacterClass(Die.D8, WeaponProficiencies.simple)
+    data object Barbarian : CharacterClass(Die.D12, WeaponProficiencies.all)
     data object Paladin : CharacterClass(Die.D10)
     data object Ranger : CharacterClass(Die.D10)
     data object Rogue : CharacterClass(Die.D8)
     data object Warlock : CharacterClass(Die.D8)
     data object Monk : CharacterClass(Die.D8)
     data object Sorcerer : CharacterClass(Die.D6)
-    data object Bard : CharacterClass(Die.D8)
+    data object Bard : CharacterClass(Die.D8, WeaponProficiencies.simple)
     data object Wizard : CharacterClass(Die.D8)
 }
 
