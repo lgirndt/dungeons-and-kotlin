@@ -4,6 +4,7 @@ import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.example.*
+import org.example.CharacterClass.Barbarian
 import org.example.CharacterClass.Warlock
 import org.example.Die.Companion.D10
 import org.example.Die.Companion.D20
@@ -220,6 +221,12 @@ class CharacterTest {
     }
 
     @Test
+    fun `CharacterClasses have the proper name`() {
+        assertThat(Barbarian.name, equalTo("Barbarian"))
+    }
+
+
+    @Test
     fun `a character can equip a weapon`() {
         val character = SOME_CHARACTER.copy()
         assertThat(character.currentWeapon, equalTo(null))
@@ -234,6 +241,54 @@ class CharacterTest {
         val character = SOME_CHARACTER.copy(armour = armour)
         assertThat(character.armourClass, equalTo(15))
         assertThat(character.armourClass, equalTo(18))
+    }
+
+
+    @Test
+    fun `a character receives normal damage`() {
+        val character = SOME_CHARACTER.copy(
+            hitPoints = 20
+        )
+
+        character.receiveDamage(8, DamageType.Force)
+
+        assertThat(character.hitPoints, equalTo(20 - 8))
+    }
+
+    @Test
+    fun `a character receives half damage from resistance`() {
+        val character = SOME_CHARACTER.copy(
+            hitPoints = 20,
+            damageModifiers = DamageModifiers(
+                resistances = setOf(DamageType.Force)
+            )
+        )
+        character.receiveDamage(9, DamageType.Force)
+        assertThat(character.hitPoints, equalTo(20 - 4)) // half damage rounded down
+    }
+
+    @Test
+    fun `a character receives double damage from vulnerability`() {
+        val character = SOME_CHARACTER.copy(
+            hitPoints = 20,
+            damageModifiers = DamageModifiers(
+                vulnerabilities = setOf(DamageType.Force)
+            )
+        )
+        character.receiveDamage(6, DamageType.Force)
+        assertThat(character.hitPoints, equalTo(20 - 6 * 2)) // double damage
+    }
+
+    @Test
+    fun `a character receives no damage from immunity`() {
+        val character = SOME_CHARACTER.copy(
+            hitPoints = 20,
+            damageModifiers = DamageModifiers(
+                immunities = setOf(DamageType.Force)
+            )
+        )
+        character.receiveDamage(15, DamageType.Force)
+        assertThat(character.hitPoints, equalTo(20)) // no damage
     }
 
 }

@@ -47,11 +47,6 @@ class DndTest {
     }
 
     @Test
-    fun `CharacterClasses have the proper name`() {
-        assertThat(Barbarian.name, equalTo("Barbarian"))
-    }
-
-    @Test
     fun `SimpleDamageRoll for 1d6 should roll correctly`() {
         val simpleDamageRoll = SimpleDamageRoll(2, D6, 7)
 
@@ -65,51 +60,5 @@ class DndTest {
 
     }
 
-    @Test
-    fun `a character receives normal damage`() {
-        val character = SOME_CHARACTER.copy(
-            hitPoints = 20
-        )
-
-        character.receiveDamage(8, DamageType.Force)
-
-        assertThat(character.hitPoints, equalTo(20 - 8))
-    }
-
-    @Test
-    fun `a character receives half damage from resistance`() {
-        val character = SOME_CHARACTER.copy(
-            hitPoints = 20,
-            damageModifiers = DamageModifiers(
-                resistances = setOf(DamageType.Force)
-            )
-        )
-        character.receiveDamage(9, DamageType.Force)
-        assertThat(character.hitPoints, equalTo(20 - 4)) // half damage rounded down
-    }
-
-    @Test
-    fun `a character receives double damage from vulnerability`() {
-        val character = SOME_CHARACTER.copy(
-            hitPoints = 20,
-            damageModifiers = DamageModifiers(
-                vulnerabilities = setOf(DamageType.Force)
-            )
-        )
-        character.receiveDamage(6, DamageType.Force)
-        assertThat(character.hitPoints, equalTo(20 - 6 * 2)) // double damage
-    }
-
-    @Test
-    fun `a character receives no damage from immunity`() {
-        val character = SOME_CHARACTER.copy(
-            hitPoints = 20,
-            damageModifiers = DamageModifiers(
-                immunities = setOf(DamageType.Force)
-            )
-        )
-        character.receiveDamage(15, DamageType.Force)
-        assertThat(character.hitPoints, equalTo(20)) // no damage
-    }
 }
 
