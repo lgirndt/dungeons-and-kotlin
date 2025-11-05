@@ -16,6 +16,23 @@ import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
 
+fun aCharacterWithWeapon(
+    strMod: Int = 10,
+    damageDie: Die = D8,
+    damageType: DamageType = DamageType.Slashing
+): Character {
+    val char = SOME_CHARACTER.copy(
+        stats = StatBlock.fromModifiers(strMod = strMod)
+    )
+    char.equip(
+        SOME_WEAPON.copy(
+            damageRoll = SimpleDamageRoll(1, damageDie),
+            damageType = damageType
+        )
+    )
+    return char
+}
+
 @ExtendWith(MockKExtension::class)
 class CharacterTest {
 
@@ -52,23 +69,6 @@ class CharacterTest {
 
     @Nested
     inner class AttackTest {
-
-        fun aCharacterWithWeapon(
-            strMod: Int = 10,
-            damageDie: Die = D8,
-            damageType: DamageType = DamageType.Slashing
-        ): Character {
-            val char = SOME_CHARACTER.copy(
-                stats = StatBlock.fromModifiers(strMod = strMod)
-            )
-            char.equip(
-                SOME_WEAPON.copy(
-                    damageRoll = SimpleDamageRoll(1, damageDie),
-                    damageType = damageType
-                )
-            )
-            return char
-        }
 
         @Test
         fun `an attacker without a weapon cannot not attack`() {
