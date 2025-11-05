@@ -12,8 +12,6 @@ data class Weapon(
     private val modifierStrategy: WeaponModifierStrategy,
     private val damageRoll: DamageRoll
 ) {
-    companion object
-
     fun receiveModifier(statBlock: StatBlock): Int =
         modifierStrategy(statBlock).modifier
 
