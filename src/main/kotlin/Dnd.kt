@@ -1,7 +1,6 @@
 package org.example
 
 import org.example.Die.Companion.D20
-import kotlin.math.max
 
 @JvmInline
 value class Stat(val value: Int) {
