@@ -58,7 +58,7 @@ class CharacterTest {
             damageType: DamageType = DamageType.Slashing
         ): Character {
             val char = SOME_CHARACTER.copy(
-                stats = StatBlock.createWithModifiers(strMod = strMod)
+                stats = StatBlock.fromModifiers(strMod = strMod)
             )
             char.equip(
                 SOME_WEAPON.copy(
@@ -73,8 +73,7 @@ class CharacterTest {
         fun `an attacker without a weapon cannot not attack`() {
             val attacker = SOME_CHARACTER.copy()
             val opponent = SOME_CHARACTER.copy(hitPoints = 20)
-
-            assertThat(attacker.currentWeapon, equalTo(null))
+ assertThat(attacker.currentWeapon, equalTo(null))
             val outcome = attacker.attack(opponent)
 
             assertThat(opponent.hitPoints, equalTo(20))

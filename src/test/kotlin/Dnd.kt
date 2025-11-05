@@ -33,7 +33,7 @@ fun StatBlock.copyByInts(
     )
 }
 
-fun StatBlock.Companion.createWithModifiers(
+fun StatBlock.Companion.fromModifiers(
     strMod: Int = 0,
     dexMod: Int = 0,
     conMod: Int = 0,
