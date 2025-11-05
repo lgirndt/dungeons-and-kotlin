@@ -119,27 +119,7 @@ class CharacterTest {
 
         }
 
-        fun hitting(
-            attackerStrMod: Int,
-            opponentHitPoints: Int = 20,
-            hitRoll: Int = 10,
-            damageRoll: Int,
-            damageType: DamageType = DamageType.Slashing,
-            opponentVulnerableTo: DamageType? = null,
-            runTest: (outcome: AttackOutcome, opponent: Character) -> Unit
-        ) {
-            hitting(
-                attackerStrMod,
-                opponentHitPoints,
-                hitRoll,
-                listOf(damageRoll),
-                damageType,
-                opponentVulnerableTo,
-                runTest
-            )
-        }
-
-        inline fun hitting(
+        private inline fun hitting(
             attackerStrMod: Int,
             opponentHitPoints: Int = 20,
             hitRoll: Int = 10,
@@ -177,7 +157,7 @@ class CharacterTest {
 
         @Test
         fun `a hit does normal damage`() {
-            hitting(attackerStrMod = 1, damageRoll = 5) { outcome, _ ->
+            hitting(attackerStrMod = 1, damageRolls = listOf(5)) { outcome, _ ->
                 assertThat(outcome.damageDealt, equalTo(5 + 1))
             }
         }
@@ -198,7 +178,7 @@ class CharacterTest {
             hitting(
                 attackerStrMod = 2,
                 opponentHitPoints = 30,
-                damageRoll = 6
+                damageRolls = listOf(6)
             ) { _, opponent ->
                 assertThat(opponent.hitPoints, equalTo(30 - 6 - 2))
             }
