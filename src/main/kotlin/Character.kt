@@ -55,12 +55,12 @@ data class Character(
         this.currentWeapon = weapon
     }
 
-    fun attack(opponent: Attackable): AttackOutcome {
+    fun attack(opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
         // to hit
         val currentWeapon = this.currentWeapon ?: return AttackOutcome.MISS
         val modifier = currentWeapon.receiveModifier(stats)
 
-        val hitRollD20 = D20.roll()
+        val hitRollD20 = rollModifier.roll(D20)
         val proficiencyModifier = if (isProficientWith(currentWeapon)) proficiencyBonus else 0
         val hitRoll = hitRollD20 + modifier + proficiencyModifier
 

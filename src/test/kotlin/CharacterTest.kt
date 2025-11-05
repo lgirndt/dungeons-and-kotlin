@@ -194,6 +194,142 @@ class CharacterTest {
             }
         }
 
+        @Test
+        fun `attacking with NORMAL modifier uses single die roll`() {
+            val damageDie = D8
+            val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 })
+
+            withFixedDice(
+                D20 rolls 10,
+                damageDie rolls 6
+            ) {
+                val outcome = attacker.attack(opponent, RollModifier.NORMAL)
+
+                assertThat(outcome.hasBeenHit, equalTo(true))
+                assertThat(
+                    "Hit roll uses single d20 roll",
+                    outcome.hitRoll, equalTo(10 + 2 + 1) // d20 + str mod + prof bonus
+                )
+                assertThat(outcome.damageDealt, equalTo(6 + 2)) // damage roll + str mod
+            }
+        }
+
+        @Test
+        fun `attacking with ADVANTAGE uses higher of two rolls to hit`() {
+            val damageDie = D8
+            val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 })
+
+            withFixedDice(
+                D20 rolls 8,
+                D20 rolls 15,  // higher roll should be used
+                damageDie rolls 6
+            ) {
+                val outcome = attacker.attack(opponent, RollModifier.ADVANTAGE)
+
+                assertThat(outcome.hasBeenHit, equalTo(true))
+                assertThat(
+                    "Hit roll uses higher of two d20 rolls",
+                    outcome.hitRoll, equalTo(15 + 2 + 1) // max(8, 15) + str mod + prof bonus
+                )
+                assertThat(outcome.damageDealt, equalTo(6 + 2))
+            }
+        }
+
+        @Test
+        fun `attacking with DISADVANTAGE uses lower of two rolls to hit`() {
+            val damageDie = D8
+            val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 })
+
+            withFixedDice(
+                D20 rolls 15,
+                D20 rolls 8,  // lower roll should be used
+                damageDie rolls 6
+            ) {
+                val outcome = attacker.attack(opponent, RollModifier.DISADVANTAGE)
+
+                assertThat(outcome.hasBeenHit, equalTo(true))
+                assertThat(
+                    "Hit roll uses lower of two d20 rolls",
+                    outcome.hitRoll, equalTo(8 + 2 + 1) // min(15, 8) + str mod + prof bonus
+                )
+                assertThat(outcome.damageDealt, equalTo(6 + 2))
+            }
+        }
+
+        @Test
+        fun `attacking with ADVANTAGE can turn a miss into a hit`() {
+            val attacker = aCharacterWithWeapon(strMod = 1)
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 15 })
+
+            withFixedDice(
+                D20 rolls 5,  // would miss: 5 + 1 + 1 = 7 < 15
+                D20 rolls 13, // hits: 13 + 1 + 1 = 15
+                D8 rolls 4
+            ) {
+                val outcome = attacker.attack(opponent, RollModifier.ADVANTAGE)
+
+                assertThat(outcome.hasBeenHit, equalTo(true))
+                assertThat(outcome.hitRoll, equalTo(13 + 1 + 1))
+            }
+        }
+
+        @Test
+        fun `attacking with DISADVANTAGE can turn a hit into a miss`() {
+            val attacker = aCharacterWithWeapon(strMod = 1)
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 15 })
+
+            withFixedDice(
+                D20 rolls 13, // would hit: 13 + 1 + 1 = 15
+                D20 rolls 5   // misses: 5 + 1 + 1 = 7 < 15
+            ) {
+                val outcome = attacker.attack(opponent, RollModifier.DISADVANTAGE)
+
+                assertThat(outcome.hasBeenHit, equalTo(false))
+                assertThat(outcome.hitRoll, equalTo(5 + 1 + 1))
+            }
+        }
+
+        @Test
+        fun `critical hit works with ADVANTAGE when either roll is 20`() {
+            val damageDie = D8
+            val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 })
+
+            withFixedDice(
+                D20 rolls 12,
+                D20 rolls 20,  // critical hit
+                damageDie rolls 5,
+                damageDie rolls 7   // second damage roll for crit
+            ) {
+                val outcome = attacker.attack(opponent, RollModifier.ADVANTAGE)
+
+                assertThat(outcome.hasBeenHit, equalTo(true))
+                assertThat(outcome.damageDealt, equalTo(5 + 7 + 2)) // double dice + str mod
+            }
+        }
+
+        @Test
+        fun `critical hit works with DISADVANTAGE when higher roll is 20`() {
+            val damageDie = D8
+            val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 })
+
+            withFixedDice(
+                D20 rolls 20,  // this is the max, so it's used even with disadvantage
+                D20 rolls 20,  // both are 20, so critical hit triggers
+                damageDie rolls 5,
+                damageDie rolls 7   // second damage roll for crit
+            ) {
+                val outcome = attacker.attack(opponent, RollModifier.DISADVANTAGE)
+
+                assertThat(outcome.hasBeenHit, equalTo(true))
+                assertThat(outcome.damageDealt, equalTo(5 + 7 + 2)) // double dice + str mod
+            }
+        }
+
     }
 
     @Test

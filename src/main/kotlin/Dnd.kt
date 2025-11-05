@@ -50,7 +50,19 @@ data class DamageModifiers(
     }
 }
 
+enum class RollModifier {
+    ADVANTAGE,
+    DISADVANTAGE,
+    NORMAL;
 
+    fun roll(die: Die): Int {
+        return when (this) {
+            ADVANTAGE -> maxOf(die.roll(), die.roll())
+            DISADVANTAGE -> minOf(die.roll(), die.roll())
+            NORMAL -> die.roll()
+        }
+    }
+}
 
 class Die private constructor(val numberOfFaces: Int) {
 
