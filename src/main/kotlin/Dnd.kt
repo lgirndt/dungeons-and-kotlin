@@ -96,11 +96,9 @@ data class Character(
 ) : Attackable {
     companion object
 
-    val proficiencyBonus: Int
-        get() = 1 + (level - 1) / 4
+    val proficiencyBonus: Int get() = 1 + (level - 1) / 4
 
-    override val armourClass: Int
-        get() = armour(stats)
+    override val armourClass: Int get() = armour(stats)
 
     fun equip(weapon: Weapon) {
         this.currentWeapon = weapon

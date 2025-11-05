@@ -1,6 +1,9 @@
+import com.natpryce.hamkrest.anyElement
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import io.mockk.every
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import org.example.*
 import org.example.CharacterClass.Warlock
 import org.example.Die.Companion.D10
@@ -224,6 +227,15 @@ class CharacterTest {
         assertThat(character.currentWeapon, equalTo(null))
         character.equip(Weapons.LONGSWORD)
         assertThat(character.currentWeapon, equalTo(Weapons.LONGSWORD))
+    }
+
+    @Test
+    fun `let's understand property oneline assignments`() {
+        var armour = mockk<(StatBlock) -> Int>()
+        every { armour(any()) } returnsMany  listOf(15, 18)
+        val character = SOME_CHARACTER.copy(armour = armour)
+        assertThat(character.armourClass, equalTo(15))
+        assertThat(character.armourClass, equalTo(18))
     }
 
 }
