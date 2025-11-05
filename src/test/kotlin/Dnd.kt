@@ -61,7 +61,7 @@ val SOME_CHARACTER = Character(
     damageModifiers = DamageModifiers.NONE,
     currentWeapon = null,
     hitPoints = 10,
-    armour =  { 10 },
+    armour = { 10 },
 )
 
 val SOME_WEAPON = Weapon(
@@ -84,29 +84,27 @@ infix fun Die.rolls(result: Int) = DieRoll(this, result)
 
 inline fun withFixedDice(
     vararg expectedRolls: DieRoll,
-    runWithFixedDice : () -> Unit
+    runWithFixedDice: () -> Unit
 ) {
     val multimap = ImmutableListMultimap.builder<Die, Int>().apply {
         expectedRolls.forEach { put(it.die, it.result) }
     }.build()
 
-    val mockedDice = mutableListOf<Die>()
-    try {
-        // expect
-        multimap.asMap().forEach { (die, allRolls) ->
-            mockkObject(die)
-            every { die.roll() } returnsMany allRolls.toList()
-            mockedDice.add(die)
+    val mockedDice = multimap.asMap().map { (die, allRolls) ->
+        die.also {
+            mockkObject(it)
+            every { it.roll() } returnsMany allRolls.toList()
         }
+    }
 
+    try {
         runWithFixedDice()
-
+    } finally {
         // verify
         multimap.asMap().forEach { (die, allRolls) ->
             verify(exactly = allRolls.size) { die.roll() }
         }
 
-    } finally {
         mockedDice.forEach { unmockkObject(it) }
     }
 }
