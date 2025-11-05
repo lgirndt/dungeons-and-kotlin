@@ -136,17 +136,13 @@ class CharacterTest {
             )
             val opponent = SOME_CHARACTER.copy(
                 hitPoints = opponentHitPoints,
-                armour = { _ -> 10 },
+                armour = { 10 },
                 damageModifiers = SOME_DAMAGE_MODIFIERS.copy(
                     vulnerabilities = if (opponentVulnerableTo != null) setOf(opponentVulnerableTo) else emptySet()
                 )
             )
 
-            val diceRolls = mutableListOf<DieRoll>()
-            diceRolls.add(D20 rolls hitRoll)
-            damageRolls.forEach { damageRoll ->
-                diceRolls.add(damageDie rolls damageRoll)
-            }
+            val diceRolls =  listOf(D20 rolls hitRoll) + damageRolls.map { damageDie rolls it }
 
             withFixedDice(*diceRolls.toTypedArray()) {
                 val outcome = attacker.attack(opponent)
