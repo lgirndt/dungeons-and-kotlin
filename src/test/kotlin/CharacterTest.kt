@@ -1,6 +1,9 @@
+import com.natpryce.hamkrest.anyElement
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import io.mockk.every
 import io.mockk.junit5.MockKExtension
+import io.mockk.mockk
 import org.example.*
 import org.example.CharacterClass.Warlock
 import org.example.Die.Companion.D10
@@ -10,20 +13,22 @@ import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
+import org.junit.jupiter.params.ParameterizedTest
+import org.junit.jupiter.params.provider.CsvSource
 
 class CharacterTest {
 
     @Test
     fun `creating a Warlock should have the proper characterClass`() {
-        val warlock = Character.create(characterClass = Warlock)
+        val warlock = SOME_CHARACTER.copy(characterClass = Warlock)
         assertThat(warlock.characterClass, equalTo(Warlock))
     }
 
     @Test
     fun `a character with custom stats and class`() {
-        val myCharacter = Character.create(
+        val myCharacter = SOME_CHARACTER.copy(
             characterClass = Warlock,
-            stats = StatBlock.create(dex = 12, con = 14),
+            stats = SOME_STAT_BOCK.copy(dex = 12, con = 14),
         )
         assertAll(
             { assertThat(myCharacter.stats.dex.value, equalTo(12)) },
@@ -31,16 +36,17 @@ class CharacterTest {
         )
     }
 
-    @Test
-    fun `proficiency bonus at various levels should be correct`() {
-        assertAll(
-            { assertThat(Character.create(level = 1).proficiencyBonus, equalTo(1)) },
-            { assertThat(Character.create(level = 2).proficiencyBonus, equalTo(1)) },
-            { assertThat(Character.create(level = 4).proficiencyBonus, equalTo(1)) },
-            { assertThat(Character.create(level = 5).proficiencyBonus, equalTo(2)) },
-            { assertThat(Character.create(level = 8).proficiencyBonus, equalTo(2)) },
-            { assertThat(Character.create(level = 9).proficiencyBonus, equalTo(3)) },
-        )
+    @ParameterizedTest
+    @CsvSource(
+        "1, 1",
+        "2, 1",
+        "4, 1",
+        "5, 2",
+        "8, 2",
+        "9, 3"
+    )
+    fun `proficiency bonus at various levels should be correct`(level: Int, expectedBonus: Int) {
+        assertThat(SOME_CHARACTER.copy(level = level).proficiencyBonus, equalTo(expectedBonus))
     }
 
     @Nested
@@ -48,20 +54,25 @@ class CharacterTest {
 
         fun aCharacterWithWeapon(
             strMod: Int = 10,
-            damageDie : Die = D8,
+            damageDie: Die = D8,
             damageType: DamageType = DamageType.Slashing
         ): Character {
-            val char = Character.create(
+            val char = SOME_CHARACTER.copy(
                 stats = StatBlock.createWithModifiers(strMod = strMod)
             )
-            char.equip(Weapon.create(damageDie = damageDie, damageType = damageType))
+            char.equip(
+                SOME_WEAPON.copy(
+                    damageRoll = SimpleDamageRoll(1, damageDie),
+                    damageType = damageType
+                )
+            )
             return char
         }
 
         @Test
         fun `an attacker without a weapon cannot not attack`() {
-            val attacker = Character.create()
-            val opponent = Character.create(hitPoints = 20)
+            val attacker = SOME_CHARACTER.copy()
+            val opponent = SOME_CHARACTER.copy(hitPoints = 20)
 
             assertThat(attacker.currentWeapon, equalTo(null))
             val outcome = attacker.attack(opponent)
@@ -73,7 +84,7 @@ class CharacterTest {
         @Test
         fun `an attacker who does not meet AC misses the attack`() {
             val target = aCharacterWithWeapon(strMod = 1)
-            val opponent = Character.create(armour = { _ -> 13 })
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 13 })
 
             withFixedDice(D20 rolls 10) {
                 val outcome = target.attack(opponent)
@@ -91,7 +102,7 @@ class CharacterTest {
         fun `an attacker who meets AC hits the attack`() {
             val damageDie = D8
             val attacker = aCharacterWithWeapon(strMod = 1, damageDie = damageDie)
-            val opponent = Character.create(armour = { _ -> 10 + 1 + 1 })
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 + 1 + 1 })
 
             withFixedDice(
                 D20 rolls 10,
@@ -110,43 +121,43 @@ class CharacterTest {
 
         fun hitting(
             attackerStrMod: Int,
-            opponentHitPoints : Int = 20,
-            hitRoll : Int = 10,
+            opponentHitPoints: Int = 20,
+            hitRoll: Int = 10,
             damageRoll: Int,
             damageType: DamageType = DamageType.Slashing,
             opponentVulnerableTo: DamageType? = null,
-            runTest: (outcome: AttackOutcome, opponent: Character)->Unit
+            runTest: (outcome: AttackOutcome, opponent: Character) -> Unit
         ) {
-           hitting(
-               attackerStrMod,
-               opponentHitPoints,
-               hitRoll,
-               listOf(damageRoll),
-               damageType,
-               opponentVulnerableTo,
-               runTest
-           )
+            hitting(
+                attackerStrMod,
+                opponentHitPoints,
+                hitRoll,
+                listOf(damageRoll),
+                damageType,
+                opponentVulnerableTo,
+                runTest
+            )
         }
 
         fun hitting(
             attackerStrMod: Int,
-            opponentHitPoints : Int = 20,
-            hitRoll : Int = 10,
+            opponentHitPoints: Int = 20,
+            hitRoll: Int = 10,
             damageRolls: List<Int>,
             damageType: DamageType = DamageType.Slashing,
             opponentVulnerableTo: DamageType? = null,
-            runTest: (outcome: AttackOutcome, opponent: Character)->Unit
+            runTest: (outcome: AttackOutcome, opponent: Character) -> Unit
         ) {
-            val damageDie  = D10
+            val damageDie = D10
             val attacker = aCharacterWithWeapon(
                 strMod = attackerStrMod,
                 damageType = damageType,
                 damageDie = damageDie
             )
-            val opponent = Character.create(
+            val opponent = SOME_CHARACTER.copy(
                 hitPoints = opponentHitPoints,
                 armour = { _ -> 10 },
-                damageModifiers = DamageModifiers.create(
+                damageModifiers = SOME_DAMAGE_MODIFIERS.copy(
                     vulnerabilities = if (opponentVulnerableTo != null) setOf(opponentVulnerableTo) else emptySet()
                 )
             )
@@ -166,8 +177,7 @@ class CharacterTest {
 
         @Test
         fun `a hit does normal damage`() {
-            hitting(attackerStrMod = 1, damageRoll = 5) {
-                outcome, _ ->
+            hitting(attackerStrMod = 1, damageRoll = 5) { outcome, _ ->
                 assertThat(outcome.damageDealt, equalTo(5 + 1))
             }
         }
@@ -177,8 +187,8 @@ class CharacterTest {
             hitting(
                 attackerStrMod = 1,
                 hitRoll = 20,
-                damageRolls = listOf(5, 8)) {
-                outcome, _ ->
+                damageRolls = listOf(5, 8)
+            ) { outcome, _ ->
                 assertThat(outcome.damageDealt, equalTo(5 + 8 + 1))
             }
         }
@@ -188,8 +198,8 @@ class CharacterTest {
             hitting(
                 attackerStrMod = 2,
                 opponentHitPoints = 30,
-                damageRoll = 6) {
-                _, opponent ->
+                damageRoll = 6
+            ) { _, opponent ->
                 assertThat(opponent.hitPoints, equalTo(30 - 6 - 2))
             }
         }
@@ -203,8 +213,7 @@ class CharacterTest {
                 damageRolls = listOf(8, 9),
                 damageType = DamageType.Slashing,
                 opponentVulnerableTo = DamageType.Slashing
-            ) {
-                _, opponent ->
+            ) { _, opponent ->
                 assertThat(opponent.hitPoints, equalTo(0))
             }
         }
@@ -213,10 +222,19 @@ class CharacterTest {
 
     @Test
     fun `a character can equip a weapon`() {
-        val character = Character.create()
+        val character = SOME_CHARACTER.copy()
         assertThat(character.currentWeapon, equalTo(null))
         character.equip(Weapons.LONGSWORD)
         assertThat(character.currentWeapon, equalTo(Weapons.LONGSWORD))
+    }
+
+    @Test
+    fun `let's understand property oneline assignments`() {
+        var armour = mockk<(StatBlock) -> Int>()
+        every { armour(any()) } returnsMany  listOf(15, 18)
+        val character = SOME_CHARACTER.copy(armour = armour)
+        assertThat(character.armourClass, equalTo(15))
+        assertThat(character.armourClass, equalTo(18))
     }
 
 }

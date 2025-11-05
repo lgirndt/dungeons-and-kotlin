@@ -27,7 +27,7 @@ class DndTest {
 
     @Test
     fun `overloaded ctor should assign values correctly`() {
-        val statBlocks = StatBlock(10, 11, 12, 13, 14, 15)
+        val statBlocks = SOME_STAT_BOCK.copy(10, 11, 12, 13, 14, 15)
         assertAll(
             { assertThat(statBlocks.str.value, equalTo(10)) },
             { assertThat(statBlocks.dex.value, equalTo(11)) },
@@ -40,7 +40,7 @@ class DndTest {
 
     @Test
     fun `some StatBlock`() {
-        val dexBlock = StatBlock.create(dex = 12)
+        val dexBlock = SOME_STAT_BOCK.copy(dex = 12)
         assertAll(
             { assertThat(dexBlock.dex.value, equalTo(12)) },
             { assertThat(dexBlock.str.value, equalTo(DEFAULT_STAT_VALUE)) },
@@ -69,7 +69,7 @@ class DndTest {
     @Test
     fun `a weapon deals proper damage`() {
         val longsword = Weapons.LONGSWORD
-        val stats = StatBlock.create(str = 16)
+        val stats = SOME_STAT_BOCK.copy(str = 16)
 
         withFixedDice(D8 rolls 6) {
             val damage = longsword.dealDamage(stats, false)
@@ -82,7 +82,7 @@ class DndTest {
     @Test
     fun `a crit deals double damage`() {
         val longsword = Weapons.LONGSWORD
-        val stats = StatBlock.create(str = 16)
+        val stats = SOME_STAT_BOCK.copy(str = 16)
 
         withFixedDice(
             D8 rolls 4,
@@ -97,7 +97,7 @@ class DndTest {
 
     @Test
     fun `a character receives normal damage`() {
-        val character = Character.create(
+        val character = SOME_CHARACTER.copy(
             hitPoints = 20
         )
 
@@ -108,7 +108,7 @@ class DndTest {
 
     @Test
     fun `a character receives half damage from resistance`() {
-        val character = Character.create(
+        val character = SOME_CHARACTER.copy(
             hitPoints = 20,
             damageModifiers = DamageModifiers(
                 resistances = setOf(DamageType.Force)
@@ -120,7 +120,7 @@ class DndTest {
 
     @Test
     fun `a character receives double damage from vulnerability`() {
-        val character = Character.create(
+        val character = SOME_CHARACTER.copy(
             hitPoints = 20,
             damageModifiers = DamageModifiers(
                 vulnerabilities = setOf(DamageType.Force)
@@ -132,7 +132,7 @@ class DndTest {
 
     @Test
     fun `a character receives no damage from immunity`() {
-        val character = Character.create(
+        val character = SOME_CHARACTER.copy(
             hitPoints = 20,
             damageModifiers = DamageModifiers(
                 immunities = setOf(DamageType.Force)
