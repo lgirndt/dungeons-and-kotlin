@@ -2,7 +2,9 @@ import com.google.common.collect.ImmutableListMultimap
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
+import io.mockk.verify
 import org.example.*
+import org.junit.jupiter.api.assertNotNull
 
 const val DEFAULT_STAT_VALUE = 10
 
@@ -91,18 +93,17 @@ inline fun withFixedDice(
     val mockedDice = mutableListOf<Die>()
     try {
         // expect
-        for (die in multimap.keySet()) {
+        multimap.asMap().forEach { (die, allRolls) ->
             mockkObject(die)
-            val allRolls = multimap.get(die)
-            every { die.roll() } returnsMany allRolls
+            every { die.roll() } returnsMany allRolls.toList()
             mockedDice.add(die)
         }
+
         runWithFixedDice()
 
         // verify
-        for (die in multimap.keySet()) {
-            val allRolls = multimap.get(die)
-            io.mockk.verify(exactly = allRolls.size) { die.roll() }
+        multimap.asMap().forEach { (die, allRolls) ->
+            verify(exactly = allRolls.size) { die.roll() }
         }
 
     } finally {
