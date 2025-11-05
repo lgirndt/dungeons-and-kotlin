@@ -2,8 +2,10 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.example.*
 import org.example.CharacterClass.Barbarian
+import org.example.Die.Companion.D20
 import org.example.Die.Companion.D6
 import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 
@@ -58,6 +60,84 @@ class DndTest {
             assertThat(result, equalTo(5 + 3 + 7))
         }
 
+    }
+
+    @Nested
+    inner class RollModifierTest {
+
+        @Test
+        fun `NORMAL returns a single die roll`() {
+            withFixedDice(D20 rolls 15) {
+                val result = RollModifier.NORMAL.roll(D20)
+                assertThat(result, equalTo(15))
+            }
+        }
+
+        @Test
+        fun `ADVANTAGE returns the higher of two rolls`() {
+            withFixedDice(
+                D20 rolls 8,
+                D20 rolls 17
+            ) {
+                val result = RollModifier.ADVANTAGE.roll(D20)
+                assertThat(result, equalTo(17))
+            }
+        }
+
+        @Test
+        fun `ADVANTAGE when first roll is higher`() {
+            withFixedDice(
+                D20 rolls 19,
+                D20 rolls 12
+            ) {
+                val result = RollModifier.ADVANTAGE.roll(D20)
+                assertThat(result, equalTo(19))
+            }
+        }
+
+        @Test
+        fun `ADVANTAGE when both rolls are equal`() {
+            withFixedDice(
+                D20 rolls 10,
+                D20 rolls 10
+            ) {
+                val result = RollModifier.ADVANTAGE.roll(D20)
+                assertThat(result, equalTo(10))
+            }
+        }
+
+        @Test
+        fun `DISADVANTAGE returns the lower of two rolls`() {
+            withFixedDice(
+                D20 rolls 8,
+                D20 rolls 17
+            ) {
+                val result = RollModifier.DISADVANTAGE.roll(D20)
+                assertThat(result, equalTo(8))
+            }
+        }
+
+        @Test
+        fun `DISADVANTAGE when second roll is lower`() {
+            withFixedDice(
+                D20 rolls 15,
+                D20 rolls 3
+            ) {
+                val result = RollModifier.DISADVANTAGE.roll(D20)
+                assertThat(result, equalTo(3))
+            }
+        }
+
+        @Test
+        fun `DISADVANTAGE when both rolls are equal`() {
+            withFixedDice(
+                D20 rolls 14,
+                D20 rolls 14
+            ) {
+                val result = RollModifier.DISADVANTAGE.roll(D20)
+                assertThat(result, equalTo(14))
+            }
+        }
     }
 
 }
