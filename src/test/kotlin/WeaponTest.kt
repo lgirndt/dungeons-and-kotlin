@@ -1,7 +1,6 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.example.Die.Companion.D8
-import org.example.SimpleDamageRoll
 import org.example.Weapons
 import org.junit.jupiter.api.Test
 
@@ -11,7 +10,7 @@ class WeaponTest {
     @Test
     fun `a weapon deals proper damage`() {
         val longsword = Weapons.LONGSWORD
-        val stats = SOME_STAT_BOCK.copy(str = 16)
+        val stats = SOME_STAT_BOCK.copyByInts(str = 16)
 
         withFixedDice(D8 rolls 6) {
             val damage = longsword.dealDamage(stats, false)
@@ -24,7 +23,7 @@ class WeaponTest {
     @Test
     fun `a crit deals double damage`() {
         val longsword = Weapons.LONGSWORD
-        val stats = SOME_STAT_BOCK.copy(str = 16)
+        val stats = SOME_STAT_BOCK.copyByInts(str = 16)
 
         withFixedDice(
             D8 rolls 4,

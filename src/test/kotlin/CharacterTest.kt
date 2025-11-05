@@ -1,4 +1,3 @@
-import com.natpryce.hamkrest.anyElement
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import io.mockk.every
@@ -29,7 +28,7 @@ class CharacterTest {
     fun `a character with custom stats and class`() {
         val myCharacter = SOME_CHARACTER.copy(
             characterClass = Warlock,
-            stats = SOME_STAT_BOCK.copy(dex = 12, con = 14),
+            stats = SOME_STAT_BOCK.copyByInts(dex = 12, con = 14),
         )
         assertAll(
             { assertThat(myCharacter.stats.dex, equalTo(Stat(12))) },

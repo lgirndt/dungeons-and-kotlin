@@ -1,4 +1,3 @@
-import DEFAULT_STAT_VALUE
 import com.google.common.collect.ImmutableListMultimap
 import io.mockk.every
 import io.mockk.mockkObject
@@ -16,7 +15,7 @@ val SOME_STAT_BOCK = StatBlock(
     cha = Stat(DEFAULT_STAT_VALUE),
 )
 
-fun StatBlock.copy(
+fun StatBlock.copyByInts(
     str: Int = this.str.toInt(),
     dex: Int = this.dex.toInt(),
     con: Int = this.con.toInt(),
