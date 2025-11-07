@@ -9,6 +9,8 @@ import org.example.CharacterClass.Warlock
 import org.example.Die.Companion.D10
 import org.example.Die.Companion.D20
 import org.example.Die.Companion.D8
+import org.example.WeaponCategory.Martial
+import org.example.WeaponCategory.Simple
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -67,15 +69,40 @@ class CharacterTest {
         assertThat(SOME_CHARACTER.copy(level = level).proficiencyBonus, equalTo(expectedBonus))
     }
 
+    private fun aWeaponBeing(category: WeaponCategory) : Weapon = SOME_WEAPON.copy(category = category)
+
+
     @Nested
     inner class CharacterClassTest {
 
         @Test
         fun `Fighter should be proficient with all weapons`() {
             val fighter = CharacterClass.Fighter
-            assertThat(fighter.isProficientWith(SOME_WEAPON.copy(category = WeaponCategory.Simple)), equalTo(true))
-            assertThat(fighter.isProficientWith(SOME_WEAPON.copy(category = WeaponCategory.Martial)), equalTo(true))
+            assertThat(fighter.isProficientWith(aWeaponBeing(Simple)), equalTo(true))
+            assertThat(fighter.isProficientWith(aWeaponBeing(Martial)), equalTo(true))
         }
+
+        @Test
+        fun `Cleric should be proficient with simple weapons only`() {
+            val cleric = CharacterClass.Cleric
+            assertThat(cleric.isProficientWith(aWeaponBeing(Simple)), equalTo(true))
+            assertThat(cleric.isProficientWith(aWeaponBeing(Martial)), equalTo(false))
+        }
+
+        @Test
+        fun `Druid should be proficient with simple weapons only`() {
+            val druid = CharacterClass.Druid
+            assertThat(druid.isProficientWith(aWeaponBeing(Simple)), equalTo(true))
+            assertThat(druid.isProficientWith(aWeaponBeing(Martial)), equalTo(false))
+        }
+
+        @Test
+        fun `Bard should be proficient with simple weapons only`() {
+            val bard = CharacterClass.Bard
+            assertThat(bard.isProficientWith(aWeaponBeing(Simple)), equalTo(true))
+            assertThat(bard.isProficientWith(aWeaponBeing(Martial)), equalTo(false))
+        }
+
     }
 
     @Nested
