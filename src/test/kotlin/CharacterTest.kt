@@ -170,7 +170,7 @@ class CharacterTest {
             )
             cleric.equip(martialWeapon)
 
-            val opponent = SOME_CHARACTER.copy(armour = { _ -> 12 })
+            val opponent = SOME_CHARACTER.copy(armour = { 12 })
 
             withFixedDice(
                 D20 rolls 10,
@@ -266,7 +266,7 @@ class CharacterTest {
         fun `attacking with NORMAL modifier uses single die roll`() {
             val damageDie = D8
             val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 })
+            val opponent = SOME_CHARACTER.copy(armour = { 10 })
 
             withFixedDice(
                 D20 rolls 10,
@@ -287,7 +287,7 @@ class CharacterTest {
         fun `attacking with ADVANTAGE uses higher of two rolls to hit`() {
             val damageDie = D8
             val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 })
+            val opponent = SOME_CHARACTER.copy(armour = { 10 })
 
             withFixedDice(
                 D20 rolls 8,
@@ -309,7 +309,7 @@ class CharacterTest {
         fun `attacking with DISADVANTAGE uses lower of two rolls to hit`() {
             val damageDie = D8
             val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 })
+            val opponent = SOME_CHARACTER.copy(armour = { 10 })
 
             withFixedDice(
                 D20 rolls 15,
@@ -330,7 +330,7 @@ class CharacterTest {
         @Test
         fun `attacking with ADVANTAGE can turn a miss into a hit`() {
             val attacker = aCharacterWithWeapon(strMod = 1)
-            val opponent = SOME_CHARACTER.copy(armour = { _ -> 15 })
+            val opponent = SOME_CHARACTER.copy(armour = { 15 })
 
             withFixedDice(
                 D20 rolls 5,  // would miss: 5 + 1 + 1 = 7 < 15
@@ -347,7 +347,7 @@ class CharacterTest {
         @Test
         fun `attacking with DISADVANTAGE can turn a hit into a miss`() {
             val attacker = aCharacterWithWeapon(strMod = 1)
-            val opponent = SOME_CHARACTER.copy(armour = { _ -> 15 })
+            val opponent = SOME_CHARACTER.copy(armour = { 15 })
 
             withFixedDice(
                 D20 rolls 13, // would hit: 13 + 1 + 1 = 15
@@ -364,7 +364,7 @@ class CharacterTest {
         fun `critical hit works with ADVANTAGE when either roll is 20`() {
             val damageDie = D8
             val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 })
+            val opponent = SOME_CHARACTER.copy(armour = { 10 })
 
             withFixedDice(
                 D20 rolls 12,
@@ -383,7 +383,7 @@ class CharacterTest {
         fun `critical hit works with DISADVANTAGE when higher roll is 20`() {
             val damageDie = D8
             val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-            val opponent = SOME_CHARACTER.copy(armour = { _ -> 10 })
+            val opponent = SOME_CHARACTER.copy(armour = { 10 })
 
             withFixedDice(
                 D20 rolls 20,  // this is the max, so it's used even with disadvantage
