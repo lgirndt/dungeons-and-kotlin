@@ -75,15 +75,16 @@ data class Character(
         val proficiencyModifier = if (isProficientWith(currentWeapon)) proficiencyBonus else 0
         val hitRoll = hitRollD20 + modifier + proficiencyModifier
 
-        if (hitRoll >= opponent.armourClass) {
+        return if (hitRoll >= opponent.armourClass) {
             // damage
             val isCritical = hitRollD20 == 20
             val damage = currentWeapon.dealDamage(stats, isCritical)
             val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
 
-            return AttackOutcome(true, receivedDamage, hitRoll)
+            AttackOutcome(true, receivedDamage, hitRoll)
+        } else {
+            AttackOutcome(false, 0, hitRoll)
         }
-        return AttackOutcome(false, 0, hitRoll)
     }
 
     override fun receiveDamage(amount: Int, damageType: DamageType): Int {
