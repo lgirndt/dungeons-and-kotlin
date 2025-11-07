@@ -157,6 +157,36 @@ class CharacterTest {
 
         }
 
+        @Test
+        fun `an attack not being proficient should hit without the proficiency bonus applied`() {
+            val damageDie = D8
+            val cleric = SOME_CHARACTER.copy(
+                characterClass = CharacterClass.Cleric,
+                stats = StatBlock.fromModifiers(strMod = 2)
+            )
+            val martialWeapon = SOME_WEAPON.copy(
+                category = Martial,
+                damageRoll = SimpleDamageRoll(1, damageDie)
+            )
+            cleric.equip(martialWeapon)
+
+            val opponent = SOME_CHARACTER.copy(armour = { _ -> 12 })
+
+            withFixedDice(
+                D20 rolls 10,
+                damageDie rolls 5
+            ) {
+                val outcome = cleric.attack(opponent)
+
+                assertThat(outcome.hasBeenHit, equalTo(true))
+                assertThat(
+                    "Hit roll without proficiency bonus: d20 + str mod (no prof bonus)",
+                    outcome.hitRoll, equalTo(10 + 2) // d20 + str mod only, no proficiency bonus
+                )
+                assertThat(outcome.damageDealt, equalTo(5 + 2)) // damage roll + str mod
+            }
+        }
+
         private inline fun hitting(
             attackerStrMod: Int,
             opponentHitPoints: Int = 20,
