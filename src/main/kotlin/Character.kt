@@ -100,8 +100,7 @@ data class Character(
     }
 
     private fun isProficientWith(weapon: Weapon): Boolean {
-        // TODO
-        return true
+        return characterClass.isProficientWith(weapon)
     }
 
 }
