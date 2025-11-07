@@ -73,11 +73,12 @@ data class Character(
 
         val hitRollD20 = rollModifier.roll(D20)
         val proficiencyModifier = if (isProficientWith(currentWeapon)) proficiencyBonus else 0
-        val hitRoll = hitRollD20 + modifier + proficiencyModifier
+        val hitRoll = hitRollD20.value + modifier + proficiencyModifier
 
         return if (hitRoll >= opponent.armourClass) {
             // damage
-            val isCritical = hitRollD20 == 20
+            // TODO check crit correctly
+            val isCritical = hitRollD20.value == 20
             val damage = currentWeapon.dealDamage(stats, isCritical)
             val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
 

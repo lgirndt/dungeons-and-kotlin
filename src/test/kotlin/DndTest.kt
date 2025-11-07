@@ -69,7 +69,7 @@ class DndTest {
         fun `NORMAL returns a single die roll`() {
             withFixedDice(D20 rolls 15) {
                 val result = RollModifier.NORMAL.roll(D20)
-                assertThat(result, equalTo(15))
+                assertThat(result.value, equalTo(15))
             }
         }
 
@@ -80,7 +80,7 @@ class DndTest {
                 D20 rolls 17
             ) {
                 val result = RollModifier.ADVANTAGE.roll(D20)
-                assertThat(result, equalTo(17))
+                assertThat(result.value, equalTo(17))
             }
         }
 
@@ -91,7 +91,7 @@ class DndTest {
                 D20 rolls 12
             ) {
                 val result = RollModifier.ADVANTAGE.roll(D20)
-                assertThat(result, equalTo(19))
+                assertThat(result.value, equalTo(19))
             }
         }
 
@@ -102,7 +102,7 @@ class DndTest {
                 D20 rolls 10
             ) {
                 val result = RollModifier.ADVANTAGE.roll(D20)
-                assertThat(result, equalTo(10))
+                assertThat(result.value, equalTo(10))
             }
         }
 
@@ -113,7 +113,7 @@ class DndTest {
                 D20 rolls 17
             ) {
                 val result = RollModifier.DISADVANTAGE.roll(D20)
-                assertThat(result, equalTo(8))
+                assertThat(result.value, equalTo(8))
             }
         }
 
@@ -124,7 +124,7 @@ class DndTest {
                 D20 rolls 3
             ) {
                 val result = RollModifier.DISADVANTAGE.roll(D20)
-                assertThat(result, equalTo(3))
+                assertThat(result.value, equalTo(3))
             }
         }
 
@@ -135,7 +135,7 @@ class DndTest {
                 D20 rolls 14
             ) {
                 val result = RollModifier.DISADVANTAGE.roll(D20)
-                assertThat(result, equalTo(14))
+                assertThat(result.value, equalTo(14))
             }
         }
     }

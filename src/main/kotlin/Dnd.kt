@@ -55,7 +55,7 @@ enum class RollModifier {
     DISADVANTAGE,
     NORMAL;
 
-    fun roll(die: Die): Int {
+    fun roll(die: Die): DieRoll {
         return when (this) {
             ADVANTAGE -> maxOf(die.roll(), die.roll())
             DISADVANTAGE -> minOf(die.roll(), die.roll())
@@ -64,10 +64,16 @@ enum class RollModifier {
     }
 }
 
+data class DieRoll(val die: Die, val value: Int) : Comparable<DieRoll> {
+    override fun compareTo(other: DieRoll): Int = compareBy(DieRoll::value).compare(this, other)
+
+
+}
+
 class Die private constructor(val numberOfFaces: Int) {
 
-    fun roll(): Int {
-        return (1..numberOfFaces).random()
+    fun roll(): DieRoll {
+        return DieRoll(this, (1..numberOfFaces).random())
     }
 
     override fun toString(): String {
@@ -119,7 +125,7 @@ class SimpleDamageRoll(
     override fun roll(isCritical: Boolean): Int {
         val critMultiplier = if (isCritical) 2 else 1
         return (1..(numberOfDice * critMultiplier)).fold(bonus) { total, _ ->
-            total + die.roll()
+            total + die.roll().value
         }
     }
 }

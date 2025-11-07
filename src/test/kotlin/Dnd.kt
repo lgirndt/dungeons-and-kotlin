@@ -78,8 +78,6 @@ val SOME_DAMAGE_MODIFIERS = DamageModifiers(
     vulnerabilities = emptySet(),
 )
 
-data class DieRoll(val die: Die, val result: Int)
-
 infix fun Die.rolls(result: Int) = DieRoll(this, result)
 
 inline fun withFixedDice(
@@ -87,13 +85,15 @@ inline fun withFixedDice(
     runWithFixedDice: () -> Unit
 ) {
     val multimap = ImmutableListMultimap.builder<Die, Int>().apply {
-        expectedRolls.forEach { put(it.die, it.result) }
+        expectedRolls.forEach { put(it.die, it.value) }
     }.build()
 
     val mockedDice = multimap.asMap().map { (die, allRolls) ->
+        // TODO more functional
+        val allDieRolls = allRolls.map { DieRoll(die, it) }
         die.also {
             mockkObject(it)
-            every { it.roll() } returnsMany allRolls.toList()
+            every { it.roll() } returnsMany allDieRolls.toList()
         }
     }
 
