@@ -4,7 +4,6 @@ import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
 import org.example.*
-import org.junit.jupiter.api.assertNotNull
 
 const val DEFAULT_STAT_VALUE = 10
 
@@ -66,7 +65,7 @@ val SOME_CHARACTER = Character(
 
 val SOME_WEAPON = Weapon(
     name = "Surgebinder",
-    category = WeaponCategory.MartialMelee,
+    category = WeaponCategory.Martial,
     attackType = AttackType.Melee,
     damageType = DamageType.Slashing,
     modifierStrategy = StrengthModifierStrategy,

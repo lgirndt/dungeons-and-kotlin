@@ -21,7 +21,7 @@ typealias WeaponProficiency = (WeaponCategory, Weapon) -> Boolean
 
 internal object WeaponProficiencies {
     val all : WeaponProficiency = { _ , _ -> true }
-    val simple : WeaponProficiency = { category, _ -> category in WeaponCategory.SIMPLE }
+    val simple : WeaponProficiency = { category, _ -> category == WeaponCategory.Simple }
     val none : WeaponProficiency = { _, _ -> false }
 }
 

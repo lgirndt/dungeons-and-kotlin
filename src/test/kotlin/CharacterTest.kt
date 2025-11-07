@@ -73,12 +73,8 @@ class CharacterTest {
         @Test
         fun `Fighter should be proficient with all weapons`() {
             val fighter = CharacterClass.Fighter
-            fighter.isProficientWith(SOME_WEAPON.copy(category = WeaponCategory.SimpleMelee)).let {
-                assertThat(it, equalTo(true))
-            }
-            fighter.isProficientWith(SOME_WEAPON.copy(category = WeaponCategory.MartialMelee)).let {
-                assertThat(it, equalTo(true))
-            }
+            assertThat(fighter.isProficientWith(SOME_WEAPON.copy(category = WeaponCategory.Simple)), equalTo(true))
+            assertThat(fighter.isProficientWith(SOME_WEAPON.copy(category = WeaponCategory.Martial)), equalTo(true))
         }
     }
 
