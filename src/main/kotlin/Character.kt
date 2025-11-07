@@ -77,9 +77,7 @@ data class Character(
 
         return if (hitRoll >= opponent.armourClass) {
             // damage
-            // TODO check crit correctly
-            val isCritical = hitRollD20.value == 20
-            val damage = currentWeapon.dealDamage(stats, isCritical)
+            val damage = currentWeapon.dealDamage(stats, isCriticalHit(hitRollD20))
             val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
 
             AttackOutcome(true, receivedDamage, hitRoll)
@@ -103,6 +101,10 @@ data class Character(
 
     private fun isProficientWith(weapon: Weapon): Boolean {
         return characterClass.isProficientWith(weapon)
+    }
+
+    private fun isCriticalHit(hitRoll: DieRoll) : Boolean {
+        return hitRoll.value == 20
     }
 
 }
