@@ -26,8 +26,8 @@ internal object WeaponProficiencies {
 }
 
 sealed class CharacterClass(
-    val hitDie: Die,
-    val weaponProficiency: WeaponProficiency = WeaponProficiencies.none
+    private val hitDie: Die,
+    private val weaponProficiency: WeaponProficiency = WeaponProficiencies.none
 ) {
     val name: String
         get() = this::class.simpleName!!
