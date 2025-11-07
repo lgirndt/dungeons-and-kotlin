@@ -27,14 +27,19 @@ internal object WeaponProficiencies {
 
 sealed class CharacterClass(
     private val hitDie: Die,
-    private val weaponProficiency: WeaponProficiency = WeaponProficiencies.none
+    private val weaponProficiency: WeaponProficiency = WeaponProficiencies.none,
+    val isCriticalHit : (DieRoll) -> Boolean = { roll -> roll.value == 20 }
 ) {
     val name: String
         get() = this::class.simpleName!!
 
     fun isProficientWith(weapon: Weapon): Boolean = weaponProficiency(weapon.category, weapon)
 
-    data object Fighter : CharacterClass(Die.D10, WeaponProficiencies.all)
+    data object Fighter : CharacterClass(
+        hitDie = Die.D10,
+        weaponProficiency =  WeaponProficiencies.all,
+        isCriticalHit = { it.value >= 19 }
+    )
     data object Cleric : CharacterClass(Die.D8, WeaponProficiencies.simple)
     data object Druid : CharacterClass(Die.D8, WeaponProficiencies.simple)
     data object Barbarian : CharacterClass(Die.D12, WeaponProficiencies.all)

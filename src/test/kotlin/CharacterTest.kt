@@ -103,6 +103,21 @@ class CharacterTest {
             assertThat(bard.isProficientWith(aWeaponBeing(Martial)), equalTo(false))
         }
 
+        @Test
+        fun `A paladin crits only on 20`() {
+            val paladin = CharacterClass.Paladin
+            assertThat(paladin.isCriticalHit(DieRoll(D20, 20)), equalTo(true))
+            assertThat(paladin.isCriticalHit(DieRoll(D20, 19)), equalTo(false))
+        }
+
+        @Test
+        fun `A fighter crits on 19 and 20`() {
+            val fighter = CharacterClass.Fighter
+            assertThat(fighter.isCriticalHit(DieRoll(D20, 20)), equalTo(true))
+            assertThat(fighter.isCriticalHit(DieRoll(D20, 19)), equalTo(true))
+            assertThat(fighter.isCriticalHit(DieRoll(D20, 18)), equalTo(false))
+        }
+
     }
 
     @Nested
