@@ -156,3 +156,11 @@ object Armours {
     val LEATHER_ARMOUR = { stats: StatBlock -> 11 + stats.dex.toInt() }
 }
 
+@JvmInline
+value class ProficiencyBonus private constructor(private val value: Int) {
+    fun toInt(): Int = value
+    companion object {
+        fun fromLevel(level: Int) : ProficiencyBonus = ProficiencyBonus(1 + (level - 1) / 4)
+        val None = ProficiencyBonus(0)
+    }
+}

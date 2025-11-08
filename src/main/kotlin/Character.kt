@@ -12,7 +12,7 @@ data class Character(
     val armour: (StatBlock) -> Int,
     override val position: Coordinate = Coordinate(0, 0),
 ) : Attackable {
-    val proficiencyBonus: Int get() = 1 + (level - 1) / 4
+    val proficiencyBonus: ProficiencyBonus get() = ProficiencyBonus.fromLevel(level)
 
     override val armourClass: Int get() = armour(stats)
 
@@ -36,10 +36,10 @@ data class Character(
     }
 
     private fun applyAttackModifiers(weapon: Weapon): Int {
-        val proficiencyModifier = if (isProficientWith(weapon)) proficiencyBonus else 0
+        val proficiencyModifier = if (isProficientWith(weapon)) proficiencyBonus else ProficiencyBonus.None
         val modifier = weapon.receiveModifier(stats)
 
-        val hitRoll = modifier + proficiencyModifier
+        val hitRoll = modifier + proficiencyModifier.toInt()
         return hitRoll
     }
 

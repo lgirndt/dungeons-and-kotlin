@@ -1,14 +1,11 @@
+
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.example.*
-import org.example.Die.Companion.D10
-import org.example.Die.Companion.D20
 import org.example.Die.Companion.D8
-import org.example.WeaponCategory.Martial
-import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertInstanceOf
 import org.junit.jupiter.api.extension.ExtendWith
@@ -63,7 +60,7 @@ class CharacterTest {
         "9, 3"
     )
     fun `proficiency bonus at various levels should be correct`(level: Int, expectedBonus: Int) {
-        assertThat(SOME_CHARACTER.copy(level = level).proficiencyBonus, equalTo(expectedBonus))
+        assertThat(SOME_CHARACTER.copy(level = level).proficiencyBonus.toInt(), equalTo(expectedBonus))
     }
 
 
