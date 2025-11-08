@@ -1,9 +1,13 @@
 package org.example
 
 import org.example.Die.Companion.D20
+import org.example.RangeClassification.OutOfRange
+import org.example.RangeClassification.WithinLongRange
+import org.example.RangeClassification.WithinNormalRange
 
 interface Attackable {
     val armourClass: Int
+    val position: Coordinate
     fun receiveDamage(amount: Int, damageType: DamageType): Int
 }
 
@@ -20,15 +24,15 @@ data class AttackOutcome(
 typealias WeaponProficiency = (WeaponCategory, Weapon) -> Boolean
 
 internal object WeaponProficiencies {
-    val all : WeaponProficiency = { _ , _ -> true }
-    val simple : WeaponProficiency = { category, _ -> category == WeaponCategory.Simple }
-    val none : WeaponProficiency = { _, _ -> false }
+    val all: WeaponProficiency = { _, _ -> true }
+    val simple: WeaponProficiency = { category, _ -> category == WeaponCategory.Simple }
+    val none: WeaponProficiency = { _, _ -> false }
 }
 
 sealed class CharacterClass(
     private val hitDie: Die,
     private val weaponProficiency: WeaponProficiency = WeaponProficiencies.none,
-    val isCriticalHit : (DieRoll) -> Boolean = { roll -> roll.value == 20 }
+    val isCriticalHit: (DieRoll) -> Boolean = { roll -> roll.value == 20 }
 ) {
     val name: String
         get() = this::class.simpleName!!
@@ -37,9 +41,10 @@ sealed class CharacterClass(
 
     data object Fighter : CharacterClass(
         hitDie = Die.D10,
-        weaponProficiency =  WeaponProficiencies.all,
+        weaponProficiency = WeaponProficiencies.all,
         isCriticalHit = { it.value >= 19 }
     )
+
     data object Cleric : CharacterClass(Die.D8, WeaponProficiencies.simple)
     data object Druid : CharacterClass(Die.D8, WeaponProficiencies.simple)
     data object Barbarian : CharacterClass(Die.D12, WeaponProficiencies.all)
@@ -61,7 +66,8 @@ data class Character(
     val damageModifiers: DamageModifiers = DamageModifiers.NONE,
     var currentWeapon: Weapon? = null,
     var hitPoints: Int,
-    val armour: (StatBlock) -> Int
+    val armour: (StatBlock) -> Int,
+    override val position: Coordinate = Coordinate(0, 0),
 ) : Attackable {
     val proficiencyBonus: Int get() = 1 + (level - 1) / 4
 
@@ -76,7 +82,15 @@ data class Character(
         val currentWeapon = this.currentWeapon ?: return AttackOutcome.MISS
         val modifier = currentWeapon.receiveModifier(stats)
 
-        val hitRollD20 = rollModifier.roll(D20)
+        val hitRollD20 = rollModifier.let {
+            val distance = position.distance(opponent.position)
+            when (currentWeapon.isTargetInRange(distance)) {
+                OutOfRange -> return AttackOutcome.MISS
+                WithinNormalRange -> it
+                WithinLongRange -> it.giveDisadvantage()
+            }
+        }.roll(D20)
+
         val proficiencyModifier = if (isProficientWith(currentWeapon)) proficiencyBonus else 0
         val hitRoll = hitRollD20.value + modifier + proficiencyModifier
 
@@ -108,7 +122,7 @@ data class Character(
         return characterClass.isProficientWith(weapon)
     }
 
-    private fun isCriticalHit(hitRoll: DieRoll) : Boolean {
+    private fun isCriticalHit(hitRoll: DieRoll): Boolean {
         return hitRoll.value == 20
     }
 

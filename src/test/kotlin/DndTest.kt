@@ -138,6 +138,20 @@ class DndTest {
                 assertThat(result.value, equalTo(14))
             }
         }
+
+        @Test
+        fun `giveAdvantage works correctly`() {
+            assertThat(RollModifier.NORMAL.giveAdvantage(), equalTo(RollModifier.ADVANTAGE))
+            assertThat(RollModifier.DISADVANTAGE.giveAdvantage(), equalTo(RollModifier.NORMAL))
+            assertThat(RollModifier.ADVANTAGE.giveAdvantage(), equalTo(RollModifier.ADVANTAGE))
+        }
+
+        @Test
+        fun `giveDisadvantage works correctly`() {
+            assertThat(RollModifier.NORMAL.giveDisadvantage(), equalTo(RollModifier.DISADVANTAGE))
+            assertThat(RollModifier.ADVANTAGE.giveDisadvantage(), equalTo(RollModifier.NORMAL))
+            assertThat(RollModifier.DISADVANTAGE.giveDisadvantage(), equalTo(RollModifier.DISADVANTAGE))
+        }
     }
 
 }

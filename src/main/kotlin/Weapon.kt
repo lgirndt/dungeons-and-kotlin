@@ -9,13 +9,32 @@ enum class WeaponCategory {
     Martial,
 }
 
+enum class RangeClassification {
+    WithinNormalRange,
+    WithinLongRange,
+    OutOfRange,
+}
+
+typealias RangeChecker = (distance: Double) -> RangeClassification
+
+object RangeCheckers {
+    fun melee(maxMeleeRange: Double): RangeChecker = { distance ->
+        if (distance <= maxMeleeRange) {
+            RangeClassification.WithinNormalRange
+        } else {
+            RangeClassification.OutOfRange
+        }
+    }
+}
+
 data class Weapon(
     val name: String,
     val category: WeaponCategory,
     val attackType: AttackType,
     val damageType: DamageType,
     private val modifierStrategy: WeaponModifierStrategy,
-    private val damageRoll: DamageRoll
+    private val damageRoll: DamageRoll,
+    private val rangeChecker: RangeChecker = { RangeClassification.OutOfRange },
 ) {
     fun receiveModifier(statBlock: StatBlock): Int =
         modifierStrategy(statBlock).modifier
@@ -26,6 +45,9 @@ data class Weapon(
 
         return rolledDamage + modifier.modifier
     }
+
+    fun isTargetInRange(distance: Double): RangeClassification =
+        rangeChecker(distance)
 }
 
 object Weapons {

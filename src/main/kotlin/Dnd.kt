@@ -62,6 +62,18 @@ enum class RollModifier {
             NORMAL -> die.roll()
         }
     }
+
+    fun giveAdvantage(): RollModifier = when (this) {
+        NORMAL -> ADVANTAGE
+        DISADVANTAGE -> NORMAL
+        ADVANTAGE -> ADVANTAGE
+    }
+
+    fun giveDisadvantage(): RollModifier = when (this) {
+        NORMAL -> DISADVANTAGE
+        ADVANTAGE -> NORMAL
+        DISADVANTAGE -> DISADVANTAGE
+    }
 }
 
 data class DieRoll(val die: Die, val value: Int) : Comparable<DieRoll> {
