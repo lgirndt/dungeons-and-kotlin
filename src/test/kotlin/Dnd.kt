@@ -70,6 +70,7 @@ val SOME_WEAPON = Weapon(
     damageType = DamageType.Slashing,
     modifierStrategy = StrengthModifierStrategy,
     damageRoll = SimpleDamageRoll(1, Die.D8),
+    rangeChecker = RangeCheckers.melee(5.0)
 )
 
 val SOME_DAMAGE_MODIFIERS = DamageModifiers(

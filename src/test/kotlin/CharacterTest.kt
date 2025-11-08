@@ -414,6 +414,59 @@ class CharacterTest {
             }
         }
 
+        @Test
+        fun `a opponent within melee range can be attacked`() {
+            val damageDie = D8
+            val attacker = SOME_CHARACTER.copy(
+                stats = StatBlock.fromModifiers(strMod = 2),
+                position = Coordinate(0, 0)
+            )
+            attacker.equip(
+                SOME_WEAPON.copy(
+                    damageRoll = SimpleDamageRoll(1, damageDie),
+                    rangeChecker = RangeCheckers.melee(5.0)
+                )
+            )
+
+            val opponent = SOME_CHARACTER.copy(
+                armour = { 10 },
+                position = Coordinate(3, 0) // distance = 3, within melee range of 5
+            )
+
+            withFixedDice(
+                D20 rolls 10,
+                damageDie rolls 6
+            ) {
+                val outcome = attacker.attack(opponent)
+                assertThat(outcome.hasBeenHit, equalTo(true))
+            }
+        }
+
+        @Test
+        fun `an attack out of melee range misses automatically`() {
+            val damageDie = D8
+            val attacker = SOME_CHARACTER.copy(
+                stats = StatBlock.fromModifiers(strMod = 2),
+                position = Coordinate(0, 0)
+            )
+            attacker.equip(
+                SOME_WEAPON.copy(
+                    damageRoll = SimpleDamageRoll(1, damageDie),
+                    rangeChecker = RangeCheckers.melee(5.0)
+                )
+            )
+
+            val opponent = SOME_CHARACTER.copy(
+                armour = { 10 },
+                position = Coordinate(6, 0) // distance = 6, out of melee range of 5
+            )
+
+            withFixedDice {
+                val outcome = attacker.attack(opponent)
+                assertThat(outcome, equalTo(AttackOutcome.MISS))
+            }
+        }
+
     }
 
     @Test
