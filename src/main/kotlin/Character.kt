@@ -5,6 +5,14 @@ import org.example.RangeClassification.OutOfRange
 import org.example.RangeClassification.WithinLongRange
 import org.example.RangeClassification.WithinNormalRange
 
+interface Attacker {
+    val currentWeapon: Weapon?
+    val position: Coordinate
+    val stats: StatBlock
+    fun applyAttackModifiers(weapon: Weapon): Int
+    fun isCriticalHit(hitRoll: DieRoll): Boolean
+}
+
 interface Attackable {
     val armourClass: Int
     val position: Coordinate
@@ -30,6 +38,32 @@ internal object WeaponProficiencies {
     val none: WeaponProficiency = { _ -> false }
 }
 
+fun attack(attacker: Attacker, opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
+    // to hit
+    val currentWeapon = attacker.currentWeapon ?: return AttackOutcome.MISS
+
+    val hitRollD20 = rollModifier.let {
+        val distance = attacker.position.distance(opponent.position)
+        when (currentWeapon.isTargetInRange(distance)) {
+            OutOfRange -> return AttackOutcome.MISS
+            WithinNormalRange -> it
+            WithinLongRange -> it.giveDisadvantage()
+        }
+    }.roll(D20)
+    val isCrit = attacker.isCriticalHit(hitRollD20)
+
+    val hitRoll = hitRollD20.value + attacker.applyAttackModifiers(currentWeapon)
+
+    return if (hitRoll >= opponent.armourClass) {
+        // damage
+        val damage = currentWeapon.dealDamage(attacker.stats, isCrit)
+        val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
+
+        AttackOutcome(true, receivedDamage, hitRoll)
+    } else {
+        AttackOutcome(false, 0, hitRoll)
+    }
+}
 
 data class Character(
     val name: String,
@@ -50,37 +84,26 @@ data class Character(
         this.currentWeapon = weapon
     }
 
-    fun attack(opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
-        // to hit
-        val currentWeapon = this.currentWeapon ?: return AttackOutcome.MISS
-
-        val hitRollD20 = rollModifier.let {
-            val distance = position.distance(opponent.position)
-            when (currentWeapon.isTargetInRange(distance)) {
-                OutOfRange -> return AttackOutcome.MISS
-                WithinNormalRange -> it
-                WithinLongRange -> it.giveDisadvantage()
-            }
-        }.roll(D20)
-
-        val hitRoll = applyAttackModifiers(hitRollD20, currentWeapon)
-
-        return if (hitRoll >= opponent.armourClass) {
-            // damage
-            val damage = currentWeapon.dealDamage(stats, isCriticalHit(hitRollD20))
-            val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
-
-            AttackOutcome(true, receivedDamage, hitRoll)
-        } else {
-            AttackOutcome(false, 0, hitRoll)
+    fun asAttacker(): Attacker {
+        val parent = this
+        return object: Attacker {
+            override val currentWeapon: Weapon? = parent.currentWeapon
+            override val position: Coordinate = parent.position
+            override val stats: StatBlock = parent.stats
+            override fun applyAttackModifiers(weapon: Weapon): Int = parent.applyAttackModifiers(weapon)
+            override fun isCriticalHit(hitRoll: DieRoll): Boolean = parent.isCriticalHit(hitRoll)
         }
     }
 
-    private fun applyAttackModifiers(hitRollD20: DieRoll, currentWeapon: Weapon): Int {
-        val proficiencyModifier = if (isProficientWith(currentWeapon)) proficiencyBonus else 0
-        val modifier = currentWeapon.receiveModifier(stats)
+    fun attack(opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
+        return attack(asAttacker(), opponent, rollModifier)
+    }
 
-        val hitRoll = hitRollD20.value + modifier + proficiencyModifier
+    private fun applyAttackModifiers(weapon: Weapon): Int {
+        val proficiencyModifier = if (isProficientWith(weapon)) proficiencyBonus else 0
+        val modifier = weapon.receiveModifier(stats)
+
+        val hitRoll = modifier + proficiencyModifier
         return hitRoll
     }
 
