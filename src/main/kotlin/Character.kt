@@ -6,9 +6,9 @@ data class Character(
     val characterClass: CharacterClass,
     val stats: StatBlock,
     val level: Int = 1,
-    val damageModifiers: DamageModifiers = DamageModifiers.NONE,
+    override val damageModifiers: DamageModifiers = DamageModifiers.NONE,
     var currentWeapon: Weapon? = null,
-    var hitPoints: Int,
+    override var hitPoints: Int,
     val armour: (StatBlock) -> Int,
     override val position: Coordinate = Coordinate(0, 0),
 ) : Attackable {
@@ -61,6 +61,7 @@ data class Character(
     }
 
     private fun isCriticalHit(hitRoll: DieRoll): Boolean {
+        // TODO needs to use class
         return hitRoll.value == 20
     }
 

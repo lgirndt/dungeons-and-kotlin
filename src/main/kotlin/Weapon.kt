@@ -77,4 +77,14 @@ object Weapons {
         modifierStrategy = StrengthModifierStrategy,
         damageRoll = SimpleDamageRoll(1, Die.D8)
     )
+
+    val Shortbow = Weapon(
+        name = "Shortbow",
+        category = WeaponCategory.Simple,
+        attackType = AttackType.Ranged,
+        damageType = DamageType.Piercing,
+        modifierStrategy = DexterityModifierStrategy,
+        damageRoll = SimpleDamageRoll(1, Die.D6),
+        rangeChecker = RangeCheckers.ranged(normalRange = 80.0, longRange = 320.0)
+    )
 }

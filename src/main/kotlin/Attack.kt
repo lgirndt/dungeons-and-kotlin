@@ -1,9 +1,7 @@
 package org.example
 
 import org.example.Die.Companion.D20
-import org.example.RangeClassification.OutOfRange
-import org.example.RangeClassification.WithinLongRange
-import org.example.RangeClassification.WithinNormalRange
+import org.example.RangeClassification.*
 
 interface Attacker {
     val currentWeapon: Weapon?
@@ -16,7 +14,20 @@ interface Attacker {
 interface Attackable {
     val armourClass: Int
     val position: Coordinate
-    fun receiveDamage(amount: Int, damageType: DamageType): Int
+    val damageModifiers: DamageModifiers
+    var hitPoints: Int
+    fun receiveDamage(amount: Int, damageType: DamageType): Int {
+        val adjustedAmount = when (damageType) {
+            in damageModifiers.immunities -> 0
+            in damageModifiers.resistances -> amount / 2
+            in damageModifiers.vulnerabilities -> amount * 2
+            else -> amount
+        }
+
+        hitPoints = (hitPoints - adjustedAmount).coerceAtLeast(0)
+
+        return adjustedAmount
+    }
 }
 
 data class AttackOutcome(
