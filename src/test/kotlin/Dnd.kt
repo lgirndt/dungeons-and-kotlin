@@ -68,7 +68,7 @@ val SOME_WEAPON = Weapon(
     category = WeaponCategory.Martial,
     attackType = AttackType.Melee,
     damageType = DamageType.Slashing,
-    modifierStrategy = StrengthModifierStrategy,
+    modifierStat = StatProviders.Str,
     damageRoll = SimpleDamageRoll(1, Die.D8),
     rangeChecker = RangeCheckers.melee(5.0)
 )

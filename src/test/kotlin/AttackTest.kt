@@ -357,7 +357,7 @@ class AttackTest {
         )
         attacker.equip(
             SOME_WEAPON.copy(
-                modifierStrategy = DexterityModifierStrategy,
+                modifierStat = StatProviders.Dex,
                 rangeChecker = RangeCheckers.ranged(normalRange = 10.0, longRange = 30.0)
             )
         )
@@ -384,7 +384,7 @@ class AttackTest {
         )
         attacker.equip(
             SOME_WEAPON.copy(
-                modifierStrategy = DexterityModifierStrategy,
+                modifierStat = StatProviders.Dex,
                 rangeChecker = RangeCheckers.ranged(normalRange = 10.0, longRange = 30.0)
             )
         )

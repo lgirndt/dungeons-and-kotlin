@@ -1,10 +1,5 @@
 package org.example
 
-typealias WeaponModifierStrategy = (StatBlock) -> Stat
-
-internal val StrengthModifierStrategy : WeaponModifierStrategy = StatBlock::str
-internal val DexterityModifierStrategy : WeaponModifierStrategy = StatBlock::dex
-
 enum class WeaponCategory {
     Simple,
     Martial,
@@ -50,15 +45,15 @@ data class Weapon(
     val category: WeaponCategory,
     val attackType: AttackType,
     val damageType: DamageType,
-    private val modifierStrategy: WeaponModifierStrategy,
+    private val modifierStat: StatProvider,
     private val damageRoll: DamageRoll,
     private val rangeChecker: RangeChecker = { RangeClassification.OutOfRange },
 ) {
     fun receiveModifier(statBlock: StatBlock): Int =
-        modifierStrategy(statBlock).modifier
+        modifierStat(statBlock).modifier
 
     fun dealDamage(stats: StatBlock, isCritical: Boolean): Int {
-        val modifier = modifierStrategy(stats)
+        val modifier = modifierStat(stats)
         val rolledDamage = damageRoll.roll(isCritical)
 
         return rolledDamage + modifier.modifier
@@ -74,7 +69,7 @@ object Weapons {
         category = WeaponCategory.Martial,
         attackType = AttackType.Melee,
         damageType = DamageType.Slashing,
-        modifierStrategy = StrengthModifierStrategy,
+        modifierStat = StatProviders.Str,
         damageRoll = SimpleDamageRoll(1, Die.D8)
     )
 
@@ -83,7 +78,7 @@ object Weapons {
         category = WeaponCategory.Simple,
         attackType = AttackType.Ranged,
         damageType = DamageType.Piercing,
-        modifierStrategy = DexterityModifierStrategy,
+        modifierStat = StatProviders.Dex,
         damageRoll = SimpleDamageRoll(1, Die.D6),
         rangeChecker = RangeCheckers.ranged(normalRange = 80.0, longRange = 320.0)
     )

@@ -1,7 +1,5 @@
 package org.example.spell
 
-import org.example.Cleric
-
 enum class SpellSchool {
     Abjuration,
     Conjuration,
@@ -9,11 +7,30 @@ enum class SpellSchool {
     // TODO add the others
 }
 
-sealed class SpellLevel(level: Int) {
+sealed class SpellLevel(val level: Int) : Comparable<SpellLevel> {
+
+    override fun compareTo(other: SpellLevel): Int = compareBy(SpellLevel::level).compare(this, other)
+
     object Cantrip : SpellLevel(0)
     object Level1: SpellLevel(1)
 }
 
+interface Caster {
+
+}
+
+interface SpellAffectable {
+
+}
+
+fun cast(caster: Caster, spell: Spell, onLevel: SpellLevel) {
+    if (onLevel == SpellLevel.Cantrip && spell.level != SpellLevel.Cantrip) {
+        return
+    }
+    if(spell.level < onLevel) {
+        return
+    }
+}
 
 open class Spell(
     val name: String,
@@ -30,10 +47,7 @@ open class AttackSpell(
     school,
     level,
 ) {
-    open fun cast(caster: Cleric, target: org.example.Attackable): org.example.AttackOutcome {
-        // default implementation does nothing
-        return org.example.AttackOutcome.MISS
-    }
+
 }
 
 

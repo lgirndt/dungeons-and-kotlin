@@ -1,7 +1,5 @@
 package org.example
 
-import org.example.Die.Companion.D20
-
 @JvmInline
 value class Stat(private val value: Int) {
     val modifier: Int
@@ -38,6 +36,16 @@ data class StatBlock(
             )
         }
     }
+}
+
+typealias StatProvider = (StatBlock) -> Stat
+object StatProviders {
+    val Str: StatProvider = { stats: StatBlock -> stats.str }
+    val Dex: StatProvider = { stats: StatBlock -> stats.dex }
+    val Con: StatProvider = { stats: StatBlock -> stats.con }
+    val Int: StatProvider = { stats: StatBlock -> stats.int }
+    val Wis: StatProvider = { stats: StatBlock -> stats.wis }
+    val Cha: StatProvider = { stats: StatBlock -> stats.cha }
 }
 
 data class DamageModifiers(
