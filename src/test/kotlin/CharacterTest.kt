@@ -29,7 +29,8 @@ fun aCharacterWithWeapon(
     char.equip(
         SOME_WEAPON.copy(
             damageRoll = SimpleDamageRoll(1, damageDie),
-            damageType = damageType
+            damageType = damageType,
+            rangeChecker = RangeCheckers.melee(5.0)
         )
     )
     return char
