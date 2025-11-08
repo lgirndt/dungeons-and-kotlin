@@ -29,15 +29,6 @@ data class AttackOutcome(
     }
 }
 
-typealias WeaponProficiency = (Weapon) -> Boolean
-
-// TODO category is also coming from weapon, do we need both?
-internal object WeaponProficiencies {
-    val all: WeaponProficiency = { _ -> true }
-    val simple: WeaponProficiency = { weapon -> weapon.category == WeaponCategory.Simple }
-    val none: WeaponProficiency = { _ -> false }
-}
-
 fun attack(attacker: Attacker, opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
     // to hit
     val currentWeapon = attacker.currentWeapon ?: return AttackOutcome.MISS
