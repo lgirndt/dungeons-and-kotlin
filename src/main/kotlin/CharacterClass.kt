@@ -34,13 +34,11 @@ class Barbarian : CharacterClass {
 }
 
 class Paladin : CharacterClass {
-    // fun isCriticalHit(roll: DieRoll): Boolean = roll.value == 20
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.none(weapon.category, weapon)
     override fun isCriticalHit(die: DieRoll): Boolean  = normalCrit(die)
 }
 
 class Warlock : CharacterClass {
-    // fun isCriticalHit(roll: DieRoll): Boolean = roll.value == 20
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.none(weapon.category, weapon)
     override fun isCriticalHit(die: DieRoll): Boolean  = normalCrit(die)
 }
