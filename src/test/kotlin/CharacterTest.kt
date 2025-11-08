@@ -78,7 +78,8 @@ class CharacterTest {
         fun `an attacker without a weapon cannot not attack`() {
             val attacker = SOME_CHARACTER.copy()
             val opponent = SOME_CHARACTER.copy(hitPoints = 20)
- assertThat(attacker.currentWeapon, equalTo(null))
+            assertThat(attacker.currentWeapon, equalTo(null))
+
             val outcome = attacker.attack(opponent)
 
             assertThat(opponent.hitPoints, equalTo(20))
@@ -176,7 +177,7 @@ class CharacterTest {
                 )
             )
 
-            val diceRolls =  listOf(D20 rolls hitRoll) + damageRolls.map { damageDie rolls it }
+            val diceRolls = listOf(D20 rolls hitRoll) + damageRolls.map { damageDie rolls it }
 
             withFixedDice(*diceRolls.toTypedArray()) {
                 val outcome = attacker.attack(opponent)
@@ -487,7 +488,7 @@ class CharacterTest {
     @Test
     fun `let's understand property oneline assignments`() {
         val armour = mockk<(StatBlock) -> Int>()
-        every { armour(any()) } returnsMany  listOf(15, 18)
+        every { armour(any()) } returnsMany listOf(15, 18)
         val character = SOME_CHARACTER.copy(armour = armour)
         assertThat(character.armourClass, equalTo(15))
         assertThat(character.armourClass, equalTo(18))
