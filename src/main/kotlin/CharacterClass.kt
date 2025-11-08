@@ -18,7 +18,7 @@ class Fighter : CharacterClass {
     override fun isCriticalHit(die: DieRoll): Boolean  = die.value >= 19
 }
 
-class Cleric() : CharacterClass {
+class Cleric : CharacterClass {
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.simple(weapon)
 }
 
