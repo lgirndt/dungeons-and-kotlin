@@ -80,7 +80,6 @@ data class Character(
     fun attack(opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
         // to hit
         val currentWeapon = this.currentWeapon ?: return AttackOutcome.MISS
-        val modifier = currentWeapon.receiveModifier(stats)
 
         val hitRollD20 = rollModifier.let {
             val distance = position.distance(opponent.position)
@@ -91,8 +90,7 @@ data class Character(
             }
         }.roll(D20)
 
-        val proficiencyModifier = if (isProficientWith(currentWeapon)) proficiencyBonus else 0
-        val hitRoll = hitRollD20.value + modifier + proficiencyModifier
+        val hitRoll = applyAttackModifiers(currentWeapon, hitRollD20)
 
         return if (hitRoll >= opponent.armourClass) {
             // damage
@@ -103,6 +101,14 @@ data class Character(
         } else {
             AttackOutcome(false, 0, hitRoll)
         }
+    }
+
+    private fun applyAttackModifiers(currentWeapon: Weapon, hitRollD20: DieRoll): Int {
+        val proficiencyModifier = if (isProficientWith(currentWeapon)) proficiencyBonus else 0
+        val modifier = currentWeapon.receiveModifier(stats)
+
+        val hitRoll = hitRollD20.value + modifier + proficiencyModifier
+        return hitRoll
     }
 
     override fun receiveDamage(amount: Int, damageType: DamageType): Int {
