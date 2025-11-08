@@ -3,6 +3,7 @@ package org.example
 typealias WeaponModifierStrategy = (StatBlock) -> Stat
 
 internal val StrengthModifierStrategy : WeaponModifierStrategy = StatBlock::str
+internal val DexterityModifierStrategy : WeaponModifierStrategy = StatBlock::dex
 
 enum class WeaponCategory {
     Simple,
@@ -23,6 +24,14 @@ object RangeCheckers {
             RangeClassification.WithinNormalRange
         } else {
             RangeClassification.OutOfRange
+        }
+    }
+
+    fun ranged(normalRange: Double, longRange: Double): RangeChecker = { distance ->
+        when {
+            distance <= normalRange -> RangeClassification.WithinNormalRange
+            distance <= longRange -> RangeClassification.WithinLongRange
+            else -> RangeClassification.OutOfRange
         }
     }
 }
