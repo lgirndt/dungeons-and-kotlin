@@ -90,7 +90,7 @@ data class Character(
             }
         }.roll(D20)
 
-        val hitRoll = applyAttackModifiers(currentWeapon, hitRollD20)
+        val hitRoll = applyAttackModifiers(hitRollD20, currentWeapon)
 
         return if (hitRoll >= opponent.armourClass) {
             // damage
@@ -103,7 +103,7 @@ data class Character(
         }
     }
 
-    private fun applyAttackModifiers(currentWeapon: Weapon, hitRollD20: DieRoll): Int {
+    private fun applyAttackModifiers(hitRollD20: DieRoll, currentWeapon: Weapon): Int {
         val proficiencyModifier = if (isProficientWith(currentWeapon)) proficiencyBonus else 0
         val modifier = currentWeapon.receiveModifier(stats)
 
