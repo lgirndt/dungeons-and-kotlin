@@ -1,7 +1,6 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.example.*
-import org.example.CharacterClass.Barbarian
 import org.example.Die.Companion.D20
 import org.example.Die.Companion.D6
 import org.junit.jupiter.api.Assertions.assertAll

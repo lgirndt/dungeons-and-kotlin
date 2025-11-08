@@ -1,11 +1,12 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.hamkrest.isA
 import io.mockk.every
 import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.example.*
-import org.example.CharacterClass.Barbarian
-import org.example.CharacterClass.Warlock
+import org.example.Barbarian
+import org.example.Warlock
 import org.example.Die.Companion.D10
 import org.example.Die.Companion.D20
 import org.example.Die.Companion.D8
@@ -14,6 +15,7 @@ import org.example.WeaponCategory.Simple
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertInstanceOf
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
@@ -41,20 +43,19 @@ class CharacterTest {
 
     @Test
     fun `creating a Warlock should have the proper characterClass`() {
-        val warlock = SOME_CHARACTER.copy(characterClass = Warlock)
-        assertThat(warlock.characterClass, equalTo(Warlock))
+        val warlock = SOME_CHARACTER.copy(characterClass = Warlock())
+        assertInstanceOf<Warlock>(warlock.characterClass)
     }
 
     @Test
     fun `a character with custom stats and class`() {
         val myCharacter = SOME_CHARACTER.copy(
-            characterClass = Warlock,
+            characterClass = Warlock(),
             stats = SOME_STAT_BOCK.copyByInts(dex = 12, con = 14),
         )
-        assertAll(
-            { assertThat(myCharacter.stats.dex, equalTo(Stat(12))) },
-            { assertThat(myCharacter.characterClass, equalTo(Warlock)) },
-        )
+
+        assertThat(myCharacter.stats.dex, equalTo(Stat(12)))
+        assertInstanceOf<Warlock>(myCharacter.characterClass)
     }
 
     @ParameterizedTest
@@ -78,42 +79,42 @@ class CharacterTest {
 
         @Test
         fun `Fighter should be proficient with all weapons`() {
-            val fighter = CharacterClass.Fighter
+            val fighter = Fighter()
             assertThat(fighter.isProficientWith(aWeaponBeing(Simple)), equalTo(true))
             assertThat(fighter.isProficientWith(aWeaponBeing(Martial)), equalTo(true))
         }
 
         @Test
         fun `Cleric should be proficient with simple weapons only`() {
-            val cleric = CharacterClass.Cleric
+            val cleric = Cleric()
             assertThat(cleric.isProficientWith(aWeaponBeing(Simple)), equalTo(true))
             assertThat(cleric.isProficientWith(aWeaponBeing(Martial)), equalTo(false))
         }
 
         @Test
         fun `Druid should be proficient with simple weapons only`() {
-            val druid = CharacterClass.Druid
+            val druid = Druid()
             assertThat(druid.isProficientWith(aWeaponBeing(Simple)), equalTo(true))
             assertThat(druid.isProficientWith(aWeaponBeing(Martial)), equalTo(false))
         }
 
         @Test
         fun `Bard should be proficient with simple weapons only`() {
-            val bard = CharacterClass.Bard
+            val bard = Bard()
             assertThat(bard.isProficientWith(aWeaponBeing(Simple)), equalTo(true))
             assertThat(bard.isProficientWith(aWeaponBeing(Martial)), equalTo(false))
         }
 
         @Test
         fun `A paladin crits only on 20`() {
-            val paladin = CharacterClass.Paladin
+            val paladin = Paladin()
             assertThat(paladin.isCriticalHit(DieRoll(D20, 20)), equalTo(true))
             assertThat(paladin.isCriticalHit(DieRoll(D20, 19)), equalTo(false))
         }
 
         @Test
         fun `A fighter crits on 19 and 20`() {
-            val fighter = CharacterClass.Fighter
+            val fighter = Fighter()
             assertThat(fighter.isCriticalHit(DieRoll(D20, 20)), equalTo(true))
             assertThat(fighter.isCriticalHit(DieRoll(D20, 19)), equalTo(true))
             assertThat(fighter.isCriticalHit(DieRoll(D20, 18)), equalTo(false))
@@ -177,7 +178,7 @@ class CharacterTest {
         fun `an attack not being proficient should hit without the proficiency bonus applied`() {
             val damageDie = D8
             val cleric = SOME_CHARACTER.copy(
-                characterClass = CharacterClass.Cleric,
+                characterClass = Cleric(),
                 stats = StatBlock.fromModifiers(strMod = 2)
             )
             val martialWeapon = SOME_WEAPON.copy(
@@ -522,7 +523,7 @@ class CharacterTest {
 
     @Test
     fun `CharacterClasses have the proper name`() {
-        assertThat(Barbarian.name, equalTo("Barbarian"))
+        assertThat(Barbarian().name, equalTo("Barbarian"))
     }
 
 

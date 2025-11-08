@@ -54,7 +54,7 @@ fun StatBlock.Companion.fromModifiers(
 
 val SOME_CHARACTER = Character(
     name = "My Name",
-    characterClass = CharacterClass.Fighter,
+    characterClass = Fighter(),
     stats = SOME_STAT_BOCK.copy(),
     level = 1,
     damageModifiers = DamageModifiers.NONE,
