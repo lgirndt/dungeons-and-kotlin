@@ -23,6 +23,7 @@ data class AttackOutcome(
 
 typealias WeaponProficiency = (WeaponCategory, Weapon) -> Boolean
 
+// TODO category is also coming from weapon, do we need both?
 internal object WeaponProficiencies {
     val all: WeaponProficiency = { _, _ -> true }
     val simple: WeaponProficiency = { category, _ -> category == WeaponCategory.Simple }
