@@ -4,7 +4,7 @@ import org.example.Die.Companion.D20
 import org.example.RangeClassification.*
 
 interface Attacker {
-    val currentWeapon: Weapon?
+    val weapon: Weapon
     val position: Coordinate
     val stats: StatBlock
     fun applyAttackModifiers(weapon: Weapon): Int
@@ -41,12 +41,9 @@ data class AttackOutcome(
 }
 
 internal fun attack(attacker: Attacker, opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
-    // to hit
-    val currentWeapon = attacker.currentWeapon ?: return AttackOutcome.MISS
-
     val hitRollD20 = rollModifier.let {
         val distance = attacker.position.distance(opponent.position)
-        when (currentWeapon.isTargetInRange(distance)) {
+        when (attacker.weapon.isTargetInRange(distance)) {
             OutOfRange -> return AttackOutcome.MISS
             WithinNormalRange -> it
             WithinLongRange -> it.giveDisadvantage()
@@ -54,12 +51,12 @@ internal fun attack(attacker: Attacker, opponent: Attackable, rollModifier: Roll
     }.roll(D20)
     val isCrit = attacker.isCriticalHit(hitRollD20)
 
-    val hitRoll = hitRollD20.value + attacker.applyAttackModifiers(currentWeapon)
+    val hitRoll = hitRollD20.value + attacker.applyAttackModifiers(attacker.weapon)
 
     return if (hitRoll >= opponent.armourClass) {
         // damage
-        val damage = currentWeapon.dealDamage({query : StatQuery -> query(attacker.stats)}, isCrit)
-        val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
+        val damage = attacker.weapon.dealDamage({query : StatQuery -> query(attacker.stats)}, isCrit)
+        val receivedDamage = opponent.receiveDamage(damage, attacker.weapon.damageType)
 
         AttackOutcome(true, receivedDamage, hitRoll)
     } else {

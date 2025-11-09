@@ -20,19 +20,17 @@ data class Character(
         this.currentWeapon = weapon
     }
 
-    fun asAttacker(): Attacker {
-        val parent = this
-        return object: Attacker {
-            override val currentWeapon: Weapon? = parent.currentWeapon
-            override val position: Coordinate = parent.position
-            override val stats: StatBlock = parent.stats
-            override fun applyAttackModifiers(weapon: Weapon): Int = parent.applyAttackModifiers(weapon)
-            override fun isCriticalHit(hitRoll: DieRoll): Boolean = parent.isCriticalHit(hitRoll)
-        }
-    }
-
     fun attack(opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
-        return attack(asAttacker(), opponent, rollModifier)
+        // to hit
+        val existingWeapon = currentWeapon ?: return AttackOutcome.MISS
+        val character = this
+        return attack(object : Attacker {
+            override val weapon = existingWeapon
+            override val position: Coordinate = character.position
+            override val stats: StatBlock = character.stats
+            override fun applyAttackModifiers(weapon: Weapon): Int = character.applyAttackModifiers(weapon)
+            override fun isCriticalHit(hitRoll: DieRoll): Boolean = character.isCriticalHit(hitRoll)
+        }, opponent, rollModifier)
     }
 
     private fun applyAttackModifiers(weapon: Weapon): Int {

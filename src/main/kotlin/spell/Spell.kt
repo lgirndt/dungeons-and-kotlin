@@ -43,7 +43,7 @@ fun castRangeAttackSpell(
     }
     val spellAsWeapon = spell.asWeapon(caster)
     return attack(object : Attacker {
-        override val currentWeapon: Weapon? = spellAsWeapon
+        override val weapon: Weapon = spellAsWeapon
         override val position: Coordinate = caster.position
         override val stats: StatBlock = caster.stats
         override fun applyAttackModifiers(weapon: Weapon): Int =
