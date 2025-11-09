@@ -66,7 +66,6 @@ val SOME_CHARACTER = Character(
 val SOME_WEAPON = PhysicalWeapon(
     name = "Surgebinder",
     category = WeaponCategory.Martial,
-    attackType = AttackType.Melee,
     damageType = DamageType.Slashing,
     statQuery = StatQueries.Str,
     damageRoll = SimpleDamageRoll(1, Die.D8),

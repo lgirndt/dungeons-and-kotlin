@@ -40,15 +40,9 @@ internal object WeaponProficiencies {
     val none: WeaponProficiency = { _ -> false }
 }
 
-enum class AttackType {
-    Melee,
-    Ranged,
-}
-
 abstract class Weapon {
     abstract val name: String
     abstract val category: WeaponCategory
-    abstract val attackType: AttackType
     abstract val damageType: DamageType
     protected abstract val statQuery: StatQuery
     protected abstract val damageRoll: DamageRoll
@@ -68,7 +62,6 @@ abstract class Weapon {
 data class PhysicalWeapon(
     override val name: String,
     override val category: WeaponCategory,
-    override val attackType: AttackType,
     override val damageType: DamageType,
     override val statQuery: StatQuery,
     override val damageRoll: DamageRoll,
@@ -83,7 +76,6 @@ object Weapons {
     val LONGSWORD = PhysicalWeapon(
         name = "Longsword",
         category = WeaponCategory.Martial,
-        attackType = AttackType.Melee,
         damageType = DamageType.Slashing,
         statQuery = StatQueries.Str,
         damageRoll = SimpleDamageRoll(1, Die.D8)
@@ -92,7 +84,6 @@ object Weapons {
     val Shortbow = PhysicalWeapon(
         name = "Shortbow",
         category = WeaponCategory.Simple,
-        attackType = AttackType.Ranged,
         damageType = DamageType.Piercing,
         statQuery = StatQueries.Dex,
         damageRoll = SimpleDamageRoll(1, Die.D6),
