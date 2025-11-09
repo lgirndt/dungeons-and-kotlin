@@ -38,14 +38,14 @@ data class StatBlock(
     }
 }
 
-typealias StatProvider = (StatBlock) -> Stat
-object StatProviders {
-    val Str: StatProvider = { stats: StatBlock -> stats.str }
-    val Dex: StatProvider = { stats: StatBlock -> stats.dex }
-    val Con: StatProvider = { stats: StatBlock -> stats.con }
-    val Int: StatProvider = { stats: StatBlock -> stats.int }
-    val Wis: StatProvider = { stats: StatBlock -> stats.wis }
-    val Cha: StatProvider = { stats: StatBlock -> stats.cha }
+typealias StatQuery = (StatBlock) -> Stat
+object StatQueries {
+    val Str: StatQuery = { stats: StatBlock -> stats.str }
+    val Dex: StatQuery = { stats: StatBlock -> stats.dex }
+    val Con: StatQuery = { stats: StatBlock -> stats.con }
+    val Int: StatQuery = { stats: StatBlock -> stats.int }
+    val Wis: StatQuery = { stats: StatBlock -> stats.wis }
+    val Cha: StatQuery = { stats: StatBlock -> stats.cha }
 }
 
 data class DamageModifiers(

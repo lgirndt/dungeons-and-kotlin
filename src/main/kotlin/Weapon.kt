@@ -45,7 +45,7 @@ data class Weapon(
     val category: WeaponCategory,
     val attackType: AttackType,
     val damageType: DamageType,
-    private val modifierStat: StatProvider,
+    private val modifierStat: StatQuery,
     private val damageRoll: DamageRoll,
     private val rangeChecker: RangeChecker = { RangeClassification.OutOfRange },
 ) {
@@ -69,7 +69,7 @@ object Weapons {
         category = WeaponCategory.Martial,
         attackType = AttackType.Melee,
         damageType = DamageType.Slashing,
-        modifierStat = StatProviders.Str,
+        modifierStat = StatQueries.Str,
         damageRoll = SimpleDamageRoll(1, Die.D8)
     )
 
@@ -78,7 +78,7 @@ object Weapons {
         category = WeaponCategory.Simple,
         attackType = AttackType.Ranged,
         damageType = DamageType.Piercing,
-        modifierStat = StatProviders.Dex,
+        modifierStat = StatQueries.Dex,
         damageRoll = SimpleDamageRoll(1, Die.D6),
         rangeChecker = RangeCheckers.ranged(normalRange = 80.0, longRange = 320.0)
     )
