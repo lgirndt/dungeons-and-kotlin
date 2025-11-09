@@ -1,11 +1,14 @@
 package org.example
 
+import org.example.spell.SpellCasting
+
 interface CharacterClass {
     val name: String
         get() = this::class.simpleName!!
 
     fun isProficientWith(weapon: Weapon): Boolean // = weaponProficiency(weapon.category, weapon)
     fun isCriticalHit(die: DieRoll): Boolean = normalCrit(die)
+    fun toSpellCaster(stats: StatBlock, level: Int) : SpellCasting? = null
 }
 
 // missing classes
@@ -36,6 +39,11 @@ class Paladin : CharacterClass {
 
 class Warlock : CharacterClass {
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.none(weapon)
+    override fun toSpellCaster(stats: StatBlock, level: Int): SpellCasting? {
+        return SpellCasting(
+            ability = StatQueries.Cha,
+        )
+    }
 }
 
 class Bard : CharacterClass {

@@ -46,7 +46,7 @@ class SpellTest {
             D20 rolls 10, // hit roll
             D4 rolls 6    // damage roll
         ) {
-            val outcome = castRangeAttackSpell(caster, opponent, spell, SpellLevel.Cantrip, RollModifier.NORMAL)
+            val outcome = castAttackSpell(caster, opponent, spell, SpellLevel.Cantrip, RollModifier.NORMAL)
 
             // Hit roll: 10 (d20) + 2 (spell ability mod) + 1 (prof bonus) = 13, which meets AC 12
             // Damage: 6 (d8) + 2 (spell ability mod) = 8

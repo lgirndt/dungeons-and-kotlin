@@ -1,5 +1,10 @@
 package org.example
 
+import org.example.spell.AttackSpell
+import org.example.spell.Caster
+import org.example.spell.SpellLevel
+import org.example.spell.castAttackSpell
+
 
 data class Character(
     val name: String,
@@ -13,6 +18,7 @@ data class Character(
     override val position: Coordinate = Coordinate(0, 0),
 ) : Attackable {
     val proficiencyBonus: ProficiencyBonus get() = ProficiencyBonus.fromLevel(level)
+    private val spellCasting = characterClass.toSpellCaster(stats, level)
 
     override val armourClass: Int get() = armour(stats)
 
@@ -32,6 +38,7 @@ data class Character(
             override fun isCriticalHit(hitRoll: DieRoll): Boolean = character.isCriticalHit(hitRoll)
         }, opponent, rollModifier)
     }
+
 
     private fun applyAttackModifiers(weapon: Weapon): Int {
         val proficiencyModifier = if (isProficientWith(weapon)) proficiencyBonus else ProficiencyBonus.None
@@ -61,6 +68,28 @@ data class Character(
     private fun isCriticalHit(hitRoll: DieRoll): Boolean {
         // TODO needs to use class
         return hitRoll.value == 20
+    }
+
+    fun castSpellAttack(
+        spell: AttackSpell,
+        level: SpellLevel,
+        opponent: Attackable,
+        rollModifier: RollModifier = RollModifier.NORMAL) : AttackOutcome? {
+        val spellCasting = this.spellCasting ?: return null
+        val character = this
+        val caster = object : Caster {
+            override val spellCastingAbility: Stat = spellCasting.ability(character.stats)
+            override val proficiencyBonus: ProficiencyBonus = character.proficiencyBonus
+            override val position: Coordinate = character.position
+            override val stats: StatBlock = character.stats
+        }
+        return castAttackSpell(
+            caster,
+            opponent,
+            spell,
+            level,
+            rollModifier
+        )
     }
 
 }

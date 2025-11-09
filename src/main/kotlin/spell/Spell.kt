@@ -28,7 +28,7 @@ interface Caster {
     val stats: StatBlock
 }
 
-fun castRangeAttackSpell(
+fun castAttackSpell(
     caster: Caster,
     opponent: Attackable,
     spell: AttackSpell,
@@ -76,5 +76,7 @@ data class AttackSpell(
     }
 }
 
-
+class SpellCasting (
+    val ability: StatQuery,
+)
 
