@@ -40,6 +40,11 @@ internal object WeaponProficiencies {
     val none: WeaponProficiency = { _ -> false }
 }
 
+enum class AttackType {
+    Melee,
+    Ranged,
+}
+
 abstract class Weapon {
     abstract val name: String
     abstract val category: WeaponCategory

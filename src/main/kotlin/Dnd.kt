@@ -130,12 +130,6 @@ enum class DamageType {
     Force,
 }
 
-enum class AttackType {
-    Melee,
-    Ranged,
-}
-
-
 interface DamageRoll {
     fun roll(isCritical: Boolean): Int
 }
