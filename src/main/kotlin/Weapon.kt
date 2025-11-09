@@ -46,8 +46,9 @@ abstract class Weapon {
     abstract val damageType: DamageType
     protected abstract val statQuery: StatQuery
     protected abstract val damageRoll: DamageRoll
+    protected abstract val rangeChecker: RangeChecker
 
-    abstract fun isTargetInRange(distance: Double): RangeClassification
+    fun isTargetInRange(distance: Double): RangeClassification = rangeChecker(distance)
 
     fun dealDamage(statProvider: StatProvider, isCritical: Boolean): Int {
         val modifier = statProvider(statQuery)
@@ -65,12 +66,8 @@ data class PhysicalWeapon(
     override val damageType: DamageType,
     override val statQuery: StatQuery,
     override val damageRoll: DamageRoll,
-    private val rangeChecker: RangeChecker = { RangeClassification.OutOfRange },
-) : Weapon() {
-
-    override fun isTargetInRange(distance: Double): RangeClassification =
-        rangeChecker(distance)
-}
+    override val rangeChecker: RangeChecker = { RangeClassification.OutOfRange },
+) : Weapon()
 
 object Weapons {
     val LONGSWORD = PhysicalWeapon(

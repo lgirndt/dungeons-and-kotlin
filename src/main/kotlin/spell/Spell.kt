@@ -17,7 +17,6 @@ sealed class SpellLevel(val level: Int) : Comparable<SpellLevel> {
         return "SpellLevel(level=$level)"
     }
 
-
     object Cantrip : SpellLevel(0)
     object Level1 : SpellLevel(1)
 }
@@ -42,7 +41,7 @@ fun castRangeAttackSpell(
     if (spell.level < onLevel) {
         return AttackOutcome.MISS
     }
-    val spellAsWeapon = spellAsWeapon(caster, spell)
+    val spellAsWeapon = spell.asWeapon(caster)
     return attack(object : Attacker {
         override val currentWeapon: Weapon? = spellAsWeapon
         override val position: Coordinate = caster.position
@@ -56,11 +55,6 @@ fun castRangeAttackSpell(
 
 }
 
-private fun spellAsWeapon(caster: Caster, spell: AttackSpell): Weapon {
-    return spell.asWeapon(caster)
-}
-
-
 data class AttackSpell(
     val name: String,
     val school: SpellSchool,
@@ -69,7 +63,7 @@ data class AttackSpell(
     val damageRoll: DamageRoll,
     val range: Double) {
 
-    fun asWeapon(caster: Caster): Weapon {
+    internal fun asWeapon(caster: Caster): Weapon {
         val spell = this
         return object : Weapon() {
             override val name: String = spell.name
@@ -77,8 +71,7 @@ data class AttackSpell(
             override val damageType: DamageType = spell.damageType
             override val statQuery: StatQuery = { caster.spellCastingAbility }
             override val damageRoll: DamageRoll = spell.damageRoll
-            override fun isTargetInRange(distance: Double): RangeClassification =
-                RangeCheckers.ranged(spell.range, spell.range).invoke(distance)
+            override val rangeChecker: RangeChecker = RangeCheckers.ranged(spell.range, spell.range)
         }
     }
 }
