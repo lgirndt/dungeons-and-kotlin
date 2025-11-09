@@ -6,11 +6,14 @@ import io.mockk.junit5.MockKExtension
 import io.mockk.mockk
 import org.example.*
 import org.example.Die.Companion.D8
+import org.example.spell.SpellLevel
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertInstanceOf
+import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
+import spell.SOME_SPELL
 
 fun aCharacterWithWeapon(
     strMod: Int = 10,
@@ -135,6 +138,52 @@ class CharacterTest {
         val damageReceived = character.receiveDamage(15, DamageType.Force)
         assertThat(damageReceived, equalTo(0))
         assertThat(character.hitPoints, equalTo(20)) // no damage
+    }
+
+    @Test
+    fun `a fighter cannot cast a spell attack`() {
+        val fighter = SOME_CHARACTER.copy(
+            characterClass = Fighter(),
+            stats = StatBlock.fromModifiers(chaMod = 3) // Charisma 16
+        )
+        val opponent = SOME_CHARACTER.copy(
+            hitPoints = 30,
+            armour = { 12 }
+        )
+
+        val spell = SOME_SPELL.copy()
+        val outcome = fighter.castSpellAttack(spell, SpellLevel.Cantrip, opponent, RollModifier.NORMAL)
+        assertThat(outcome, equalTo(null))
+    }
+
+    @Test
+    fun `a warlock can cast a spell attack`() {
+        val warlock = SOME_CHARACTER.copy(
+            characterClass = Warlock(),
+            stats = StatBlock.fromModifiers(chaMod = 3) // Charisma 16
+        )
+        val opponent = SOME_CHARACTER.copy(
+            hitPoints = 30,
+            armour = { 12 }
+        )
+
+        val spell = SOME_SPELL.copy(
+            level = SpellLevel.Cantrip,
+            damageRoll = SimpleDamageRoll(1, Die.D10),
+        )
+
+        withFixedDice(
+            Die.D20 rolls 12, // hit roll
+            Die.D10 rolls 7   // damage roll
+        ) {
+            val outcome = warlock.castSpellAttack(spell, SpellLevel.Cantrip, opponent, RollModifier.NORMAL)
+
+            assertNotNull(outcome)
+            // Hit roll: 12 (d20) + 3 (cha mod) + 2 (prof bonus) = 17, which meets AC 12
+            // Damage: 7 (d10) + 3 (cha mod) = 10
+            assertThat(outcome.hasBeenHit, equalTo(true))
+            assertThat(outcome.damageDealt, equalTo(10))
+        }
     }
 
 }

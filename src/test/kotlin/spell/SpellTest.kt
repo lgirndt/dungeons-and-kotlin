@@ -12,16 +12,16 @@ import org.junit.jupiter.api.Test
 import rolls
 import withFixedDice
 
-class SpellTest {
+val SOME_SPELL = AttackSpell(
+    name = "Magic Missile",
+    school = SpellSchool.Evocation,
+    level = SpellLevel.Level1,
+    damageType = DamageType.Force,
+    damageRoll = SimpleDamageRoll(1, Die.D4, 1),
+    range = 120.0
+)
 
-    val SOME_SPELL = AttackSpell(
-        name = "Magic Missile",
-        school = SpellSchool.Evocation,
-        level = SpellLevel.Level1,
-        damageType = DamageType.Force,
-        damageRoll = SimpleDamageRoll(1, Die.D4, 1),
-        range = 120.0
-    )
+class SpellTest {
 
     @Test
     fun `a spell attack that meets AC hits the target`() {
