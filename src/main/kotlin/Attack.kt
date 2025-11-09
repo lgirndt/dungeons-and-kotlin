@@ -40,7 +40,7 @@ data class AttackOutcome(
     }
 }
 
-fun attack(attacker: Attacker, opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
+internal fun attack(attacker: Attacker, opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
     // to hit
     val currentWeapon = attacker.currentWeapon ?: return AttackOutcome.MISS
 
