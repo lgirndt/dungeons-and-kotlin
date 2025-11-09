@@ -30,15 +30,15 @@ fun castRangeAttackSpell(
     spell: AttackSpell,
     onLevel: SpellLevel,
     rollModifier: RollModifier
-) {
+) : AttackOutcome {
     if (onLevel == SpellLevel.Cantrip && spell.level != SpellLevel.Cantrip) {
-        return
+        return AttackOutcome.MISS
     }
     if (spell.level < onLevel) {
-        return
+        return AttackOutcome.MISS
     }
     val spellAsWeapon = spellAsWeapon(caster, spell)
-    attack(object : Attacker {
+    return attack(object : Attacker {
         override val currentWeapon: Weapon? = spellAsWeapon
         override val position: Coordinate = caster.position
         override val stats: StatBlock = caster.stats
@@ -59,8 +59,8 @@ private fun spellAsWeapon(caster: Caster, spell: AttackSpell): Weapon {
         damageType = spell.damageType, // TODO get from spell
         modifierStat = { caster.spellCastingAbility },
         damageRoll = spell.damageRoll,
+        rangeChecker = RangeCheckers.ranged(spell.range, spell.range)
     )
-
 }
 
 
@@ -69,7 +69,8 @@ class AttackSpell(
     val school: SpellSchool,
     val level: SpellLevel,
     val damageType: DamageType,
-    val damageRoll: DamageRoll
+    val damageRoll: DamageRoll,
+    val range: Double
 )
 
 
