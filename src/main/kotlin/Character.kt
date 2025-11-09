@@ -28,7 +28,7 @@ data class Character(
             override val weapon = existingWeapon
             override val position: Coordinate = character.position
             override val stats: StatBlock = character.stats
-            override fun applyAttackModifiers(weapon: Weapon): Int = character.applyAttackModifiers(weapon)
+            override fun applyAttackModifiers(): Int = character.applyAttackModifiers(existingWeapon)
             override fun isCriticalHit(hitRoll: DieRoll): Boolean = character.isCriticalHit(hitRoll)
         }, opponent, rollModifier)
     }

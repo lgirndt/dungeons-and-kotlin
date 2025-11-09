@@ -46,7 +46,7 @@ fun castRangeAttackSpell(
         override val weapon: Weapon = spellAsWeapon
         override val position: Coordinate = caster.position
         override val stats: StatBlock = caster.stats
-        override fun applyAttackModifiers(weapon: Weapon): Int =
+        override fun applyAttackModifiers(): Int =
             caster.spellCastingAbility.modifier + caster.proficiencyBonus.toInt()
 
         override fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == 20

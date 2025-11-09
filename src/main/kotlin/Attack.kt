@@ -7,7 +7,7 @@ interface Attacker {
     val weapon: Weapon
     val position: Coordinate
     val stats: StatBlock
-    fun applyAttackModifiers(weapon: Weapon): Int
+    fun applyAttackModifiers(): Int
     fun isCriticalHit(hitRoll: DieRoll): Boolean
 }
 
@@ -51,7 +51,7 @@ internal fun attack(attacker: Attacker, opponent: Attackable, rollModifier: Roll
     }.roll(D20)
     val isCrit = attacker.isCriticalHit(hitRollD20)
 
-    val hitRoll = hitRollD20.value + attacker.applyAttackModifiers(attacker.weapon)
+    val hitRoll = hitRollD20.value + attacker.applyAttackModifiers()
 
     return if (hitRoll >= opponent.armourClass) {
         // damage
