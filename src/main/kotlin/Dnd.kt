@@ -101,6 +101,7 @@ class Die private constructor(val numberOfFaces: Int) {
     }
 
     companion object {
+        val D4 = Die(4)
         val D6 = Die(6)
         val D8 = Die(8)
         val D10 = Die(10)

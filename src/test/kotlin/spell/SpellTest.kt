@@ -6,13 +6,22 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.example.*
 import org.example.Die.Companion.D20
-import org.example.Die.Companion.D8
+import org.example.Die.Companion.D4
 import org.example.spell.*
 import org.junit.jupiter.api.Test
 import rolls
 import withFixedDice
 
 class SpellTest {
+
+    val SOME_SPELL = AttackSpell(
+        name = "Magic Missile",
+        school = SpellSchool.Evocation,
+        level = SpellLevel.Level1,
+        damageType = DamageType.Force,
+        damageRoll = SimpleDamageRoll(1, Die.D4, 1),
+        range = 120.0
+    )
 
     @Test
     fun `a spell attack that meets AC hits the target`() {
@@ -23,13 +32,9 @@ class SpellTest {
             override val stats: StatBlock = SOME_STAT_BOCK
         }
 
-        val spell = AttackSpell(
-            name = "Fire Bolt",
-            school = SpellSchool.Evocation,
+        val spell = SOME_SPELL.copy(
             level = SpellLevel.Cantrip,
-            damageType = DamageType.Fire,
-            damageRoll = SimpleDamageRoll(1, D8),
-            range = 30.0
+            damageRoll = SimpleDamageRoll(1, D4)
         )
 
         val opponent = SOME_CHARACTER.copy(
@@ -39,7 +44,7 @@ class SpellTest {
 
         withFixedDice(
             D20 rolls 10, // hit roll
-            D8 rolls 6    // damage roll
+            D4 rolls 6    // damage roll
         ) {
             val outcome = castRangeAttackSpell(caster, opponent, spell, SpellLevel.Cantrip, RollModifier.NORMAL)
 

@@ -12,6 +12,10 @@ enum class SpellSchool {
 sealed class SpellLevel(val level: Int) : Comparable<SpellLevel> {
 
     override fun compareTo(other: SpellLevel): Int = compareBy(SpellLevel::level).compare(this, other)
+    override fun toString(): String {
+        return "SpellLevel(level=$level)"
+    }
+
 
     object Cantrip : SpellLevel(0)
     object Level1 : SpellLevel(1)
@@ -64,7 +68,7 @@ private fun spellAsWeapon(caster: Caster, spell: AttackSpell): Weapon {
 }
 
 
-class AttackSpell(
+data class AttackSpell(
     val name: String,
     val school: SpellSchool,
     val level: SpellLevel,
