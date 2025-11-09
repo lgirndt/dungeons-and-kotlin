@@ -2,6 +2,7 @@ package org.example.spell
 
 import org.example.*
 
+
 enum class SpellSchool {
     Abjuration,
     Conjuration,
@@ -56,15 +57,7 @@ fun castRangeAttackSpell(
 }
 
 private fun spellAsWeapon(caster: Caster, spell: AttackSpell): Weapon {
-    return Weapon(
-        name = spell.name,
-        category = WeaponCategory.Simple, // TODO this does not make sense
-        attackType = AttackType.Ranged,
-        damageType = spell.damageType, // TODO get from spell
-        whichStat = { caster.spellCastingAbility },
-        damageRoll = spell.damageRoll,
-        rangeChecker = RangeCheckers.ranged(spell.range, spell.range)
-    )
+    return spell.asWeapon(caster)
 }
 
 
@@ -74,8 +67,22 @@ data class AttackSpell(
     val level: SpellLevel,
     val damageType: DamageType,
     val damageRoll: DamageRoll,
-    val range: Double
-)
+    val range: Double) {
+
+    fun asWeapon(caster: Caster): Weapon {
+        val spell = this
+        return object : Weapon() {
+            override val name: String = spell.name
+            override val category: WeaponCategory = WeaponCategory.Simple // TODO this does not make sense
+            override val attackType: AttackType = AttackType.Ranged
+            override val damageType: DamageType = spell.damageType
+            override val statQuery: StatQuery = { caster.spellCastingAbility }
+            override val damageRoll: DamageRoll = spell.damageRoll
+            override fun isTargetInRange(distance: Double): RangeClassification =
+                RangeCheckers.ranged(spell.range, spell.range).invoke(distance)
+        }
+    }
+}
 
 
 

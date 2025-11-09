@@ -40,44 +40,56 @@ internal object WeaponProficiencies {
     val none: WeaponProficiency = { _ -> false }
 }
 
-data class Weapon(
-    val name: String,
-    val category: WeaponCategory,
-    val attackType: AttackType,
-    val damageType: DamageType,
-    private val whichStat: StatQuery,
-    private val damageRoll: DamageRoll,
-    private val rangeChecker: RangeChecker = { RangeClassification.OutOfRange },
-) {
-    fun whichStat(statBlock: StatBlock): Stat = whichStat(statBlock)
+abstract class Weapon {
+    abstract val name: String
+    abstract val category: WeaponCategory
+    abstract val attackType: AttackType
+    abstract val damageType: DamageType
+    protected abstract val statQuery: StatQuery
+    protected abstract val damageRoll: DamageRoll
+
+    abstract fun isTargetInRange(distance: Double): RangeClassification
 
     fun dealDamage(statProvider: StatProvider, isCritical: Boolean): Int {
-        val modifier = statProvider(whichStat)
+        val modifier = statProvider(statQuery)
         val rolledDamage = damageRoll.roll(isCritical)
 
         return rolledDamage + modifier.modifier
     }
 
-    fun isTargetInRange(distance: Double): RangeClassification =
+    fun whichStat(statBlock: StatBlock): Stat = statQuery(statBlock)
+}
+
+data class PhysicalWeapon(
+    override val name: String,
+    override val category: WeaponCategory,
+    override val attackType: AttackType,
+    override val damageType: DamageType,
+    override val statQuery: StatQuery,
+    override val damageRoll: DamageRoll,
+    private val rangeChecker: RangeChecker = { RangeClassification.OutOfRange },
+) : Weapon() {
+
+    override fun isTargetInRange(distance: Double): RangeClassification =
         rangeChecker(distance)
 }
 
 object Weapons {
-    val LONGSWORD = Weapon(
+    val LONGSWORD = PhysicalWeapon(
         name = "Longsword",
         category = WeaponCategory.Martial,
         attackType = AttackType.Melee,
         damageType = DamageType.Slashing,
-        whichStat = StatQueries.Str,
+        statQuery = StatQueries.Str,
         damageRoll = SimpleDamageRoll(1, Die.D8)
     )
 
-    val Shortbow = Weapon(
+    val Shortbow = PhysicalWeapon(
         name = "Shortbow",
         category = WeaponCategory.Simple,
         attackType = AttackType.Ranged,
         damageType = DamageType.Piercing,
-        whichStat = StatQueries.Dex,
+        statQuery = StatQueries.Dex,
         damageRoll = SimpleDamageRoll(1, Die.D6),
         rangeChecker = RangeCheckers.ranged(normalRange = 80.0, longRange = 320.0)
     )

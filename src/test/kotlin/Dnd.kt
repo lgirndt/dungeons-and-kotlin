@@ -63,12 +63,12 @@ val SOME_CHARACTER = Character(
     armour = { 10 },
 )
 
-val SOME_WEAPON = Weapon(
+val SOME_WEAPON = PhysicalWeapon(
     name = "Surgebinder",
     category = WeaponCategory.Martial,
     attackType = AttackType.Melee,
     damageType = DamageType.Slashing,
-    whichStat = StatQueries.Str,
+    statQuery = StatQueries.Str,
     damageRoll = SimpleDamageRoll(1, Die.D8),
     rangeChecker = RangeCheckers.melee(5.0)
 )
