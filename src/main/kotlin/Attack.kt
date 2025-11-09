@@ -58,7 +58,7 @@ fun attack(attacker: Attacker, opponent: Attackable, rollModifier: RollModifier 
 
     return if (hitRoll >= opponent.armourClass) {
         // damage
-        val damage = currentWeapon.dealDamage(attacker.stats, isCrit)
+        val damage = currentWeapon.dealDamage({query : StatQuery -> query(attacker.stats)}, isCrit)
         val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
 
         AttackOutcome(true, receivedDamage, hitRoll)

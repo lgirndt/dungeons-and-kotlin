@@ -37,7 +37,7 @@ data class Character(
 
     private fun applyAttackModifiers(weapon: Weapon): Int {
         val proficiencyModifier = if (isProficientWith(weapon)) proficiencyBonus else ProficiencyBonus.None
-        val modifier = weapon.receiveModifier(stats)
+        val modifier = weapon.receiveModifier { query -> query(stats) }
 
         val hitRoll = modifier + proficiencyModifier.toInt()
         return hitRoll

@@ -14,7 +14,7 @@ class WeaponTest {
         val stats = SOME_STAT_BOCK.copyByInts(str = 16)
 
         withFixedDice(D8 rolls 6) {
-            val damage = longsword.dealDamage(stats, false)
+            val damage = longsword.dealDamage({ query -> query(stats) }, false)
 
             assertThat(damage, equalTo(6 + 3)) // 3 is the modifier for str 16
         }
@@ -30,7 +30,7 @@ class WeaponTest {
             D8 rolls 4,
             D8 rolls 7,
         ) {
-            val damage = longsword.dealDamage(stats, true)
+            val damage = longsword.dealDamage({ query -> query(stats) }, true)
 
             assertThat(damage, equalTo(4 + 7 + 3)) // 3 is the modifier for str 16
         }

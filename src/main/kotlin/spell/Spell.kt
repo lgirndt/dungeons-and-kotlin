@@ -61,7 +61,7 @@ private fun spellAsWeapon(caster: Caster, spell: AttackSpell): Weapon {
         category = WeaponCategory.Simple, // TODO this does not make sense
         attackType = AttackType.Ranged,
         damageType = spell.damageType, // TODO get from spell
-        modifierStat = { caster.spellCastingAbility },
+        whichStat = { caster.spellCastingAbility },
         damageRoll = spell.damageRoll,
         rangeChecker = RangeCheckers.ranged(spell.range, spell.range)
     )

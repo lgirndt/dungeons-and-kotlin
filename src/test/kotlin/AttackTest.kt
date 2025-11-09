@@ -357,7 +357,7 @@ class AttackTest {
         )
         attacker.equip(
             SOME_WEAPON.copy(
-                modifierStat = StatQueries.Dex,
+                whichStat = StatQueries.Dex,
                 rangeChecker = RangeCheckers.ranged(normalRange = 10.0, longRange = 30.0)
             )
         )
@@ -384,7 +384,7 @@ class AttackTest {
         )
         attacker.equip(
             SOME_WEAPON.copy(
-                modifierStat = StatQueries.Dex,
+                whichStat = StatQueries.Dex,
                 rangeChecker = RangeCheckers.ranged(normalRange = 10.0, longRange = 30.0)
             )
         )

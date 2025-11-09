@@ -48,6 +48,8 @@ object StatQueries {
     val Cha: StatQuery = { stats: StatBlock -> stats.cha }
 }
 
+typealias StatProvider = (StatQuery) -> Stat
+
 data class DamageModifiers(
     val resistances: Set<DamageType> = emptySet(),
     val immunities: Set<DamageType> = emptySet(),
