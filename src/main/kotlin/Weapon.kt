@@ -49,8 +49,7 @@ data class Weapon(
     private val damageRoll: DamageRoll,
     private val rangeChecker: RangeChecker = { RangeClassification.OutOfRange },
 ) {
-    fun receiveModifier(statProvider: StatProvider): Int =
-        statProvider(whichStat).modifier
+    fun whichStat(statBlock: StatBlock): Stat = whichStat(statBlock)
 
     fun dealDamage(statProvider: StatProvider, isCritical: Boolean): Int {
         val modifier = statProvider(whichStat)
