@@ -1,12 +1,11 @@
 package org.example
 
-import org.example.Die.Companion.D20
-import kotlin.math.max
-
 @JvmInline
-value class Stat(val value: Int) {
+value class Stat(private val value: Int) {
     val modifier: Int
         get() = value / 2 - 5
+
+    fun toInt(): Int = value
 }
 
 data class StatBlock(
@@ -39,25 +38,17 @@ data class StatBlock(
     }
 }
 
-sealed class CharacterClass(
-    val hitDie: Die
-) {
-    val name: String
-        get() = this::class.simpleName!!
-
-    data object Fighter : CharacterClass(Die.D10)
-    data object Cleric : CharacterClass(Die.D8)
-    data object Druid : CharacterClass(Die.D8)
-    data object Barbarian : CharacterClass(Die.D12)
-    data object Paladin : CharacterClass(Die.D10)
-    data object Ranger : CharacterClass(Die.D10)
-    data object Rogue : CharacterClass(Die.D8)
-    data object Warlock : CharacterClass(Die.D8)
-    data object Monk : CharacterClass(Die.D8)
-    data object Sorcerer : CharacterClass(Die.D6)
-    data object Bard : CharacterClass(Die.D8)
-    data object Wizard : CharacterClass(Die.D8)
+typealias StatQuery = (StatBlock) -> Stat
+object StatQueries {
+    val Str: StatQuery = { stats: StatBlock -> stats.str }
+    val Dex: StatQuery = { stats: StatBlock -> stats.dex }
+    val Con: StatQuery = { stats: StatBlock -> stats.con }
+    val Int: StatQuery = { stats: StatBlock -> stats.int }
+    val Wis: StatQuery = { stats: StatBlock -> stats.wis }
+    val Cha: StatQuery = { stats: StatBlock -> stats.cha }
 }
+
+typealias StatProvider = (StatQuery) -> Stat
 
 data class DamageModifiers(
     val resistances: Set<DamageType> = emptySet(),
@@ -69,85 +60,42 @@ data class DamageModifiers(
     }
 }
 
-interface Attackable {
-    val armourClass: Int
-    fun receiveDamage(amount: Int, damageType: DamageType): Int
+enum class RollModifier {
+    ADVANTAGE,
+    DISADVANTAGE,
+    NORMAL;
+
+    fun roll(die: Die): DieRoll {
+        return when (this) {
+            ADVANTAGE -> maxOf(die.roll(), die.roll())
+            DISADVANTAGE -> minOf(die.roll(), die.roll())
+            NORMAL -> die.roll()
+        }
+    }
+
+    fun giveAdvantage(): RollModifier = when (this) {
+        NORMAL -> ADVANTAGE
+        DISADVANTAGE -> NORMAL
+        ADVANTAGE -> ADVANTAGE
+    }
+
+    fun giveDisadvantage(): RollModifier = when (this) {
+        NORMAL -> DISADVANTAGE
+        ADVANTAGE -> NORMAL
+        DISADVANTAGE -> DISADVANTAGE
+    }
 }
 
-data class AttackOutcome(
-    val hasBeenHit: Boolean,
-    val damageDealt: Int,
-    val hitRoll: Int = 0,
-) {
-    companion object {
-        val MISS = AttackOutcome(false, 0)
-    }
-}
+data class DieRoll(val die: Die, val value: Int) : Comparable<DieRoll> {
+    override fun compareTo(other: DieRoll): Int = compareBy(DieRoll::value).compare(this, other)
 
-data class Character(
-    val name: String,
-    val characterClass: CharacterClass,
-    val stats: StatBlock,
-    val level: Int = 1,
-    val damageModifiers: DamageModifiers = DamageModifiers.NONE,
-    var currentWeapon: Weapon? = null,
-    var hitPoints: Int,
-    val armour: (StatBlock) -> Int
-) : Attackable {
-    companion object
-
-    val proficiencyBonus: Int get() = 1 + (level - 1) / 4
-
-    override val armourClass: Int get() = armour(stats)
-
-    fun equip(weapon: Weapon) {
-        this.currentWeapon = weapon
-    }
-
-    fun attack(opponent: Attackable): AttackOutcome {
-        // to hit
-        val currentWeapon = this.currentWeapon ?: return AttackOutcome.MISS
-        val modifier = currentWeapon.receiveModifier(stats)
-
-        val hitRollD20 = D20.roll()
-        val proficiencyModifier = if (isProficientWith(currentWeapon)) proficiencyBonus else 0
-        val hitRoll = hitRollD20 + modifier + proficiencyModifier
-
-        if (hitRoll >= opponent.armourClass) {
-            // damage
-            val isCritical = hitRollD20 == 20
-            val damage = currentWeapon.dealDamage(stats, isCritical)
-            val receivedDamage = opponent.receiveDamage(damage, currentWeapon.damageType)
-
-            return AttackOutcome(true, receivedDamage, hitRoll)
-        }
-        return AttackOutcome(false, 0, hitRoll)
-    }
-
-    override fun receiveDamage(amount: Int, damageType: DamageType): Int {
-        val adjustedAmount = when (damageType) {
-            in damageModifiers.immunities -> 0
-            in damageModifiers.resistances -> amount / 2
-            in damageModifiers.vulnerabilities -> amount * 2
-            else -> amount
-        }
-
-        hitPoints = (hitPoints - adjustedAmount).coerceAtLeast(0)
-
-        return adjustedAmount
-    }
-
-    private fun isProficientWith(weapon: Weapon): Boolean {
-        // TODO
-        return true
-    }
 
 }
 
 class Die private constructor(val numberOfFaces: Int) {
 
-    fun roll(): Int {
-        return (1..numberOfFaces).random()
+    fun roll(): DieRoll {
+        return DieRoll(this, (1..numberOfFaces).random())
     }
 
     override fun toString(): String {
@@ -155,6 +103,7 @@ class Die private constructor(val numberOfFaces: Int) {
     }
 
     companion object {
+        val D4 = Die(4)
         val D6 = Die(6)
         val D8 = Die(8)
         val D10 = Die(10)
@@ -181,15 +130,6 @@ enum class DamageType {
     Force,
 }
 
-enum class AttackType {
-    Melee,
-    Ranged,
-}
-
-typealias WeaponModifierStrategy = (StatBlock) -> Stat
-
-val StrengthModifierStrategy : WeaponModifierStrategy = StatBlock::str
-
 interface DamageRoll {
     fun roll(isCritical: Boolean): Int
 }
@@ -202,44 +142,22 @@ class SimpleDamageRoll(
     override fun roll(isCritical: Boolean): Int {
         val critMultiplier = if (isCritical) 2 else 1
         return (1..(numberOfDice * critMultiplier)).fold(bonus) { total, _ ->
-            total + die.roll()
+            total + die.roll().value
         }
     }
-}
-
-data class Weapon(
-    val name: String,
-    val attackType: AttackType,
-    val damageType: DamageType,
-    private val modifierStrategy: WeaponModifierStrategy,
-    private val damageRoll: DamageRoll
-) {
-    companion object
-
-    fun receiveModifier(statBlock: StatBlock): Int =
-        modifierStrategy(statBlock).modifier
-
-    fun dealDamage(stats: StatBlock, isCritical: Boolean): Int {
-        val modifier = modifierStrategy(stats)
-        val rolledDamage = damageRoll.roll(isCritical)
-
-        return rolledDamage + modifier.modifier
-    }
-}
-
-object Weapons {
-    val LONGSWORD = Weapon(
-        name = "Longsword",
-        attackType = AttackType.Melee,
-        damageType = DamageType.Slashing,
-        modifierStrategy = StrengthModifierStrategy,
-        damageRoll = SimpleDamageRoll(1, Die.D8)
-    )
 }
 
 object Armours {
 
     val CHAIN_MAIL = { _: StatBlock -> 16 }
-    val LEATHER_ARMOUR = { stats: StatBlock -> 11 + stats.dex.value }
+    val LEATHER_ARMOUR = { stats: StatBlock -> 11 + stats.dex.toInt() }
 }
 
+@JvmInline
+value class ProficiencyBonus private constructor(private val value: Int) {
+    fun toInt(): Int = value
+    companion object {
+        fun fromLevel(level: Int) : ProficiencyBonus = ProficiencyBonus(1 + (level - 1) / 4)
+        val None = ProficiencyBonus(0)
+    }
+}

@@ -1,8 +1,8 @@
-import DEFAULT_STAT_VALUE
 import com.google.common.collect.ImmutableListMultimap
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
+import io.mockk.verify
 import org.example.*
 
 const val DEFAULT_STAT_VALUE = 10
@@ -16,13 +16,13 @@ val SOME_STAT_BOCK = StatBlock(
     cha = Stat(DEFAULT_STAT_VALUE),
 )
 
-fun StatBlock.copy(
-    str: Int = this.str.value,
-    dex: Int = this.dex.value,
-    con: Int = this.con.value,
-    int: Int = this.int.value,
-    wis: Int = this.wis.value,
-    cha: Int = this.cha.value,
+fun StatBlock.copyByInts(
+    str: Int = this.str.toInt(),
+    dex: Int = this.dex.toInt(),
+    con: Int = this.con.toInt(),
+    int: Int = this.int.toInt(),
+    wis: Int = this.wis.toInt(),
+    cha: Int = this.cha.toInt(),
 ): StatBlock {
     return StatBlock(
         Stat(str),
@@ -34,7 +34,7 @@ fun StatBlock.copy(
     )
 }
 
-fun StatBlock.Companion.createWithModifiers(
+fun StatBlock.Companion.fromModifiers(
     strMod: Int = 0,
     dexMod: Int = 0,
     conMod: Int = 0,
@@ -54,21 +54,22 @@ fun StatBlock.Companion.createWithModifiers(
 
 val SOME_CHARACTER = Character(
     name = "My Name",
-    characterClass = CharacterClass.Fighter,
+    characterClass = Fighter(),
     stats = SOME_STAT_BOCK.copy(),
     level = 1,
     damageModifiers = DamageModifiers.NONE,
     currentWeapon = null,
     hitPoints = 10,
-    armour =  { 10 },
+    armour = { 10 },
 )
 
-val SOME_WEAPON = Weapon(
+val SOME_WEAPON = PhysicalWeapon(
     name = "Surgebinder",
-    attackType = AttackType.Melee,
+    category = WeaponCategory.Martial,
     damageType = DamageType.Slashing,
-    modifierStrategy = StrengthModifierStrategy,
+    statQuery = StatQueries.Str,
     damageRoll = SimpleDamageRoll(1, Die.D8),
+    rangeChecker = RangeCheckers.melee(5.0)
 )
 
 val SOME_DAMAGE_MODIFIERS = DamageModifiers(
@@ -77,38 +78,33 @@ val SOME_DAMAGE_MODIFIERS = DamageModifiers(
     vulnerabilities = emptySet(),
 )
 
-data class DieRoll(val die: Die, val result: Int)
-
 infix fun Die.rolls(result: Int) = DieRoll(this, result)
 
-fun withFixedDice(
+inline fun withFixedDice(
     vararg expectedRolls: DieRoll,
-    runWithFixedDice : () -> Unit
+    runWithFixedDice: () -> Unit
 ) {
     val multimap = ImmutableListMultimap.builder<Die, Int>().apply {
-        expectedRolls.forEach { put(it.die, it.result) }
+        expectedRolls.forEach { put(it.die, it.value) }
     }.build()
 
-    val mockedDice = mutableListOf<Die>()
+    val mockedDice = multimap.asMap().map { (die, allRolls) ->
+        // TODO more functional
+        val allDieRolls = allRolls.map { DieRoll(die, it) }
+        die.also {
+            mockkObject(it)
+            every { it.roll() } returnsMany allDieRolls.toList()
+        }
+    }
+
     try {
-        // expect
-        for (die in multimap.keySet()) {
-            mockkObject(die)
-            val allRolls = multimap.get(die)
-            every { die.roll() } returnsMany allRolls
-            mockedDice.add(die)
-        }
         runWithFixedDice()
-
-        // verify
-        for (die in multimap.keySet()) {
-            val allRolls = multimap.get(die)
-            io.mockk.verify(exactly = allRolls.size) { die.roll() }
-        }
-
     } finally {
-        for (die in mockedDice) {
-            unmockkObject(die)
+        // verify
+        multimap.asMap().forEach { (die, allRolls) ->
+            verify(exactly = allRolls.size) { die.roll() }
         }
+
+        mockedDice.forEach { unmockkObject(it) }
     }
 }
