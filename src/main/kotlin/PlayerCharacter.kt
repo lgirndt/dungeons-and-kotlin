@@ -1,0 +1,45 @@
+package org.example
+
+data class PlayerCharacterData(
+    val level: Int,
+    val weapon: Weapon,
+)
+
+class PlayerCharacter(
+    private val data: PlayerCharacterData,
+    private val classFeatures : CharacterClass,
+    core: CoreEntityData,
+) : CoreEntity(core) {
+
+    companion object {}
+
+    val proficiencyBonus: ProficiencyBonus
+        get() = ProficiencyBonus.fromLevel(data.level)
+
+    fun copy(
+        core: CoreEntityData = this.core,
+        data: PlayerCharacterData = this.data,
+        classFeatures : CharacterClass = this.classFeatures
+    ): PlayerCharacter {
+        return PlayerCharacter(
+            data = data,
+            core = core,
+            classFeatures = classFeatures
+        )
+    }
+
+    override val weapon: Weapon
+        get() = data.weapon
+
+    override val attackModifier: Int
+        get() {
+            val proficiencyModifier = if (classFeatures.isProficientWith(weapon))
+                proficiencyBonus
+            else
+                ProficiencyBonus.None
+
+            val attackStat = weapon.whichStat(core.stats)
+            val hitRoll = attackStat.modifier + proficiencyModifier.toInt()
+            return hitRoll
+        }
+}

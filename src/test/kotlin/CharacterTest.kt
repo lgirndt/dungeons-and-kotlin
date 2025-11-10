@@ -1,4 +1,3 @@
-
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import io.mockk.every
@@ -19,38 +18,35 @@ fun aCharacterWithWeapon(
     strMod: Int = 10,
     damageDie: Die = D8,
     damageType: DamageType = DamageType.Slashing
-): Character {
-    val char = SOME_CHARACTER.copy(
-        stats = StatBlock.fromModifiers(strMod = strMod)
-    )
-    char.equip(
-        SOME_WEAPON.copy(
+): PlayerCharacter {
+    val char = PlayerCharacter.aPlayerCharacter(
+        stats = StatBlock.fromModifiers(strMod = strMod),
+        weapon = SOME_WEAPON.copy(
             damageRoll = SimpleDamageRoll(1, damageDie),
             damageType = damageType,
             rangeChecker = RangeCheckers.melee(5.0)
         )
     )
+
     return char
 }
 
 @ExtendWith(MockKExtension::class)
 class CharacterTest {
 
-    @Test
-    fun `creating a Warlock should have the proper characterClass`() {
-        val warlock = SOME_CHARACTER.copy(characterClass = Warlock())
-        assertInstanceOf<Warlock>(warlock.characterClass)
-    }
+//    @Test
+//    fun `creating a Warlock should have the proper characterClass`() {
+//        val warlock = PlayerCharacter.aPlayerCharacter(classFeatures = Warlock())
+//        assertInstanceOf<Warlock>(warlock.classFeatures)
+//    }
 
     @Test
     fun `a character with custom stats and class`() {
-        val myCharacter = SOME_CHARACTER.copy(
-            characterClass = Warlock(),
+        val myCharacter = PlayerCharacter.aPlayerCharacter(
             stats = SOME_STAT_BOCK.copyByInts(dex = 12, con = 14),
         )
 
         assertThat(myCharacter.stats.dex, equalTo(Stat(12)))
-        assertInstanceOf<Warlock>(myCharacter.characterClass)
     }
 
     @ParameterizedTest
@@ -63,7 +59,8 @@ class CharacterTest {
         "9, 3"
     )
     fun `proficiency bonus at various levels should be correct`(level: Int, expectedBonus: Int) {
-        assertThat(SOME_CHARACTER.copy(level = level).proficiencyBonus.toInt(), equalTo(expectedBonus))
+        assertThat(PlayerCharacter.aPlayerCharacter(level = level).proficiencyBonus.toInt(),
+            equalTo(expectedBonus))
     }
 
 

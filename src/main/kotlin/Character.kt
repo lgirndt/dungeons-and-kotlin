@@ -17,7 +17,9 @@ data class Character(
     val armour: (StatBlock) -> Int,
     override val position: Coordinate = Coordinate(0, 0),
 ) : Attackable {
-    val proficiencyBonus: ProficiencyBonus get() = ProficiencyBonus.fromLevel(level)
+    val proficiencyBonus: ProficiencyBonus
+        get() = ProficiencyBonus.fromLevel(level)
+
     private val spellCasting = characterClass.toSpellCaster(stats, level)
 
     override val armourClass: Int get() = armour(stats)

@@ -52,6 +52,42 @@ fun StatBlock.Companion.fromModifiers(
     )
 }
 
+fun PlayerCharacter.Companion.aPlayerCharacter(
+    name: String = "My Name",
+    stats: StatBlock = SOME_STAT_BOCK.copy(),
+    hitPoints: Int = 10,
+    armourClass: Int = 12,
+    damageModifiers: DamageModifiers = DamageModifiers.NONE,
+    level: Int = 1,
+    weapon: Weapon = SOME_WEAPON.copy(),
+    classFeatures : CharacterClass = Fighter(),
+) : PlayerCharacter {
+    return PlayerCharacter(
+        core = CoreEntityData(
+            name = name,
+            stats = stats,
+            hitPoints = hitPoints,
+            armourClass = armourClass,
+            damageModifiers = damageModifiers
+        ),
+        data = PlayerCharacterData(
+            level = level,
+            weapon = weapon
+        ),
+        classFeatures = classFeatures
+    )
+}
+
+
+val SOME_WEAPON = PhysicalWeapon(
+    name = "Surgebinder",
+    category = WeaponCategory.Martial,
+    damageType = DamageType.Slashing,
+    statQuery = StatQueries.Str,
+    damageRoll = SimpleDamageRoll(1, Die.D8),
+    rangeChecker = RangeCheckers.melee(5.0)
+)
+
 val SOME_CHARACTER = Character(
     name = "My Name",
     characterClass = Fighter(),
@@ -61,15 +97,6 @@ val SOME_CHARACTER = Character(
     currentWeapon = null,
     hitPoints = 10,
     armour = { 10 },
-)
-
-val SOME_WEAPON = PhysicalWeapon(
-    name = "Surgebinder",
-    category = WeaponCategory.Martial,
-    damageType = DamageType.Slashing,
-    statQuery = StatQueries.Str,
-    damageRoll = SimpleDamageRoll(1, Die.D8),
-    rangeChecker = RangeCheckers.melee(5.0)
 )
 
 val SOME_DAMAGE_MODIFIERS = DamageModifiers(
