@@ -34,12 +34,6 @@ fun aCharacterWithWeapon(
 @ExtendWith(MockKExtension::class)
 class CharacterTest {
 
-//    @Test
-//    fun `creating a Warlock should have the proper characterClass`() {
-//        val warlock = PlayerCharacter.aPlayerCharacter(classFeatures = Warlock())
-//        assertInstanceOf<Warlock>(warlock.classFeatures)
-//    }
-
     @Test
     fun `a character with custom stats and class`() {
         val myCharacter = PlayerCharacter.aPlayerCharacter(
@@ -68,29 +62,6 @@ class CharacterTest {
     fun `CharacterClasses have the proper name`() {
         assertThat(Barbarian().name, equalTo("Barbarian"))
     }
-
-
-// TODO: PlayerCharacter weapon is protected, cannot be accessed from tests. Need to add public accessor or redesign.
-//    @Test
-//    fun `a character can equip a weapon`() {
-//        val character = PlayerCharacter.aPlayerCharacter()
-//        assertThat(character.weapon, equalTo(SOME_WEAPON))
-//        val characterWithSword = character.copy(
-//            data = PlayerCharacterData(level = 1, weapon = Weapons.LONGSWORD)
-//        )
-//        assertThat(characterWithSword.weapon, equalTo(Weapons.LONGSWORD))
-//    }
-
-// TODO: This test is specific to Character's armour function design, not applicable to PlayerCharacter
-//    @Test
-//    fun `let's understand property oneline assignments`() {
-//        val armour = mockk<(StatBlock) -> Int>()
-//        every { armour(any()) } returnsMany listOf(15, 18)
-//        val character = SOME_CHARACTER.copy(armour = armour)
-//        assertThat(character.armourClass, equalTo(15))
-//        assertThat(character.armourClass, equalTo(18))
-//    }
-
 
     @Test
     fun `a character receives normal damage`() {
