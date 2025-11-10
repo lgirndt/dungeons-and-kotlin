@@ -30,7 +30,7 @@ class AttackTest {
         )
 
         withFixedDice(D20 rolls 10) {
-            val outcome = target.attack(opponent.asAttackable())
+            val outcome = target.attack(opponent)
 
             assertThat(outcome.hasBeenHit, equalTo(false))
             assertThat(
@@ -51,7 +51,7 @@ class AttackTest {
             D20 rolls 10,
             damageDie rolls 5
         ) {
-            val outcome = attacker.attack(opponent.asAttackable())
+            val outcome = attacker.attack(opponent)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(
@@ -81,7 +81,7 @@ class AttackTest {
             D20 rolls 10,
             damageDie rolls 5
         ) {
-            val outcome = cleric.attack(opponent.asAttackable())
+            val outcome = cleric.attack(opponent)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(
@@ -113,7 +113,7 @@ class AttackTest {
             damageModifiers = SOME_DAMAGE_MODIFIERS.copy(
                 vulnerabilities = if (opponentVulnerableTo != null) setOf(opponentVulnerableTo) else emptySet()
             )
-        ).asAttackable()
+        )
 
         val diceRolls = listOf(D20 rolls hitRoll) + damageRolls.map { damageDie rolls it }
 
@@ -171,7 +171,7 @@ class AttackTest {
     fun `attacking with NORMAL modifier uses single die roll`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10).asAttackable()
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
         withFixedDice(
             D20 rolls 10,
@@ -192,7 +192,7 @@ class AttackTest {
     fun `attacking with ADVANTAGE uses higher of two rolls to hit`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10).asAttackable()
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
         withFixedDice(
             D20 rolls 8,
@@ -214,7 +214,7 @@ class AttackTest {
     fun `attacking with DISADVANTAGE uses lower of two rolls to hit`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10).asAttackable()
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
         withFixedDice(
             D20 rolls 15,
@@ -242,7 +242,7 @@ class AttackTest {
             D20 rolls 13, // hits: 13 + 1 + 1 = 15
             D8 rolls 4
         ) {
-            val outcome = attacker.attack(opponent.asAttackable(), RollModifier.ADVANTAGE)
+            val outcome = attacker.attack(opponent, RollModifier.ADVANTAGE)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(outcome.hitRoll, equalTo(13 + 1 + 1))
@@ -252,7 +252,7 @@ class AttackTest {
     @Test
     fun `attacking with DISADVANTAGE can turn a hit into a miss`() {
         val attacker = aCharacterWithWeapon(strMod = 1)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 15).asAttackable()
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 15)
 
         withFixedDice(
             D20 rolls 13, // would hit: 13 + 1 + 1 = 15
@@ -269,7 +269,7 @@ class AttackTest {
     fun `critical hit works with ADVANTAGE when either roll is 20`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10).asAttackable()
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
         withFixedDice(
             D20 rolls 12,
@@ -288,7 +288,7 @@ class AttackTest {
     fun `critical hit works with DISADVANTAGE when higher roll is 20`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10).asAttackable()
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
         withFixedDice(
             D20 rolls 20,  // this is the max, so it's used even with disadvantage
@@ -316,7 +316,7 @@ class AttackTest {
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 10,
             position = Coordinate(3, 0) // distance = 3, within melee range of 5
-        ).asAttackable()
+        )
 
         withFixedDice(
             D20 rolls 10,
@@ -339,7 +339,7 @@ class AttackTest {
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 10,
             position = Coordinate(6, 0) // distance = 6, out of melee range of 5
-        ).asAttackable()
+        )
 
         withFixedDice {
             val outcome = attacker.attack(opponent)
@@ -361,7 +361,7 @@ class AttackTest {
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 10,
             position = Coordinate(8, 0) // distance = 8, within normal range of 10
-        ).asAttackable()
+        )
 
         withFixedDice(
             D20 rolls 10,
@@ -386,7 +386,7 @@ class AttackTest {
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 10,
             position = Coordinate(25, 0) // distance = 25, within long range of 30
-        ).asAttackable()
+        )
 
         withFixedDice(
             D20 rolls 10, // lower roll should be used

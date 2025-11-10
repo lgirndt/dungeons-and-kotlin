@@ -40,7 +40,7 @@ class SpellTest {
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 12,
             position = Coordinate(10, 0)
-        ).asAttackable()
+        )
 
         withFixedDice(
             D20 rolls 10, // hit roll

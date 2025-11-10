@@ -62,10 +62,9 @@ class CharacterTest {
         val character = PlayerCharacter.aPlayerCharacter(
             hitPoints = 20
         )
-        val attackable = character.asAttackable()
-        val damageReceived = attackable.receiveDamage(8, DamageType.Force)
+        val damageReceived = character.receiveDamage(8, DamageType.Force)
         assertThat(damageReceived, equalTo(8))
-        assertThat(attackable.hitPoints, equalTo(20 - 8))
+        assertThat(character.hitPoints, equalTo(20 - 8))
     }
 
     @Test
@@ -76,10 +75,9 @@ class CharacterTest {
                 resistances = setOf(DamageType.Force)
             )
         )
-        val attackable = character.asAttackable()
-        val damageReceived = attackable.receiveDamage(9, DamageType.Force)
+        val damageReceived = character.receiveDamage(9, DamageType.Force)
         assertThat(damageReceived, equalTo(4))
-        assertThat(attackable.hitPoints, equalTo(20 - 4)) // half damage rounded down
+        assertThat(character.hitPoints, equalTo(20 - 4)) // half damage rounded down
     }
 
     @Test
@@ -90,10 +88,9 @@ class CharacterTest {
                 vulnerabilities = setOf(DamageType.Force)
             )
         )
-        val attackable = character.asAttackable()
-        val damageReceived = attackable.receiveDamage(6, DamageType.Force)
+        val damageReceived = character.receiveDamage(6, DamageType.Force)
         assertThat(damageReceived, equalTo(12))
-        assertThat(attackable.hitPoints, equalTo(20 - 6 * 2)) // double damage
+        assertThat(character.hitPoints, equalTo(20 - 6 * 2)) // double damage
     }
 
     @Test
@@ -104,10 +101,9 @@ class CharacterTest {
                 immunities = setOf(DamageType.Force)
             )
         )
-        val attackable = character.asAttackable()
-        val damageReceived = attackable.receiveDamage(15, DamageType.Force)
+        val damageReceived = character.receiveDamage(15, DamageType.Force)
         assertThat(damageReceived, equalTo(0))
-        assertThat(attackable.hitPoints, equalTo(20)) // no damage
+        assertThat(character.hitPoints, equalTo(20)) // no damage
     }
 
 // TODO: PlayerCharacter doesn't have castSpellAttack method yet. This is only in Character.
@@ -123,7 +119,7 @@ class CharacterTest {
 //        )
 //
 //        val spell = SOME_SPELL.copy()
-//        val outcome = fighter.castSpellAttack(spell, SpellLevel.Cantrip, opponent.asAttackable(), RollModifier.NORMAL)
+//        val outcome = fighter.castSpellAttack(spell, SpellLevel.Cantrip, opponent, RollModifier.NORMAL)
 //        assertThat(outcome, equalTo(null))
 //    }
 
@@ -148,7 +144,7 @@ class CharacterTest {
 //            Die.D20 rolls 12, // hit roll
 //            Die.D10 rolls 7   // damage roll
 //        ) {
-//            val outcome = warlock.castSpellAttack(spell, SpellLevel.Cantrip, opponent.asAttackable(), RollModifier.NORMAL)
+//            val outcome = warlock.castSpellAttack(spell, SpellLevel.Cantrip, opponent, RollModifier.NORMAL)
 //
 //            assertNotNull(outcome)
 //            // Hit roll: 12 (d20) + 3 (cha mod) + 2 (prof bonus) = 17, which meets AC 12
