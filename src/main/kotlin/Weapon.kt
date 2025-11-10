@@ -31,7 +31,7 @@ object RangeCheckers {
     }
 }
 
-typealias WeaponProficiency = (Weapon) -> Boolean
+typealias WeaponProficiency = (AttackSource) -> Boolean
 
 internal object WeaponProficiencies {
     val all: WeaponProficiency = { _ -> true }
@@ -39,7 +39,7 @@ internal object WeaponProficiencies {
     val none: WeaponProficiency = { _ -> false }
 }
 
-abstract class Weapon {
+abstract class AttackSource {
     abstract val name: String
     abstract val category: WeaponCategory
     abstract val damageType: DamageType
@@ -59,17 +59,17 @@ abstract class Weapon {
     fun whichStat(statBlock: StatBlock): Stat = statQuery(statBlock)
 }
 
-data class PhysicalWeapon(
+data class Weapon(
     override val name: String,
     override val category: WeaponCategory,
     override val damageType: DamageType,
     override val statQuery: StatQuery,
     override val damageRoll: DamageRoll,
     override val rangeChecker: RangeChecker = { RangeClassification.OutOfRange },
-) : Weapon()
+) : AttackSource()
 
 object Weapons {
-    val LONGSWORD = PhysicalWeapon(
+    val LONGSWORD = Weapon(
         name = "Longsword",
         category = WeaponCategory.Martial,
         damageType = DamageType.Slashing,
@@ -77,7 +77,7 @@ object Weapons {
         damageRoll = SimpleDamageRoll(1, Die.D8)
     )
 
-    val Shortbow = PhysicalWeapon(
+    val Shortbow = Weapon(
         name = "Shortbow",
         category = WeaponCategory.Simple,
         damageType = DamageType.Piercing,

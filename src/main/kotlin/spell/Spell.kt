@@ -43,7 +43,7 @@ fun castAttackSpell(
     }
     val spellAsWeapon = spell.asWeapon(caster)
     return attack(object : Attacker {
-        override val weapon: Weapon = spellAsWeapon
+        override val attackSource: AttackSource = spellAsWeapon
         override val position: Coordinate = caster.position
         override val stats: StatBlock = caster.stats
         override fun applyAttackModifiers(): Int =
@@ -63,9 +63,9 @@ data class AttackSpell(
     val damageRoll: DamageRoll,
     val range: Double) {
 
-    internal fun asWeapon(caster: Caster): Weapon {
+    internal fun asWeapon(caster: Caster): AttackSource {
         val spell = this
-        return object : Weapon() {
+        return object : AttackSource() {
             override val name: String = spell.name
             override val category: WeaponCategory = WeaponCategory.Simple // TODO this does not make sense
             override val damageType: DamageType = spell.damageType

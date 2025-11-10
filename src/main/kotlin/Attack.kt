@@ -4,7 +4,7 @@ import org.example.Die.Companion.D20
 import org.example.RangeClassification.*
 
 interface Attacker {
-    val weapon: Weapon
+    val attackSource: AttackSource
     val position: Coordinate
     val stats: StatBlock
     fun applyAttackModifiers(): Int
@@ -43,7 +43,7 @@ data class AttackOutcome(
 internal fun attack(attacker: Attacker, opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
     val hitRollD20 = rollModifier.let {
         val distance = attacker.position.distance(opponent.position)
-        when (attacker.weapon.isTargetInRange(distance)) {
+        when (attacker.attackSource.isTargetInRange(distance)) {
             OutOfRange -> return AttackOutcome.MISS
             WithinNormalRange -> it
             WithinLongRange -> it.giveDisadvantage()
@@ -55,8 +55,8 @@ internal fun attack(attacker: Attacker, opponent: Attackable, rollModifier: Roll
 
     return if (hitRoll >= opponent.armourClass) {
         // damage
-        val damage = attacker.weapon.dealDamage({query : StatQuery -> query(attacker.stats)}, isCrit)
-        val receivedDamage = opponent.receiveDamage(damage, attacker.weapon.damageType)
+        val damage = attacker.attackSource.dealDamage({ query : StatQuery -> query(attacker.stats)}, isCrit)
+        val receivedDamage = opponent.receiveDamage(damage, attacker.attackSource.damageType)
 
         AttackOutcome(true, receivedDamage, hitRoll)
     } else {

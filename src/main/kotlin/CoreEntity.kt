@@ -43,7 +43,7 @@ abstract class CoreEntity(
     internal fun asPhysicalAttacker(): Attacker {
         val entity = this
         return object : Attacker {
-            override val weapon = entity.weapon
+            override val attackSource = entity.weapon
             override val position = entity.core.position
             override val stats: StatBlock
                 get() = core.stats

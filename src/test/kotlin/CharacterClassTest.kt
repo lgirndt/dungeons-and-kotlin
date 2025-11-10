@@ -9,7 +9,7 @@ import org.junit.jupiter.api.Test
 
 class CharacterClassTest {
 
-    private fun aWeaponBeing(category: WeaponCategory) : Weapon = SOME_WEAPON.copy(category = category)
+    private fun aWeaponBeing(category: WeaponCategory) : AttackSource = SOME_WEAPON.copy(category = category)
 
     @Test
     fun `Fighter should be proficient with all weapons`() {

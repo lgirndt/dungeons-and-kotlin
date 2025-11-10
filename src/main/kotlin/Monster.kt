@@ -3,7 +3,7 @@ package org.example
 data class Monster(
     val name: String,
     val stats: StatBlock,
-    var weapon: Weapon,
+    var attackSource: AttackSource,
     override val armourClass: Int,
     override var position: Coordinate,
     override val damageModifiers: DamageModifiers,
@@ -23,7 +23,7 @@ object Bestiary {
                 wis = Stat(8),
                 cha = Stat(8),
             ),
-            weapon = Weapons.Shortbow,
+            attackSource = Weapons.Shortbow,
             armourClass = 15,
             position = Coordinate(0, 0),
             damageModifiers = DamageModifiers.NONE,

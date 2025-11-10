@@ -1,10 +1,10 @@
+
 import com.google.common.collect.ImmutableListMultimap
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
 import org.example.*
-import javax.swing.text.Position
 
 const val DEFAULT_STAT_VALUE = 10
 
@@ -82,7 +82,7 @@ fun PlayerCharacter.Companion.aPlayerCharacter(
 }
 
 
-val SOME_WEAPON = PhysicalWeapon(
+val SOME_WEAPON = Weapon(
     name = "Surgebinder",
     category = WeaponCategory.Martial,
     damageType = DamageType.Slashing,
