@@ -2,6 +2,7 @@ package spell
 
 import SOME_CHARACTER
 import SOME_STAT_BOCK
+import aPlayerCharacter
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import org.example.*
@@ -37,10 +38,10 @@ class SpellTest {
             damageRoll = SimpleDamageRoll(1, D4)
         )
 
-        val opponent = SOME_CHARACTER.copy(
-            armour = { 12 }, // AC 12
+        val opponent = PlayerCharacter.aPlayerCharacter(
+            armourClass = 12,
             position = Coordinate(10, 0)
-        )
+        ).asAttackable()
 
         withFixedDice(
             D20 rolls 10, // hit roll
