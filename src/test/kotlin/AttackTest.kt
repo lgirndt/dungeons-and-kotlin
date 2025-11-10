@@ -75,7 +75,7 @@ class AttackTest {
             weapon = martialWeapon
         )
 
-        val opponent = SOME_CHARACTER.copy(armour = { 12 })
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 12)
 
         withFixedDice(
             D20 rolls 10,
@@ -192,7 +192,7 @@ class AttackTest {
     fun `attacking with ADVANTAGE uses higher of two rolls to hit`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = SOME_CHARACTER.copy(armour = { 10 })
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
         withFixedDice(
             D20 rolls 8,
@@ -214,7 +214,7 @@ class AttackTest {
     fun `attacking with DISADVANTAGE uses lower of two rolls to hit`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = SOME_CHARACTER.copy(armour = { 10 })
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
         withFixedDice(
             D20 rolls 15,
@@ -235,7 +235,7 @@ class AttackTest {
     @Test
     fun `attacking with ADVANTAGE can turn a miss into a hit`() {
         val attacker = aCharacterWithWeapon(strMod = 1)
-        val opponent = SOME_CHARACTER.copy(armour = { 15 })
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 15)
 
         withFixedDice(
             D20 rolls 5,  // would miss: 5 + 1 + 1 = 7 < 15
@@ -252,7 +252,7 @@ class AttackTest {
     @Test
     fun `attacking with DISADVANTAGE can turn a hit into a miss`() {
         val attacker = aCharacterWithWeapon(strMod = 1)
-        val opponent = SOME_CHARACTER.copy(armour = { 15 })
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 15)
 
         withFixedDice(
             D20 rolls 13, // would hit: 13 + 1 + 1 = 15
@@ -269,7 +269,7 @@ class AttackTest {
     fun `critical hit works with ADVANTAGE when either roll is 20`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = SOME_CHARACTER.copy(armour = { 10 })
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
         withFixedDice(
             D20 rolls 12,
@@ -288,7 +288,7 @@ class AttackTest {
     fun `critical hit works with DISADVANTAGE when higher roll is 20`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = SOME_CHARACTER.copy(armour = { 10 })
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
         withFixedDice(
             D20 rolls 20,  // this is the max, so it's used even with disadvantage
@@ -306,7 +306,7 @@ class AttackTest {
     @Test
     fun `a opponent within melee range can be attacked`() {
         val damageDie = D8
-        val attacker = SOME_CHARACTER.copy(
+        val attacker = PlayerCharacter.aPlayerCharacter(
             position = Coordinate(0, 0)
         )
         attacker.equip(
@@ -315,8 +315,8 @@ class AttackTest {
             )
         )
 
-        val opponent = SOME_CHARACTER.copy(
-            armour = { 10 },
+        val opponent = PlayerCharacter.aPlayerCharacter(
+            armourClass = 10,
             position = Coordinate(3, 0) // distance = 3, within melee range of 5
         )
 
@@ -331,7 +331,7 @@ class AttackTest {
 
     @Test
     fun `an attack out of melee range misses automatically`() {
-        val attacker = SOME_CHARACTER.copy(
+        val attacker = PlayerCharacter.aPlayerCharacter(
             position = Coordinate(0, 0)
         )
         attacker.equip(
@@ -340,8 +340,8 @@ class AttackTest {
             )
         )
 
-        val opponent = SOME_CHARACTER.copy(
-            armour = { 10 },
+        val opponent = PlayerCharacter.aPlayerCharacter(
+            armourClass = 10,
             position = Coordinate(6, 0) // distance = 6, out of melee range of 5
         )
 
@@ -354,7 +354,7 @@ class AttackTest {
     @Test
     fun `a ranged weapon attack within normal range hits normally`() {
         val damageDie = D8
-        val attacker = SOME_CHARACTER.copy(
+        val attacker = PlayerCharacter.aPlayerCharacter(
             position = Coordinate(0, 0)
         )
         attacker.equip(
@@ -364,8 +364,8 @@ class AttackTest {
             )
         )
 
-        val opponent = SOME_CHARACTER.copy(
-            armour = { 10 },
+        val opponent = PlayerCharacter.aPlayerCharacter(
+            armourClass = 10,
             position = Coordinate(8, 0) // distance = 8, within normal range of 10
         )
 
@@ -381,7 +381,7 @@ class AttackTest {
     @Test
     fun `a ranged weapon attack within long range hits with disadvantage`() {
         val damageDie = D8
-        val attacker = SOME_CHARACTER.copy(
+        val attacker = PlayerCharacter.aPlayerCharacter(
             position = Coordinate(0, 0)
         )
         attacker.equip(
@@ -391,8 +391,8 @@ class AttackTest {
             )
         )
 
-        val opponent = SOME_CHARACTER.copy(
-            armour = { 10 },
+        val opponent = PlayerCharacter.aPlayerCharacter(
+            armourClass = 10,
             position = Coordinate(25, 0) // distance = 25, within long range of 30
         )
 
