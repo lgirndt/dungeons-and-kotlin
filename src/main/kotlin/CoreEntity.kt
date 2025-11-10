@@ -42,7 +42,7 @@ abstract class CoreEntity (
         return object : Attackable {
             override val armourClass: Int
                 get() = core.armourClass
-            override val position = Coordinate(0,0)
+            override val position = core.position
             override val damageModifiers: DamageModifiers
                 get() = core.damageModifiers
             override var hitPoints: Int

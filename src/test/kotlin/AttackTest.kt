@@ -329,19 +329,17 @@ class AttackTest {
 
     @Test
     fun `an attack out of melee range misses automatically`() {
-        val attacker = SOME_CHARACTER.copy(
-            position = Coordinate(0, 0)
-        )
-        attacker.equip(
-            SOME_WEAPON.copy(
+        val attacker = PlayerCharacter.aPlayerCharacter(
+            position = Coordinate(0, 0),
+            weapon = SOME_WEAPON.copy(
                 rangeChecker = RangeCheckers.melee(5.0)
             )
         )
 
-        val opponent = SOME_CHARACTER.copy(
-            armour = { 10 },
+        val opponent = PlayerCharacter.aPlayerCharacter(
+            armourClass = 10,
             position = Coordinate(6, 0) // distance = 6, out of melee range of 5
-        )
+        ).asAttackable()
 
         withFixedDice {
             val outcome = attacker.attack(opponent)
@@ -352,20 +350,18 @@ class AttackTest {
     @Test
     fun `a ranged weapon attack within normal range hits normally`() {
         val damageDie = D8
-        val attacker = SOME_CHARACTER.copy(
-            position = Coordinate(0, 0)
-        )
-        attacker.equip(
-            SOME_WEAPON.copy(
+        val attacker = PlayerCharacter.aPlayerCharacter(
+            position = Coordinate(0, 0),
+            weapon = SOME_WEAPON.copy(
                 statQuery = StatQueries.Dex,
                 rangeChecker = RangeCheckers.ranged(normalRange = 10.0, longRange = 30.0)
             )
         )
 
-        val opponent = SOME_CHARACTER.copy(
-            armour = { 10 },
+        val opponent = PlayerCharacter.aPlayerCharacter(
+            armourClass = 10,
             position = Coordinate(8, 0) // distance = 8, within normal range of 10
-        )
+        ).asAttackable()
 
         withFixedDice(
             D20 rolls 10,
@@ -379,20 +375,18 @@ class AttackTest {
     @Test
     fun `a ranged weapon attack within long range hits with disadvantage`() {
         val damageDie = D8
-        val attacker = SOME_CHARACTER.copy(
-            position = Coordinate(0, 0)
-        )
-        attacker.equip(
-            SOME_WEAPON.copy(
+        val attacker = PlayerCharacter.aPlayerCharacter(
+            position = Coordinate(0, 0),
+            weapon = SOME_WEAPON.copy(
                 statQuery = StatQueries.Dex,
                 rangeChecker = RangeCheckers.ranged(normalRange = 10.0, longRange = 30.0)
             )
         )
 
-        val opponent = SOME_CHARACTER.copy(
-            armour = { 10 },
+        val opponent = PlayerCharacter.aPlayerCharacter(
+            armourClass = 10,
             position = Coordinate(25, 0) // distance = 25, within long range of 30
-        )
+        ).asAttackable()
 
         withFixedDice(
             D20 rolls 10, // lower roll should be used
