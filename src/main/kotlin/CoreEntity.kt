@@ -1,11 +1,14 @@
 package org.example
 
+import javax.swing.text.Position
+
 data class CoreEntityData (
     val name: String,
     val stats: StatBlock,
     var hitPoints: Int,
     val armourClass: Int,
     val damageModifiers: DamageModifiers,
+    val position: Coordinate
 )
 
 abstract class CoreEntity (
@@ -26,7 +29,7 @@ abstract class CoreEntity (
         val entity = this
         return object : Attacker {
             override val weapon = entity.weapon
-            override val position = Coordinate(0,0)
+            override val position = entity.core.position
             override val stats: StatBlock
                 get() = core.stats
             override fun applyAttackModifiers(): Int = entity.attackModifier

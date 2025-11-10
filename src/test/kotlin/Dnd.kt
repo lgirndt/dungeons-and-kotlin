@@ -4,6 +4,7 @@ import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
 import org.example.*
+import javax.swing.text.Position
 
 const val DEFAULT_STAT_VALUE = 10
 
@@ -58,6 +59,7 @@ fun PlayerCharacter.Companion.aPlayerCharacter(
     hitPoints: Int = 10,
     armourClass: Int = 12,
     damageModifiers: DamageModifiers = DamageModifiers.NONE,
+    position: Coordinate = Coordinate(0,0),
     level: Int = 1,
     weapon: Weapon = SOME_WEAPON.copy(),
     classFeatures : CharacterClass = Fighter(),
@@ -68,7 +70,8 @@ fun PlayerCharacter.Companion.aPlayerCharacter(
             stats = stats,
             hitPoints = hitPoints,
             armourClass = armourClass,
-            damageModifiers = damageModifiers
+            damageModifiers = damageModifiers,
+            position = position,
         ),
         data = PlayerCharacterData(
             level = level,
