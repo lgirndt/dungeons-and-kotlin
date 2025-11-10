@@ -31,7 +31,7 @@ object RangeCheckers {
     }
 }
 
-typealias WeaponProficiency = (AttackSource) -> Boolean
+typealias WeaponProficiency = (Weapon) -> Boolean
 
 internal object WeaponProficiencies {
     val all: WeaponProficiency = { _ -> true }
@@ -41,7 +41,6 @@ internal object WeaponProficiencies {
 
 abstract class AttackSource {
     abstract val name: String
-    abstract val category: WeaponCategory
     abstract val damageType: DamageType
     protected abstract val statQuery: StatQuery
     protected abstract val damageRoll: DamageRoll
@@ -61,11 +60,11 @@ abstract class AttackSource {
 
 data class Weapon(
     override val name: String,
-    override val category: WeaponCategory,
     override val damageType: DamageType,
     override val statQuery: StatQuery,
     override val damageRoll: DamageRoll,
     override val rangeChecker: RangeChecker = { RangeClassification.OutOfRange },
+    val category: WeaponCategory,
 ) : AttackSource()
 
 object Weapons {

@@ -67,7 +67,6 @@ data class AttackSpell(
         val spell = this
         return object : AttackSource() {
             override val name: String = spell.name
-            override val category: WeaponCategory = WeaponCategory.Simple // TODO this does not make sense
             override val damageType: DamageType = spell.damageType
             override val statQuery: StatQuery = { caster.spellCastingAbility }
             override val damageRoll: DamageRoll = spell.damageRoll
