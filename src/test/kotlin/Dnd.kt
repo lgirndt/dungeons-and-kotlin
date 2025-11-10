@@ -91,17 +91,6 @@ val SOME_WEAPON = PhysicalWeapon(
     rangeChecker = RangeCheckers.melee(5.0)
 )
 
-val SOME_CHARACTER = Character(
-    name = "My Name",
-    characterClass = Fighter(),
-    stats = SOME_STAT_BOCK.copy(),
-    level = 1,
-    damageModifiers = DamageModifiers.NONE,
-    currentWeapon = null,
-    hitPoints = 10,
-    armour = { 10 },
-)
-
 val SOME_DAMAGE_MODIFIERS = DamageModifiers(
     resistances = emptySet(),
     immunities = emptySet(),

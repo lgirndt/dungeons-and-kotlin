@@ -1,6 +1,5 @@
 package spell
 
-import SOME_CHARACTER
 import SOME_STAT_BOCK
 import aPlayerCharacter
 import com.natpryce.hamkrest.assertion.assertThat

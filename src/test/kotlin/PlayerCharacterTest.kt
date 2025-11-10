@@ -1,18 +1,12 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import io.mockk.every
 import io.mockk.junit5.MockKExtension
-import io.mockk.mockk
 import org.example.*
 import org.example.Die.Companion.D8
-import org.example.spell.SpellLevel
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertInstanceOf
-import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
 import org.junit.jupiter.params.provider.CsvSource
-import spell.SOME_SPELL
 
 fun aCharacterWithWeapon(
     strMod: Int = 10,
