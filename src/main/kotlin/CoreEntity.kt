@@ -40,7 +40,7 @@ abstract class CoreEntity(
         return hitRoll.value == 20
     }
 
-    internal fun asAttacker(): Attacker {
+    internal fun asPhysicalAttacker(): Attacker {
         val entity = this
         return object : Attacker {
             override val weapon = entity.weapon
@@ -55,7 +55,7 @@ abstract class CoreEntity(
     }
 
     fun attack(opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
-        val attacker = asAttacker()
+        val attacker = asPhysicalAttacker()
         return attack(attacker, opponent, rollModifier)
     }
 }
