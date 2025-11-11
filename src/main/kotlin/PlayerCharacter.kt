@@ -6,7 +6,7 @@ data class PlayerCharacterData(
 )
 
 class PlayerCharacter(
-    id: EntityId = EntityId.generate(),
+    id: Id<CoreEntity> = Id.generate(),
     private val data: PlayerCharacterData,
     private val classFeatures : ClassFeatures,
     core: CoreEntityData,

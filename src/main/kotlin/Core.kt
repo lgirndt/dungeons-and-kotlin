@@ -1,0 +1,12 @@
+package org.example
+
+import java.util.*
+
+@JvmInline
+value class Id<T>(val value: UUID) {
+    companion object {
+        fun <T> generate(): Id<T> {
+            return Id<T>(UUID.randomUUID())
+        }
+    }
+}
