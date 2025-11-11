@@ -6,10 +6,11 @@ data class PlayerCharacterData(
 )
 
 class PlayerCharacter(
+    id: EntityId = EntityId.generate(),
     private val data: PlayerCharacterData,
     private val classFeatures : ClassFeatures,
     core: CoreEntityData,
-) : CoreEntity(core) {
+) : CoreEntity(id,core) {
 
     companion object {}
 

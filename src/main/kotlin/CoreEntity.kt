@@ -1,5 +1,17 @@
 package org.example
 
+import java.util.*
+
+
+@JvmInline
+value class EntityId(val value: UUID) {
+    companion object {
+        fun generate(): EntityId {
+            return EntityId(UUID.randomUUID())
+        }
+    }
+}
+
 data class CoreEntityData(
     val name: String,
     val stats: StatBlock,
@@ -10,6 +22,7 @@ data class CoreEntityData(
 )
 
 abstract class CoreEntity(
+    val id: EntityId,
     protected val core: CoreEntityData,
 ) : Attackable {
     val stats: StatBlock
