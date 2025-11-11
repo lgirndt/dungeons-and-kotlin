@@ -7,7 +7,7 @@ import org.example.WeaponCategory.Simple
 import org.junit.jupiter.api.Test
 
 
-class CharacterClassTest {
+class ClassFeaturesTest {
 
     private fun aWeaponBeing(category: WeaponCategory) : Weapon = SOME_WEAPON.copy(category = category)
 
