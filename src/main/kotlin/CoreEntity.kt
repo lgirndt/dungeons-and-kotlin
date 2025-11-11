@@ -1,7 +1,5 @@
 package org.example
 
-import java.util.*
-
 
 data class CoreEntityData(
     val name: String,
@@ -16,6 +14,10 @@ abstract class CoreEntity(
     val id: Id<CoreEntity>,
     protected val core: CoreEntityData,
 ) : Attackable {
+
+    val name: String
+        get() = core.name
+
     val stats: StatBlock
         get() = core.stats
 
