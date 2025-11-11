@@ -41,9 +41,9 @@ fun castAttackSpell(
     if (spell.level < onLevel) {
         return AttackOutcome.MISS
     }
-    val spellAsWeapon = spell.asWeapon(caster)
+    val attackSource = spell.asAttackSource(caster)
     return attack(object : Attacker {
-        override val attackSource: AttackSource = spellAsWeapon
+        override val attackSource: AttackSource = attackSource
         override val position: Coordinate = caster.position
         override val stats: StatBlock = caster.stats
         override fun applyAttackModifiers(): Int =
@@ -63,7 +63,7 @@ data class AttackSpell(
     val damageRoll: DamageRoll,
     val range: Double) {
 
-    internal fun asWeapon(caster: Caster): AttackSource {
+    internal fun asAttackSource(caster: Caster): AttackSource {
         val spell = this
         return object : AttackSource() {
             override val name: String = spell.name
