@@ -32,9 +32,6 @@ abstract class CoreEntity(
 
     abstract val weapon: Weapon
 
-//    override fun applyAttackModifiers(): Int = attackModifier
-
-
     protected abstract val attackModifier: Int
     protected open fun isCriticalHit(hitRoll: DieRoll): Boolean {
         return hitRoll.value == 20
