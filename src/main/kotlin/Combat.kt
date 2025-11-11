@@ -87,4 +87,13 @@ class CombatantsStore (
     fun find(id: Id<CoreEntity>) : Combatant? {
         return combatants[id]
     }
+
+    fun findAllWithStance(towards: Id<CoreEntity>, stance: FactionStance) : List<Combatant> {
+        val combatant = combatants[towards] ?: return emptyList()
+        val targetFaction = combatant.faction
+        return combatants.values.filter {
+            val relationStance = factionRelations.queryStance(targetFaction, it.faction)
+            relationStance == stance
+        }
+    }
 }

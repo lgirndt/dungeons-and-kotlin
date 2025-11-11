@@ -6,6 +6,22 @@ import io.mockk.unmockkObject
 import io.mockk.verify
 import org.example.*
 
+class TestId<T> {
+
+    private val map : MutableMap<Int, Id<T>> = mutableMapOf()
+
+    operator fun get(idx: Int): Id<T> {
+        if(map.contains(idx)) {
+            return map[idx]!!
+        } else {
+            val newId = Id.generate<T>()
+
+            map[idx] = newId
+            return newId
+        }
+    }
+}
+
 const val DEFAULT_STAT_VALUE = 10
 
 val SOME_STAT_BOCK = StatBlock(

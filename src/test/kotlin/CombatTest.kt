@@ -1,8 +1,11 @@
 
 import com.google.common.collect.ImmutableListMultimap
+import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
+import com.natpryce.hamkrest.hasSize
 import org.example.*
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertThrows
@@ -36,7 +39,6 @@ class FactionRelationsTest {
             .add(FactionRelationship(FACTION_A, FACTION_B, FactionStance.Hostile))
             .build()
 
-
         assertThat(relations.queryStance(FACTION_A, FACTION_B), equalTo(FactionStance.Hostile))
         assertThat(relations.queryStance(FACTION_B, FACTION_A), equalTo(FactionStance.Hostile))
     }
@@ -58,7 +60,7 @@ class FactionRelationsTest {
     }
 }
 
-fun CombatantsBuilder() : ImmutableListMultimap.Builder<Faction, CoreEntity> =
+fun combatantsBuilder() : ImmutableListMultimap.Builder<Faction, CoreEntity> =
     ImmutableListMultimap.builder<Faction, CoreEntity>()
 
 class CombatantsStoreTest {
@@ -66,13 +68,14 @@ class CombatantsStoreTest {
     val FACTION_A = Faction(name="Faction A")
     val FACTION_B = Faction(name="Faction B")
 
-    val ID = (0..5).map { Id.generate<CoreEntity>() }
+    lateinit var ID : TestId<CoreEntity>
+    lateinit var store : CombatantsStore
 
-    @Test
-    fun `construct a CombatantsStore`() {
-        // Just a construction test for now
-        val store = CombatantsStore(
-            CombatantsBuilder()
+    @BeforeEach
+    fun setup(){
+        ID = TestId()
+        store = CombatantsStore(
+            combatantsBuilder()
                 .putAll(FACTION_A,
                     PlayerCharacter.aPlayerCharacter(ID[0], name="Alpha"),
                     PlayerCharacter.aPlayerCharacter(ID[1]),
@@ -85,8 +88,35 @@ class CombatantsStoreTest {
                 )
                 .build(),
         )
+    }
+
+    @Test
+    fun `find an existing combantant`() {
         val found = store.find(ID[0])
         assertNotNull(found)
         assertThat(found.entity.name, equalTo("Alpha"))
+    }
+
+    @Test
+    fun `do not find a non-existing combantant`() {
+        val found = store.find(ID[42])
+        assertThat(found, equalTo(null))
+    }
+
+    @Test
+    fun `findAllWithStance should return correct combatants`() {
+        val friendlyToA = store.findAllWithStance(ID[0], FactionStance.Friendly)
+        assertThat(
+            friendlyToA.map{it.entity.id}.toSet(),
+            hasSize(equalTo(3))
+            and equalTo(setOf(ID[0], ID[1], ID[2]))
+        )
+
+        val hostileToA = store.findAllWithStance(ID[0], FactionStance.Hostile)
+        assertThat(
+            hostileToA.map{it.entity.id}.toSet(),
+            hasSize(equalTo(3))
+            and equalTo(setOf(ID[3], ID[4], ID[5]))
+        )
     }
 }
