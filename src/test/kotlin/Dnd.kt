@@ -62,7 +62,7 @@ fun PlayerCharacter.Companion.aPlayerCharacter(
     position: Coordinate = Coordinate(0,0),
     level: Int = 1,
     weapon: Weapon = SOME_WEAPON.copy(),
-    classFeatures : CharacterClass = Fighter(),
+    classFeatures : ClassFeatures = Fighter(),
 ) : PlayerCharacter {
     return PlayerCharacter(
         core = CoreEntityData(

@@ -7,7 +7,7 @@ data class PlayerCharacterData(
 
 class PlayerCharacter(
     private val data: PlayerCharacterData,
-    private val classFeatures : CharacterClass,
+    private val classFeatures : ClassFeatures,
     core: CoreEntityData,
 ) : CoreEntity(core) {
 
@@ -19,7 +19,7 @@ class PlayerCharacter(
     fun copy(
         core: CoreEntityData = this.core,
         data: PlayerCharacterData = this.data,
-        classFeatures : CharacterClass = this.classFeatures
+        classFeatures : ClassFeatures = this.classFeatures
     ): PlayerCharacter {
         return PlayerCharacter(
             data = data,

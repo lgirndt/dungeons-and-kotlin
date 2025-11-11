@@ -2,7 +2,7 @@ package org.example
 
 import org.example.spell.SpellCasting
 
-interface CharacterClass {
+interface ClassFeatures {
     val name: String
         get() = this::class.simpleName!!
 
@@ -16,28 +16,28 @@ interface CharacterClass {
 
 private val normalCrit : (DieRoll) -> Boolean = { it.value == 20 }
 
-class Fighter : CharacterClass {
+class Fighter : ClassFeatures {
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.all(weapon)
     override fun isCriticalHit(die: DieRoll): Boolean  = die.value >= 19
 }
 
-class Cleric : CharacterClass {
+class Cleric : ClassFeatures {
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.simple(weapon)
 }
 
-class Druid : CharacterClass {
+class Druid : ClassFeatures {
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.simple(weapon)
 }
 
-class Barbarian : CharacterClass {
+class Barbarian : ClassFeatures {
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.all(weapon)
 }
 
-class Paladin : CharacterClass {
+class Paladin : ClassFeatures {
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.none(weapon)
 }
 
-class Warlock : CharacterClass {
+class Warlock : ClassFeatures {
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.none(weapon)
     override fun toSpellCaster(stats: StatBlock, level: Int): SpellCasting? {
         return SpellCasting(
@@ -46,6 +46,6 @@ class Warlock : CharacterClass {
     }
 }
 
-class Bard : CharacterClass {
+class Bard : ClassFeatures {
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.simple(weapon)
 }
