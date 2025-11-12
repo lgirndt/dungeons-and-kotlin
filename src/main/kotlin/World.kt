@@ -5,7 +5,7 @@ import kotlin.math.sqrt
 @JvmInline
 value class Feet(val value: Double) : Comparable<Feet> {
 
-    constructor(value: Int): this(value.toDouble())
+    constructor(value: Int) : this(value.toDouble())
 
     operator fun plus(other: Feet): Feet {
         return Feet(this.value + other.value)
@@ -56,4 +56,8 @@ data class Coordinate(val x: Feet, val y: Feet) {
             return Coordinate(Feet(x.toDouble()), Feet(y.toDouble()))
         }
     }
+}
+
+fun isInRange(from: Coordinate, to: Coordinate, range: Feet): Boolean {
+    return from.distance(to) <= range
 }
