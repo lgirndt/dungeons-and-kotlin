@@ -1,5 +1,6 @@
 package org.example.spell
 
+import com.google.common.base.MoreObjects
 import org.example.*
 
 
@@ -14,7 +15,9 @@ sealed class SpellLevel(val level: Int) : Comparable<SpellLevel> {
 
     override fun compareTo(other: SpellLevel): Int = compareBy(SpellLevel::level).compare(this, other)
     override fun toString(): String {
-        return "SpellLevel(level=$level)"
+        return MoreObjects.toStringHelper(this)
+            .add("level", level)
+            .toString()
     }
 
     object Cantrip : SpellLevel(0)
@@ -35,12 +38,9 @@ fun castAttackSpell(
     onLevel: SpellLevel,
     rollModifier: RollModifier
 ) : AttackOutcome {
-    if (onLevel == SpellLevel.Cantrip && spell.level != SpellLevel.Cantrip) {
-        return AttackOutcome.MISS
-    }
-    if (spell.level < onLevel) {
-        return AttackOutcome.MISS
-    }
+    require(onLevel == SpellLevel.Cantrip && spell.level == SpellLevel.Cantrip)
+    require(spell.level >= onLevel)
+
     val attackSource = spell.asAttackSource(caster)
     return attack(object : Attacker {
         override val attackSource = attackSource
@@ -48,9 +48,7 @@ fun castAttackSpell(
         override val stats = caster.stats
         override fun applyAttackModifiers() =
             caster.spellCastingAbility.modifier + caster.proficiencyBonus.toInt()
-
         override fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == 20
-
     }, opponent, rollModifier)
 
 }
