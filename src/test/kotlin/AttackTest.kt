@@ -307,15 +307,15 @@ class AttackTest {
     fun `a opponent within melee range can be attacked`() {
         val damageDie = D8
         val attacker = PlayerCharacter.aPlayerCharacter(
-            position = Coordinate(0, 0),
+            position = Coordinate.from(0, 0),
             weapon = SOME_WEAPON.copy(
-                rangeChecker = RangeCheckers.melee(5.0)
+                rangeChecker = RangeCheckers.melee(Feet(5.0))
             )
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 10,
-            position = Coordinate(3, 0) // distance = 3, within melee range of 5
+            position = Coordinate.from(3, 0) // distance = 3, within melee range of 5
         )
 
         withFixedDice(
@@ -330,15 +330,15 @@ class AttackTest {
     @Test
     fun `an attack out of melee range misses automatically`() {
         val attacker = PlayerCharacter.aPlayerCharacter(
-            position = Coordinate(0, 0),
+            position = Coordinate.from(0, 0),
             weapon = SOME_WEAPON.copy(
-                rangeChecker = RangeCheckers.melee(5.0)
+                rangeChecker = RangeCheckers.melee(Feet(5.0))
             )
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 10,
-            position = Coordinate(6, 0) // distance = 6, out of melee range of 5
+            position = Coordinate.from(6, 0) // distance = 6, out of melee range of 5
         )
 
         withFixedDice {
@@ -351,16 +351,16 @@ class AttackTest {
     fun `a ranged weapon attack within normal range hits normally`() {
         val damageDie = D8
         val attacker = PlayerCharacter.aPlayerCharacter(
-            position = Coordinate(0, 0),
+            position = Coordinate.from(0, 0),
             weapon = SOME_WEAPON.copy(
                 statQuery = StatQueries.Dex,
-                rangeChecker = RangeCheckers.ranged(normalRange = 10.0, longRange = 30.0)
+                rangeChecker = RangeCheckers.ranged(normalRange = Feet(10.0), longRange = Feet(30.0))
             )
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 10,
-            position = Coordinate(8, 0) // distance = 8, within normal range of 10
+            position = Coordinate.from(8, 0) // distance = 8, within normal range of 10
         )
 
         withFixedDice(
@@ -376,16 +376,16 @@ class AttackTest {
     fun `a ranged weapon attack within long range hits with disadvantage`() {
         val damageDie = D8
         val attacker = PlayerCharacter.aPlayerCharacter(
-            position = Coordinate(0, 0),
+            position = Coordinate.from(0, 0),
             weapon = SOME_WEAPON.copy(
                 statQuery = StatQueries.Dex,
-                rangeChecker = RangeCheckers.ranged(normalRange = 10.0, longRange = 30.0)
+                rangeChecker = RangeCheckers.ranged(normalRange = Feet(10.0), longRange = Feet(30.0))
             )
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 10,
-            position = Coordinate(25, 0) // distance = 25, within long range of 30
+            position = Coordinate.from(25, 0) // distance = 25, within long range of 30
         )
 
         withFixedDice(

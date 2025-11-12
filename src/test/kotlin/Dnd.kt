@@ -76,7 +76,7 @@ fun PlayerCharacter.Companion.aPlayerCharacter(
     hitPoints: Int = 10,
     armourClass: Int = 12,
     damageModifiers: DamageModifiers = DamageModifiers.NONE,
-    position: Coordinate = Coordinate(0,0),
+    position: Coordinate = Coordinate.from(0,0),
     level: Int = 1,
     weapon: Weapon = SOME_WEAPON.copy(),
     classFeatures : ClassFeatures = Fighter(),
@@ -106,7 +106,7 @@ val SOME_WEAPON = Weapon(
     damageType = DamageType.Slashing,
     statQuery = StatQueries.Str,
     damageRoll = SimpleDamageRoll(1, Die.D8),
-    rangeChecker = RangeCheckers.melee(5.0)
+    rangeChecker = RangeCheckers.melee(Feet(5.0))
 )
 
 val SOME_DAMAGE_MODIFIERS = DamageModifiers(

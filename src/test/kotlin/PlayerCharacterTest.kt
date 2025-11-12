@@ -18,7 +18,7 @@ fun aCharacterWithWeapon(
         weapon = SOME_WEAPON.copy(
             damageRoll = SimpleDamageRoll(1, damageDie),
             damageType = damageType,
-            rangeChecker = RangeCheckers.melee(5.0)
+            rangeChecker = RangeCheckers.melee(Feet(5.0))
         )
     )
 

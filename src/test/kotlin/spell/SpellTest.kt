@@ -18,7 +18,7 @@ val SOME_SPELL = AttackSpell(
     level = SpellLevel.Level1,
     damageType = DamageType.Force,
     damageRoll = SimpleDamageRoll(1, Die.D4, 1),
-    range = 120.0
+    range = Feet(120.0)
 )
 
 class SpellTest {
@@ -28,7 +28,7 @@ class SpellTest {
         val caster = object : Caster {
             override val spellCastingAbility: Stat = Stat(14) // modifier +2
             override val proficiencyBonus: ProficiencyBonus = ProficiencyBonus.fromLevel(1) // +1
-            override val position: Coordinate = Coordinate(0, 0)
+            override val position: Coordinate = Coordinate.from(0, 0)
             override val stats: StatBlock = SOME_STAT_BOCK
         }
 
@@ -39,7 +39,7 @@ class SpellTest {
 
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 12,
-            position = Coordinate(10, 0)
+            position = Coordinate.from(10, 0)
         )
 
         withFixedDice(

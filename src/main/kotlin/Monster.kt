@@ -25,7 +25,7 @@ object Bestiary {
             ),
             attackSource = Weapons.Shortbow,
             armourClass = 15,
-            position = Coordinate(0, 0),
+            position = Coordinate.from(0, 0),
             damageModifiers = DamageModifiers.NONE,
             hitPoints = 7,
         )

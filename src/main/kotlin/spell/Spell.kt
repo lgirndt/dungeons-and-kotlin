@@ -59,7 +59,7 @@ data class AttackSpell(
     val level: SpellLevel,
     val damageType: DamageType,
     val damageRoll: DamageRoll,
-    val range: Double) {
+    val range: Feet) {
 
     internal fun asAttackSource(caster: Caster): AttackSource {
         val spell = this

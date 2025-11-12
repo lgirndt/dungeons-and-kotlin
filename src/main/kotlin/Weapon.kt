@@ -11,10 +11,10 @@ enum class RangeClassification {
     OutOfRange,
 }
 
-typealias RangeChecker = (distance: Double) -> RangeClassification
+typealias RangeChecker = (distance: Feet) -> RangeClassification
 
 object RangeCheckers {
-    fun melee(maxMeleeRange: Double): RangeChecker = { distance ->
+    fun melee(maxMeleeRange: Feet): RangeChecker = { distance ->
         if (distance <= maxMeleeRange) {
             RangeClassification.WithinNormalRange
         } else {
@@ -22,7 +22,7 @@ object RangeCheckers {
         }
     }
 
-    fun ranged(normalRange: Double, longRange: Double): RangeChecker = { distance ->
+    fun ranged(normalRange: Feet, longRange: Feet): RangeChecker = { distance ->
         when {
             distance <= normalRange -> RangeClassification.WithinNormalRange
             distance <= longRange -> RangeClassification.WithinLongRange
@@ -46,7 +46,7 @@ abstract class AttackSource {
     protected abstract val damageRoll: DamageRoll
     protected abstract val rangeChecker: RangeChecker
 
-    fun isTargetInRange(distance: Double): RangeClassification = rangeChecker(distance)
+    fun isTargetInRange(distance: Feet): RangeClassification = rangeChecker(distance)
 
     fun dealDamage(statProvider: StatProvider, isCritical: Boolean): Int {
         val modifier = statProvider(statQuery)
@@ -82,6 +82,6 @@ object Weapons {
         damageType = DamageType.Piercing,
         statQuery = StatQueries.Dex,
         damageRoll = SimpleDamageRoll(1, Die.D6),
-        rangeChecker = RangeCheckers.ranged(normalRange = 80.0, longRange = 320.0)
+        rangeChecker = RangeCheckers.ranged(normalRange = Feet(80.0), longRange = Feet(320.0))
     )
 }
