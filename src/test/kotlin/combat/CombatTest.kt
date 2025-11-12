@@ -1,10 +1,13 @@
-
+package combat
+import TestId
+import aPlayerCharacter
 import com.google.common.collect.ImmutableListMultimap
 import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.hasSize
 import org.example.*
+import org.example.combat.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -12,14 +15,24 @@ import org.junit.jupiter.api.assertThrows
 
 class FactionRelationsTest {
 
-    val FACTION_A = Faction(name="Faction A")
-    val FACTION_B = Faction(name="Faction B")
-    val SOME_RELATIONSHIP = FactionRelationship(FACTION_A, FACTION_B, FactionStance.Friendly)
+    val FACTION_A = _root_ide_package_.org.example.combat.Faction(name = "Faction A")
+    val FACTION_B = _root_ide_package_.org.example.combat.Faction(name = "Faction B")
+    val SOME_RELATIONSHIP = _root_ide_package_.org.example.combat.FactionRelationship(
+        FACTION_A,
+        FACTION_B,
+        FactionStance.Friendly
+    )
 
     @Test
     fun `queryStance should return an added Relationship`() {
         val relations = FactionRelations.Builder()
-            .add(FactionRelationship(FACTION_A, FACTION_B, FactionStance.Neutral))
+            .add(
+                FactionRelationship(
+                    FACTION_A,
+                    FACTION_B,
+                    FactionStance.Neutral
+                )
+            )
             .build()
 
         assertThat(relations.queryStance(FACTION_A, FACTION_B), equalTo(FactionStance.Neutral))
@@ -36,7 +49,13 @@ class FactionRelationsTest {
     @Test
     fun `An added hostile Relationship should be queried as hostile`() {
         val relations = FactionRelations.Builder()
-            .add(FactionRelationship(FACTION_A, FACTION_B, FactionStance.Hostile))
+            .add(
+                FactionRelationship(
+                    FACTION_A,
+                    FACTION_B,
+                    FactionStance.Hostile
+                )
+            )
             .build()
 
         assertThat(relations.queryStance(FACTION_A, FACTION_B), equalTo(FactionStance.Hostile))
@@ -65,8 +84,8 @@ fun combatantsBuilder() : ImmutableListMultimap.Builder<Faction, CoreEntity> =
 
 class CombatantsStoreTest {
 
-    val FACTION_A = Faction(name="Faction A")
-    val FACTION_B = Faction(name="Faction B")
+    val FACTION_A = _root_ide_package_.org.example.combat.Faction(name = "Faction A")
+    val FACTION_B = _root_ide_package_.org.example.combat.Faction(name = "Faction B")
 
     lateinit var ID : TestId<CoreEntity>
     lateinit var store : CombatantsStore
@@ -74,14 +93,16 @@ class CombatantsStoreTest {
     @BeforeEach
     fun setup(){
         ID = TestId()
-        store = CombatantsStore(
+        store = _root_ide_package_.org.example.combat.CombatantsStore(
             combatantsBuilder()
-                .putAll(FACTION_A,
-                    PlayerCharacter.aPlayerCharacter(ID[0], name="Alpha"),
+                .putAll(
+                    FACTION_A,
+                    PlayerCharacter.Companion.aPlayerCharacter(ID[0], name = "Alpha"),
                     PlayerCharacter.aPlayerCharacter(ID[1]),
                     PlayerCharacter.aPlayerCharacter(ID[2])
                 )
-                .putAll(FACTION_B,
+                .putAll(
+                    FACTION_B,
                     PlayerCharacter.aPlayerCharacter(ID[3]),
                     PlayerCharacter.aPlayerCharacter(ID[4]),
                     PlayerCharacter.aPlayerCharacter(ID[5])

@@ -1,4 +1,4 @@
-package org.example
+package org.example.combat
 
 import com.google.common.collect.Multimap
 
@@ -9,7 +9,7 @@ enum class FactionStance {
 }
 
 data class Faction(
-    val id: Id<Faction> = Id.generate(),
+    val id: org.example.Id<Faction> = _root_ide_package_.org.example.Id.Companion.generate(),
     val name: String,
 )
 
@@ -23,7 +23,7 @@ data class FactionRelationship(
     }
 }
 
-private typealias FactionRelationsLookupKey = Set<Id<Faction>>
+private typealias FactionRelationsLookupKey = Set<org.example.Id<Faction>>
 
 class FactionRelations private constructor(
     private val relationships: Map<FactionRelationsLookupKey, FactionStance>
@@ -61,15 +61,15 @@ class FactionRelations private constructor(
 }
 
 data class Combatant(
-    val entity: CoreEntity,
+    val entity: org.example.CoreEntity,
     val faction: Faction
 )
 
 class CombatantsStore(
-    combatantsByFaction: Multimap<Faction, CoreEntity>,
+    combatantsByFaction: Multimap<Faction, org.example.CoreEntity>,
     nonHostileFactionRelationships: List<FactionRelationship> = emptyList(),
 ) {
-    val combatants: Map<Id<CoreEntity>, Combatant> = combatantsByFaction.entries()
+    val combatants: Map<org.example.Id<org.example.CoreEntity>, Combatant> = combatantsByFaction.entries()
         .map { Combatant(faction = it.key, entity = it.value) }
         .associateBy { it.entity.id }
 
@@ -83,11 +83,11 @@ class CombatantsStore(
             builder.add(relationship)
         }.build()
 
-    fun findOrNull(id: Id<CoreEntity>): Combatant? {
+    fun findOrNull(id: org.example.Id<org.example.CoreEntity>): Combatant? {
         return combatants[id]
     }
 
-    fun findAllWithStance(towards: Id<CoreEntity>, stance: FactionStance): List<Combatant> {
+    fun findAllWithStance(towards: org.example.Id<org.example.CoreEntity>, stance: FactionStance): List<Combatant> {
         val combatant = combatants[towards] ?: return emptyList()
         val targetFaction = combatant.faction
         return combatants.values.filter {
@@ -102,35 +102,35 @@ class CombatantsStore(
 }
 
 interface CombatScenario {
-    fun listVisibleCombatants(observer: Id<CoreEntity>): List<Combatant>
-    fun isVisibleTo(observer: Id<CoreEntity>, target: Id<CoreEntity>): Boolean
-    fun listCombatantsInRange(observer: Id<CoreEntity>, rangeInFeet: Feet): List<Combatant>
+    fun listVisibleCombatants(observer: org.example.Id<org.example.CoreEntity>): List<Combatant>
+    fun isVisibleTo(observer: org.example.Id<org.example.CoreEntity>, target: org.example.Id<org.example.CoreEntity>): Boolean
+    fun listCombatantsInRange(observer: org.example.Id<org.example.CoreEntity>, rangeInFeet: org.example.Feet): List<Combatant>
 }
 
 class SimpleCombatScenario(
     private val combatantsStore: CombatantsStore
 ) : CombatScenario {
 
-    override fun listVisibleCombatants(observer: Id<CoreEntity>): List<Combatant> {
+    override fun listVisibleCombatants(observer: org.example.Id<org.example.CoreEntity>): List<Combatant> {
         return combatantsStore.listAll().filter { it.entity.id != observer }
     }
 
     override fun isVisibleTo(
-        observer: Id<CoreEntity>,
-        target: Id<CoreEntity>
+        observer: org.example.Id<org.example.CoreEntity>,
+        target: org.example.Id<org.example.CoreEntity>
     ): Boolean = true
 
 
     override fun listCombatantsInRange(
-        observer: Id<CoreEntity>,
-        rangeInFeet: Feet
+        observer: org.example.Id<org.example.CoreEntity>,
+        rangeInFeet: org.example.Feet
     ): List<Combatant> {
         val entity = combatantsStore.findOrNull(observer)?.entity
             ?: return emptyList()
 
         return combatantsStore.listAll()
             .filter { it.entity.id != observer }
-            .filter { isInRange(entity.position, it.entity.position, rangeInFeet) }
+            .filter { _root_ide_package_.org.example.isInRange(entity.position, it.entity.position, rangeInFeet) }
     }
 
 }
