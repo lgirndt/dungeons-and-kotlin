@@ -2,6 +2,7 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import io.mockk.junit5.MockKExtension
 import org.example.*
+import org.example.Die.Companion.D20
 import org.example.Die.Companion.D8
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
@@ -154,4 +155,75 @@ class CharacterTest {
 //        }
 //    }
 
+    @Test
+    fun `ability check that meets DC should succeed`() {
+        val character = PlayerCharacter.aPlayerCharacter(
+            stats = StatBlock.fromModifiers(strMod = 2) // Strength 14, modifier +2
+        )
+
+        withFixedDice(D20 rolls 10) {
+            val result = character.rollAbilityCheck(
+                ability = StatQueries.Str,
+                difficultyClass = 12
+            )
+            // Roll: 10 + 2 (str mod) = 12, meets DC 12
+            assertThat(result.isSuccessful, equalTo(true))
+        }
+    }
+
+    @Test
+    fun `ability check that fails to meet DC should fail`() {
+        val character = PlayerCharacter.aPlayerCharacter(
+            stats = StatBlock.fromModifiers(dexMod = 1) // Dexterity 12, modifier +1
+        )
+
+        withFixedDice(D20 rolls 8) {
+            val result = character.rollAbilityCheck(
+                ability = StatQueries.Dex,
+                difficultyClass = 15
+            )
+            // Roll: 8 + 1 (dex mod) = 9, fails DC 15
+            assertThat(result.isSuccessful, equalTo(false))
+        }
+    }
+
+    @Test
+    fun `ability check with advantage should use higher roll`() {
+        val character = PlayerCharacter.aPlayerCharacter(
+            stats = StatBlock.fromModifiers(wisMod = 3) // Wisdom 16, modifier +3
+        )
+
+        withFixedDice(
+            D20 rolls 8,
+            D20 rolls 15
+        ) {
+            val result = character.rollAbilityCheck(
+                ability = StatQueries.Wis,
+                difficultyClass = 18,
+                rollModifier = RollModifier.ADVANTAGE
+            )
+            // Roll: 15 (higher) + 3 (wis mod) = 18, meets DC 18
+            assertThat(result.isSuccessful, equalTo(true))
+        }
+    }
+
+    @Test
+    fun `ability check with disadvantage should use lower roll`() {
+        val character = PlayerCharacter.aPlayerCharacter(
+            stats = StatBlock.fromModifiers(intMod = 2) // Intelligence 14, modifier +2
+        )
+
+        withFixedDice(
+            D20 rolls 16,
+            D20 rolls 9
+        ) {
+            val result = character.rollAbilityCheck(
+                ability = StatQueries.Int,
+                difficultyClass = 15,
+                rollModifier = RollModifier.DISADVANTAGE
+            )
+            // Roll: 9 (lower) + 2 (int mod) = 11, fails DC 15
+            assertThat(result.isSuccessful, equalTo(false))
+        }
+    }
 }

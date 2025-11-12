@@ -1,5 +1,7 @@
 package org.example
 
+import org.example.Die.Companion.D20
+
 
 data class CoreEntityData(
     val name: String,
@@ -60,5 +62,13 @@ abstract class CoreEntity(
     fun attack(opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
         val attacker = asPhysicalAttacker()
         return attack(attacker, opponent, rollModifier)
+    }
+
+    fun rollAbilityCheck(
+        ability: StatQuery,
+        difficultyClass: Int,
+        rollModifier: RollModifier = RollModifier.NORMAL): AbilityCheckResult {
+        val roll = rollModifier.roll(D20)
+        return AbilityCheckResult(roll.value + ability(stats).modifier >= difficultyClass)
     }
 }
