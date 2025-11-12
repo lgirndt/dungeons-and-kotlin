@@ -43,10 +43,10 @@ fun castAttackSpell(
     }
     val attackSource = spell.asAttackSource(caster)
     return attack(object : Attacker {
-        override val attackSource: AttackSource = attackSource
-        override val position: Coordinate = caster.position
-        override val stats: StatBlock = caster.stats
-        override fun applyAttackModifiers(): Int =
+        override val attackSource = attackSource
+        override val position = caster.position
+        override val stats = caster.stats
+        override fun applyAttackModifiers() =
             caster.spellCastingAbility.modifier + caster.proficiencyBonus.toInt()
 
         override fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == 20
