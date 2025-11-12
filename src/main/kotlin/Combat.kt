@@ -84,7 +84,7 @@ class CombatantsStore (
         builder.add(relationship)
     }.build()
 
-    fun find(id: Id<CoreEntity>) : Combatant? {
+    fun findOrNull(id: Id<CoreEntity>) : Combatant? {
         return combatants[id]
     }
 
