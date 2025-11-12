@@ -1,8 +1,14 @@
+
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import org.example.*
+import io.mockk.mockk
+import io.mockk.verify
+import org.example.AbilityCheckResult
 import org.example.Die.Companion.D20
 import org.example.Die.Companion.D6
+import org.example.RollModifier
+import org.example.SimpleDamageRoll
+import org.example.Stat
 import org.junit.jupiter.api.Assertions.assertAll
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -155,3 +161,35 @@ class DndTest {
 
 }
 
+class AbilityCheckResultTest {
+
+    @Test
+    fun `a abilityCheckResult should have proper isSuccessful`() {
+        assertThat(AbilityCheckResult(true).isSuccessful, equalTo(true))
+        assertThat(AbilityCheckResult(false).isSuccessful, equalTo(false))
+    }
+
+    @Test
+    fun `onSuccess should execute action when successful`() {
+        val successAction = mockk<() -> Unit>(relaxed = true)
+        val failureAction = mockk<() -> Unit>(relaxed = true)
+
+        AbilityCheckResult(true)
+            .onSuccess(successAction)
+            .onFailure(failureAction)
+        verify(exactly = 1) { successAction() }
+        verify(exactly = 0) { failureAction() }
+    }
+
+    @Test
+    fun `onFailure should execute action when not successful`() {
+        val successAction = mockk<() -> Unit>(relaxed = true)
+        val failureAction = mockk<() -> Unit>(relaxed = true)
+
+        AbilityCheckResult(false)
+            .onSuccess(successAction)
+            .onFailure(failureAction)
+        verify(exactly = 0) { successAction() }
+        verify(exactly = 1) { failureAction() }
+    }
+}

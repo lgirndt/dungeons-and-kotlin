@@ -161,3 +161,21 @@ value class ProficiencyBonus private constructor(private val value: Int) {
         val None = ProficiencyBonus(0)
     }
 }
+
+class AbilityCheckResult(
+    val isSuccessful: Boolean,
+) {
+
+    fun onSuccess(action: () -> Unit): AbilityCheckResult {
+        if (isSuccessful) {
+            action()
+        }
+        return this
+    }
+    fun onFailure(action: () -> Unit): AbilityCheckResult {
+        if (!isSuccessful) {
+            action()
+        }
+        return this
+    }
+}
