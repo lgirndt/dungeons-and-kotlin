@@ -71,4 +71,10 @@ abstract class CoreEntity(
         val roll = rollModifier.roll(D20)
         return AbilityCheckResult(roll.value + ability(stats).modifier >= difficultyClass)
     }
+
+    fun rollInitiative(rollModifier: RollModifier = RollModifier.NORMAL): DieRoll {
+        val roll = rollModifier.roll(D20)
+        val dexMod = StatQueries.Dex(stats).modifier
+        return DieRoll(D20, roll.value + dexMod)
+    }
 }

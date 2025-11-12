@@ -226,4 +226,87 @@ class CharacterTest {
             assertThat(result.isSuccessful, equalTo(false))
         }
     }
+
+    @Test
+    fun `initiative roll should add dexterity modifier`() {
+        val character = PlayerCharacter.aPlayerCharacter(
+            stats = StatBlock.fromModifiers(dexMod = 3) // Dexterity 16, modifier +3
+        )
+
+        withFixedDice(D20 rolls 12) {
+            val result = character.rollInitiative()
+            // Roll: 12 + 3 (dex mod) = 15
+            assertThat(result.value, equalTo(15))
+        }
+    }
+
+    @Test
+    fun `initiative roll with advantage should use higher roll`() {
+        val character = PlayerCharacter.aPlayerCharacter(
+            stats = StatBlock.fromModifiers(dexMod = 2) // Dexterity 14, modifier +2
+        )
+
+        withFixedDice(
+            D20 rolls 8,
+            D20 rolls 16
+        ) {
+            val result = character.rollInitiative(RollModifier.ADVANTAGE)
+            // Roll: 16 (higher) + 2 (dex mod) = 18
+            assertThat(result.value, equalTo(18))
+        }
+    }
+
+    @Test
+    fun `initiative roll with disadvantage should use lower roll`() {
+        val character = PlayerCharacter.aPlayerCharacter(
+            stats = StatBlock.fromModifiers(dexMod = 1) // Dexterity 12, modifier +1
+        )
+
+        withFixedDice(
+            D20 rolls 14,
+            D20 rolls 6
+        ) {
+            val result = character.rollInitiative(RollModifier.DISADVANTAGE)
+            // Roll: 6 (lower) + 1 (dex mod) = 7
+            assertThat(result.value, equalTo(7))
+        }
+    }
+
+    @Test
+    fun `initiative roll with negative dexterity modifier should subtract`() {
+        val character = PlayerCharacter.aPlayerCharacter(
+            stats = StatBlock.fromModifiers(dexMod = -1) // Dexterity 8, modifier -1
+        )
+
+        withFixedDice(D20 rolls 10) {
+            val result = character.rollInitiative()
+            // Roll: 10 + (-1) (dex mod) = 9
+            assertThat(result.value, equalTo(9))
+        }
+    }
+
+    @Test
+    fun `initiative roll with zero dexterity modifier should not modify roll`() {
+        val character = PlayerCharacter.aPlayerCharacter(
+            stats = StatBlock.fromModifiers(dexMod = 0) // Dexterity 10, modifier +0
+        )
+
+        withFixedDice(D20 rolls 15) {
+            val result = character.rollInitiative()
+            // Roll: 15 + 0 (dex mod) = 15
+            assertThat(result.value, equalTo(15))
+        }
+    }
+
+    @Test
+    fun `initiative roll result should be a D20 die roll`() {
+        val character = PlayerCharacter.aPlayerCharacter(
+            stats = StatBlock.fromModifiers(dexMod = 2)
+        )
+
+        withFixedDice(D20 rolls 10) {
+            val result = character.rollInitiative()
+            assertThat(result.die, equalTo(D20))
+        }
+    }
 }
