@@ -1,4 +1,4 @@
-package org.example
+package io.dungeons
 
 enum class WeaponCategory {
     Simple,

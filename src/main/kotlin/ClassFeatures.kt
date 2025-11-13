@@ -1,6 +1,6 @@
-package org.example
+package io.dungeons
 
-import org.example.spell.SpellCasting
+import io.dungeons.spell.SpellCasting
 
 interface ClassFeatures {
     val name: String

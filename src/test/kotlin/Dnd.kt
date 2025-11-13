@@ -4,7 +4,7 @@ import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
-import org.example.*
+import io.dungeons.*
 
 class TestId<T> {
 

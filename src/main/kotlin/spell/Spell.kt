@@ -1,7 +1,7 @@
-package org.example.spell
+package io.dungeons.spell
 
 import com.google.common.base.MoreObjects
-import org.example.*
+import io.dungeons.*
 
 
 enum class SpellSchool {

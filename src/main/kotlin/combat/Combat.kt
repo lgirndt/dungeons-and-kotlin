@@ -1,4 +1,4 @@
-package org.example.combat
+package io.dungeons.combat
 
 import com.google.common.collect.Multimap
 
@@ -9,7 +9,7 @@ enum class FactionStance {
 }
 
 data class Faction(
-    val id: org.example.Id<Faction> = _root_ide_package_.org.example.Id.Companion.generate(),
+    val id: io.dungeons.Id<Faction> = _root_ide_package_.io.dungeons.Id.Companion.generate(),
     val name: String,
 )
 
@@ -23,7 +23,7 @@ data class FactionRelationship(
     }
 }
 
-private typealias FactionRelationsLookupKey = Set<org.example.Id<Faction>>
+private typealias FactionRelationsLookupKey = Set<io.dungeons.Id<Faction>>
 
 class FactionRelations private constructor(
     private val relationships: Map<FactionRelationsLookupKey, FactionStance>
@@ -61,15 +61,15 @@ class FactionRelations private constructor(
 }
 
 data class Combatant(
-    val entity: org.example.CoreEntity,
+    val entity: io.dungeons.CoreEntity,
     val faction: Faction
 )
 
 class CombatantsStore(
-    combatantsByFaction: Multimap<Faction, org.example.CoreEntity>,
+    combatantsByFaction: Multimap<Faction, io.dungeons.CoreEntity>,
     nonHostileFactionRelationships: List<FactionRelationship> = emptyList(),
 ) {
-    val combatants: Map<org.example.Id<org.example.CoreEntity>, Combatant> = combatantsByFaction.entries()
+    val combatants: Map<io.dungeons.Id<io.dungeons.CoreEntity>, Combatant> = combatantsByFaction.entries()
         .map { Combatant(faction = it.key, entity = it.value) }
         .associateBy { it.entity.id }
 
@@ -83,11 +83,11 @@ class CombatantsStore(
             builder.add(relationship)
         }.build()
 
-    fun findOrNull(id: org.example.Id<org.example.CoreEntity>): Combatant? {
+    fun findOrNull(id: io.dungeons.Id<io.dungeons.CoreEntity>): Combatant? {
         return combatants[id]
     }
 
-    fun findAllWithStance(towards: org.example.Id<org.example.CoreEntity>, stance: FactionStance): List<Combatant> {
+    fun findAllWithStance(towards: io.dungeons.Id<io.dungeons.CoreEntity>, stance: FactionStance): List<Combatant> {
         val combatant = combatants[towards] ?: return emptyList()
         val targetFaction = combatant.faction
         return combatants.values.filter {
@@ -102,35 +102,35 @@ class CombatantsStore(
 }
 
 interface CombatScenario {
-    fun listVisibleCombatants(observer: org.example.Id<org.example.CoreEntity>): List<Combatant>
-    fun isVisibleTo(observer: org.example.Id<org.example.CoreEntity>, target: org.example.Id<org.example.CoreEntity>): Boolean
-    fun listCombatantsInRange(observer: org.example.Id<org.example.CoreEntity>, rangeInFeet: org.example.Feet): List<Combatant>
+    fun listVisibleCombatants(observer: io.dungeons.Id<io.dungeons.CoreEntity>): List<Combatant>
+    fun isVisibleTo(observer: io.dungeons.Id<io.dungeons.CoreEntity>, target: io.dungeons.Id<io.dungeons.CoreEntity>): Boolean
+    fun listCombatantsInRange(observer: io.dungeons.Id<io.dungeons.CoreEntity>, rangeInFeet: io.dungeons.Feet): List<Combatant>
 }
 
 class SimpleCombatScenario(
     private val combatantsStore: CombatantsStore
 ) : CombatScenario {
 
-    override fun listVisibleCombatants(observer: org.example.Id<org.example.CoreEntity>): List<Combatant> {
+    override fun listVisibleCombatants(observer: io.dungeons.Id<io.dungeons.CoreEntity>): List<Combatant> {
         return combatantsStore.listAll().filter { it.entity.id != observer }
     }
 
     override fun isVisibleTo(
-        observer: org.example.Id<org.example.CoreEntity>,
-        target: org.example.Id<org.example.CoreEntity>
+        observer: io.dungeons.Id<io.dungeons.CoreEntity>,
+        target: io.dungeons.Id<io.dungeons.CoreEntity>
     ): Boolean = true
 
 
     override fun listCombatantsInRange(
-        observer: org.example.Id<org.example.CoreEntity>,
-        rangeInFeet: org.example.Feet
+        observer: io.dungeons.Id<io.dungeons.CoreEntity>,
+        rangeInFeet: io.dungeons.Feet
     ): List<Combatant> {
         val entity = combatantsStore.findOrNull(observer)?.entity
             ?: return emptyList()
 
         return combatantsStore.listAll()
             .filter { it.entity.id != observer }
-            .filter { _root_ide_package_.org.example.isInRange(entity.position, it.entity.position, rangeInFeet) }
+            .filter { _root_ide_package_.io.dungeons.isInRange(entity.position, it.entity.position, rangeInFeet) }
     }
 
 }

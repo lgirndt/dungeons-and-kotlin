@@ -1,9 +1,9 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import org.example.Die.Companion.D8
-import org.example.Feet
-import org.example.RangeClassification
-import org.example.Weapons
+import io.dungeons.Die.Companion.D8
+import io.dungeons.Feet
+import io.dungeons.RangeClassification
+import io.dungeons.Weapons
 import org.junit.jupiter.api.Test
 
 
@@ -43,7 +43,7 @@ class RangeCheckersTest {
 
     @Test
     fun `melee range checker works correctly`() {
-        val meleeChecker = org.example.RangeCheckers.melee(Feet(2.0))
+        val meleeChecker = io.dungeons.RangeCheckers.melee(Feet(2.0))
 
         assertThat(meleeChecker(Feet(1.5)),equalTo(RangeClassification.WithinNormalRange))
         assertThat(meleeChecker(Feet(2.0)),equalTo(RangeClassification.WithinNormalRange))

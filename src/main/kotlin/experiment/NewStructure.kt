@@ -1,4 +1,4 @@
-package org.example.experiment
+package io.dungeons.experiment
 
 data class MonsterData(
     val monsterType: String,

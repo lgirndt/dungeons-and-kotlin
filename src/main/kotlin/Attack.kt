@@ -1,7 +1,7 @@
-package org.example
+package io.dungeons
 
-import org.example.Die.Companion.D20
-import org.example.RangeClassification.*
+import io.dungeons.Die.Companion.D20
+import io.dungeons.RangeClassification.*
 
 interface Attacker {
     val attackSource: AttackSource

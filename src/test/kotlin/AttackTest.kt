@@ -1,10 +1,10 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import org.example.*
-import org.example.Die.Companion.D10
-import org.example.Die.Companion.D20
-import org.example.Die.Companion.D8
-import org.example.WeaponCategory.Martial
+import io.dungeons.*
+import io.dungeons.Die.Companion.D10
+import io.dungeons.Die.Companion.D20
+import io.dungeons.Die.Companion.D8
+import io.dungeons.WeaponCategory.Martial
 import org.junit.jupiter.api.Test
 
 

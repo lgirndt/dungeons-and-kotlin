@@ -1,6 +1,6 @@
-package org.example
+package io.dungeons
 
-import org.example.Die.Companion.D20
+import io.dungeons.Die.Companion.D20
 
 
 data class CoreEntityData(

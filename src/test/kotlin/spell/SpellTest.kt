@@ -4,10 +4,10 @@ import SOME_STAT_BOCK
 import aPlayerCharacter
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import org.example.*
-import org.example.Die.Companion.D20
-import org.example.Die.Companion.D4
-import org.example.spell.*
+import io.dungeons.*
+import io.dungeons.Die.Companion.D20
+import io.dungeons.Die.Companion.D4
+import io.dungeons.spell.*
 import org.junit.jupiter.api.Test
 import rolls
 import withFixedDice

@@ -1,4 +1,4 @@
-package org.example
+package io.dungeons
 
 import java.util.*
 

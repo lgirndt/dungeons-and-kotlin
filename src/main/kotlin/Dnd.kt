@@ -1,4 +1,4 @@
-package org.example
+package io.dungeons
 
 @JvmInline
 value class Stat(private val value: Int) {

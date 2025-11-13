@@ -1,4 +1,4 @@
-package org.example
+package io.dungeons
 
 data class PlayerCharacterData(
     val level: Int,

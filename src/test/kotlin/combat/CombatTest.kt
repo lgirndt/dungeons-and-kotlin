@@ -6,8 +6,8 @@ import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.hasSize
-import org.example.*
-import org.example.combat.*
+import io.dungeons.*
+import io.dungeons.combat.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -15,9 +15,9 @@ import org.junit.jupiter.api.assertThrows
 
 class FactionRelationsTest {
 
-    val FACTION_A = _root_ide_package_.org.example.combat.Faction(name = "Faction A")
-    val FACTION_B = _root_ide_package_.org.example.combat.Faction(name = "Faction B")
-    val SOME_RELATIONSHIP = _root_ide_package_.org.example.combat.FactionRelationship(
+    val FACTION_A = _root_ide_package_.io.dungeons.combat.Faction(name = "Faction A")
+    val FACTION_B = _root_ide_package_.io.dungeons.combat.Faction(name = "Faction B")
+    val SOME_RELATIONSHIP = _root_ide_package_.io.dungeons.combat.FactionRelationship(
         FACTION_A,
         FACTION_B,
         FactionStance.Friendly
@@ -84,8 +84,8 @@ fun combatantsBuilder() : ImmutableListMultimap.Builder<Faction, CoreEntity> =
 
 class CombatantsStoreTest {
 
-    val FACTION_A = _root_ide_package_.org.example.combat.Faction(name = "Faction A")
-    val FACTION_B = _root_ide_package_.org.example.combat.Faction(name = "Faction B")
+    val FACTION_A = _root_ide_package_.io.dungeons.combat.Faction(name = "Faction A")
+    val FACTION_B = _root_ide_package_.io.dungeons.combat.Faction(name = "Faction B")
 
     lateinit var ID : TestId<CoreEntity>
     lateinit var store : CombatantsStore
@@ -93,7 +93,7 @@ class CombatantsStoreTest {
     @BeforeEach
     fun setup(){
         ID = TestId()
-        store = _root_ide_package_.org.example.combat.CombatantsStore(
+        store = _root_ide_package_.io.dungeons.combat.CombatantsStore(
             combatantsBuilder()
                 .putAll(
                     FACTION_A,

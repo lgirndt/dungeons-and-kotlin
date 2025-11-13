@@ -1,9 +1,9 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import io.mockk.junit5.MockKExtension
-import org.example.*
-import org.example.Die.Companion.D20
-import org.example.Die.Companion.D8
+import io.dungeons.*
+import io.dungeons.Die.Companion.D20
+import io.dungeons.Die.Companion.D8
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest

@@ -1,8 +1,8 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import org.example.Coordinate
-import org.example.Feet
-import org.example.isInRange
+import io.dungeons.Coordinate
+import io.dungeons.Feet
+import io.dungeons.isInRange
 import org.junit.jupiter.api.Test
 
 class FeetTest {
