@@ -4,3 +4,4 @@ plugins {
 rootProject.name = "learn-kotlin"
 
 include("dungeons-domain")
+include("app")

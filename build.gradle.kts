@@ -1,7 +1,7 @@
-group = "io.dungeons"
-version = "1.0-SNAPSHOT"
-
 allprojects {
+    group = "io.dungeons"
+    version = "1.0-SNAPSHOT"
+
     repositories {
         mavenCentral()
     }
