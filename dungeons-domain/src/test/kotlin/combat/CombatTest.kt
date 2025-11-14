@@ -6,18 +6,25 @@ import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.hasSize
-import io.dungeons.*
+import fromModifiers
+import io.dungeons.CoreEntity
+import io.dungeons.Die.Companion.D20
+import io.dungeons.PlayerCharacter
+import io.dungeons.StatBlock
 import io.dungeons.combat.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.junit.jupiter.api.assertThrows
+import rolls
+import withFixedDice
+
+val FACTION_A = Faction(name = "Faction A")
+val FACTION_B = Faction(name = "Faction B")
 
 class FactionRelationsTest {
 
-    val FACTION_A = _root_ide_package_.io.dungeons.combat.Faction(name = "Faction A")
-    val FACTION_B = _root_ide_package_.io.dungeons.combat.Faction(name = "Faction B")
-    val SOME_RELATIONSHIP = _root_ide_package_.io.dungeons.combat.FactionRelationship(
+    val SOME_RELATIONSHIP = FactionRelationship(
         FACTION_A,
         FACTION_B,
         FactionStance.Friendly
@@ -84,8 +91,8 @@ fun combatantsBuilder() : ImmutableListMultimap.Builder<Faction, CoreEntity> =
 
 class CombatantsStoreTest {
 
-    val FACTION_A = _root_ide_package_.io.dungeons.combat.Faction(name = "Faction A")
-    val FACTION_B = _root_ide_package_.io.dungeons.combat.Faction(name = "Faction B")
+    val FACTION_A = Faction(name = "Faction A")
+    val FACTION_B = Faction(name = "Faction B")
 
     lateinit var ID : TestId<CoreEntity>
     lateinit var store : CombatantsStore
@@ -93,7 +100,7 @@ class CombatantsStoreTest {
     @BeforeEach
     fun setup(){
         ID = TestId()
-        store = _root_ide_package_.io.dungeons.combat.CombatantsStore(
+        store = CombatantsStore(
             combatantsBuilder()
                 .putAll(
                     FACTION_A,
@@ -139,5 +146,38 @@ class CombatantsStoreTest {
             hasSize(equalTo(3))
             and equalTo(setOf(ID[3], ID[4], ID[5]))
         )
+    }
+}
+
+class CombatantTest {
+
+    @Test
+    fun `initiative should be cached after first access`() {
+        val entity = PlayerCharacter.aPlayerCharacter(name = "Test Character")
+        val combatant = Combatant(entity = entity, faction = FACTION_A)
+
+        withFixedDice(D20 rolls 12) {
+            // Access initiative twice
+            val firstRoll = combatant.initiative
+            val secondRoll = combatant.initiative
+
+            // Should be the exact same instance (lazy evaluation caches the result)
+            assertThat(firstRoll, equalTo(secondRoll))
+        }
+    }
+
+    @Test
+    fun `initiative should include dexterity modifier`() {
+
+        val player = PlayerCharacter.aPlayerCharacter(
+            name = "Dexterous Character",
+            stats = StatBlock.fromModifiers(dexMod=4)
+        )
+        withFixedDice(D20 rolls 12) {
+            val combatant = Combatant(entity = player, faction = FACTION_A)
+            val initiative = combatant.initiative
+            assertThat(initiative.value, equalTo(12+4))
+            assertThat(initiative.die, equalTo(D20))
+        }
     }
 }

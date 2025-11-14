@@ -1,6 +1,8 @@
 package io.dungeons.combat
 
 import com.google.common.collect.Multimap
+import io.dungeons.CoreEntity
+import io.dungeons.DieRoll
 
 enum class FactionStance {
     Friendly,
@@ -61,9 +63,13 @@ class FactionRelations private constructor(
 }
 
 data class Combatant(
-    val entity: io.dungeons.CoreEntity,
+    val entity: CoreEntity,
     val faction: Faction
-)
+) {
+    val initiative: DieRoll by lazy {
+        entity.rollInitiative()
+    }
+}
 
 class CombatantsStore(
     combatantsByFaction: Multimap<Faction, io.dungeons.CoreEntity>,
