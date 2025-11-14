@@ -3,6 +3,7 @@ plugins {
 }
 
 dependencies {
+    testImplementation(kotlin("test"))
     testImplementation(platform("org.junit:junit-bom:${Versions.junitBom}"))
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("com.natpryce:hamkrest:${Versions.hamkrest}")
