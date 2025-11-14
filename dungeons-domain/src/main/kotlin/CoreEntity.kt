@@ -9,7 +9,7 @@ data class CoreEntityData(
     var hitPoints: Int,
     val armourClass: Int,
     val damageModifiers: DamageModifiers,
-    val position: Coordinate
+    val position: Coordinate = Coordinate.from(0, 0),
 )
 
 abstract class CoreEntity(

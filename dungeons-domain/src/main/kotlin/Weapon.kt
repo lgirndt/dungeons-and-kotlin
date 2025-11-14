@@ -73,7 +73,8 @@ object Weapons {
         category = WeaponCategory.Martial,
         damageType = DamageType.Slashing,
         statQuery = StatQueries.Str,
-        damageRoll = SimpleDamageRoll(1, Die.D8)
+        damageRoll = SimpleDamageRoll(1, Die.D8),
+        rangeChecker = RangeCheckers.melee(Feet(5.0))
     )
 
     val Shortbow = Weapon(

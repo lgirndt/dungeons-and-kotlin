@@ -1,33 +1,32 @@
 package io.dungeons
 
-data class Monster(
-    val name: String,
-    val stats: StatBlock,
-    var attackSource: AttackSource,
-    override val armourClass: Int,
-    override var position: Coordinate,
-    override val damageModifiers: DamageModifiers,
-    override var hitPoints: Int
+open class Monster(
+    id: Id<CoreEntity> = Id.generate(),
+    core: CoreEntityData,
+    override val weapon: Weapon,
+    override val attackModifier: Int,
+) : CoreEntity(
+    id,
+    core
+)
 
-) : Attackable
+class Goblin(
+    id: Id<CoreEntity> = Id.generate(),
+    core: CoreEntityData = CoreEntityData(
+        name = "Goblin",
+        stats = StatBlock(
+            str = Stat(8),
+            dex = Stat(14),
+            con = Stat(10),
+            int = Stat(10),
+            wis = Stat(8),
+            cha = Stat(8),
+        ),
+        hitPoints = 7,
+        armourClass = 15,
+        damageModifiers = DamageModifiers.NONE,
+    ),
+    override val weapon: Weapon = Weapons.Shortbow,
+    override val attackModifier: Int = weapon.whichStat(core.stats).modifier,
 
-object Bestiary {
-    fun Goblin(): Monster {
-        return Monster(
-            name = "Goblin",
-            stats = StatBlock(
-                str = Stat(8),
-                dex = Stat(14),
-                con = Stat(10),
-                int = Stat(10),
-                wis = Stat(8),
-                cha = Stat(8),
-            ),
-            attackSource = Weapons.Shortbow,
-            armourClass = 15,
-            position = Coordinate.from(0, 0),
-            damageModifiers = DamageModifiers.NONE,
-            hitPoints = 7,
-        )
-    }
-}
+) : Monster(id, core, weapon, attackModifier)
