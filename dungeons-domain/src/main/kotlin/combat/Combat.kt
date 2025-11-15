@@ -1,8 +1,7 @@
 package io.dungeons.combat
 
 import com.google.common.collect.Multimap
-import io.dungeons.CoreEntity
-import io.dungeons.DieRoll
+import io.dungeons.*
 
 enum class FactionStance {
     Friendly,
@@ -11,7 +10,7 @@ enum class FactionStance {
 }
 
 data class Faction(
-    val id: io.dungeons.Id<Faction> = _root_ide_package_.io.dungeons.Id.Companion.generate(),
+    val id: Id<Faction> = Id.Companion.generate(),
     val name: String,
 )
 
@@ -25,7 +24,7 @@ data class FactionRelationship(
     }
 }
 
-private typealias FactionRelationsLookupKey = Set<io.dungeons.Id<Faction>>
+private typealias FactionRelationsLookupKey = Set<Id<Faction>>
 
 class FactionRelations private constructor(
     private val relationships: Map<FactionRelationsLookupKey, FactionStance>
@@ -66,18 +65,21 @@ data class Combatant(
     val entity: CoreEntity,
     val faction: Faction
 ) {
+    val id: Id<CoreEntity>
+        get() = entity.id
+
     val initiative: DieRoll by lazy {
         entity.rollInitiative()
     }
 }
 
 class CombatantsStore(
-    combatantsByFaction: Multimap<Faction, io.dungeons.CoreEntity>,
+    combatantsByFaction: Multimap<Faction, CoreEntity>,
     nonHostileFactionRelationships: List<FactionRelationship> = emptyList(),
 ) {
     val combatants: Map<io.dungeons.Id<io.dungeons.CoreEntity>, Combatant> = combatantsByFaction.entries()
         .map { Combatant(faction = it.key, entity = it.value) }
-        .associateBy { it.entity.id }
+        .associateBy { it.id }
 
     val factionRelations: FactionRelations = nonHostileFactionRelationships
         .onEach {
@@ -118,7 +120,7 @@ class SimpleCombatScenario(
 ) : CombatScenario {
 
     override fun listVisibleCombatants(observer: io.dungeons.Id<io.dungeons.CoreEntity>): List<Combatant> {
-        return combatantsStore.listAll().filter { it.entity.id != observer }
+        return combatantsStore.listAll().filter { it.id != observer }
     }
 
     override fun isVisibleTo(
@@ -135,7 +137,7 @@ class SimpleCombatScenario(
             ?: return emptyList()
 
         return combatantsStore.listAll()
-            .filter { it.entity.id != observer }
+            .filter { it.id != observer }
             .filter { _root_ide_package_.io.dungeons.isInRange(entity.position, it.entity.position, rangeInFeet) }
     }
 

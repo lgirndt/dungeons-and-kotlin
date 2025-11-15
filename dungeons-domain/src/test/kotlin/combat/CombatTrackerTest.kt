@@ -7,13 +7,14 @@ import fromModifiers
 import io.dungeons.Die.Companion.D20
 import io.dungeons.PlayerCharacter
 import io.dungeons.StatBlock
-import io.dungeons.combat.Combatant
 import io.dungeons.combat.CombatTracker
 import io.dungeons.combat.CombatTrackerListener
+import io.dungeons.combat.Combatant
 import io.dungeons.combat.Faction
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
+import org.junit.jupiter.api.assertThrows
 import rolls
 import withFixedDice
 
@@ -51,13 +52,13 @@ class CombatTrackerTest {
 
             // Verify the combatants are sorted by initiative (descending)
             // Expected order: midDexPlayer (14), highDexPlayer (12), lowDexPlayer (10)
-            assertThat(tracker.combatants.size, equalTo(3))
-            assertThat(tracker.combatants[0].entity.name, equalTo("Medium Character"))
-            assertThat(tracker.combatants[0].initiative.value, equalTo(14))
-            assertThat(tracker.combatants[1].entity.name, equalTo("Fast Character"))
-            assertThat(tracker.combatants[1].initiative.value, equalTo(12))
-            assertThat(tracker.combatants[2].entity.name, equalTo("Slow Character"))
-            assertThat(tracker.combatants[2].initiative.value, equalTo(10))
+            assertThat(tracker.combatantsOrderedByInitiative.size, equalTo(3))
+            assertThat(tracker.combatantsOrderedByInitiative[0].entity.name, equalTo("Medium Character"))
+            assertThat(tracker.combatantsOrderedByInitiative[0].initiative.value, equalTo(14))
+            assertThat(tracker.combatantsOrderedByInitiative[1].entity.name, equalTo("Fast Character"))
+            assertThat(tracker.combatantsOrderedByInitiative[1].initiative.value, equalTo(12))
+            assertThat(tracker.combatantsOrderedByInitiative[2].entity.name, equalTo("Slow Character"))
+            assertThat(tracker.combatantsOrderedByInitiative[2].initiative.value, equalTo(10))
         }
     }
 
@@ -86,32 +87,15 @@ class CombatTrackerTest {
             val tracker = CombatTracker(combatants)
 
             // Both have initiative 12, should maintain input order
-            assertThat(tracker.combatants[0].entity.name, equalTo("First"))
-            assertThat(tracker.combatants[1].entity.name, equalTo("Second"))
+            assertThat(tracker.combatantsOrderedByInitiative[0].entity.name, equalTo("First"))
+            assertThat(tracker.combatantsOrderedByInitiative[1].entity.name, equalTo("Second"))
         }
     }
 
     @Test
     fun `empty combatants list should create empty tracker`() {
-        val tracker = CombatTracker(emptyList())
-        assertThat(tracker.combatants.size, equalTo(0))
-    }
-
-    @Test
-    fun `single combatant should be first in order`() {
-        val player = PlayerCharacter.aPlayerCharacter(
-            name = "Solo",
-            stats = StatBlock.fromModifiers(dexMod = 1)
-        )
-        val faction = Faction(name = "Lone Wolf")
-
-        withFixedDice(D20 rolls 15) {
-            val combatant = Combatant(entity = player, faction = faction)
-            val tracker = CombatTracker(listOf(combatant))
-
-            assertThat(tracker.combatants.size, equalTo(1))
-            assertThat(tracker.combatants[0].entity.name, equalTo("Solo"))
-            assertThat(tracker.combatants[0].initiative.value, equalTo(15 + 1))
+        assertThrows<IllegalArgumentException> {
+            CombatTracker(emptyList())
         }
     }
 
@@ -142,7 +126,7 @@ class CombatTrackerTest {
 
             // Verify listener was called with the sorted list
             verify(exactly = 1) {
-                listener.afterRolledInitiative(match { sortedCombatants ->
+                listener.rolledInitiative(match { sortedCombatants ->
                     sortedCombatants.size == 2 &&
                     sortedCombatants[0].entity.name == "First" &&
                     sortedCombatants[0].initiative.value == 11 &&
