@@ -12,62 +12,59 @@ interface CombatTrackerListener {
 
 abstract class CombatCommand {
 
-    fun perform(turn: Turn, combatScenario: CombatScenario) {
+    fun perform(turn: Turn, combatScenario: CombatScenario): Turn {
         require(isTurnAvailable(turn)) { "Already performed in this turn." }
         doPerform(combatScenario)
-        consumeTurn(turn)
+        return consumeTurn(turn)
     }
 
     protected abstract fun doPerform(combatScenario: CombatScenario)
-    protected abstract fun consumeTurn(turn: Turn)
+    protected abstract fun consumeTurn(turn: Turn): Turn
     protected abstract fun isTurnAvailable(turn: Turn): Boolean
 }
 
 abstract class MovementCombatCommand : CombatCommand() {
-    override fun consumeTurn(turn: Turn) =
-        turn.useMovement()
+    override fun consumeTurn(turn: Turn): Turn {
+        return turn.useMovement()
+    }
+
 
     override fun isTurnAvailable(turn: Turn): Boolean = turn.movementAvailable
 }
 
 private val NOOP_COMBAT_TRACKER_LISTENER = object : CombatTrackerListener {}
 
-class Turn(
-    movementAvailable: Boolean = true,
-    actionAvailable: Boolean = true,
-    bonusActionAvailable: Boolean = true,
-    reactionAvailable: Boolean = true
+data class Turn(
+    val movementAvailable: Boolean = true,
+    val actionAvailable: Boolean = true,
+    val bonusActionAvailable: Boolean = true,
+    val reactionAvailable: Boolean = true
 ) {
-    var movementAvailable: Boolean = movementAvailable
-        private set
-    var actionAvailable: Boolean = actionAvailable
-        private set
-    var bonusActionAvailable: Boolean = bonusActionAvailable
-        private set
-    var reactionAvailable: Boolean = reactionAvailable
-        private set
 
     val hasOptionsLeft: Boolean
-        get() = movementAvailable || actionAvailable || bonusActionAvailable || reactionAvailable
+        get() = movementAvailable
+                || actionAvailable
+                || bonusActionAvailable
+                || reactionAvailable
 
-    fun useMovement() {
+    fun useMovement(): Turn {
         require(movementAvailable) { "Movement already used this turn." }
-        movementAvailable = false
+        return copy(movementAvailable = false)
     }
 
-    fun useAction() {
+    fun useAction(): Turn {
         require(actionAvailable) { "Action already used this turn." }
-        actionAvailable = false
+        return copy(actionAvailable = false)
     }
 
-    fun useBonusAction() {
+    fun useBonusAction(): Turn {
         require(bonusActionAvailable) { "Bonus action already used this turn." }
-        bonusActionAvailable = false
+        return copy(bonusActionAvailable = false)
     }
 
-    fun useReaction() {
+    fun useReaction(): Turn {
         require(reactionAvailable) { "Reaction already used this turn." }
-        reactionAvailable = false
+        return copy(reactionAvailable = false)
     }
 
 }
@@ -79,15 +76,15 @@ interface TurnActor {
 class CombatTracker(
     combatants: Collection<Combatant>,
     nonHostileFactionRelationships: List<FactionRelationship> = emptyList(),
-    combatScenarioFactory: (CombatantsStore) -> CombatScenario  = { SimpleCombatScenario(it) },
+    combatScenarioFactory: (CombatantsStore) -> CombatScenario = { SimpleCombatScenario(it) },
     val actors: Map<Id<CoreEntity>, TurnActor> = emptyMap(), // TODO
     val listener: CombatTrackerListener = NOOP_COMBAT_TRACKER_LISTENER
 ) {
-    val combatantsOrderedByInitiative: List<Combatant> = combatants
+    private val combatantsOrderedByInitiative: List<Combatant> = combatants
         .sortedByDescending { it.initiative }
         .also { listener.rolledInitiative(it) }
 
-    val combatantsStore : CombatantsStore = CombatantsStore(
+    private val combatantsStore: CombatantsStore = CombatantsStore(
         combatantsByFaction = ImmutableListMultimap.builder<Faction, CoreEntity>()
             .apply {
                 combatants.forEach { combatant ->
@@ -121,12 +118,13 @@ class CombatTracker(
             throw IllegalStateException("No actor found for combatant ${currentCombatant.id}")
         }
         // TODO needs to live longer
-        val turn = Turn()
+        var turn = Turn()
         do {
-            val command = actor.handleTurn(currentCombatant, turn, combatScenario) ?: break
-            command.perform(turn, combatScenario)
+            val command = actor.handleTurn(currentCombatant, turn, combatScenario)
+                ?: break
+            turn = command.perform(turn, combatScenario)
 
-        }while(turn.hasOptionsLeft)
+        } while (turn.hasOptionsLeft)
 
 
         if (turnIndex >= combatantsOrderedByInitiative.size) {
