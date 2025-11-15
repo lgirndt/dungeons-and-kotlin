@@ -80,7 +80,7 @@ class CombatTracker(
     val actors: Map<Id<CoreEntity>, TurnActor> = emptyMap(), // TODO
     val listener: CombatTrackerListener = NOOP_COMBAT_TRACKER_LISTENER
 ) {
-    private val combatantsOrderedByInitiative: List<Combatant> = combatants
+    internal val combatantsOrderedByInitiative: List<Combatant> = combatants
         .sortedByDescending { it.initiative }
         .also { listener.rolledInitiative(it) }
 
