@@ -134,27 +134,27 @@ class CombatTrackerTest {
 
     @Test
     fun `listener should be called with sorted combatants after initiative is rolled`() {
-        val player1 = PlayerCharacter.aPlayerCharacter(
-            name = "First",
-            stats = StatBlock.fromModifiers(dexMod = 1)
-        )
-        val player2 = PlayerCharacter.aPlayerCharacter(
-            name = "Second",
-            stats = StatBlock.fromModifiers(dexMod = 2)
-        )
-
-        val faction = Faction(name = "Party")
+        
         val listener = mockk<CombatTrackerListener>(relaxed = true)
 
+        val trackerEntries = listOf(
+            aTrackerEntity(
+                coreEntity = PlayerCharacter.aPlayerCharacter(
+                    name = "First",
+                    stats = StatBlock.fromModifiers(dexMod = 1)
+                )
+            ),
+            aTrackerEntity(
+                coreEntity = PlayerCharacter.aPlayerCharacter(
+                    name = "Second",
+                    stats = StatBlock.fromModifiers(dexMod = 2)
+                )
+            ),
+        )
         withFixedDice(
             D20 rolls 10,  // player1: 10 + 1 = 11
             D20 rolls 8    // player2: 8 + 2 = 10
         ) {
-            val actor = mockk<TurnActor>(relaxed = true)
-            val trackerEntries = listOf(
-                TrackerEntry(Combatant(entity = player1, faction = faction), actor = actor),
-                TrackerEntry(Combatant(entity = player2, faction = faction), actor = actor)
-            )
 
             CombatTracker(
                 trackerEntries = trackerEntries,
