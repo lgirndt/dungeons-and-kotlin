@@ -6,7 +6,8 @@ import io.dungeons.Id
 interface CombatTrackerListener {
     fun rolledInitiative(combatants: List<Combatant>) {}
     fun startedCombat(combatants: List<Combatant>) {}
-    fun startedTurn(combatant: Combatant) {}
+    fun startedTurn(turn: Turn, combatant: Combatant) {}
+    fun endTurn(turn: Turn, combatant: Combatant) {}
 }
 
 abstract class CombatCommand {
@@ -34,6 +35,7 @@ abstract class MovementCombatCommand : CombatCommand() {
 private val NOOP_COMBAT_TRACKER_LISTENER = object : CombatTrackerListener {}
 
 data class Turn(
+    val round: Int,
     val movementAvailable: Boolean = true,
     val actionAvailable: Boolean = true,
     val bonusActionAvailable: Boolean = true,
@@ -87,7 +89,8 @@ class CombatTracker(
         .sortedByDescending { it.initiative }
         .also { listener.rolledInitiative(it) }
 
-    val actors: Map<Id<CoreEntity>, TurnActor> = trackerEntries.associate{ it.combatant.id to it.actor }
+    private val actors: Map<Id<CoreEntity>, TurnActor> = trackerEntries.associate{ it.combatant.id to it.actor }
+    private val turnTable : MutableMap<Id<CoreEntity>, Turn> = mutableMapOf()
 
     init {
         require(trackerEntries.count() >= 2) { "At least two combatants are required to start combat." }
@@ -103,14 +106,11 @@ class CombatTracker(
         }
 
         val currentCombatant = combatantsOrderedByInitiative[turnIndex]
-        turnIndex++
 
-        listener.startedTurn(currentCombatant)
         val actor = actors.getOrElse(currentCombatant.id) {
             throw IllegalStateException("No actor found for combatant ${currentCombatant.id}")
         }
-        // TODO needs to live longer
-        var turn = Turn()
+        var turn = nextTurnFor(currentCombatant)
         do {
             val command = actor.handleTurn(currentCombatant, turn, combatScenario)
                 ?: break
@@ -118,10 +118,21 @@ class CombatTracker(
 
         } while (turn.hasOptionsLeft)
 
-
+        turnIndex++
         if (turnIndex >= combatantsOrderedByInitiative.size) {
             turnIndex = 0
             round++
         }
+    }
+
+    private fun nextTurnFor(combatant: Combatant): Turn {
+        val id = combatant.id
+        turnTable[id]?.let {
+            listener.endTurn(it, combatant)
+        }
+        val newTurn = Turn(round)
+        listener.startedTurn(newTurn, combatant)
+        turnTable[id] = newTurn
+        return newTurn
     }
 }

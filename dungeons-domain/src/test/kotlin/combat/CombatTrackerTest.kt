@@ -28,7 +28,7 @@ class CombatTrackerTest {
         dexMod: Int = 0,
         faction: Faction = PLAYER_FACTION,
         actor: TurnActor = mockk<TurnActor>(relaxed = true)
-    ) : TrackerEntry {
+    ): TrackerEntry {
         return TrackerEntry(
             combatant = Combatant(
                 entity = PlayerCharacter.aPlayerCharacter(
@@ -148,20 +148,18 @@ class CombatTrackerTest {
     }
 
     @Test
-    fun `advanceTurn should let the first actor take their turn`() {
-        val actor1 = mockk<TurnActor>(relaxed = true)
-        val actor2 = mockk<TurnActor>()
+    fun `advanceTurn should let the first actor in initiative order take their turn`() {
+        val actor1 = mockk<TurnActor>()
+        val actor2 = mockk<TurnActor>(name = "Actor2 Mock")
 
         val trackerEntries = listOf(
             aTrackerEntity(name = "First", dexMod = 2, actor = actor1),
             aTrackerEntity(name = "Second", dexMod = 1, actor = actor2),
         )
 
-        every { actor2.handleTurn(any(), any(), any()) } returns object:  MovementCombatCommand() {
-            override fun doPerform(combatScenario: CombatScenario) {
-                // NOOP
-            }
-        }
+        expectTurnForActor(actor2, object : MovementCombatCommand() {
+            override fun doPerform(combatScenario: CombatScenario) {}
+        })
 
         withFixedDice(
             D20 rolls 10,  // player1: 10 + 2 = 12
@@ -176,7 +174,14 @@ class CombatTrackerTest {
             verify(exactly = 1) {
                 actor2.handleTurn(
                     match { it.entity.name == "Second" },
-                    any(),
+                    match { it.movementAvailable},
+                    any()
+                )
+            }
+            verify(exactly = 1) {
+                actor2.handleTurn(
+                    match { it.entity.name == "Second" },
+                    match { !it.movementAvailable},
                     any()
                 )
             }
@@ -188,5 +193,9 @@ class CombatTrackerTest {
                 )
             }
         }
+    }
+
+    private fun expectTurnForActor(actor2: TurnActor, vararg combatCmd: MovementCombatCommand) {
+        every { actor2.handleTurn(any(), any(), any()) } returnsMany combatCmd.toList() + listOf(null)
     }
 }
