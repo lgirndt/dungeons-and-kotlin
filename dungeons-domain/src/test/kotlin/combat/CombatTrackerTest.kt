@@ -7,12 +7,15 @@ import com.natpryce.hamkrest.equalTo
 import fromModifiers
 import io.dungeons.CoreEntity
 import io.dungeons.Die.Companion.D20
+import io.dungeons.DieRoll
 import io.dungeons.PlayerCharacter
 import io.dungeons.StatBlock
 import io.dungeons.combat.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.junit.jupiter.api.BeforeEach
+import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import rolls
@@ -147,50 +150,62 @@ class CombatTrackerTest {
         }
     }
 
-    @Test
-    fun `advanceTurn should let the first actor in initiative order take their turn`() {
-        val actor1 = mockk<TurnActor>()
-        val actor2 = mockk<TurnActor>(name = "Actor2 Mock")
+    @Nested
+    inner class AdvanceTurnTest {
 
-        val trackerEntries = listOf(
-            aTrackerEntity(name = "First", dexMod = 2, actor = actor1),
-            aTrackerEntity(name = "Second", dexMod = 1, actor = actor2),
-        )
+        lateinit var actor1: TurnActor;
+        lateinit var actor2: TurnActor;
+        lateinit var trackerEntries: List<TrackerEntry>
+        lateinit var expectedRolls: Array<DieRoll>
 
-        expectTurnForActor(actor2, object : MovementCombatCommand() {
-            override fun doPerform(combatScenario: CombatScenario) {}
-        })
+        @BeforeEach
+        fun beforeEach() {
+            actor1 = mockk<TurnActor>(name = "Actor1 Mock")
+            actor2 = mockk<TurnActor>(name = "Actor2 Mock")
 
-        withFixedDice(
-            D20 rolls 10,  // player1: 10 + 2 = 12
-            D20 rolls 12   // player2: 12 + 1 = 13
-        ) {
+            trackerEntries = listOf(
+                aTrackerEntity(name = "First", dexMod = 2, actor = actor1, faction = PLAYER_FACTION),
+                aTrackerEntity(name = "Second", dexMod = 1, actor = actor2, faction = MONSTER_FACTION),
+            )
 
-            val tracker = createCombatTracker(trackerEntries)
+            expectedRolls = arrayOf(
+                D20 rolls 10,  // player1: 10 + 2 = 12
+                D20 rolls 12   // player2: 12 + 1 = 13
+            )
+        }
 
-            // First turn should go to "Second" (higher initiative)
-            tracker.advanceTurn()
+        @Test
+        fun `advanceTurn should let the first actor in initiative order take their turn`() {
+            withFixedDice(*expectedRolls) {
+                expectTurnForActor(actor2, object : MovementCombatCommand() {
+                    override fun doPerform(combatScenario: CombatScenario) {}
+                })
 
-            verify(exactly = 1) {
-                actor2.handleTurn(
-                    match { it.entity.name == "Second" },
-                    match { it.movementAvailable},
-                    any()
-                )
-            }
-            verify(exactly = 1) {
-                actor2.handleTurn(
-                    match { it.entity.name == "Second" },
-                    match { !it.movementAvailable},
-                    any()
-                )
-            }
-            verify(exactly = 0) {
-                actor1.handleTurn(
-                    match { it.entity.name == "First" },
-                    any(),
-                    any()
-                )
+                val tracker = createCombatTracker(trackerEntries)
+                // First turn should go to "Second" (higher initiative)
+                tracker.advanceTurn()
+
+                verify(exactly = 1) {
+                    actor2.handleTurn(
+                        match { it.entity.name == "Second" },
+                        match { it.movementAvailable},
+                        any()
+                    )
+                }
+                verify(exactly = 1) {
+                    actor2.handleTurn(
+                        match { it.entity.name == "Second" },
+                        match { !it.movementAvailable},
+                        any()
+                    )
+                }
+                verify(exactly = 0) {
+                    actor1.handleTurn(
+                        match { it.entity.name == "First" },
+                        any(),
+                        any()
+                    )
+                }
             }
         }
     }
