@@ -10,6 +10,7 @@ import io.dungeons.Die.Companion.D20
 import io.dungeons.PlayerCharacter
 import io.dungeons.StatBlock
 import io.dungeons.combat.*
+import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -23,13 +24,17 @@ class CombatTrackerTest {
     val MONSTER_FACTION = Faction(name = "Monsters")
 
     fun aTrackerEntity(
-        coreEntity : CoreEntity = PlayerCharacter.aPlayerCharacter(),
+        name: String = "some name",
+        dexMod: Int = 0,
         faction: Faction = PLAYER_FACTION,
         actor: TurnActor = mockk<TurnActor>(relaxed = true)
     ) : TrackerEntry {
         return TrackerEntry(
             combatant = Combatant(
-                entity = coreEntity,
+                entity = PlayerCharacter.aPlayerCharacter(
+                    name = name,
+                    stats = StatBlock.fromModifiers(dexMod = dexMod)
+                ),
                 faction = faction
             ),
             actor = actor
@@ -39,23 +44,9 @@ class CombatTrackerTest {
     @Test
     fun `combatants should be sorted by initiative in descending order`() {
         val trackerEntries = listOf(
-            aTrackerEntity(PlayerCharacter.aPlayerCharacter(
-                name = "Slow Character",
-                stats = StatBlock.fromModifiers(dexMod = 0)
-            )
-            ),
-            aTrackerEntity(
-                PlayerCharacter.aPlayerCharacter(
-                    name = "Medium Character",
-                    stats = StatBlock.fromModifiers(dexMod = 2)
-                )
-            ),
-            aTrackerEntity(
-                PlayerCharacter.aPlayerCharacter(
-                    name = "Fast Character",
-                    stats = StatBlock.fromModifiers(dexMod = 4)
-                )
-            ),
+            aTrackerEntity(name = "Slow Character", dexMod = 0),
+            aTrackerEntity(name = "Medium Character", dexMod = 2),
+            aTrackerEntity(name = "Fast Character", dexMod = 4),
         )
         withFixedDice(
             D20 rolls 10,  // lowDexPlayer: 10 + 0 = 10
@@ -79,22 +70,13 @@ class CombatTrackerTest {
 
     @Test
     fun `combatants with same initiative should maintain input order`() {
-        val player1 = PlayerCharacter.aPlayerCharacter(
-            name = "First",
-            stats = StatBlock.fromModifiers(dexMod = 2)
-        )
-        val player2 = PlayerCharacter.aPlayerCharacter(
-            name = "Second",
-            stats = StatBlock.fromModifiers(dexMod = 2)
-        )
-
         withFixedDice(
             D20 rolls 10,  // player1: 10 + 2 = 12
             D20 rolls 10   // player2: 10 + 2 = 12
         ) {
             val trackerEntries = listOf(
-                aTrackerEntity(coreEntity = player1),
-                aTrackerEntity(coreEntity = player2),
+                aTrackerEntity(name = "First", dexMod = 2),
+                aTrackerEntity(name = "Second", dexMod = 2),
             )
 
             val tracker = createCombatTracker(trackerEntries)
@@ -134,22 +116,12 @@ class CombatTrackerTest {
 
     @Test
     fun `listener should be called with sorted combatants after initiative is rolled`() {
-        
+
         val listener = mockk<CombatTrackerListener>(relaxed = true)
 
         val trackerEntries = listOf(
-            aTrackerEntity(
-                coreEntity = PlayerCharacter.aPlayerCharacter(
-                    name = "First",
-                    stats = StatBlock.fromModifiers(dexMod = 1)
-                )
-            ),
-            aTrackerEntity(
-                coreEntity = PlayerCharacter.aPlayerCharacter(
-                    name = "Second",
-                    stats = StatBlock.fromModifiers(dexMod = 2)
-                )
-            ),
+            aTrackerEntity(name = "First", dexMod = 1),
+            aTrackerEntity(name = "Second", dexMod = 2),
         )
         withFixedDice(
             D20 rolls 10,  // player1: 10 + 1 = 11
@@ -171,6 +143,49 @@ class CombatTrackerTest {
                             sortedCombatants[1].entity.name == "Second" &&
                             sortedCombatants[1].initiative.value == 10
                 })
+            }
+        }
+    }
+
+    @Test
+    fun `advanceTurn should let the first actor take their turn`() {
+        val actor1 = mockk<TurnActor>(relaxed = true)
+        val actor2 = mockk<TurnActor>()
+
+        val trackerEntries = listOf(
+            aTrackerEntity(name = "First", dexMod = 2, actor = actor1),
+            aTrackerEntity(name = "Second", dexMod = 1, actor = actor2),
+        )
+
+        every { actor2.handleTurn(any(), any(), any()) } returns object:  MovementCombatCommand() {
+            override fun doPerform(combatScenario: CombatScenario) {
+                // NOOP
+            }
+        }
+
+        withFixedDice(
+            D20 rolls 10,  // player1: 10 + 2 = 12
+            D20 rolls 12   // player2: 12 + 1 = 13
+        ) {
+
+            val tracker = createCombatTracker(trackerEntries)
+
+            // First turn should go to "Second" (higher initiative)
+            tracker.advanceTurn()
+
+            verify(exactly = 1) {
+                actor2.handleTurn(
+                    match { it.entity.name == "Second" },
+                    any(),
+                    any()
+                )
+            }
+            verify(exactly = 0) {
+                actor1.handleTurn(
+                    match { it.entity.name == "First" },
+                    any(),
+                    any()
+                )
             }
         }
     }
