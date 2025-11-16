@@ -19,6 +19,23 @@ import withFixedDice
 
 class CombatTrackerTest {
 
+    val PLAYER_FACTION = Faction(name = "Players")
+    val MONSTER_FACTION = Faction(name = "Monsters")
+
+    fun aTrackerEntity(
+        coreEntity : CoreEntity = PlayerCharacter.aPlayerCharacter(),
+        faction: Faction = PLAYER_FACTION,
+        actor: TurnActor = mockk<TurnActor>(relaxed = true)
+    ) : TrackerEntry {
+        return TrackerEntry(
+            combatant = Combatant(
+                entity = coreEntity,
+                faction = faction
+            ),
+            actor = actor
+        )
+    }
+
     @Test
     fun `combatants should be sorted by initiative in descending order`() {
         val lowDexPlayer = PlayerCharacter.aPlayerCharacter(
@@ -41,11 +58,10 @@ class CombatTrackerTest {
             D20 rolls 12,  // midDexPlayer: 12 + 2 = 14
             D20 rolls 8    // highDexPlayer: 8 + 4 = 12
         ) {
-            val actor = mockk<TurnActor>(relaxed = true)
             val trackerEntries = listOf(
-                TrackerEntry(Combatant(entity = lowDexPlayer, faction = faction), actor = actor),
-                TrackerEntry(Combatant(entity = midDexPlayer, faction = faction), actor = actor),
-                TrackerEntry(Combatant(entity = highDexPlayer, faction = faction), actor = actor)
+                aTrackerEntity(coreEntity = lowDexPlayer),
+                aTrackerEntity(coreEntity = midDexPlayer),
+                aTrackerEntity(coreEntity = highDexPlayer),
             )
 
             val tracker = createCombatTracker(trackerEntries)
@@ -79,10 +95,9 @@ class CombatTrackerTest {
             D20 rolls 10,  // player1: 10 + 2 = 12
             D20 rolls 10   // player2: 10 + 2 = 12
         ) {
-            val actor = mockk<TurnActor>(relaxed = true)
             val trackerEntries = listOf(
-                TrackerEntry(Combatant(entity = player1, faction = faction), actor = actor),
-                TrackerEntry(Combatant(entity = player2, faction = faction), actor = actor)
+                aTrackerEntity(coreEntity = player1),
+                aTrackerEntity(coreEntity = player2),
             )
 
             val tracker = createCombatTracker(trackerEntries)
