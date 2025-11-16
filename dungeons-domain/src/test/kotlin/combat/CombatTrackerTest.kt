@@ -319,6 +319,68 @@ class CombatTrackerTest {
                 }
             }
         }
+
+        @Test
+        fun `actor using all three command types should exhaust turn options`() {
+            withFixedDice(*expectedRolls) {
+                val actionCommand = object : ActionCombatCommand() {
+                    override fun doPerform(combatScenario: CombatScenario) {}
+                }
+
+                val bonusActionCommand = object : BonusActionCombatCommand() {
+                    override fun doPerform(combatScenario: CombatScenario) {}
+                }
+
+                val movementCommand = object : MovementCombatCommand() {
+                    override fun doPerform(combatScenario: CombatScenario) {}
+                }
+
+                // Actor1 will use action, bonus action, and movement (in that order)
+                every { actor1.handleTurn(any(), any(), any()) } returnsMany listOf(
+                    actionCommand,
+                    bonusActionCommand,
+                    movementCommand
+                )
+
+                val tracker = createCombatTracker(trackerEntries)
+
+                tracker.advanceTurn()
+
+                // Verify actor1 was called 3 times:
+                // 1. with all options available
+                // 2. with action used
+                // 3. with action and bonus action used
+                verify(exactly = 1) {
+                    actor1.handleTurn(
+                        match(MATCH_FIRST_ENTITY),
+                        match { it.actionAvailable && it.bonusActionAvailable && it.movementAvailable },
+                        any()
+                    )
+                }
+                verify(exactly = 1) {
+                    actor1.handleTurn(
+                        match(MATCH_FIRST_ENTITY),
+                        match { !it.actionAvailable && it.bonusActionAvailable && it.movementAvailable },
+                        any()
+                    )
+                }
+                verify(exactly = 1) {
+                    actor1.handleTurn(
+                        match(MATCH_FIRST_ENTITY),
+                        match { !it.actionAvailable && !it.bonusActionAvailable && it.movementAvailable },
+                        any()
+                    )
+                }
+                // Verify actor1 was NOT called a 4th time (all options exhausted)
+                verify(exactly = 0) {
+                    actor1.handleTurn(
+                        match(MATCH_FIRST_ENTITY),
+                        match { !it.actionAvailable && !it.bonusActionAvailable && !it.movementAvailable },
+                        any()
+                    )
+                }
+            }
+        }
     }
 
     private fun expectTurnForActor(actor2: TurnActor, vararg combatCmd: MovementCombatCommand) {
