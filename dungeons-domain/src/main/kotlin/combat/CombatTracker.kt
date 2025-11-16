@@ -33,6 +33,22 @@ abstract class MovementCombatCommand : CombatCommand() {
     override fun isTurnAvailable(turn: Turn): Boolean = turn.movementAvailable
 }
 
+abstract class ActionCombatCommand : CombatCommand() {
+    override fun consumeTurn(turn: Turn): Turn {
+        return turn.useAction()
+    }
+
+    override fun isTurnAvailable(turn: Turn): Boolean = turn.actionAvailable
+}
+
+abstract class BonusActionCombatCommand : CombatCommand() {
+    override fun consumeTurn(turn: Turn): Turn {
+        return turn.useBonusAction()
+    }
+
+    override fun isTurnAvailable(turn: Turn): Boolean = turn.bonusActionAvailable
+}
+
 private val NOOP_COMBAT_TRACKER_LISTENER = object : CombatTrackerListener {}
 
 data class Turn(
