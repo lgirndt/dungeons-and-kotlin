@@ -38,31 +38,30 @@ class CombatTrackerTest {
 
     @Test
     fun `combatants should be sorted by initiative in descending order`() {
-        val lowDexPlayer = PlayerCharacter.aPlayerCharacter(
-            name = "Slow Character",
-            stats = StatBlock.fromModifiers(dexMod = 0)
+        val trackerEntries = listOf(
+            aTrackerEntity(PlayerCharacter.aPlayerCharacter(
+                name = "Slow Character",
+                stats = StatBlock.fromModifiers(dexMod = 0)
+            )
+            ),
+            aTrackerEntity(
+                PlayerCharacter.aPlayerCharacter(
+                    name = "Medium Character",
+                    stats = StatBlock.fromModifiers(dexMod = 2)
+                )
+            ),
+            aTrackerEntity(
+                PlayerCharacter.aPlayerCharacter(
+                    name = "Fast Character",
+                    stats = StatBlock.fromModifiers(dexMod = 4)
+                )
+            ),
         )
-        val midDexPlayer = PlayerCharacter.aPlayerCharacter(
-            name = "Medium Character",
-            stats = StatBlock.fromModifiers(dexMod = 2)
-        )
-        val highDexPlayer = PlayerCharacter.aPlayerCharacter(
-            name = "Fast Character",
-            stats = StatBlock.fromModifiers(dexMod = 4)
-        )
-
-        val faction = Faction(name = "Heroes")
-
         withFixedDice(
             D20 rolls 10,  // lowDexPlayer: 10 + 0 = 10
             D20 rolls 12,  // midDexPlayer: 12 + 2 = 14
             D20 rolls 8    // highDexPlayer: 8 + 4 = 12
         ) {
-            val trackerEntries = listOf(
-                aTrackerEntity(coreEntity = lowDexPlayer),
-                aTrackerEntity(coreEntity = midDexPlayer),
-                aTrackerEntity(coreEntity = highDexPlayer),
-            )
 
             val tracker = createCombatTracker(trackerEntries)
 
@@ -88,8 +87,6 @@ class CombatTrackerTest {
             name = "Second",
             stats = StatBlock.fromModifiers(dexMod = 2)
         )
-
-        val faction = Faction(name = "Party")
 
         withFixedDice(
             D20 rolls 10,  // player1: 10 + 2 = 12
