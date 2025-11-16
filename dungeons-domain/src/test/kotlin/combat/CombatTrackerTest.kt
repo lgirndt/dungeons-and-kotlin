@@ -7,10 +7,7 @@ import fromModifiers
 import io.dungeons.Die.Companion.D20
 import io.dungeons.PlayerCharacter
 import io.dungeons.StatBlock
-import io.dungeons.combat.CombatTracker
-import io.dungeons.combat.CombatTrackerListener
-import io.dungeons.combat.Combatant
-import io.dungeons.combat.Faction
+import io.dungeons.combat.*
 import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Test
@@ -42,13 +39,14 @@ class CombatTrackerTest {
             D20 rolls 12,  // midDexPlayer: 12 + 2 = 14
             D20 rolls 8    // highDexPlayer: 8 + 4 = 12
         ) {
-            val combatants = listOf(
-                Combatant(entity = lowDexPlayer, faction = faction),
-                Combatant(entity = midDexPlayer, faction = faction),
-                Combatant(entity = highDexPlayer, faction = faction)
+            val actor = mockk<TurnActor>(relaxed = true)
+            val trackerEntries = listOf(
+                TrackerEntry(Combatant(entity = lowDexPlayer, faction = faction), actor = actor),
+                TrackerEntry(Combatant(entity = midDexPlayer, faction = faction), actor = actor),
+                TrackerEntry(Combatant(entity = highDexPlayer, faction = faction), actor = actor)
             )
 
-            val tracker = CombatTracker(combatants)
+            val tracker = CombatTracker(trackerEntries)
 
             // Verify the combatants are sorted by initiative (descending)
             // Expected order: midDexPlayer (14), highDexPlayer (12), lowDexPlayer (10)
@@ -79,12 +77,13 @@ class CombatTrackerTest {
             D20 rolls 10,  // player1: 10 + 2 = 12
             D20 rolls 10   // player2: 10 + 2 = 12
         ) {
-            val combatants = listOf(
-                Combatant(entity = player1, faction = faction),
-                Combatant(entity = player2, faction = faction)
+            val actor = mockk<TurnActor>(relaxed = true)
+            val trackerEntries = listOf(
+                TrackerEntry(Combatant(entity = player1, faction = faction), actor = actor),
+                TrackerEntry(Combatant(entity = player2, faction = faction), actor = actor)
             )
 
-            val tracker = CombatTracker(combatants)
+            val tracker = CombatTracker(trackerEntries)
 
             // Both have initiative 12, should maintain input order
             assertThat(tracker.combatantsOrderedByInitiative[0].entity.name, equalTo("First"))
@@ -117,21 +116,22 @@ class CombatTrackerTest {
             D20 rolls 10,  // player1: 10 + 1 = 11
             D20 rolls 8    // player2: 8 + 2 = 10
         ) {
-            val combatants = listOf(
-                Combatant(entity = player1, faction = faction),
-                Combatant(entity = player2, faction = faction)
+            val actor = mockk<TurnActor>(relaxed = true)
+            val trackerEntries = listOf(
+                TrackerEntry(Combatant(entity = player1, faction = faction), actor = actor),
+                TrackerEntry(Combatant(entity = player2, faction = faction), actor = actor)
             )
 
-            CombatTracker(combatants, listener = listener)
+            CombatTracker(trackerEntries, listener = listener)
 
             // Verify listener was called with the sorted list
             verify(exactly = 1) {
                 listener.rolledInitiative(match { sortedCombatants ->
                     sortedCombatants.size == 2 &&
-                    sortedCombatants[0].entity.name == "First" &&
-                    sortedCombatants[0].initiative.value == 11 &&
-                    sortedCombatants[1].entity.name == "Second" &&
-                    sortedCombatants[1].initiative.value == 10
+                            sortedCombatants[0].entity.name == "First" &&
+                            sortedCombatants[0].initiative.value == 11 &&
+                            sortedCombatants[1].entity.name == "Second" &&
+                            sortedCombatants[1].initiative.value == 10
                 })
             }
         }

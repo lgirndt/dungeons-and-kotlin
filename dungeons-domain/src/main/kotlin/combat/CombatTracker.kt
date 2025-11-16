@@ -73,32 +73,42 @@ interface TurnActor {
     fun handleTurn(combatant: Combatant, turn: Turn, combatScenario: CombatScenario): CombatCommand?
 }
 
+data class TrackerEntry(
+    val combatant: Combatant,
+    val actor: TurnActor
+)
+
 class CombatTracker(
-    combatants: Collection<Combatant>,
+    trackerEntries: Collection<TrackerEntry>,
     nonHostileFactionRelationships: List<FactionRelationship> = emptyList(),
     combatScenarioFactory: (CombatantsStore) -> CombatScenario = { SimpleCombatScenario(it) },
-    val actors: Map<Id<CoreEntity>, TurnActor> = emptyMap(), // TODO
+
     val listener: CombatTrackerListener = NOOP_COMBAT_TRACKER_LISTENER
 ) {
-    internal val combatantsOrderedByInitiative: List<Combatant> = combatants
+    internal val combatantsOrderedByInitiative: List<Combatant> = trackerEntries
+        .map(TrackerEntry::combatant)
         .sortedByDescending { it.initiative }
         .also { listener.rolledInitiative(it) }
 
     private val combatantsStore: CombatantsStore = CombatantsStore(
         combatantsByFaction = ImmutableListMultimap.builder<Faction, CoreEntity>()
             .apply {
-                combatants.forEach { combatant ->
-                    put(combatant.faction, combatant.entity)
-                }
+                trackerEntries
+                    .map(TrackerEntry::combatant)
+                    .forEach { combatant ->
+                        put(combatant.faction, combatant.entity)
+                    }
             }
             .build(),
         nonHostileFactionRelationships = nonHostileFactionRelationships
     )
 
+    val actors: Map<Id<CoreEntity>, TurnActor> = trackerEntries.associate{ it.combatant.id to it.actor }
+
     private val combatScenario: CombatScenario = combatScenarioFactory(combatantsStore)
 
     init {
-        require(combatants.count() >= 2) { "At least two combatants are required to start combat." }
+        require(trackerEntries.count() >= 2) { "At least two combatants are required to start combat." }
     }
 
     private var round = 1
