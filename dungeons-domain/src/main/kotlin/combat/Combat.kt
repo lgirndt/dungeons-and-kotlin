@@ -71,6 +71,9 @@ data class Combatant(
     val initiative: DieRoll by lazy {
         entity.rollInitiative()
     }
+
+    val hitPoints: Int
+        get() = entity.hitPoints
 }
 
 class CombatantsStore(

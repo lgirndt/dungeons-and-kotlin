@@ -7,6 +7,7 @@ interface CombatTrackerListener {
     fun rolledInitiative(combatants: List<Combatant>) {}
     fun startedCombat(combatants: List<Combatant>) {}
     fun startedTurn(turn: Turn, combatant: Combatant) {}
+    fun skipTurn(combatant: Combatant) {}
     fun endTurn(turn: Turn, combatant: Combatant) {}
 }
 
@@ -42,11 +43,10 @@ data class Turn(
     val reactionAvailable: Boolean = true
 ) {
 
-    val hasOptionsLeft: Boolean
+    val hasOptionsForTurnLeft: Boolean
         get() = movementAvailable
                 || actionAvailable
                 || bonusActionAvailable
-                || reactionAvailable
 
     fun useMovement(): Turn {
         require(movementAvailable) { "Movement already used this turn." }
@@ -104,17 +104,20 @@ class CombatTracker(
         handleStartCombat()
 
         val currentCombatant = combatantsOrderedByInitiative[turnIndex]
+        if (currentCombatant.hitPoints > 0) {
+            val actor = actors.getOrElse(currentCombatant.id) {
+                error("No actor found for combatant ${currentCombatant.id}")
+            }
+            var turn = nextTurnFor(currentCombatant)
+            do {
+                val command = actor.handleTurn(currentCombatant, turn, combatScenario)
+                    ?: break
+                turn = command.perform(turn, combatScenario)
 
-        val actor = actors.getOrElse(currentCombatant.id) {
-            error("No actor found for combatant ${currentCombatant.id}")
+            } while (turn.hasOptionsForTurnLeft)
+        } else {
+            listener.skipTurn(currentCombatant)// Combatant is down, skip turn
         }
-        var turn = nextTurnFor(currentCombatant)
-        do {
-            val command = actor.handleTurn(currentCombatant, turn, combatScenario)
-                ?: break
-            turn = command.perform(turn, combatScenario)
-
-        } while (turn.hasOptionsLeft)
 
         incrementTurn()
     }

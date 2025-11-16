@@ -157,6 +157,8 @@ class CombatTrackerTest {
         lateinit var actor2: TurnActor;
         lateinit var trackerEntries: List<TrackerEntry>
         lateinit var expectedRolls: Array<DieRoll>
+        lateinit var firstEntity: TrackerEntry
+        lateinit var secondEntity: TrackerEntry
 
         val FIRST_NAME = "First"
         val SECOND_NAME = "Second"
@@ -169,10 +171,10 @@ class CombatTrackerTest {
             actor1 = mockk<TurnActor>(name = "Actor1 Mock")
             actor2 = mockk<TurnActor>(name = "Actor2 Mock")
 
-            trackerEntries = listOf(
-                aTrackerEntity(name = FIRST_NAME, dexMod = 2, actor = actor1, faction = PLAYER_FACTION),
-                aTrackerEntity(name = SECOND_NAME, dexMod = 1, actor = actor2, faction = MONSTER_FACTION),
-            )
+            firstEntity = aTrackerEntity(name = FIRST_NAME, dexMod = 2, actor = actor1, faction = PLAYER_FACTION)
+            secondEntity = aTrackerEntity(name = SECOND_NAME, dexMod = 1, actor = actor2, faction = MONSTER_FACTION)
+
+            trackerEntries = listOf(firstEntity, secondEntity)
 
             expectedRolls = arrayOf(
                 D20 rolls 10,  // player1: 10 + 2 = 12
