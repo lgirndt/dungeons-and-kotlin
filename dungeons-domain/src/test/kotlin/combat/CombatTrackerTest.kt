@@ -158,51 +158,118 @@ class CombatTrackerTest {
         lateinit var trackerEntries: List<TrackerEntry>
         lateinit var expectedRolls: Array<DieRoll>
 
+        val FIRST_NAME = "First"
+        val SECOND_NAME = "Second"
+
+        val MATCH_FIRST_ENTITY: (Combatant) -> Boolean = { it.entity.name == FIRST_NAME }
+        val MATCH_SECOND_ENTITY: (Combatant) -> Boolean = { it.entity.name == SECOND_NAME }
+
         @BeforeEach
         fun beforeEach() {
             actor1 = mockk<TurnActor>(name = "Actor1 Mock")
             actor2 = mockk<TurnActor>(name = "Actor2 Mock")
 
             trackerEntries = listOf(
-                aTrackerEntity(name = "First", dexMod = 2, actor = actor1, faction = PLAYER_FACTION),
-                aTrackerEntity(name = "Second", dexMod = 1, actor = actor2, faction = MONSTER_FACTION),
+                aTrackerEntity(name = FIRST_NAME, dexMod = 2, actor = actor1, faction = PLAYER_FACTION),
+                aTrackerEntity(name = SECOND_NAME, dexMod = 1, actor = actor2, faction = MONSTER_FACTION),
             )
 
             expectedRolls = arrayOf(
                 D20 rolls 10,  // player1: 10 + 2 = 12
-                D20 rolls 12   // player2: 12 + 1 = 13
+                D20 rolls 10   // player2: 12 + 1 = 13
             )
         }
 
         @Test
         fun `advanceTurn should let the first actor in initiative order take their turn`() {
             withFixedDice(*expectedRolls) {
+                expectTurnForActor(actor1, object : MovementCombatCommand() {
+                    override fun doPerform(combatScenario: CombatScenario) {}
+                })
+
+                val tracker = createCombatTracker(trackerEntries)
+
+                tracker.advanceTurn()
+
+                verify(exactly = 1) {
+                    actor1.handleTurn(
+                        match(MATCH_FIRST_ENTITY),
+                        match { it.movementAvailable && it.round == 1},
+                        any()
+                    )
+                }
+                verify(exactly = 1) {
+                    actor1.handleTurn(
+                        match(MATCH_FIRST_ENTITY),
+                        match { !it.movementAvailable && it.round == 1},
+                        any()
+                    )
+                }
+                verify(exactly = 0) {
+                    actor2.handleTurn(
+                        match(MATCH_SECOND_ENTITY),
+                        any(),
+                        any()
+                    )
+                }
+            }
+        }
+
+        @Test
+        fun `advance to the 2nd turn should let the second actor in initiative order take their turn`() {
+            withFixedDice(*expectedRolls) {
+                expectTurnForActor(actor1)
+
                 expectTurnForActor(actor2, object : MovementCombatCommand() {
                     override fun doPerform(combatScenario: CombatScenario) {}
                 })
 
                 val tracker = createCombatTracker(trackerEntries)
-                // First turn should go to "Second" (higher initiative)
-                tracker.advanceTurn()
+
+                repeat(2) {
+                    tracker.advanceTurn()
+                }
 
                 verify(exactly = 1) {
-                    actor2.handleTurn(
-                        match { it.entity.name == "Second" },
-                        match { it.movementAvailable},
+                    actor1.handleTurn(
+                        match(MATCH_FIRST_ENTITY),
+                        match { it.round == 1},
                         any()
                     )
                 }
                 verify(exactly = 1) {
                     actor2.handleTurn(
-                        match { it.entity.name == "Second" },
+                        match(MATCH_SECOND_ENTITY),
+                        match { it.movementAvailable && it.round == 1},
+                        any()
+                    )
+                }
+                verify(exactly = 1) {
+                    actor2.handleTurn(
+                        match(MATCH_SECOND_ENTITY),
                         match { !it.movementAvailable},
                         any()
                     )
                 }
-                verify(exactly = 0) {
+            }
+        }
+
+        @Test
+        fun `advance to the 3rd turn should start a new round and let the first actor take their turn`() {
+            withFixedDice(*expectedRolls) {
+                expectTurnForActor(actor1)
+                expectTurnForActor(actor2)
+                expectTurnForActor(actor1)
+
+                val tracker = createCombatTracker(trackerEntries)
+
+                repeat(3) {
+                    tracker.advanceTurn()
+                }
+                verify(exactly = 1) {
                     actor1.handleTurn(
-                        match { it.entity.name == "First" },
-                        any(),
+                        match(MATCH_FIRST_ENTITY),
+                        match { it.movementAvailable && it.round == 2 },
                         any()
                     )
                 }
