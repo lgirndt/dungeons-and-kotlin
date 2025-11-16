@@ -1,9 +1,11 @@
 package combat
 
 import aPlayerCharacter
+import com.google.common.collect.ImmutableListMultimap
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import fromModifiers
+import io.dungeons.CoreEntity
 import io.dungeons.Die.Companion.D20
 import io.dungeons.PlayerCharacter
 import io.dungeons.StatBlock
@@ -46,7 +48,7 @@ class CombatTrackerTest {
                 TrackerEntry(Combatant(entity = highDexPlayer, faction = faction), actor = actor)
             )
 
-            val tracker = CombatTracker(trackerEntries)
+            val tracker = createCombatTracker(trackerEntries)
 
             // Verify the combatants are sorted by initiative (descending)
             // Expected order: midDexPlayer (14), highDexPlayer (12), lowDexPlayer (10)
@@ -83,7 +85,7 @@ class CombatTrackerTest {
                 TrackerEntry(Combatant(entity = player2, faction = faction), actor = actor)
             )
 
-            val tracker = CombatTracker(trackerEntries)
+            val tracker = createCombatTracker(trackerEntries)
 
             // Both have initiative 12, should maintain input order
             assertThat(tracker.combatantsOrderedByInitiative[0].entity.name, equalTo("First"))
@@ -91,10 +93,30 @@ class CombatTrackerTest {
         }
     }
 
+    private fun toCombatScenario(trackerEntries: List<TrackerEntry>): SimpleCombatScenario =
+        SimpleCombatScenario(toCombatStore(trackerEntries))
+
+    private fun toCombatStore(trackerEntries: List<TrackerEntry>): CombatantsStore = CombatantsStore(
+        combatantsByFaction = ImmutableListMultimap.builder<Faction, CoreEntity>()
+            .apply {
+                trackerEntries
+                    .map(TrackerEntry::combatant)
+                    .forEach { combatant ->
+                        put(combatant.faction, combatant.entity)
+                    }
+            }
+            .build()
+    )
+
+    private fun createCombatTracker(trackerEntries: List<TrackerEntry>): CombatTracker = CombatTracker(
+        trackerEntries = trackerEntries,
+        combatScenario = toCombatScenario(trackerEntries)
+    )
+
     @Test
     fun `empty combatants list should create empty tracker`() {
         assertThrows<IllegalArgumentException> {
-            CombatTracker(emptyList())
+            createCombatTracker(emptyList())
         }
     }
 
@@ -122,7 +144,11 @@ class CombatTrackerTest {
                 TrackerEntry(Combatant(entity = player2, faction = faction), actor = actor)
             )
 
-            CombatTracker(trackerEntries, listener = listener)
+            CombatTracker(
+                trackerEntries = trackerEntries,
+                combatScenario = toCombatScenario(trackerEntries),
+                listener = listener
+            )
 
             // Verify listener was called with the sorted list
             verify(exactly = 1) {

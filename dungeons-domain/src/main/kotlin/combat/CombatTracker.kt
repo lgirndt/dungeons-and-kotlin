@@ -1,6 +1,5 @@
 package io.dungeons.combat
 
-import com.google.common.collect.ImmutableListMultimap
 import io.dungeons.CoreEntity
 import io.dungeons.Id
 
@@ -80,9 +79,7 @@ data class TrackerEntry(
 
 class CombatTracker(
     trackerEntries: Collection<TrackerEntry>,
-    nonHostileFactionRelationships: List<FactionRelationship> = emptyList(),
-    combatScenarioFactory: (CombatantsStore) -> CombatScenario = { SimpleCombatScenario(it) },
-
+    val combatScenario: CombatScenario,
     val listener: CombatTrackerListener = NOOP_COMBAT_TRACKER_LISTENER
 ) {
     internal val combatantsOrderedByInitiative: List<Combatant> = trackerEntries
@@ -90,22 +87,7 @@ class CombatTracker(
         .sortedByDescending { it.initiative }
         .also { listener.rolledInitiative(it) }
 
-    private val combatantsStore: CombatantsStore = CombatantsStore(
-        combatantsByFaction = ImmutableListMultimap.builder<Faction, CoreEntity>()
-            .apply {
-                trackerEntries
-                    .map(TrackerEntry::combatant)
-                    .forEach { combatant ->
-                        put(combatant.faction, combatant.entity)
-                    }
-            }
-            .build(),
-        nonHostileFactionRelationships = nonHostileFactionRelationships
-    )
-
     val actors: Map<Id<CoreEntity>, TurnActor> = trackerEntries.associate{ it.combatant.id to it.actor }
-
-    private val combatScenario: CombatScenario = combatScenarioFactory(combatantsStore)
 
     init {
         require(trackerEntries.count() >= 2) { "At least two combatants are required to start combat." }
