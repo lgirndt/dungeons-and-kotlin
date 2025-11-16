@@ -277,6 +277,48 @@ class CombatTrackerTest {
                 }
             }
         }
+
+        @Test
+        fun `advanceTurn should skip combatants with 0 hit points`() {
+            withFixedDice(*expectedRolls) {
+                expectTurnForActor(actor1)
+                expectTurnForActor(actor2)
+
+                val tracker = createCombatTracker(trackerEntries)
+
+                // First round - both actors take their turns normally
+                tracker.advanceTurn()
+                tracker.advanceTurn()
+
+                // Reduce actor1's hit points to 0
+                firstEntity.combatant.entity.hitPoints = 0
+
+                tracker.advanceTurn()
+
+                // Verify actor1 was NOT called again (still only called once from round 1)
+                verify(exactly = 1) {
+                    actor1.handleTurn(
+                        match(MATCH_FIRST_ENTITY),
+                        match { it.round == 1 },
+                        any()
+                    )
+                }
+                verify(exactly = 1) {
+                    actor2.handleTurn(
+                        match(MATCH_SECOND_ENTITY),
+                        match { it.round == 1 },
+                        any()
+                    )
+                }
+                verify(exactly = 0) {
+                    actor1.handleTurn(
+                        match(MATCH_FIRST_ENTITY),
+                        match { it.round == 2 },
+                        any()
+                    )
+                }
+            }
+        }
     }
 
     private fun expectTurnForActor(actor2: TurnActor, vararg combatCmd: MovementCombatCommand) {
