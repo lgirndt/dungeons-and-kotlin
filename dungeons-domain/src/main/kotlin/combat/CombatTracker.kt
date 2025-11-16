@@ -101,14 +101,12 @@ class CombatTracker(
 
 
     fun advanceTurn() {
-        if (turnIndex == 0 && round == 1) {
-            listener.startedCombat(combatantsOrderedByInitiative)
-        }
+        handleStartCombat()
 
         val currentCombatant = combatantsOrderedByInitiative[turnIndex]
 
         val actor = actors.getOrElse(currentCombatant.id) {
-            throw IllegalStateException("No actor found for combatant ${currentCombatant.id}")
+            error("No actor found for combatant ${currentCombatant.id}")
         }
         var turn = nextTurnFor(currentCombatant)
         do {
@@ -118,6 +116,16 @@ class CombatTracker(
 
         } while (turn.hasOptionsLeft)
 
+        incrementTurn()
+    }
+
+    private fun handleStartCombat() {
+        if (turnIndex == 0 && round == 1) {
+            listener.startedCombat(combatantsOrderedByInitiative)
+        }
+    }
+
+    private fun incrementTurn() {
         turnIndex++
         if (turnIndex >= combatantsOrderedByInitiative.size) {
             turnIndex = 0
