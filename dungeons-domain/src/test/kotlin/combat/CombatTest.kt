@@ -21,6 +21,12 @@ import withFixedDice
 val FACTION_A = Faction(name = "Faction A")
 val FACTION_B = Faction(name = "Faction B")
 
+val SOME_COMBATANT = Combatant(
+    entity = PlayerCharacter.aPlayerCharacter(name = "Some Combatant"),
+    faction = FACTION_A,
+    actor = NoopTurnActor()
+)
+
 class FactionRelationsTest {
 
     val SOME_RELATIONSHIP = FactionRelationship(
@@ -98,12 +104,12 @@ class CombatantsStoreTest {
         ID = TestId()
         store = CombatantsStore(
             listOf(
-                Combatant(PlayerCharacter.Companion.aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[1]), FACTION_A),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[2]), FACTION_A),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[3]), FACTION_B),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[4]), FACTION_B),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[5]), FACTION_B),
+                Combatant(PlayerCharacter.Companion.aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A, NoopTurnActor()),
+                Combatant(PlayerCharacter.aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
+                Combatant(PlayerCharacter.aPlayerCharacter(ID[2]), FACTION_A, NoopTurnActor()),
+                Combatant(PlayerCharacter.aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),
+                Combatant(PlayerCharacter.aPlayerCharacter(ID[4]), FACTION_B, NoopTurnActor()),
+                Combatant(PlayerCharacter.aPlayerCharacter(ID[5]), FACTION_B, NoopTurnActor()),
             )
         )
     }
@@ -144,7 +150,7 @@ class CombatantTest {
     @Test
     fun `initiative should be cached after first access`() {
         val entity = PlayerCharacter.aPlayerCharacter(name = "Test Character")
-        val combatant = Combatant(entity = entity, faction = FACTION_A)
+        val combatant = SOME_COMBATANT.copy()
 
         withFixedDice(D20 rolls 12) {
             // Access initiative twice
@@ -164,7 +170,7 @@ class CombatantTest {
             stats = StatBlock.fromModifiers(dexMod=4)
         )
         withFixedDice(D20 rolls 12) {
-            val combatant = Combatant(entity = player, faction = FACTION_A)
+            val combatant = SOME_COMBATANT.copy(entity = player)
             val initiative = combatant.initiative
             assertThat(initiative.value, equalTo(12+4))
             assertThat(initiative.die, equalTo(D20))

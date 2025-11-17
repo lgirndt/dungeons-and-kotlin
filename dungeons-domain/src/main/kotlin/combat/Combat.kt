@@ -112,7 +112,7 @@ internal class NoopTurnActor : TurnActor {
 data class Combatant(
     val entity: CoreEntity,
     val faction: Faction,
-    val actor: TurnActor = NoopTurnActor()
+    val actor: TurnActor,
 ) {
     val id: Id<CoreEntity>
         get() = entity.id
