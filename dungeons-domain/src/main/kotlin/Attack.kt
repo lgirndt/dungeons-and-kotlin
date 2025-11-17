@@ -2,19 +2,20 @@ package io.dungeons
 
 import io.dungeons.Die.Companion.D20
 import io.dungeons.RangeClassification.*
-import io.dungeons.world.Coordinate
+import io.dungeons.combat.ProvidesGridPosition
+import io.dungeons.world.GridPosition
 
 interface Attacker {
+    val id: Id<CoreEntity>
     val attackSource: AttackSource
-    val position: Coordinate
     val stats: StatBlock
     fun applyAttackModifiers(): Int
     fun isCriticalHit(hitRoll: DieRoll): Boolean
 }
 
 interface Attackable {
+    val id: Id<CoreEntity>
     val armourClass: Int
-    val position: Coordinate
     val damageModifiers: DamageModifiers
     var hitPoints: Int
     fun receiveDamage(amount: Int, damageType: DamageType): Int {
@@ -41,10 +42,16 @@ data class AttackOutcome(
     }
 }
 
-internal fun attack(attacker: Attacker, opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
+internal fun attack(
+    attacker: Attacker,
+    opponent: Attackable,
+    providesGridPosition: ProvidesGridPosition,
+    rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
     val hitRollD20 = rollModifier.let {
-        val distance = attacker.position.distance(opponent.position)
-        when (attacker.attackSource.isTargetInRange(distance)) {
+        val attackerPos : GridPosition = providesGridPosition.getGridPosition(attacker.id) ?: error("No position found for entity $attacker")
+        val opponentPos = providesGridPosition.getGridPosition(opponent.id) ?: error("No position found for entity $opponent")
+        val distance = attackerPos.chebyshevDistance(opponentPos)
+        when (attacker.attackSource.isTargetInRange(distance.toFeet())) {
             OutOfRange -> return AttackOutcome.MISS
             WithinNormalRange -> it
             WithinLongRange -> it.giveDisadvantage()

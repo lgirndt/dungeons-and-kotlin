@@ -3,7 +3,8 @@ package io.dungeons.combat
 import io.dungeons.CoreEntity
 import io.dungeons.DieRoll
 import io.dungeons.Id
-import io.dungeons.world.Feet
+import io.dungeons.world.GridPosition
+import io.dungeons.world.Square
 import io.dungeons.world.isInRange
 
 enum class FactionStance {
@@ -163,10 +164,15 @@ class CombatantsStore(
     }
 }
 
-interface CombatScenario {
+interface ProvidesGridPosition {
+    fun getGridPosition(entityId: Id<CoreEntity>): GridPosition?
+}
+
+interface CombatScenario : ProvidesGridPosition {
     fun listVisibleCombatants(observer: Id<CoreEntity>): List<Combatant>
     fun isVisibleTo(observer: Id<CoreEntity>, target: Id<CoreEntity>): Boolean
-    fun listCombatantsInRange(observer: Id<CoreEntity>, rangeInFeet: Feet): List<Combatant>
+    fun listCombatantsInRange(observer: Id<CoreEntity>, rangeInSquares: Square): List<Combatant>
+    override fun getGridPosition(entityId: Id<CoreEntity>): GridPosition?
 }
 
 class SimpleCombatScenario(
@@ -185,14 +191,22 @@ class SimpleCombatScenario(
 
     override fun listCombatantsInRange(
         observer: Id<CoreEntity>,
-        rangeInFeet: Feet
+        rangeInSquares: Square
     ): List<Combatant> {
-        val entity = combatantsStore.findOrNull(observer)?.entity
-            ?: return emptyList()
+        val position = getGridPosition(observer)
+            ?: error("No grid position found for entity $observer")
 
         return combatantsStore.listAll()
             .filter { it.id != observer }
-            .filter { isInRange(entity.position, it.entity.position, rangeInFeet) }
+            .filter {
+                getGridPosition(it.entity.id)?.let { targetPos ->
+                    isInRange(position, targetPos, rangeInSquares)
+                } ?: true
+            }
+    }
+
+    override fun getGridPosition(entityId: Id<CoreEntity>): GridPosition? {
+        TODO("Not yet implemented")
     }
 
 }

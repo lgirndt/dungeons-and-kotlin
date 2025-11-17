@@ -2,6 +2,7 @@ package io.dungeons.spell
 
 import com.google.common.base.MoreObjects
 import io.dungeons.*
+import io.dungeons.combat.ProvidesGridPosition
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet
 
@@ -27,6 +28,7 @@ sealed class SpellLevel(val level: Int) : Comparable<SpellLevel> {
 }
 
 interface Caster {
+    val id: Id<CoreEntity>
     val spellCastingAbility: Stat
     val proficiencyBonus: ProficiencyBonus
     val position: Coordinate
@@ -38,20 +40,28 @@ fun castAttackSpell(
     opponent: Attackable,
     spell: AttackSpell,
     onLevel: SpellLevel,
+    providesGridPosition: ProvidesGridPosition,
     rollModifier: RollModifier
-) : AttackOutcome {
+): AttackOutcome {
     require(onLevel == SpellLevel.Cantrip && spell.level == SpellLevel.Cantrip)
     require(spell.level >= onLevel)
 
     val attackSource = spell.asAttackSource(caster)
-    return attack(object : Attacker {
-        override val attackSource = attackSource
-        override val position = caster.position
-        override val stats = caster.stats
-        override fun applyAttackModifiers() =
-            caster.spellCastingAbility.modifier + caster.proficiencyBonus.toInt()
-        override fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == 20
-    }, opponent, rollModifier)
+    return attack(
+        object : Attacker {
+            override val id: Id<CoreEntity>
+                get() = caster.id
+            override val attackSource = attackSource
+            override val stats = caster.stats
+            override fun applyAttackModifiers() =
+                caster.spellCastingAbility.modifier + caster.proficiencyBonus.toInt()
+
+            override fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == 20
+        },
+        opponent,
+        providesGridPosition,
+        rollModifier
+    )
 
 }
 
@@ -61,7 +71,8 @@ data class AttackSpell(
     val level: SpellLevel,
     val damageType: DamageType,
     val damageRoll: DamageRoll,
-    val range: Feet) {
+    val range: Feet
+) {
 
     internal fun asAttackSource(caster: Caster): AttackSource {
         val spell = this
@@ -75,7 +86,7 @@ data class AttackSpell(
     }
 }
 
-class SpellCasting (
+class SpellCasting(
     val ability: StatQuery,
 )
 

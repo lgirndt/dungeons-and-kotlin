@@ -1,12 +1,11 @@
 
 import com.google.common.collect.ImmutableListMultimap
+import io.dungeons.*
+import io.dungeons.world.Feet
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
-import io.dungeons.*
-import io.dungeons.world.Coordinate
-import io.dungeons.world.Feet
 
 class TestId<T> {
 
@@ -78,7 +77,6 @@ fun PlayerCharacter.Companion.aPlayerCharacter(
     hitPoints: Int = 10,
     armourClass: Int = 12,
     damageModifiers: DamageModifiers = DamageModifiers.NONE,
-    position: Coordinate = Coordinate.from(0,0),
     level: Int = 1,
     weapon: Weapon = SOME_WEAPON.copy(),
     classFeatures : ClassFeatures = Fighter(),
@@ -91,7 +89,6 @@ fun PlayerCharacter.Companion.aPlayerCharacter(
             hitPoints = hitPoints,
             armourClass = armourClass,
             damageModifiers = damageModifiers,
-            position = position,
         ),
         data = PlayerCharacterData(
             level = level,

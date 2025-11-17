@@ -1,15 +1,22 @@
 package spell
 
 import SOME_STAT_BOCK
+import TestId
 import aPlayerCharacter
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import io.dungeons.*
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D4
+import io.dungeons.combat.ProvidesGridPosition
 import io.dungeons.spell.*
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet
+import io.dungeons.world.GridPosition
+import io.dungeons.world.Square
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import rolls
 import withFixedDice
@@ -25,9 +32,19 @@ val SOME_SPELL = AttackSpell(
 
 class SpellTest {
 
+    lateinit var providesGridPosition: ProvidesGridPosition
+    val ID = TestId<CoreEntity>()
+
+    @BeforeEach
+    fun beforeEach() {
+        providesGridPosition = mockk()
+    }
+
+
     @Test
     fun `a spell attack that meets AC hits the target`() {
         val caster = object : Caster {
+            override val id: Id<CoreEntity> get() = ID[0]
             override val spellCastingAbility: Stat = Stat(14) // modifier +2
             override val proficiencyBonus: ProficiencyBonus = ProficiencyBonus.fromLevel(1) // +1
             override val position: Coordinate = Coordinate.from(0, 0)
@@ -40,15 +57,30 @@ class SpellTest {
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
+            id = ID[1],
             armourClass = 12,
-            position = Coordinate.from(10, 0)
         )
+
+        every {
+            providesGridPosition.getGridPosition(match { it == ID[0] })
+        } returns GridPosition(Square(0), Square(0))
+
+        every {
+            providesGridPosition.getGridPosition(match { it == ID[1] })
+        } returns GridPosition(Square(0), Square(2))
 
         withFixedDice(
             D20 rolls 10, // hit roll
             D4 rolls 6    // damage roll
         ) {
-            val outcome = castAttackSpell(caster, opponent, spell, SpellLevel.Cantrip, RollModifier.NORMAL)
+            val outcome = castAttackSpell(
+                caster,
+                opponent,
+                spell,
+                SpellLevel.Cantrip,
+                providesGridPosition,
+                RollModifier.NORMAL
+            )
 
             // Hit roll: 10 (d20) + 2 (spell ability mod) + 1 (prof bonus) = 13, which meets AC 12
             // Damage: 6 (d8) + 2 (spell ability mod) = 8

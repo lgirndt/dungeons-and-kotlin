@@ -1,7 +1,7 @@
 package io.dungeons
 
 import io.dungeons.Die.Companion.D20
-import io.dungeons.world.Coordinate
+import io.dungeons.combat.ProvidesGridPosition
 
 
 data class CoreEntityData(
@@ -10,11 +10,10 @@ data class CoreEntityData(
     var hitPoints: Int,
     val armourClass: Int,
     val damageModifiers: DamageModifiers,
-    val position: Coordinate = Coordinate.from(0, 0),
 )
 
 abstract class CoreEntity(
-    val id: Id<CoreEntity>,
+    override val id: Id<CoreEntity>,
     protected val core: CoreEntityData,
 ) : Attackable {
 
@@ -36,9 +35,6 @@ abstract class CoreEntity(
     override val armourClass: Int
         get() = core.armourClass
 
-    override val position: Coordinate
-        get() = core.position
-
     abstract val weapon: Weapon
 
     protected abstract val attackModifier: Int
@@ -49,8 +45,9 @@ abstract class CoreEntity(
     internal fun asPhysicalAttacker(): Attacker {
         val entity = this
         return object : Attacker {
+            override val id: Id<CoreEntity>
+                get() = entity.id
             override val attackSource = entity.weapon
-            override val position = entity.core.position
             override val stats: StatBlock
                 get() = core.stats
 
@@ -60,9 +57,12 @@ abstract class CoreEntity(
         }
     }
 
-    fun attack(opponent: Attackable, rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
+    fun attack(
+        opponent: Attackable,
+        providesGridPosition: ProvidesGridPosition,
+        rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
         val attacker = asPhysicalAttacker()
-        return attack(attacker, opponent, rollModifier)
+        return attack(attacker, opponent, providesGridPosition, rollModifier)
     }
 
     fun rollAbilityCheck(

@@ -1,3 +1,4 @@
+
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import io.dungeons.*
@@ -5,12 +6,29 @@ import io.dungeons.Die.Companion.D10
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D8
 import io.dungeons.WeaponCategory.Martial
-import io.dungeons.world.Coordinate
+import io.dungeons.combat.ProvidesGridPosition
 import io.dungeons.world.Feet
+import io.dungeons.world.GridPosition
+import io.dungeons.world.Square
+import io.mockk.every
+import io.mockk.mockk
+import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 
 class AttackTest {
+
+    lateinit var providesGridPosition: ProvidesGridPosition
+    val ID = TestId<CoreEntity>()
+
+    @BeforeEach
+    fun beforeEach() {
+        providesGridPosition = mockk()
+    }
+
+    private fun expectAnyGridPosition() {
+        every { providesGridPosition.getGridPosition(any()) } returns GridPosition(Square(0), Square(0))
+    }
 
 // TODO this will not work aynmore
 //    @Test
@@ -30,9 +48,10 @@ class AttackTest {
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 13
         )
+        expectAnyGridPosition()
 
         withFixedDice(D20 rolls 10) {
-            val outcome = target.attack(opponent)
+            val outcome = target.attack(opponent, providesGridPosition)
 
             assertThat(outcome.hasBeenHit, equalTo(false))
             assertThat(
@@ -47,13 +66,15 @@ class AttackTest {
     fun `an attacker who meets AC hits the attack`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 1, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10 + 1 + 1 )
+        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10 + 1 + 1)
+
+        expectAnyGridPosition()
 
         withFixedDice(
             D20 rolls 10,
             damageDie rolls 5
         ) {
-            val outcome = attacker.attack(opponent)
+            val outcome = attacker.attack(opponent, providesGridPosition)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(
@@ -79,11 +100,13 @@ class AttackTest {
 
         val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 12)
 
+        expectAnyGridPosition()
+
         withFixedDice(
             D20 rolls 10,
             damageDie rolls 5
         ) {
-            val outcome = cleric.attack(opponent)
+            val outcome = cleric.attack(opponent, providesGridPosition)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(
@@ -111,7 +134,7 @@ class AttackTest {
         )
         val opponent = PlayerCharacter.aPlayerCharacter(
             hitPoints = opponentHitPoints,
-            armourClass =  10,
+            armourClass = 10,
             damageModifiers = SOME_DAMAGE_MODIFIERS.copy(
                 vulnerabilities = if (opponentVulnerableTo != null) setOf(opponentVulnerableTo) else emptySet()
             )
@@ -119,8 +142,10 @@ class AttackTest {
 
         val diceRolls = listOf(D20 rolls hitRoll) + damageRolls.map { damageDie rolls it }
 
+        expectAnyGridPosition()
+
         withFixedDice(*diceRolls.toTypedArray()) {
-            val outcome = attacker.attack(opponent)
+            val outcome = attacker.attack(opponent, providesGridPosition)
             runTest(outcome, opponent)
         }
 
@@ -175,11 +200,13 @@ class AttackTest {
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
         val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
+        expectAnyGridPosition()
+
         withFixedDice(
             D20 rolls 10,
             damageDie rolls 6
         ) {
-            val outcome = attacker.attack(opponent, RollModifier.NORMAL)
+            val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.NORMAL)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(
@@ -196,12 +223,14 @@ class AttackTest {
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
         val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
+        expectAnyGridPosition()
+
         withFixedDice(
             D20 rolls 8,
             D20 rolls 15,  // higher roll should be used
             damageDie rolls 6
         ) {
-            val outcome = attacker.attack(opponent, RollModifier.ADVANTAGE)
+            val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.ADVANTAGE)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(
@@ -218,12 +247,14 @@ class AttackTest {
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
         val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
+        expectAnyGridPosition()
+
         withFixedDice(
             D20 rolls 15,
             D20 rolls 8,  // lower roll should be used
             damageDie rolls 6
         ) {
-            val outcome = attacker.attack(opponent, RollModifier.DISADVANTAGE)
+            val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.DISADVANTAGE)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(
@@ -239,12 +270,14 @@ class AttackTest {
         val attacker = aCharacterWithWeapon(strMod = 1)
         val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 15)
 
+        expectAnyGridPosition()
+
         withFixedDice(
             D20 rolls 5,  // would miss: 5 + 1 + 1 = 7 < 15
             D20 rolls 13, // hits: 13 + 1 + 1 = 15
             D8 rolls 4
         ) {
-            val outcome = attacker.attack(opponent, RollModifier.ADVANTAGE)
+            val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.ADVANTAGE)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(outcome.hitRoll, equalTo(13 + 1 + 1))
@@ -256,11 +289,13 @@ class AttackTest {
         val attacker = aCharacterWithWeapon(strMod = 1)
         val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 15)
 
+        expectAnyGridPosition()
+
         withFixedDice(
             D20 rolls 13, // would hit: 13 + 1 + 1 = 15
             D20 rolls 5   // misses: 5 + 1 + 1 = 7 < 15
         ) {
-            val outcome = attacker.attack(opponent, RollModifier.DISADVANTAGE)
+            val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.DISADVANTAGE)
 
             assertThat(outcome.hasBeenHit, equalTo(false))
             assertThat(outcome.hitRoll, equalTo(5 + 1 + 1))
@@ -273,13 +308,15 @@ class AttackTest {
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
         val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
+        expectAnyGridPosition()
+
         withFixedDice(
             D20 rolls 12,
             D20 rolls 20,  // critical hit
             damageDie rolls 5,
             damageDie rolls 7   // second damage roll for crit
         ) {
-            val outcome = attacker.attack(opponent, RollModifier.ADVANTAGE)
+            val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.ADVANTAGE)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(outcome.damageDealt, equalTo(5 + 7 + 2)) // double dice + str mod
@@ -292,13 +329,15 @@ class AttackTest {
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
         val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
 
+        expectAnyGridPosition()
+
         withFixedDice(
             D20 rolls 20,  // this is the max, so it's used even with disadvantage
             D20 rolls 20,  // both are 20, so critical hit triggers
             damageDie rolls 5,
             damageDie rolls 7   // second damage roll for crit
         ) {
-            val outcome = attacker.attack(opponent, RollModifier.DISADVANTAGE)
+            val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.DISADVANTAGE)
 
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(outcome.damageDealt, equalTo(5 + 7 + 2)) // double dice + str mod
@@ -309,7 +348,7 @@ class AttackTest {
     fun `a opponent within melee range can be attacked`() {
         val damageDie = D8
         val attacker = PlayerCharacter.aPlayerCharacter(
-            position = Coordinate.from(0, 0),
+
             weapon = SOME_WEAPON.copy(
                 rangeChecker = RangeCheckers.melee(Feet(5.0))
             )
@@ -317,14 +356,15 @@ class AttackTest {
 
         val opponent = PlayerCharacter.aPlayerCharacter(
             armourClass = 10,
-            position = Coordinate.from(3, 0) // distance = 3, within melee range of 5
         )
+
+        expectAnyGridPosition()
 
         withFixedDice(
             D20 rolls 10,
             damageDie rolls 6
         ) {
-            val outcome = attacker.attack(opponent)
+            val outcome = attacker.attack(opponent, providesGridPosition)
             assertThat(outcome.hasBeenHit, equalTo(true))
         }
     }
@@ -332,19 +372,25 @@ class AttackTest {
     @Test
     fun `an attack out of melee range misses automatically`() {
         val attacker = PlayerCharacter.aPlayerCharacter(
-            position = Coordinate.from(0, 0),
+            id = ID[0],
             weapon = SOME_WEAPON.copy(
                 rangeChecker = RangeCheckers.melee(Feet(5.0))
             )
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
+            id = ID[1],
             armourClass = 10,
-            position = Coordinate.from(6, 0) // distance = 6, out of melee range of 5
+        )
+
+        expectGridPositions(
+            providesGridPosition,
+            GridPosition(Square(0), Square(0)),
+            GridPosition(Square(2), Square(0))
         )
 
         withFixedDice {
-            val outcome = attacker.attack(opponent)
+            val outcome = attacker.attack(opponent, providesGridPosition)
             assertThat(outcome, equalTo(AttackOutcome.MISS))
         }
     }
@@ -353,32 +399,53 @@ class AttackTest {
     fun `a ranged weapon attack within normal range hits normally`() {
         val damageDie = D8
         val attacker = PlayerCharacter.aPlayerCharacter(
-            position = Coordinate.from(0, 0),
+            id = ID[0],
             weapon = SOME_WEAPON.copy(
+                name = "Test Weapon",
                 statQuery = StatQueries.Dex,
                 rangeChecker = RangeCheckers.ranged(normalRange = Feet(10.0), longRange = Feet(30.0))
             )
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
+            id = ID[1],
             armourClass = 10,
-            position = Coordinate.from(8, 0) // distance = 8, within normal range of 10
+        )
+
+        expectGridPositions(
+            providesGridPosition,
+            GridPosition(Square(0), Square(0)),
+            GridPosition(Square(1), Square(0))
         )
 
         withFixedDice(
             D20 rolls 10,
             damageDie rolls 6
         ) {
-            val outcome = attacker.attack(opponent)
+            val outcome = attacker.attack(opponent, providesGridPosition)
             assertThat(outcome.hasBeenHit, equalTo(true))
         }
+    }
+
+    private fun expectGridPositions(
+        providesGridPosition: ProvidesGridPosition,
+        attackerPos: GridPosition,
+        opponentPos: GridPosition
+    ) {
+        every {
+            providesGridPosition.getGridPosition(match { it == ID[0] })
+        } returns attackerPos
+
+        every {
+            providesGridPosition.getGridPosition(match { it == ID[1] })
+        } returns opponentPos
     }
 
     @Test
     fun `a ranged weapon attack within long range hits with disadvantage`() {
         val damageDie = D8
         val attacker = PlayerCharacter.aPlayerCharacter(
-            position = Coordinate.from(0, 0),
+            id = ID[0],
             weapon = SOME_WEAPON.copy(
                 statQuery = StatQueries.Dex,
                 rangeChecker = RangeCheckers.ranged(normalRange = Feet(10.0), longRange = Feet(30.0))
@@ -386,8 +453,14 @@ class AttackTest {
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
+            id = ID[1],
             armourClass = 10,
-            position = Coordinate.from(25, 0) // distance = 25, within long range of 30
+        )
+
+        expectGridPositions(
+            providesGridPosition,
+            GridPosition(Square(0), Square(0)),
+            GridPosition(Square(5), Square(0))
         )
 
         withFixedDice(
@@ -395,7 +468,7 @@ class AttackTest {
             D20 rolls 15,
             damageDie rolls 6
         ) {
-            val outcome = attacker.attack(opponent)
+            val outcome = attacker.attack(opponent, providesGridPosition)
             assertThat(outcome.hasBeenHit, equalTo(true))
             assertThat(outcome.hitRoll, equalTo(10 + 1))
         }
