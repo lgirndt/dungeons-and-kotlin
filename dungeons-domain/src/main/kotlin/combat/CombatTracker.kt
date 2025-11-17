@@ -52,6 +52,16 @@ interface TurnActor {
     fun handleTurn(combatant: Combatant, turn: Turn, combatScenario: CombatScenario): CombatCommand?
 }
 
+internal class NoopTurnActor : TurnActor {
+    override fun handleTurn(
+        combatant: Combatant,
+        turn: Turn,
+        combatScenario: CombatScenario
+    ): CombatCommand? {
+        return null
+    }
+}
+
 data class TrackerEntry(
     val combatant: Combatant,
     val actor: TurnActor
