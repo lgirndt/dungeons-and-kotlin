@@ -152,10 +152,10 @@ class CombatTrackerTest {
         lateinit var actor1: TurnActor;
         lateinit var actor2: TurnActor;
         // TODO rename properly
-        lateinit var trackerEntries: List<Combatant>
+        lateinit var combatants: List<Combatant>
         lateinit var expectedRolls: Array<DieRoll>
-        lateinit var firstEntity: Combatant
-        lateinit var secondEntity: Combatant
+        lateinit var firstCombatant: Combatant
+        lateinit var secondCombatant: Combatant
 
         val FIRST_NAME = "First"
         val SECOND_NAME = "Second"
@@ -168,10 +168,10 @@ class CombatTrackerTest {
             actor1 = mockk<TurnActor>(name = "Actor1 Mock")
             actor2 = mockk<TurnActor>(name = "Actor2 Mock")
 
-            firstEntity = aTrackerEntity(name = FIRST_NAME, dexMod = 2, actor = actor1, faction = PLAYER_FACTION)
-            secondEntity = aTrackerEntity(name = SECOND_NAME, dexMod = 1, actor = actor2, faction = MONSTER_FACTION)
+            firstCombatant = aTrackerEntity(name = FIRST_NAME, dexMod = 2, actor = actor1, faction = PLAYER_FACTION)
+            secondCombatant = aTrackerEntity(name = SECOND_NAME, dexMod = 1, actor = actor2, faction = MONSTER_FACTION)
 
-            trackerEntries = listOf(firstEntity, secondEntity)
+            combatants = listOf(firstCombatant, secondCombatant)
 
             expectedRolls = arrayOf(
                 D20 rolls 10,  // player1: 10 + 2 = 12
@@ -186,7 +186,7 @@ class CombatTrackerTest {
                     override fun doPerform(combatScenario: CombatScenario) {}
                 })
 
-                val tracker = createCombatTracker(trackerEntries)
+                val tracker = createCombatTracker(combatants)
 
                 tracker.advanceTurn()
 
@@ -223,7 +223,7 @@ class CombatTrackerTest {
                     override fun doPerform(combatScenario: CombatScenario) {}
                 })
 
-                val tracker = createCombatTracker(trackerEntries)
+                val tracker = createCombatTracker(combatants)
 
                 repeat(2) {
                     tracker.advanceTurn()
@@ -260,7 +260,7 @@ class CombatTrackerTest {
                 expectTurnForActor(actor2)
                 expectTurnForActor(actor1)
 
-                val tracker = createCombatTracker(trackerEntries)
+                val tracker = createCombatTracker(combatants)
 
                 repeat(3) {
                     tracker.advanceTurn()
@@ -281,14 +281,14 @@ class CombatTrackerTest {
                 expectTurnForActor(actor1)
                 expectTurnForActor(actor2)
 
-                val tracker = createCombatTracker(trackerEntries)
+                val tracker = createCombatTracker(combatants)
 
                 // First round - both actors take their turns normally
                 tracker.advanceTurn()
                 tracker.advanceTurn()
 
                 // Reduce actor1's hit points to 0
-                firstEntity.entity.hitPoints = 0
+                firstCombatant.entity.hitPoints = 0
 
                 tracker.advanceTurn()
 
@@ -339,7 +339,7 @@ class CombatTrackerTest {
                     movementCommand
                 )
 
-                val tracker = createCombatTracker(trackerEntries)
+                val tracker = createCombatTracker(combatants)
 
                 tracker.advanceTurn()
 
