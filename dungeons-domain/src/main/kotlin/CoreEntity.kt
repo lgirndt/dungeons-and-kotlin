@@ -1,6 +1,7 @@
 package io.dungeons
 
 import io.dungeons.Die.Companion.D20
+import io.dungeons.world.Coordinate
 
 
 data class CoreEntityData(

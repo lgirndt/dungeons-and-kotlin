@@ -1,6 +1,10 @@
 package io.dungeons.combat
 
-import io.dungeons.*
+import io.dungeons.CoreEntity
+import io.dungeons.DieRoll
+import io.dungeons.Id
+import io.dungeons.world.Feet
+import io.dungeons.world.isInRange
 
 enum class FactionStance {
     Friendly,

@@ -5,6 +5,8 @@ import io.dungeons.Die.Companion.D10
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D8
 import io.dungeons.WeaponCategory.Martial
+import io.dungeons.world.Coordinate
+import io.dungeons.world.Feet
 import org.junit.jupiter.api.Test
 
 

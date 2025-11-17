@@ -5,6 +5,8 @@ import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
 import io.dungeons.*
+import io.dungeons.world.Coordinate
+import io.dungeons.world.Feet
 
 class TestId<T> {
 

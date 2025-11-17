@@ -1,9 +1,9 @@
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import io.dungeons.Die.Companion.D8
-import io.dungeons.Feet
 import io.dungeons.RangeClassification
 import io.dungeons.Weapons
+import io.dungeons.world.Feet
 import org.junit.jupiter.api.Test
 
 

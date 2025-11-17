@@ -2,6 +2,7 @@ package io.dungeons
 
 import io.dungeons.Die.Companion.D20
 import io.dungeons.RangeClassification.*
+import io.dungeons.world.Coordinate
 
 interface Attacker {
     val attackSource: AttackSource

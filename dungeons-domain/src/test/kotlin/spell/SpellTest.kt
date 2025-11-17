@@ -8,6 +8,8 @@ import io.dungeons.*
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D4
 import io.dungeons.spell.*
+import io.dungeons.world.Coordinate
+import io.dungeons.world.Feet
 import org.junit.jupiter.api.Test
 import rolls
 import withFixedDice

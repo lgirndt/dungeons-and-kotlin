@@ -2,6 +2,8 @@ package io.dungeons.spell
 
 import com.google.common.base.MoreObjects
 import io.dungeons.*
+import io.dungeons.world.Coordinate
+import io.dungeons.world.Feet
 
 
 enum class SpellSchool {

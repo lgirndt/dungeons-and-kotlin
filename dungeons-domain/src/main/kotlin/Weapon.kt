@@ -1,5 +1,7 @@
 package io.dungeons
 
+import io.dungeons.world.Feet
+
 enum class WeaponCategory {
     Simple,
     Martial,
