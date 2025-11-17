@@ -1,5 +1,6 @@
 package spell
 
+import ProvidesGridPositionMock
 import SOME_STAT_BOCK
 import TestId
 import aPlayerCharacter
@@ -8,15 +9,11 @@ import com.natpryce.hamkrest.equalTo
 import io.dungeons.*
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D4
-import io.dungeons.combat.ProvidesGridPosition
 import io.dungeons.spell.*
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet
 import io.dungeons.world.GridPosition
 import io.dungeons.world.Square
-import io.mockk.every
-import io.mockk.mockk
-import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import rolls
 import withFixedDice
@@ -32,13 +29,7 @@ val SOME_SPELL = AttackSpell(
 
 class SpellTest {
 
-    lateinit var providesGridPosition: ProvidesGridPosition
     val ID = TestId<CoreEntity>()
-
-    @BeforeEach
-    fun beforeEach() {
-        providesGridPosition = mockk()
-    }
 
 
     @Test
@@ -61,13 +52,12 @@ class SpellTest {
             armourClass = 12,
         )
 
-        every {
-            providesGridPosition.getGridPosition(match { it == ID[0] })
-        } returns GridPosition(Square(0), Square(0))
-
-        every {
-            providesGridPosition.getGridPosition(match { it == ID[1] })
-        } returns GridPosition(Square(0), Square(2))
+        val providesGridPosition = ProvidesGridPositionMock(
+            mapOf(
+                ID[0] to GridPosition(Square(0), Square(0)),
+                ID[1] to GridPosition(Square(0), Square(2))
+            )
+        )
 
         withFixedDice(
             D20 rolls 10, // hit roll

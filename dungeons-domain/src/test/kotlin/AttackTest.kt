@@ -16,6 +16,15 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
 
+class ProvidesGridPositionMock(
+    val positions: Map<Id<CoreEntity>, GridPosition>
+) : ProvidesGridPosition  {
+    override fun getGridPosition(entityId: Id<CoreEntity>): GridPosition? {
+        return positions[entityId]
+    }
+
+}
+
 class AttackTest {
 
     lateinit var providesGridPosition: ProvidesGridPosition
@@ -383,10 +392,11 @@ class AttackTest {
             armourClass = 10,
         )
 
-        expectGridPositions(
-            providesGridPosition,
-            GridPosition(Square(0), Square(0)),
-            GridPosition(Square(2), Square(0))
+        providesGridPosition = ProvidesGridPositionMock(
+            mapOf(
+                ID[0] to GridPosition(Square(0), Square(0)),
+                ID[1] to GridPosition(Square(2), Square(0))
+            )
         )
 
         withFixedDice {
@@ -397,6 +407,14 @@ class AttackTest {
 
     @Test
     fun `a ranged weapon attack within normal range hits normally`() {
+
+        providesGridPosition = ProvidesGridPositionMock(
+            mapOf(
+                ID[0] to GridPosition(Square(0), Square(0)),
+                ID[1] to GridPosition(Square(1), Square(0))
+            )
+        )
+
         val damageDie = D8
         val attacker = PlayerCharacter.aPlayerCharacter(
             id = ID[0],
@@ -412,11 +430,6 @@ class AttackTest {
             armourClass = 10,
         )
 
-        expectGridPositions(
-            providesGridPosition,
-            GridPosition(Square(0), Square(0)),
-            GridPosition(Square(1), Square(0))
-        )
 
         withFixedDice(
             D20 rolls 10,
@@ -425,20 +438,6 @@ class AttackTest {
             val outcome = attacker.attack(opponent, providesGridPosition)
             assertThat(outcome.hasBeenHit, equalTo(true))
         }
-    }
-
-    private fun expectGridPositions(
-        providesGridPosition: ProvidesGridPosition,
-        attackerPos: GridPosition,
-        opponentPos: GridPosition
-    ) {
-        every {
-            providesGridPosition.getGridPosition(match { it == ID[0] })
-        } returns attackerPos
-
-        every {
-            providesGridPosition.getGridPosition(match { it == ID[1] })
-        } returns opponentPos
     }
 
     @Test
@@ -457,10 +456,11 @@ class AttackTest {
             armourClass = 10,
         )
 
-        expectGridPositions(
-            providesGridPosition,
-            GridPosition(Square(0), Square(0)),
-            GridPosition(Square(5), Square(0))
+        providesGridPosition = ProvidesGridPositionMock(
+            mapOf(
+                ID[0] to GridPosition(Square(0), Square(0)),
+                ID[1] to GridPosition(Square(5), Square(0))
+            )
         )
 
         withFixedDice(
