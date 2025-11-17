@@ -1,6 +1,7 @@
 package io.dungeons.world
 
 data class Coordinate(val x: Feet, val y: Feet) {
+
     operator fun plus(other: Coordinate): Coordinate {
         return Coordinate(this.x + other.x, this.y + other.y)
     }
