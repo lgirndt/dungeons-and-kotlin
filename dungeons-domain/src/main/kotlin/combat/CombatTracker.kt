@@ -13,75 +13,20 @@ interface CombatTrackerListener {
 
 private val NOOP_COMBAT_TRACKER_LISTENER = object : CombatTrackerListener {}
 
-data class Turn(
-    val round: Int,
-    val movementAvailable: Boolean = true,
-    val actionAvailable: Boolean = true,
-    val bonusActionAvailable: Boolean = true,
-    val reactionAvailable: Boolean = true
-) {
-
-    val hasOptionsForTurnLeft: Boolean
-        get() = movementAvailable
-                || actionAvailable
-                || bonusActionAvailable
-
-    fun useMovement(): Turn {
-        require(movementAvailable) { "Movement already used this turn." }
-        return copy(movementAvailable = false)
-    }
-
-    fun useAction(): Turn {
-        require(actionAvailable) { "Action already used this turn." }
-        return copy(actionAvailable = false)
-    }
-
-    fun useBonusAction(): Turn {
-        require(bonusActionAvailable) { "Bonus action already used this turn." }
-        return copy(bonusActionAvailable = false)
-    }
-
-    fun useReaction(): Turn {
-        require(reactionAvailable) { "Reaction already used this turn." }
-        return copy(reactionAvailable = false)
-    }
-
-}
-
-interface TurnActor {
-    fun handleTurn(combatant: Combatant, turn: Turn, combatScenario: CombatScenario): CombatCommand?
-}
-
-internal class NoopTurnActor : TurnActor {
-    override fun handleTurn(
-        combatant: Combatant,
-        turn: Turn,
-        combatScenario: CombatScenario
-    ): CombatCommand? {
-        return null
-    }
-}
-
-data class TrackerEntry(
-    val combatant: Combatant,
-    val actor: TurnActor
-)
-
 class CombatTracker(
-    trackerEntries: Collection<TrackerEntry>,
+    combatants: Collection<Combatant>,
     val combatScenario: CombatScenario,
     val listener: CombatTrackerListener = NOOP_COMBAT_TRACKER_LISTENER
 ) {
-    internal val combatantsOrderedByInitiative: List<Combatant> = trackerEntries
-        .map(TrackerEntry::combatant)
+    internal val combatantsOrderedByInitiative: List<Combatant> = combatants
         .sortedByDescending { it.initiative }
         .also { listener.rolledInitiative(it) }
 
-    private val actors: Map<Id<CoreEntity>, TurnActor> = trackerEntries.associate{ it.combatant.id to it.actor }
+    private val actors: Map<Id<CoreEntity>, TurnActor> = combatants.associate { it.id to it.actor }
     private val turnTable : MutableMap<Id<CoreEntity>, Turn> = mutableMapOf()
 
     init {
-        require(trackerEntries.count() >= 2) { "At least two combatants are required to start combat." }
+        require(combatants.count() >= 2) { "At least two combatants are required to start combat." }
     }
 
     private var round = 1

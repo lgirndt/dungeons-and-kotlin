@@ -31,15 +31,13 @@ class CombatTrackerTest {
         dexMod: Int = 0,
         faction: Faction = PLAYER_FACTION,
         actor: TurnActor = mockk<TurnActor>(relaxed = true)
-    ): TrackerEntry {
-        return TrackerEntry(
-            combatant = Combatant(
-                entity = PlayerCharacter.aPlayerCharacter(
-                    name = name,
-                    stats = StatBlock.fromModifiers(dexMod = dexMod)
-                ),
-                faction = faction
+    ): Combatant {
+        return Combatant(
+            entity = PlayerCharacter.aPlayerCharacter(
+                name = name,
+                stats = StatBlock.fromModifiers(dexMod = dexMod)
             ),
+            faction = faction,
             actor = actor
         )
     }
@@ -90,24 +88,22 @@ class CombatTrackerTest {
         }
     }
 
-    private fun toCombatScenario(trackerEntries: List<TrackerEntry>): SimpleCombatScenario =
-        SimpleCombatScenario(toCombatStore(trackerEntries))
+    private fun toCombatScenario(combatants: List<Combatant>): SimpleCombatScenario =
+        SimpleCombatScenario(toCombatStore(combatants))
 
-    private fun toCombatStore(trackerEntries: List<TrackerEntry>): CombatantsStore = CombatantsStore(
+    private fun toCombatStore(combatants: List<Combatant>): CombatantsStore = CombatantsStore(
         combatantsByFaction = ImmutableListMultimap.builder<Faction, CoreEntity>()
             .apply {
-                trackerEntries
-                    .map(TrackerEntry::combatant)
-                    .forEach { combatant ->
-                        put(combatant.faction, combatant.entity)
-                    }
+                combatants.forEach { combatant ->
+                    put(combatant.faction, combatant.entity)
+                }
             }
             .build()
     )
 
-    private fun createCombatTracker(trackerEntries: List<TrackerEntry>): CombatTracker = CombatTracker(
-        trackerEntries = trackerEntries,
-        combatScenario = toCombatScenario(trackerEntries)
+    private fun createCombatTracker(combatants: List<Combatant>): CombatTracker = CombatTracker(
+        combatants = combatants,
+        combatScenario = toCombatScenario(combatants)
     )
 
     @Test
@@ -132,7 +128,7 @@ class CombatTrackerTest {
         ) {
 
             CombatTracker(
-                trackerEntries = trackerEntries,
+                combatants = trackerEntries,
                 combatScenario = toCombatScenario(trackerEntries),
                 listener = listener
             )
@@ -155,10 +151,11 @@ class CombatTrackerTest {
 
         lateinit var actor1: TurnActor;
         lateinit var actor2: TurnActor;
-        lateinit var trackerEntries: List<TrackerEntry>
+        // TODO rename properly
+        lateinit var trackerEntries: List<Combatant>
         lateinit var expectedRolls: Array<DieRoll>
-        lateinit var firstEntity: TrackerEntry
-        lateinit var secondEntity: TrackerEntry
+        lateinit var firstEntity: Combatant
+        lateinit var secondEntity: Combatant
 
         val FIRST_NAME = "First"
         val SECOND_NAME = "Second"
@@ -291,7 +288,7 @@ class CombatTrackerTest {
                 tracker.advanceTurn()
 
                 // Reduce actor1's hit points to 0
-                firstEntity.combatant.entity.hitPoints = 0
+                firstEntity.entity.hitPoints = 0
 
                 tracker.advanceTurn()
 

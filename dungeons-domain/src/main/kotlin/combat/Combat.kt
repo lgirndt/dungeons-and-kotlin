@@ -61,9 +61,59 @@ class FactionRelations private constructor(
     }
 }
 
+data class Turn(
+    val round: Int,
+    val movementAvailable: Boolean = true,
+    val actionAvailable: Boolean = true,
+    val bonusActionAvailable: Boolean = true,
+    val reactionAvailable: Boolean = true
+) {
+
+    val hasOptionsForTurnLeft: Boolean
+        get() = movementAvailable
+                || actionAvailable
+                || bonusActionAvailable
+
+    fun useMovement(): Turn {
+        require(movementAvailable) { "Movement already used this turn." }
+        return copy(movementAvailable = false)
+    }
+
+    fun useAction(): Turn {
+        require(actionAvailable) { "Action already used this turn." }
+        return copy(actionAvailable = false)
+    }
+
+    fun useBonusAction(): Turn {
+        require(bonusActionAvailable) { "Bonus action already used this turn." }
+        return copy(bonusActionAvailable = false)
+    }
+
+    fun useReaction(): Turn {
+        require(reactionAvailable) { "Reaction already used this turn." }
+        return copy(reactionAvailable = false)
+    }
+
+}
+
+interface TurnActor {
+    fun handleTurn(combatant: Combatant, turn: Turn, combatScenario: CombatScenario): CombatCommand?
+}
+
+internal class NoopTurnActor : TurnActor {
+    override fun handleTurn(
+        combatant: Combatant,
+        turn: Turn,
+        combatScenario: CombatScenario
+    ): CombatCommand? {
+        return null
+    }
+}
+
 data class Combatant(
     val entity: CoreEntity,
-    val faction: Faction
+    val faction: Faction,
+    val actor: TurnActor = NoopTurnActor()
 ) {
     val id: Id<CoreEntity>
         get() = entity.id
