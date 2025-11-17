@@ -48,9 +48,14 @@ internal fun attack(
     providesGridPosition: ProvidesGridPosition,
     rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
     val hitRollD20 = rollModifier.let {
-        val attackerPos : GridPosition = providesGridPosition.getGridPosition(attacker.id) ?: error("No position found for entity $attacker")
-        val opponentPos = providesGridPosition.getGridPosition(opponent.id) ?: error("No position found for entity $opponent")
+        val attackerPos : GridPosition = providesGridPosition.getGridPosition(attacker.id)
+            ?: error("No position found for entity $attacker")
+
+        val opponentPos = providesGridPosition.getGridPosition(opponent.id)
+            ?: error("No position found for entity $opponent")
+
         val distance = attackerPos.chebyshevDistance(opponentPos)
+
         when (attacker.attackSource.isTargetInRange(distance.toFeet())) {
             OutOfRange -> return AttackOutcome.MISS
             WithinNormalRange -> it
