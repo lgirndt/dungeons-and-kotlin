@@ -25,3 +25,8 @@ data class Coordinate(val x: Feet, val y: Feet) {
         }
     }
 }
+
+fun isInRange(from: Coordinate, to: Coordinate, range: Feet): Boolean {
+    return from.distance(to) <= range
+}
+
