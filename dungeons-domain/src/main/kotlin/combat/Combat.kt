@@ -80,7 +80,7 @@ class CombatantsStore(
     combatantsByFaction: Multimap<Faction, CoreEntity>,
     nonHostileFactionRelationships: List<FactionRelationship> = emptyList(),
 ) {
-    val combatants: Map<io.dungeons.Id<io.dungeons.CoreEntity>, Combatant> = combatantsByFaction.entries()
+    val combatants: Map<Id<CoreEntity>, Combatant> = combatantsByFaction.entries()
         .map { Combatant(faction = it.key, entity = it.value) }
         .associateBy { it.id }
 
@@ -94,11 +94,11 @@ class CombatantsStore(
             builder.add(relationship)
         }.build()
 
-    fun findOrNull(id: io.dungeons.Id<io.dungeons.CoreEntity>): Combatant? {
+    fun findOrNull(id: Id<CoreEntity>): Combatant? {
         return combatants[id]
     }
 
-    fun findAllWithStance(towards: io.dungeons.Id<io.dungeons.CoreEntity>, stance: FactionStance): List<Combatant> {
+    fun findAllWithStance(towards: Id<CoreEntity>, stance: FactionStance): List<Combatant> {
         val combatant = combatants[towards] ?: return emptyList()
         val targetFaction = combatant.faction
         return combatants.values.filter {
@@ -113,35 +113,35 @@ class CombatantsStore(
 }
 
 interface CombatScenario {
-    fun listVisibleCombatants(observer: io.dungeons.Id<io.dungeons.CoreEntity>): List<Combatant>
-    fun isVisibleTo(observer: io.dungeons.Id<io.dungeons.CoreEntity>, target: io.dungeons.Id<io.dungeons.CoreEntity>): Boolean
-    fun listCombatantsInRange(observer: io.dungeons.Id<io.dungeons.CoreEntity>, rangeInFeet: io.dungeons.Feet): List<Combatant>
+    fun listVisibleCombatants(observer: Id<CoreEntity>): List<Combatant>
+    fun isVisibleTo(observer: Id<CoreEntity>, target: Id<CoreEntity>): Boolean
+    fun listCombatantsInRange(observer: Id<CoreEntity>, rangeInFeet: Feet): List<Combatant>
 }
 
 class SimpleCombatScenario(
     private val combatantsStore: CombatantsStore
 ) : CombatScenario {
 
-    override fun listVisibleCombatants(observer: io.dungeons.Id<io.dungeons.CoreEntity>): List<Combatant> {
+    override fun listVisibleCombatants(observer: Id<CoreEntity>): List<Combatant> {
         return combatantsStore.listAll().filter { it.id != observer }
     }
 
     override fun isVisibleTo(
-        observer: io.dungeons.Id<io.dungeons.CoreEntity>,
-        target: io.dungeons.Id<io.dungeons.CoreEntity>
+        observer: Id<CoreEntity>,
+        target: Id<CoreEntity>
     ): Boolean = true
 
 
     override fun listCombatantsInRange(
-        observer: io.dungeons.Id<io.dungeons.CoreEntity>,
-        rangeInFeet: io.dungeons.Feet
+        observer: Id<CoreEntity>,
+        rangeInFeet: Feet
     ): List<Combatant> {
         val entity = combatantsStore.findOrNull(observer)?.entity
             ?: return emptyList()
 
         return combatantsStore.listAll()
             .filter { it.id != observer }
-            .filter { _root_ide_package_.io.dungeons.isInRange(entity.position, it.entity.position, rangeInFeet) }
+            .filter { isInRange(entity.position, it.entity.position, rangeInFeet) }
     }
 
 }
