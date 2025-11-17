@@ -1,6 +1,5 @@
 package io.dungeons.combat
 
-import com.google.common.collect.Multimap
 import io.dungeons.*
 
 enum class FactionStance {
@@ -127,12 +126,10 @@ data class Combatant(
 }
 
 class CombatantsStore(
-    combatantsByFaction: Multimap<Faction, CoreEntity>,
+    combatants: Collection<Combatant>,
     nonHostileFactionRelationships: List<FactionRelationship> = emptyList(),
 ) {
-    val combatants: Map<Id<CoreEntity>, Combatant> = combatantsByFaction.entries()
-        .map { Combatant(faction = it.key, entity = it.value) }
-        .associateBy { it.id }
+    val combatants: Map<Id<CoreEntity>, Combatant> = combatants.associateBy { it.id }
 
     val factionRelations: FactionRelations = nonHostileFactionRelationships
         .onEach {

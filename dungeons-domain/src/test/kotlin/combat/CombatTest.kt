@@ -1,7 +1,6 @@
 package combat
 import TestId
 import aPlayerCharacter
-import com.google.common.collect.ImmutableListMultimap
 import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
@@ -86,9 +85,6 @@ class FactionRelationsTest {
     }
 }
 
-fun combatantsBuilder() : ImmutableListMultimap.Builder<Faction, CoreEntity> =
-    ImmutableListMultimap.builder<Faction, CoreEntity>()
-
 class CombatantsStoreTest {
 
     val FACTION_A = Faction(name = "Faction A")
@@ -101,20 +97,14 @@ class CombatantsStoreTest {
     fun setup(){
         ID = TestId()
         store = CombatantsStore(
-            combatantsBuilder()
-                .putAll(
-                    FACTION_A,
-                    PlayerCharacter.Companion.aPlayerCharacter(ID[0], name = "Alpha"),
-                    PlayerCharacter.aPlayerCharacter(ID[1]),
-                    PlayerCharacter.aPlayerCharacter(ID[2])
-                )
-                .putAll(
-                    FACTION_B,
-                    PlayerCharacter.aPlayerCharacter(ID[3]),
-                    PlayerCharacter.aPlayerCharacter(ID[4]),
-                    PlayerCharacter.aPlayerCharacter(ID[5])
-                )
-                .build(),
+            listOf(
+                Combatant(PlayerCharacter.Companion.aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A),
+                Combatant(PlayerCharacter.aPlayerCharacter(ID[1]), FACTION_A),
+                Combatant(PlayerCharacter.aPlayerCharacter(ID[2]), FACTION_A),
+                Combatant(PlayerCharacter.aPlayerCharacter(ID[3]), FACTION_B),
+                Combatant(PlayerCharacter.aPlayerCharacter(ID[4]), FACTION_B),
+                Combatant(PlayerCharacter.aPlayerCharacter(ID[5]), FACTION_B),
+            )
         )
     }
 

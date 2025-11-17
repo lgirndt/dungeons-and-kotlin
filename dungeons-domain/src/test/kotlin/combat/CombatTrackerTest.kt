@@ -91,15 +91,7 @@ class CombatTrackerTest {
     private fun toCombatScenario(combatants: List<Combatant>): SimpleCombatScenario =
         SimpleCombatScenario(toCombatStore(combatants))
 
-    private fun toCombatStore(combatants: List<Combatant>): CombatantsStore = CombatantsStore(
-        combatantsByFaction = ImmutableListMultimap.builder<Faction, CoreEntity>()
-            .apply {
-                combatants.forEach { combatant ->
-                    put(combatant.faction, combatant.entity)
-                }
-            }
-            .build()
-    )
+    private fun toCombatStore(combatants: List<Combatant>): CombatantsStore = CombatantsStore(combatants)
 
     private fun createCombatTracker(combatants: List<Combatant>): CombatTracker = CombatTracker(
         combatants = combatants,
