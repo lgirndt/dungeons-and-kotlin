@@ -9,3 +9,5 @@ the rules of Edition 5 and its 2024/2025 revision.
 - See rules on Unit Tests in doc/unit_tests.md
 - Whenever you make changes to a source file, consult the intellij MCP afterwards with
   `get_file_problems` to observe if any problems were introduced.
+- Prefer using IntelliJ MCP tools (`get_run_configurations` and `execute_run_configuration`)
+  to run unit tests instead of calling `./gradlew` directly.
