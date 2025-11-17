@@ -41,51 +41,11 @@ class GridPositionTest {
     }
 
     @Test
-    fun `manhattan distance between adjacent horizontal positions should be 1`() {
-        val pos1 = GridPosition.from(0, 0)
-        val pos2 = GridPosition.from(1, 0)
-        
-        assertThat(pos1.manhattanDistance(pos2), equalTo(Square(1)))
-    }
-
-    @Test
-    fun `manhattan distance between adjacent vertical positions should be 1`() {
-        val pos1 = GridPosition.from(0, 0)
-        val pos2 = GridPosition.from(0, 1)
-        
-        assertThat(pos1.manhattanDistance(pos2), equalTo(Square(1)))
-    }
-
-    @Test
-    fun `manhattan distance between diagonal positions should be sum of components`() {
-        val pos1 = GridPosition.from(0, 0)
-        val pos2 = GridPosition.from(3, 4)
-        
-        // Manhattan distance = |3-0| + |4-0| = 7
-        assertThat(pos1.manhattanDistance(pos2), equalTo(Square(7)))
-    }
-
-    @Test
-    fun `manhattan distance should be symmetric`() {
-        val pos1 = GridPosition.from(1, 2)
-        val pos2 = GridPosition.from(4, 6)
-        
-        assertThat(pos1.manhattanDistance(pos2), equalTo(pos2.manhattanDistance(pos1)))
-    }
-
-    @Test
-    fun `manhattan distance to same position should be 0`() {
-        val pos = GridPosition.from(5, 5)
-        
-        assertThat(pos.manhattanDistance(pos), equalTo(Square(0)))
-    }
-
-    @Test
     fun `chebyshev distance between adjacent horizontal positions should be 1`() {
         val pos1 = GridPosition.from(0, 0)
         val pos2 = GridPosition.from(1, 0)
         
-        assertThat(pos1.chebyshevDistance(pos2), equalTo(Square(1)))
+        assertThat(pos1.distance(pos2), equalTo(Square(1)))
     }
 
     @Test
@@ -93,7 +53,7 @@ class GridPositionTest {
         val pos1 = GridPosition.from(0, 0)
         val pos2 = GridPosition.from(0, 1)
         
-        assertThat(pos1.chebyshevDistance(pos2), equalTo(Square(1)))
+        assertThat(pos1.distance(pos2), equalTo(Square(1)))
     }
 
     @Test
@@ -102,7 +62,7 @@ class GridPositionTest {
         val pos2 = GridPosition.from(1, 1)
         
         // In D&D, diagonal movement counts as 1 square
-        assertThat(pos1.chebyshevDistance(pos2), equalTo(Square(1)))
+        assertThat(pos1.distance(pos2), equalTo(Square(1)))
     }
 
     @Test
@@ -111,7 +71,7 @@ class GridPositionTest {
         val pos2 = GridPosition.from(3, 4)
         
         // Chebyshev distance = max(|3-0|, |4-0|) = 4
-        assertThat(pos1.chebyshevDistance(pos2), equalTo(Square(4)))
+        assertThat(pos1.distance(pos2), equalTo(Square(4)))
     }
 
     @Test
@@ -119,14 +79,14 @@ class GridPositionTest {
         val pos1 = GridPosition.from(1, 2)
         val pos2 = GridPosition.from(4, 6)
         
-        assertThat(pos1.chebyshevDistance(pos2), equalTo(pos2.chebyshevDistance(pos1)))
+        assertThat(pos1.distance(pos2), equalTo(pos2.distance(pos1)))
     }
 
     @Test
     fun `chebyshev distance to same position should be 0`() {
         val pos = GridPosition.from(5, 5)
         
-        assertThat(pos.chebyshevDistance(pos), equalTo(Square(0)))
+        assertThat(pos.distance(pos), equalTo(Square(0)))
     }
 
     @Test
@@ -135,7 +95,7 @@ class GridPositionTest {
         val pos2 = GridPosition.from(2, 5)
         
         // Can move diagonally 2 squares, then 3 more vertically = max(2, 5) = 5
-        assertThat(pos1.chebyshevDistance(pos2), equalTo(Square(5)))
+        assertThat(pos1.distance(pos2), equalTo(Square(5)))
     }
 
     @Test
@@ -193,21 +153,12 @@ class GridPositionTest {
     }
 
     @Test
-    fun `manhattan distance should work with negative differences`() {
-        val pos1 = GridPosition.from(5, 8)
-        val pos2 = GridPosition.from(2, 3)
-        
-        // Manhattan distance = |5-2| + |8-3| = 3 + 5 = 8
-        assertThat(pos1.manhattanDistance(pos2), equalTo(Square(8)))
-    }
-
-    @Test
     fun `chebyshev distance should work with negative differences`() {
         val pos1 = GridPosition.from(5, 8)
         val pos2 = GridPosition.from(2, 3)
         
         // Chebyshev distance = max(|5-2|, |8-3|) = max(3, 5) = 5
-        assertThat(pos1.chebyshevDistance(pos2), equalTo(Square(5)))
+        assertThat(pos1.distance(pos2), equalTo(Square(5)))
     }
 
     @Test

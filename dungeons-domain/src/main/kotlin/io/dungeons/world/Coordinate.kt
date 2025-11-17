@@ -32,6 +32,6 @@ fun isInRange(from: Coordinate, to: Coordinate, range: Feet): Boolean {
 }
 
 fun isInRange(from: GridPosition, to: GridPosition, range: Square): Boolean {
-    return from.chebyshevDistance(to) <= range
+    return from.distance(to) <= range
 }
 

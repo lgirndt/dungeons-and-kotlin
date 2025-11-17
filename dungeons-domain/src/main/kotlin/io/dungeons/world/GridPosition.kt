@@ -16,21 +16,11 @@ data class GridPosition(
     }
 
     /**
-     * Calculate Manhattan distance (in squares) between two grid positions.
-     * This represents the minimum number of orthogonal moves needed.
-     */
-    fun manhattanDistance(other: GridPosition): Square {
-        val dx = abs((this.x - other.x).value)
-        val dy = abs((this.y - other.y).value)
-        return Square(dx + dy)
-    }
-
-    /**
      * Calculate Chebyshev distance (in squares) between two grid positions.
      * This represents the minimum number of moves including diagonals (D&D grid movement).
      * In D&D 5e, diagonal movement counts as 1 square.
      */
-    fun chebyshevDistance(other: GridPosition): Square {
+    fun distance(other: GridPosition): Square {
         val dx = abs((this.x - other.x).value)
         val dy = abs((this.y - other.y).value)
         return Square(max(dx, dy))

@@ -54,7 +54,7 @@ internal fun attack(
         val opponentPos = providesGridPosition.getGridPosition(opponent.id)
             ?: error("No position found for entity $opponent")
 
-        val distance = attackerPos.chebyshevDistance(opponentPos)
+        val distance = attackerPos.distance(opponentPos)
 
         when (attacker.attackSource.isTargetInRange(distance.toFeet())) {
             OutOfRange -> return AttackOutcome.MISS
