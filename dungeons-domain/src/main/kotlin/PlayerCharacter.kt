@@ -1,5 +1,7 @@
 package io.dungeons
 
+import io.dungeons.core.Id
+
 data class PlayerCharacterData(
     val level: Int,
     val weapon: Weapon,

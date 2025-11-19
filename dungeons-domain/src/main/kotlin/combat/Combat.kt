@@ -2,7 +2,7 @@ package io.dungeons.combat
 
 import io.dungeons.CoreEntity
 import io.dungeons.DieRoll
-import io.dungeons.Id
+import io.dungeons.core.Id
 import io.dungeons.world.GridPosition
 import io.dungeons.world.Square
 import io.dungeons.world.isInRange

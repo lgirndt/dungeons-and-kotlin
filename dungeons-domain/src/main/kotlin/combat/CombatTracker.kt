@@ -1,7 +1,7 @@
 package io.dungeons.combat
 
 import io.dungeons.CoreEntity
-import io.dungeons.Id
+import io.dungeons.core.Id
 
 interface CombatTrackerListener {
     fun rolledInitiative(combatants: List<Combatant>) {}

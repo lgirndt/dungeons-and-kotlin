@@ -2,6 +2,7 @@ package io.dungeons
 
 import io.dungeons.Die.Companion.D20
 import io.dungeons.combat.ProvidesGridPosition
+import io.dungeons.core.Id
 
 
 data class CoreEntityData(

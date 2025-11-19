@@ -9,6 +9,7 @@ import com.natpryce.hamkrest.equalTo
 import io.dungeons.*
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D4
+import io.dungeons.core.Id
 import io.dungeons.spell.*
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet

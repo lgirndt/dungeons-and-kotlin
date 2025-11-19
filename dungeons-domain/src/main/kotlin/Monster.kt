@@ -1,5 +1,7 @@
 package io.dungeons
 
+import io.dungeons.core.Id
+
 open class Monster(
     id: Id<CoreEntity> = Id.generate(),
     core: CoreEntityData,
@@ -29,7 +31,7 @@ class Goblin(
     override val weapon: Weapon = Weapons.Shortbow,
     override val attackModifier: Int = weapon.whichStat(core.stats).modifier,
 
-) : Monster(id, core, weapon, attackModifier)
+    ) : Monster(id, core, weapon, attackModifier)
 
 class KoboldWarrior(
     id: Id<CoreEntity> = Id.generate(),

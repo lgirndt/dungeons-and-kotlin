@@ -3,6 +3,7 @@ package io.dungeons
 import io.dungeons.Die.Companion.D20
 import io.dungeons.RangeClassification.*
 import io.dungeons.combat.ProvidesGridPosition
+import io.dungeons.core.Id
 import io.dungeons.world.GridPosition
 
 interface Attacker {

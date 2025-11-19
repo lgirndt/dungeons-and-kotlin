@@ -3,6 +3,7 @@ package io.dungeons.spell
 import com.google.common.base.MoreObjects
 import io.dungeons.*
 import io.dungeons.combat.ProvidesGridPosition
+import io.dungeons.core.Id
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet
 

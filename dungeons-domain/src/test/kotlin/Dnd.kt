@@ -1,6 +1,7 @@
 
 import com.google.common.collect.ImmutableListMultimap
 import io.dungeons.*
+import io.dungeons.core.Id
 import io.dungeons.world.Feet
 import io.mockk.every
 import io.mockk.mockkObject

@@ -7,6 +7,7 @@ import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D8
 import io.dungeons.WeaponCategory.Martial
 import io.dungeons.combat.ProvidesGridPosition
+import io.dungeons.core.Id
 import io.dungeons.world.Feet
 import io.dungeons.world.GridPosition
 import io.dungeons.world.Square
