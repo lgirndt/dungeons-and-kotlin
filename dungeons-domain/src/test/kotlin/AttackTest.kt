@@ -9,7 +9,7 @@ import io.dungeons.WeaponCategory.Martial
 import io.dungeons.combat.ProvidesGridPosition
 import io.dungeons.core.Id
 import io.dungeons.world.Feet
-import io.dungeons.world.GridPosition
+import io.dungeons.board.BoardPosition
 import io.dungeons.world.Square
 import io.mockk.every
 import io.mockk.mockk
@@ -18,9 +18,9 @@ import org.junit.jupiter.api.Test
 
 
 class ProvidesGridPositionMock(
-    val positions: Map<Id<CoreEntity>, GridPosition>
+    val positions: Map<Id<CoreEntity>, BoardPosition>
 ) : ProvidesGridPosition  {
-    override fun getGridPosition(entityId: Id<CoreEntity>): GridPosition? {
+    override fun getGridPosition(entityId: Id<CoreEntity>): BoardPosition? {
         return positions[entityId]
     }
 
@@ -37,7 +37,7 @@ class AttackTest {
     }
 
     private fun expectAnyGridPosition() {
-        every { providesGridPosition.getGridPosition(any()) } returns GridPosition(Square(0), Square(0))
+        every { providesGridPosition.getGridPosition(any()) } returns BoardPosition(Square(0), Square(0))
     }
 
 // TODO this will not work aynmore
@@ -395,8 +395,8 @@ class AttackTest {
 
         providesGridPosition = ProvidesGridPositionMock(
             mapOf(
-                ID[0] to GridPosition(Square(0), Square(0)),
-                ID[1] to GridPosition(Square(2), Square(0))
+                ID[0] to BoardPosition(Square(0), Square(0)),
+                ID[1] to BoardPosition(Square(2), Square(0))
             )
         )
 
@@ -411,8 +411,8 @@ class AttackTest {
 
         providesGridPosition = ProvidesGridPositionMock(
             mapOf(
-                ID[0] to GridPosition(Square(0), Square(0)),
-                ID[1] to GridPosition(Square(1), Square(0))
+                ID[0] to BoardPosition(Square(0), Square(0)),
+                ID[1] to BoardPosition(Square(1), Square(0))
             )
         )
 
@@ -459,8 +459,8 @@ class AttackTest {
 
         providesGridPosition = ProvidesGridPositionMock(
             mapOf(
-                ID[0] to GridPosition(Square(0), Square(0)),
-                ID[1] to GridPosition(Square(5), Square(0))
+                ID[0] to BoardPosition(Square(0), Square(0)),
+                ID[1] to BoardPosition(Square(5), Square(0))
             )
         )
 

@@ -3,7 +3,7 @@ package io.dungeons.combat
 import io.dungeons.CoreEntity
 import io.dungeons.DieRoll
 import io.dungeons.core.Id
-import io.dungeons.world.GridPosition
+import io.dungeons.board.BoardPosition
 import io.dungeons.world.Square
 import io.dungeons.world.isInRange
 
@@ -165,14 +165,14 @@ class CombatantsStore(
 }
 
 interface ProvidesGridPosition {
-    fun getGridPosition(entityId: Id<CoreEntity>): GridPosition?
+    fun getGridPosition(entityId: Id<CoreEntity>): BoardPosition?
 }
 
 interface CombatScenario : ProvidesGridPosition {
     fun listVisibleCombatants(observer: Id<CoreEntity>): List<Combatant>
     fun isVisibleTo(observer: Id<CoreEntity>, target: Id<CoreEntity>): Boolean
     fun listCombatantsInRange(observer: Id<CoreEntity>, rangeInSquares: Square): List<Combatant>
-    override fun getGridPosition(entityId: Id<CoreEntity>): GridPosition?
+    override fun getGridPosition(entityId: Id<CoreEntity>): BoardPosition?
 }
 
 class SimpleCombatScenario(
@@ -205,7 +205,7 @@ class SimpleCombatScenario(
             }
     }
 
-    override fun getGridPosition(entityId: Id<CoreEntity>): GridPosition? {
+    override fun getGridPosition(entityId: Id<CoreEntity>): BoardPosition? {
         TODO("Not yet implemented")
     }
 

@@ -1,5 +1,7 @@
 package io.dungeons.world
 
+import io.dungeons.board.BoardPosition
+
 data class Coordinate(val x: Feet, val y: Feet) {
 
     operator fun plus(other: Coordinate): Coordinate {
@@ -31,7 +33,7 @@ fun isInRange(from: Coordinate, to: Coordinate, range: Feet): Boolean {
     return from.distance(to) <= range
 }
 
-fun isInRange(from: GridPosition, to: GridPosition, range: Square): Boolean {
+fun isInRange(from: BoardPosition, to: BoardPosition, range: Square): Boolean {
     return from.distance(to) <= range
 }
 

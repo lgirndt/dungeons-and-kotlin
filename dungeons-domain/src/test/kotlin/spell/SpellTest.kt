@@ -13,7 +13,6 @@ import io.dungeons.core.Id
 import io.dungeons.spell.*
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet
-import io.dungeons.world.GridPosition
 import io.dungeons.world.Square
 import org.junit.jupiter.api.Test
 import rolls
@@ -53,10 +52,10 @@ class SpellTest {
             armourClass = 12,
         )
 
-        val providesGridPosition = ProvidesGridPositionMock(
+        val providesBoardPosition = ProvidesGridPositionMock(
             mapOf(
-                ID[0] to GridPosition(Square(0), Square(0)),
-                ID[1] to GridPosition(Square(0), Square(2))
+                ID[0] to BoardPosition(Square(0), Square(0)),
+                ID[1] to BoardPosition(Square(0), Square(2))
             )
         )
 
@@ -69,7 +68,7 @@ class SpellTest {
                 opponent,
                 spell,
                 SpellLevel.Cantrip,
-                providesGridPosition,
+                providesBoardPosition,
                 RollModifier.NORMAL
             )
 

@@ -4,7 +4,7 @@ import io.dungeons.Die.Companion.D20
 import io.dungeons.RangeClassification.*
 import io.dungeons.combat.ProvidesGridPosition
 import io.dungeons.core.Id
-import io.dungeons.world.GridPosition
+import io.dungeons.board.BoardPosition
 
 interface Attacker {
     val id: Id<CoreEntity>
@@ -49,7 +49,7 @@ internal fun attack(
     providesGridPosition: ProvidesGridPosition,
     rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
     val hitRollD20 = rollModifier.let {
-        val attackerPos : GridPosition = providesGridPosition.getGridPosition(attacker.id)
+        val attackerPos : BoardPosition = providesGridPosition.getGridPosition(attacker.id)
             ?: error("No position found for entity $attacker")
 
         val opponentPos = providesGridPosition.getGridPosition(opponent.id)
