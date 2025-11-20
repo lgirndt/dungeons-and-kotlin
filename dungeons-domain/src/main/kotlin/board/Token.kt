@@ -11,7 +11,7 @@ interface Token
 }
 
 data class EmptyToken(
-    override val id: Id<Token>
+    override val id: Id<Token> = Id.generate(),
 ) : Token {
     override val allowsMovementToSameSqqare: Boolean = true
 }
