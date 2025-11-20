@@ -25,7 +25,7 @@ class GridTest {
 
             for (y in 0 until 3) {
                 for (x in 0 until 3) {
-                    assertThat(grid[GridPosition(x, y)], equalTo(42))
+                    assertThat(grid[GridCell(x, y)], equalTo(42))
                 }
             }
         }
@@ -34,8 +34,8 @@ class GridTest {
         fun `should initialize string grid correctly`() {
             val grid = Grid(2, 2, "empty")
 
-            assertThat(grid[GridPosition(0, 0)], equalTo("empty"))
-            assertThat(grid[GridPosition(1, 1)], equalTo("empty"))
+            assertThat(grid[GridCell(0, 0)], equalTo("empty"))
+            assertThat(grid[GridCell(1, 1)], equalTo("empty"))
         }
 
         @Test
@@ -74,7 +74,7 @@ class GridTest {
         fun `should create 1x1 grid`() {
             val grid = Grid(1, 1, 99)
 
-            assertThat(grid[GridPosition(0, 0)], equalTo(99))
+            assertThat(grid[GridCell(0, 0)], equalTo(99))
         }
 
         @Test
@@ -93,35 +93,35 @@ class GridTest {
         fun `should get value at origin`() {
             val grid = Grid(5, 5, "initial")
 
-            assertThat(grid[GridPosition(0, 0)], equalTo("initial"))
+            assertThat(grid[GridCell(0, 0)], equalTo("initial"))
         }
 
         @Test
         fun `should get value at top-right corner`() {
             val grid = Grid(5, 5, 123)
 
-            assertThat(grid[GridPosition(4, 0)], equalTo(123))
+            assertThat(grid[GridCell(4, 0)], equalTo(123))
         }
 
         @Test
         fun `should get value at bottom-left corner`() {
             val grid = Grid(5, 5, 123)
 
-            assertThat(grid[GridPosition(0, 4)], equalTo(123))
+            assertThat(grid[GridCell(0, 4)], equalTo(123))
         }
 
         @Test
         fun `should get value at bottom-right corner`() {
             val grid = Grid(5, 5, 123)
 
-            assertThat(grid[GridPosition(4, 4)], equalTo(123))
+            assertThat(grid[GridCell(4, 4)], equalTo(123))
         }
 
         @Test
         fun `should get value in middle of grid`() {
             val grid = Grid(5, 5, 'X')
 
-            assertThat(grid[GridPosition(2, 2)], equalTo('X'))
+            assertThat(grid[GridCell(2, 2)], equalTo('X'))
         }
 
         @Test
@@ -129,7 +129,7 @@ class GridTest {
             val grid = Grid(3, 3, 0)
 
             val exception = assertThrows<IllegalArgumentException> {
-                grid[GridPosition(3, 1)]
+                grid[GridCell(3, 1)]
             }
             assertThat(exception.message, equalTo("Position GridPosition(x=3, y=1) is out of bounds for grid of size 3x3"))
         }
@@ -139,7 +139,7 @@ class GridTest {
             val grid = Grid(3, 3, 0)
 
             val exception = assertThrows<IllegalArgumentException> {
-                grid[GridPosition(1, 3)]
+                grid[GridCell(1, 3)]
             }
             assertThat(exception.message, equalTo("Position GridPosition(x=1, y=3) is out of bounds for grid of size 3x3"))
         }
@@ -152,18 +152,18 @@ class GridTest {
         fun `should set value at origin`() {
             val grid = Grid(5, 5, 0)
 
-            grid[GridPosition(0, 0)] = 42
+            grid[GridCell(0, 0)] = 42
 
-            assertThat(grid[GridPosition(0, 0)], equalTo(42))
+            assertThat(grid[GridCell(0, 0)], equalTo(42))
         }
 
         @Test
         fun `should set value at specific position`() {
             val grid = Grid(5, 5, "empty")
 
-            grid[GridPosition(2, 3)] = "occupied"
+            grid[GridCell(2, 3)] = "occupied"
 
-            assertThat(grid[GridPosition(2, 3)], equalTo("occupied"))
+            assertThat(grid[GridCell(2, 3)], equalTo("occupied"))
         }
 
 
@@ -171,10 +171,10 @@ class GridTest {
         fun `should overwrite existing value`() {
             val grid = Grid(3, 3, 10)
 
-            grid[GridPosition(1, 1)] = 20
-            grid[GridPosition(1, 1)] = 30
+            grid[GridCell(1, 1)] = 20
+            grid[GridCell(1, 1)] = 30
 
-            assertThat(grid[GridPosition(1, 1)], equalTo(30))
+            assertThat(grid[GridCell(1, 1)], equalTo(30))
         }
 
 
@@ -183,7 +183,7 @@ class GridTest {
             val grid = Grid(3, 3, 0)
 
             val exception = assertThrows<IllegalArgumentException> {
-                grid[GridPosition(3, 1)] = 42
+                grid[GridCell(3, 1)] = 42
             }
             assertThat(exception.message, equalTo("Position GridPosition(x=3, y=1) is out of bounds for grid of size 3x3"))
         }
@@ -193,7 +193,7 @@ class GridTest {
             val grid = Grid(3, 3, 0)
 
             val exception = assertThrows<IllegalArgumentException> {
-                grid[GridPosition(1, 3)] = 42
+                grid[GridCell(1, 3)] = 42
             }
             assertThat(exception.message, equalTo("Position GridPosition(x=1, y=3) is out of bounds for grid of size 3x3"))
         }
@@ -206,63 +206,63 @@ class GridTest {
         fun `should return true for origin`() {
             val grid = Grid(5, 5, 0)
 
-            assertThat(grid.isInBounds(GridPosition(0, 0)), equalTo(true))
+            assertThat(grid.isInBounds(GridCell(0, 0)), equalTo(true))
         }
 
         @Test
         fun `should return true for valid position in middle`() {
             val grid = Grid(5, 5, 0)
 
-            assertThat(grid.isInBounds(GridPosition(2, 3)), equalTo(true))
+            assertThat(grid.isInBounds(GridCell(2, 3)), equalTo(true))
         }
 
         @Test
         fun `should return true for top-right corner`() {
             val grid = Grid(5, 5, 0)
 
-            assertThat(grid.isInBounds(GridPosition(4, 0)), equalTo(true))
+            assertThat(grid.isInBounds(GridCell(4, 0)), equalTo(true))
         }
 
         @Test
         fun `should return true for bottom-left corner`() {
             val grid = Grid(5, 5, 0)
 
-            assertThat(grid.isInBounds(GridPosition(0, 4)), equalTo(true))
+            assertThat(grid.isInBounds(GridCell(0, 4)), equalTo(true))
         }
 
         @Test
         fun `should return true for bottom-right corner`() {
             val grid = Grid(5, 5, 0)
 
-            assertThat(grid.isInBounds(GridPosition(4, 4)), equalTo(true))
+            assertThat(grid.isInBounds(GridCell(4, 4)), equalTo(true))
         }
 
         @Test
         fun `should return false when x is out of bounds to the right`() {
             val grid = Grid(5, 5, 0)
 
-            assertThat(grid.isInBounds(GridPosition(5, 2)), equalTo(false))
+            assertThat(grid.isInBounds(GridCell(5, 2)), equalTo(false))
         }
 
         @Test
         fun `should return false when y is out of bounds to the bottom`() {
             val grid = Grid(5, 5, 0)
 
-            assertThat(grid.isInBounds(GridPosition(2, 5)), equalTo(false))
+            assertThat(grid.isInBounds(GridCell(2, 5)), equalTo(false))
         }
 
         @Test
         fun `should return false when both coordinates are out of bounds`() {
             val grid = Grid(5, 5, 0)
 
-            assertThat(grid.isInBounds(GridPosition(10, 10)), equalTo(false))
+            assertThat(grid.isInBounds(GridCell(10, 10)), equalTo(false))
         }
 
         @Test
         fun `should return false for way out of bounds position`() {
             val grid = Grid(5, 5, 0)
 
-            assertThat(grid.isInBounds(GridPosition(100, 100)), equalTo(false))
+            assertThat(grid.isInBounds(GridCell(100, 100)), equalTo(false))
         }
     }
 
@@ -273,10 +273,10 @@ class GridTest {
         fun `should work correctly with nullable types`() {
             val grid = Grid<String?>(3, 3, null)
 
-            assertThat(grid[GridPosition(0, 0)], equalTo(null))
+            assertThat(grid[GridCell(0, 0)], equalTo(null))
 
-            grid[GridPosition(1, 1)] = "value"
-            assertThat(grid[GridPosition(1, 1)], equalTo("value"))
+            grid[GridCell(1, 1)] = "value"
+            assertThat(grid[GridCell(1, 1)], equalTo("value"))
         }
 
         @Test
@@ -287,10 +287,10 @@ class GridTest {
             val grid = Grid(3, 3, initial)
 
             val occupied = Cell("occupied", 42)
-            grid[GridPosition(1, 1)] = occupied
+            grid[GridCell(1, 1)] = occupied
 
-            assertThat(grid[GridPosition(1, 1)], equalTo(occupied))
-            assertThat(grid[GridPosition(0, 0)], equalTo(initial))
+            assertThat(grid[GridCell(1, 1)], equalTo(occupied))
+            assertThat(grid[GridCell(0, 0)], equalTo(initial))
         }
 
     }
