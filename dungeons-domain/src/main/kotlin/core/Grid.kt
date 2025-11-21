@@ -38,6 +38,21 @@ abstract class Grid<T> {
     fun iterateWithIndex(): Iterator<Pair<T,GridIndex>> {
         return cells.entries.map { Pair(it.value, it.key) }.iterator()
     }
+
+    fun toMaskBy(predicate: (T) -> Boolean): BooleanGrid {
+        val mask = BooleanGrid(
+            minX = boundingBox.minX,
+            minY = boundingBox.minY,
+            maxX = boundingBox.maxX,
+            maxY = boundingBox.maxY
+        )
+
+        for ((pos, value) in cells) {
+            mask[pos] = predicate(value)
+        }
+
+        return mask
+    }
 }
 
 class UnboundedGrid<T> : Grid<T>() {
