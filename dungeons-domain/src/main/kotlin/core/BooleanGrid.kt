@@ -8,6 +8,9 @@ class BooleanGrid(
 ) {
     private val grid: Grid<Unit> = BoundedGrid(minX, minY, maxX, maxY)
 
+    val boundingBox: BoundingBox
+        get() = BoundingBox(minX, minY, maxX, maxY)
+
     operator fun get(index: GridIndex): Boolean {
         return grid.contains(index)
     }

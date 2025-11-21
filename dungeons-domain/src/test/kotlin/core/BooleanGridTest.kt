@@ -68,10 +68,7 @@ class BooleanGridTest {
 
             val result = grid1.union(grid2)
 
-            assertThat(result.minX, equalTo(0))
-            assertThat(result.minY, equalTo(0))
-            assertThat(result.maxX, equalTo(10))
-            assertThat(result.maxY, equalTo(10))
+            assertThat(result.boundingBox, equalTo(BoundingBox(0, 0, 10, 10)))
             assertThat(result[GridIndex(1, 1)], equalTo(true))
             assertThat(result[GridIndex(8, 8)], equalTo(true))
         }
@@ -110,10 +107,7 @@ class BooleanGridTest {
 
             val result = grid1.intersect(grid2)
 
-            assertThat(result.minX, equalTo(5))
-            assertThat(result.minY, equalTo(5))
-            assertThat(result.maxX, equalTo(10))
-            assertThat(result.maxY, equalTo(10))
+            assertThat(result.boundingBox, equalTo(BoundingBox(5, 5, 10, 10)))
             assertThat(result[GridIndex(5, 5)], equalTo(true))
         }
 
