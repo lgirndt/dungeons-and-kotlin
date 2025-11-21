@@ -1,16 +1,26 @@
 package io.dungeons.board
 
 import io.dungeons.core.*
-import io.dungeons.world.Square
 import kotlin.math.abs
 
+enum class BoardLayer {
+    GROUND,
+    OBJECT,
+    CREATURE
+}
 
 class GameBoard(
     val width: Int,
     val height: Int
 ) {
-    private val grid: Grid<Token> = BoundedGrid.fromDimensions(width, height)
+    private val layers: Map<BoardLayer, Grid<Token>> =
+        BoardLayer.entries.associateWith { BoundedGrid.fromDimensions<Token>(width, height) }
+
     private val tokenToIndex = mutableMapOf<Id<Token>, GridIndex>()
+
+
+    private val boundingBox: BoundingBox
+        get() = gridOnLayer(BoardLayer.GROUND).boundingBox
 
     private fun BoardPosition.toGridIndex(): GridIndex {
         return GridIndex(this.x.value, this.y.value)
@@ -18,37 +28,38 @@ class GameBoard(
 
     fun putTokenTo(position: BoardPosition, token: Token) {
         require(!tokenToIndex.containsKey(token.id)) { "Token $token is already on the board" }
-        require(!grid.isEmpty(position.toGridIndex())) { "There is already a token at position $position" }
+        require(!gridOnLayer(token.layer).isEmpty(position.toGridIndex())) { "There is already a token at position $position" }
 
         tokenToIndex[token.id] = position.toGridIndex()
-        grid[position.toGridIndex()] = token
+        gridOnLayer(token.layer).set(position.toGridIndex(), token)
     }
 
-    fun removeTokenFrom(position: BoardPosition): Token? {
-        return grid.remove(position.toGridIndex())?.also {
-            require(tokenToIndex.containsKey(it.id)) { "Internal Inconsistency. Token $it is not in the index" }
 
-            tokenToIndex.remove(it.id)
-        }
-    }
+    private fun gridOnLayer(layer: BoardLayer): Grid<Token> = layers[layer]!!
 
-    fun getPositionOf(token: Token): BoardPosition? {
-        val index = tokenToIndex[token.id] ?: return null
-        return BoardPosition(
-            Square(index.x),
-            Square(index.y)
-        )
-    }
+    //    fun removeTokenFrom(position: BoardPosition): Token? {
+//        return layers.remove(position.toGridIndex())?.also {
+//            require(tokenToIndex.containsKey(it.id)) { "Internal Inconsistency. Token $it is not in the index" }
+//
+//            tokenToIndex.remove(it.id)
+//        }
+//    fun moveTokenTo(toPosition: BoardPosition, token: Token) {
+//        val fromPosition = getPositionOf(token)
+//            ?: throw IllegalArgumentException("Token $token is not on the board")
+//
+//        removeTokenFrom(fromPosition)
+//            ?: throw IllegalStateException("Internal Inconsistency. Token $token was not found at position $fromPosition")
+//
+//        putTokenTo(toPosition, token)
+//    }
 
-    fun moveTokenTo(toPosition: BoardPosition, token: Token) {
-        val fromPosition = getPositionOf(token)
-            ?: throw IllegalArgumentException("Token $token is not on the board")
-
-        removeTokenFrom(fromPosition)
-            ?: throw IllegalStateException("Internal Inconsistency. Token $token was not found at position $fromPosition")
-
-        putTokenTo(toPosition, token)
-    }
+//    fun getPositionOf(token: Token): BoardPosition? {
+//        val index = tokenToIndex[token.id] ?: return null
+//        return BoardPosition(
+//            Square(index.x),
+//            Square(index.y)
+//        )
+//    }
 
     /**
      * Calculate all positions reachable from a given position within the specified number of movement steps.
@@ -89,15 +100,30 @@ class GameBoard(
     private fun getNeighbors(index: GridIndex): List<GridIndex> {
         return DIRECTIONS.map { (dx, dy) ->
             GridIndex(index.x + dx, index.y + dy)
-        }.filter { it in grid.boundingBox }
+        }.filter { it in boundingBox }
     }
 
     private fun allowsMovement(index: GridIndex): Boolean {
-        if (index !in grid.boundingBox) {
+        if (index !in boundingBox) {
             return false // Out of bounds positions are blocked
         }
-        val token = grid[index] ?: return true
-        return token.allowsMovement
+        return testOnEachLayer(index, defaultOnAbsence = true) { it.allowsMovement }
+    }
+
+    private fun testOnEachLayer(
+        index: GridIndex,
+        defaultOnAbsence: Boolean,
+        predicate: (Token) -> Boolean
+    ): Boolean {
+        return BoardLayer.entries.all { layer ->
+            val token = gridOnLayer(layer)[index]
+            if (token == null) {
+                defaultOnAbsence
+            } else {
+                predicate(token)
+            }
+
+        }
     }
 
     private companion object {
@@ -123,13 +149,19 @@ class GameBoard(
 
         // Check each position along the line (excluding start and end positions)
         for (index in line.drop(1).dropLast(1)) {
-            val token = grid[index]
-            if (token != null && !token.allowsSight) {
-                return false // Line of sight is blocked
+            if (!allowsSight(index)) {
+                return false // Sight is blocked
             }
         }
 
         return true // No blocking tokens found
+    }
+
+    private fun allowsSight(index: GridIndex): Boolean {
+        if (index !in boundingBox) {
+            return false // Out of bounds positions are blocked
+        }
+        return testOnEachLayer(index, defaultOnAbsence = true) { it.allowsSight }
     }
 
     private fun bresenhamLine(from: GridIndex, to: GridIndex): List<GridIndex> {
