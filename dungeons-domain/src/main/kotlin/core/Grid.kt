@@ -5,7 +5,10 @@ data class BoundingBox(
     val minY: Int,
     val maxX: Int,
     val maxY: Int
-)
+) {
+    operator fun contains(gridIndex: GridIndex): Boolean =
+        gridIndex.x in minX..maxX && gridIndex.y in minY..maxY
+}
 
 abstract class Grid<T> {
     protected val cells: MutableMap<GridIndex,T> = mutableMapOf()
