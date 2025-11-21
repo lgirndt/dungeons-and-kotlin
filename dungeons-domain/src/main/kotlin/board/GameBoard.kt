@@ -69,7 +69,7 @@ class GameBoard(
 
         while (queue.isNotEmpty()) {
             val current = queue.removeFirst()
-            val currentDistance = distances[current]!!
+            val currentDistance = distances[current] ?: error("Internal Inconsistency. Token $current")
 
             if (currentDistance >= steps) {
                 continue
