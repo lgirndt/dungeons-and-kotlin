@@ -1,25 +1,27 @@
 package io.dungeons.core
 
+import java.util.*
+
 class Grid<T>(
     val width: Int,
-    val height: Int,
-    initialValue: T
+    val height: Int
 ) {
     init {
         require(width > 0) { "width must be positive, but was $width" }
         require(height > 0) { "height must be positive, but was $height" }
     }
 
-    private val cells: MutableList<T> = MutableList(width * height) { initialValue }
+    private val cells: MutableMap<GridIndex,T> = mutableMapOf()
 
-    operator fun get(pos: GridIndex): T {
+
+    operator fun get(pos: GridIndex): T? {
         requireInBounds(pos)
-        return cells[toIndex(pos)]
+        return cells[pos]
     }
 
     operator fun set(pos: GridIndex, value: T) {
         requireInBounds(pos)
-        cells[toIndex(pos)] = value
+        cells[pos] = value
     }
 
     fun isInBounds(pos: GridIndex): Boolean {
@@ -30,9 +32,5 @@ class Grid<T>(
         require(isInBounds(pos)) {
             "Position $pos is out of bounds for grid of size ${width}x$height"
         }
-    }
-
-    private fun toIndex(pos: GridIndex): Int {
-        return pos.y * width + pos.x
     }
 }

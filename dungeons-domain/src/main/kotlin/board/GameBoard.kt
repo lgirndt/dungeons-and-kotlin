@@ -8,7 +8,7 @@ class GameBoard(
     val width: Int,
     val height: Int
 ) {
-    private val grid: Grid<Token> = Grid(width, height, EmptyToken())
+    private val grid: Grid<Token> = Grid(width, height)
 
     private fun BoardPosition.toGridIndex(): GridIndex {
         return GridIndex(this.x.value, this.y.value)
