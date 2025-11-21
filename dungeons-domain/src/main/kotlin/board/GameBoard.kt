@@ -98,11 +98,11 @@ class GameBoard(
     private fun getNeighbors(index: GridIndex): List<GridIndex> {
         return DIRECTIONS.map { (dx, dy) ->
             GridIndex(index.x + dx, index.y + dy)
-        }.filter { (grid as BoundedGrid).isInBounds(it) }
+        }.filter { it in grid.boundingBox }
     }
 
     private fun isBlocked(index: GridIndex): Boolean {
-        if (!(grid as BoundedGrid).isInBounds(index)) {
+        if (index !in grid.boundingBox) {
             return true // Out of bounds positions are blocked
         }
         val token = grid[index] ?: return false
