@@ -113,4 +113,8 @@ class GameBoard(
         )
     }
 
+    fun hasLineOfSight(from: BoardPosition, to: BoardPosition): Boolean {
+        TODO("Implement Bresenham's line algorithm or similar to check line of sight")
+    }
+
 }
