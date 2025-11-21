@@ -1,32 +1,19 @@
 package combat
+
 import TestId
 import aPlayerCharacter
 import com.natpryce.hamkrest.and
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.hasSize
-import fromModifiers
 import io.dungeons.Creature
-import io.dungeons.Die.Companion.D20
 import io.dungeons.PlayerCharacter
-import io.dungeons.StatBlock
 import io.dungeons.combat.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
-import rolls
-import withFixedDice
 
-val FACTION_A = Faction(name = "Faction A")
-val FACTION_B = Faction(name = "Faction B")
-
-val SOME_COMBATANT = Combatant(
-    creature = PlayerCharacter.aPlayerCharacter(name = "Some Combatant"),
-    faction = FACTION_A,
-    actor = NoopTurnActor()
-)
-
-class CombatantsStoreTest {
+class CombatantsCollectionTest {
 
     val FACTION_A = Faction(name = "Faction A")
     val FACTION_B = Faction(name = "Faction B")
@@ -50,14 +37,14 @@ class CombatantsStoreTest {
     }
 
     @Test
-    fun `find an existing combantant`() {
+    fun `get an existing combatant`() {
         val found = store[ID[0]]
         assertNotNull(found)
         assertThat(found.creature.name, equalTo("Alpha"))
     }
 
     @Test
-    fun `do not find a non-existing combantant`() {
+    fun `do not get a non-existing combantant`() {
         val found = store[ID[42]]
         assertThat(found, equalTo(null))
     }
@@ -68,47 +55,14 @@ class CombatantsStoreTest {
         assertThat(
             friendlyToA.map{it.creature.id}.toSet(),
             hasSize(equalTo(3))
-            and equalTo(setOf(ID[0], ID[1], ID[2]))
+                    and equalTo(setOf(ID[0], ID[1], ID[2]))
         )
 
         val hostileToA = store.findAllWithStance(ID[0], FactionStance.Hostile)
         assertThat(
             hostileToA.map{it.creature.id}.toSet(),
             hasSize(equalTo(3))
-            and equalTo(setOf(ID[3], ID[4], ID[5]))
+                    and equalTo(setOf(ID[3], ID[4], ID[5]))
         )
-    }
-}
-
-class CombatantTest {
-
-    @Test
-    fun `initiative should be cached after first access`() {
-        val creature = PlayerCharacter.aPlayerCharacter(name = "Test Character")
-        val combatant = SOME_COMBATANT.copy()
-
-        withFixedDice(D20 rolls 12) {
-            // Access initiative twice
-            val firstRoll = combatant.initiative
-            val secondRoll = combatant.initiative
-
-            // Should be the exact same instance (lazy evaluation caches the result)
-            assertThat(firstRoll, equalTo(secondRoll))
-        }
-    }
-
-    @Test
-    fun `initiative should include dexterity modifier`() {
-
-        val player = PlayerCharacter.aPlayerCharacter(
-            name = "Dexterous Character",
-            stats = StatBlock.fromModifiers(dexMod=4)
-        )
-        withFixedDice(D20 rolls 12) {
-            val combatant = SOME_COMBATANT.copy(creature = player)
-            val initiative = combatant.initiative
-            assertThat(initiative.value, equalTo(12+4))
-            assertThat(initiative.die, equalTo(D20))
-        }
     }
 }
