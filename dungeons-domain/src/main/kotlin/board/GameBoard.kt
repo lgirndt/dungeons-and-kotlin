@@ -111,7 +111,7 @@ class GameBoard(
 
     private companion object {
         // 8 directions: N, NE, E, SE, S, SW, W, NW
-        val DIRECTIONS = listOf(
+        private val DIRECTIONS = listOf(
             0 to -1,  // N
             1 to -1,  // NE
             1 to 0,   // E
@@ -122,4 +122,5 @@ class GameBoard(
             -1 to -1  // NW
         )
     }
+
 }
