@@ -1,7 +1,16 @@
 package io.dungeons.core
 
+data class BoundingBox(
+    val minX: Int,
+    val minY: Int,
+    val maxX: Int,
+    val maxY: Int
+)
+
 abstract class Grid<T> {
-    private val cells: MutableMap<GridIndex,T> = mutableMapOf()
+    protected val cells: MutableMap<GridIndex,T> = mutableMapOf()
+
+    abstract val boundingBox : BoundingBox
 
     open operator fun get(pos: GridIndex): T? {
         return cells[pos]
@@ -20,7 +29,21 @@ abstract class Grid<T> {
     }
 }
 
-class UnboundedGrid<T> : Grid<T>()
+class UnboundedGrid<T> : Grid<T>() {
+    override val boundingBox: BoundingBox
+        get() {
+            if (cells.isEmpty()) {
+                return BoundingBox(0, 0, 0, 0)
+            }
+
+            val minX = cells.keys.minOf { it.x }
+            val maxX = cells.keys.maxOf { it.x } + 1
+            val minY = cells.keys.minOf { it.y }
+            val maxY = cells.keys.maxOf { it.y } + 1
+
+            return BoundingBox(minX, minY, maxX, maxY)
+        }
+}
 
 class BoundedGrid<T>(
     val minX: Int = 0,
@@ -58,9 +81,13 @@ class BoundedGrid<T>(
         return pos.x in minX until maxX && pos.y in minY until maxY
     }
 
+    override val boundingBox: BoundingBox
+        get() = BoundingBox(minX, minY, maxX, maxY)
+
     private fun requireInBounds(pos: GridIndex) {
         require(isInBounds(pos)) {
             "Position $pos is out of bounds for grid with bounds [$minX..$maxX) x [$minY..$maxY)"
         }
     }
+
 }

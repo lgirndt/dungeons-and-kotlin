@@ -220,4 +220,44 @@ class BoundedGridTest {
             assertThat(grid.isInBounds(GridIndex(10, 0)), equalTo(false))
         }
     }
+
+    @Nested
+    inner class BoundingBox {
+
+        @Test
+        fun `should return grid dimensions as bounding box`() {
+            val grid = BoundedGrid<Int>(maxX = 10, maxY = 20)
+
+            val box = grid.boundingBox
+
+            assertThat(box.minX, equalTo(0))
+            assertThat(box.minY, equalTo(0))
+            assertThat(box.maxX, equalTo(10))
+            assertThat(box.maxY, equalTo(20))
+        }
+
+        @Test
+        fun `should return custom min bounds in bounding box`() {
+            val grid = BoundedGrid<Int>(minX = 5, minY = 10, maxX = 15, maxY = 30)
+
+            val box = grid.boundingBox
+
+            assertThat(box.minX, equalTo(5))
+            assertThat(box.minY, equalTo(10))
+            assertThat(box.maxX, equalTo(15))
+            assertThat(box.maxY, equalTo(30))
+        }
+
+        @Test
+        fun `should return negative bounds in bounding box`() {
+            val grid = BoundedGrid<Int>(minX = -10, minY = -20, maxX = 10, maxY = 20)
+
+            val box = grid.boundingBox
+
+            assertThat(box.minX, equalTo(-10))
+            assertThat(box.minY, equalTo(-20))
+            assertThat(box.maxX, equalTo(10))
+            assertThat(box.maxY, equalTo(20))
+        }
+    }
 }

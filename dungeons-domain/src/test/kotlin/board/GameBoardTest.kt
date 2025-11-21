@@ -2,7 +2,6 @@ package io.dungeons.board
 
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.hasSize
 import io.dungeons.core.GridIndex
 import io.dungeons.core.Id
 import io.dungeons.world.Square
