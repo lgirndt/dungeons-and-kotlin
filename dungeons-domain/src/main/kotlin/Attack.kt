@@ -2,7 +2,7 @@ package io.dungeons
 
 import io.dungeons.Die.Companion.D20
 import io.dungeons.RangeClassification.*
-import io.dungeons.combat.ProvidesGridPosition
+import io.dungeons.combat.ProvidesBoardPosition
 import io.dungeons.core.Id
 import io.dungeons.board.BoardPosition
 
@@ -46,13 +46,13 @@ data class AttackOutcome(
 internal fun attack(
     attacker: Attacker,
     opponent: Attackable,
-    providesGridPosition: ProvidesGridPosition,
+    providesBoardPosition: ProvidesBoardPosition,
     rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
     val hitRollD20 = rollModifier.let {
-        val attackerPos : BoardPosition = providesGridPosition.getGridPosition(attacker.id)
+        val attackerPos : BoardPosition = providesBoardPosition.getBoardPosition(attacker.id)
             ?: error("No position found for creature $attacker")
 
-        val opponentPos = providesGridPosition.getGridPosition(opponent.id)
+        val opponentPos = providesBoardPosition.getBoardPosition(opponent.id)
             ?: error("No position found for creature $opponent")
 
         val distance = attackerPos.distance(opponentPos)

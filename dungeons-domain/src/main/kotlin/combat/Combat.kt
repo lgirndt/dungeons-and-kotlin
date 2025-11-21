@@ -164,15 +164,15 @@ class CombatantsStore(
     }
 }
 
-interface ProvidesGridPosition {
-    fun getGridPosition(creatureId: Id<Creature>): BoardPosition?
+interface ProvidesBoardPosition {
+    fun getBoardPosition(creatureId: Id<Creature>): BoardPosition?
 }
 
-interface CombatScenario : ProvidesGridPosition {
+interface CombatScenario : ProvidesBoardPosition {
     fun listVisibleCombatants(observer: Id<Creature>): List<Combatant>
     fun isVisibleTo(observer: Id<Creature>, target: Id<Creature>): Boolean
     fun listCombatantsInRange(observer: Id<Creature>, rangeInSquares: Square): List<Combatant>
-    override fun getGridPosition(creatureId: Id<Creature>): BoardPosition?
+    override fun getBoardPosition(creatureId: Id<Creature>): BoardPosition?
 }
 
 class SimpleCombatScenario(
@@ -193,19 +193,19 @@ class SimpleCombatScenario(
         observer: Id<Creature>,
         rangeInSquares: Square
     ): List<Combatant> {
-        val position = getGridPosition(observer)
+        val position = getBoardPosition(observer)
             ?: error("No grid position found for creature $observer")
 
         return combatantsStore.listAll()
             .filter { it.id != observer }
             .filter {
-                getGridPosition(it.creature.id)?.let { targetPos ->
+                getBoardPosition(it.creature.id)?.let { targetPos ->
                     isInRange(position, targetPos, rangeInSquares)
                 } ?: true
             }
     }
 
-    override fun getGridPosition(creatureId: Id<Creature>): BoardPosition? {
+    override fun getBoardPosition(creatureId: Id<Creature>): BoardPosition? {
         TODO("Not yet implemented")
     }
 

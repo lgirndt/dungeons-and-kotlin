@@ -1,7 +1,7 @@
 package io.dungeons
 
 import io.dungeons.Die.Companion.D20
-import io.dungeons.combat.ProvidesGridPosition
+import io.dungeons.combat.ProvidesBoardPosition
 import io.dungeons.core.Id
 
 
@@ -65,10 +65,10 @@ abstract class Creature(
 
     fun attack(
         opponent: Attackable,
-        providesGridPosition: ProvidesGridPosition,
+        providesBoardPosition: ProvidesBoardPosition,
         rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
         val attacker = asPhysicalAttacker()
-        return attack(attacker, opponent, providesGridPosition, rollModifier)
+        return attack(attacker, opponent, providesBoardPosition, rollModifier)
     }
 
     fun rollAbilityCheck(

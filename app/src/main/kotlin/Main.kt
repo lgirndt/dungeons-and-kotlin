@@ -1,7 +1,7 @@
 
 import io.dungeons.*
 import io.dungeons.board.BoardPosition
-import io.dungeons.combat.ProvidesGridPosition
+import io.dungeons.combat.ProvidesBoardPosition
 import io.dungeons.core.Id
 import io.dungeons.world.Square
 
@@ -34,8 +34,8 @@ fun main() {
     println("A wild ${goblin.name} appears!")
 
     println("${fighter.name} attacks the ${goblin.name} with a ${fighter.weapon.name}.")
-    val providesGridPosition : ProvidesGridPosition= object : ProvidesGridPosition {
-        override fun getGridPosition(creatureId: Id<Creature>): BoardPosition {
+    val providesBoardPosition : ProvidesBoardPosition= object : ProvidesBoardPosition {
+        override fun getBoardPosition(creatureId: Id<Creature>): BoardPosition {
             return when (creatureId) {
                 fighter.id -> BoardPosition(Square(0), Square(0))
                 goblin.id -> BoardPosition(Square(0), Square(1))
@@ -43,7 +43,7 @@ fun main() {
             }
         }
     }
-    val outcome = fighter.attack(goblin, providesGridPosition)
+    val outcome = fighter.attack(goblin, providesBoardPosition)
     println("${fighter.name} rolled a ${outcome.hitRoll}")
     if (outcome.hasBeenHit) {
         println("${fighter.name} hits the ${goblin.name} for ${outcome.damageDealt} damage!")
