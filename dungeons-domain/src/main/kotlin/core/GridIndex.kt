@@ -1,6 +1,6 @@
 package io.dungeons.core
 
-data class GridCell(
+data class GridIndex(
     val x: Int,
     val y: Int
 ) {

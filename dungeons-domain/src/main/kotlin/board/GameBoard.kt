@@ -1,7 +1,7 @@
 package io.dungeons.board
 
 import io.dungeons.core.Grid
-import io.dungeons.core.GridCell
+import io.dungeons.core.GridIndex
 
 
 class GameBoard(
@@ -10,15 +10,15 @@ class GameBoard(
 ) {
     private val grid: Grid<Token> = Grid(width, height, EmptyToken())
 
-    private fun BoardPosition.toGridCell(): GridCell {
-        return GridCell(this.x.value, this.y.value)
+    private fun BoardPosition.toGridIndex(): GridIndex {
+        return GridIndex(this.x.value, this.y.value)
     }
 
     fun putTokenAt(position: BoardPosition, token: Token) {
-        grid[position.toGridCell()] = token
+        grid[position.toGridIndex()] = token
     }
 
     fun removeTokenAt(position: BoardPosition) {
-        grid[position.toGridCell()] = EmptyToken()
+        grid[position.toGridIndex()] = EmptyToken()
     }
 }
