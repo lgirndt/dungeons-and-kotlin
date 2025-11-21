@@ -35,8 +35,8 @@ fun main() {
 
     println("${fighter.name} attacks the ${goblin.name} with a ${fighter.weapon.name}.")
     val providesGridPosition : ProvidesGridPosition= object : ProvidesGridPosition {
-        override fun getGridPosition(id: Id<CoreEntity>): BoardPosition {
-            return when (id) {
+        override fun getGridPosition(entityId: Id<CoreEntity>): BoardPosition {
+            return when (entityId) {
                 fighter.id -> BoardPosition(Square(0), Square(0))
                 goblin.id -> BoardPosition(Square(0), Square(1))
                 else -> throw IllegalArgumentException("Unknown entity ID")
