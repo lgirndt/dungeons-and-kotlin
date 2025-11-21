@@ -1,9 +1,6 @@
 package io.dungeons.board
 
-import io.dungeons.core.BoundedGrid
-import io.dungeons.core.Grid
-import io.dungeons.core.GridIndex
-import io.dungeons.core.Id
+import io.dungeons.core.*
 import io.dungeons.world.Square
 
 
@@ -64,7 +61,7 @@ class GameBoard(
         require(steps >= 0) { "Steps must be non-negative, but was $steps" }
 
         val startIndex = startPosition.toGridIndex()
-        val distances = BoundedGrid.fromDimensions<Int>(width, height)
+        val distances = UnboundedGrid<Int>()
         val queue = ArrayDeque<GridIndex>()
 
         queue.add(startIndex)
