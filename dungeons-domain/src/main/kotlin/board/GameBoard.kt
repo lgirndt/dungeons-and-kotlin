@@ -96,7 +96,7 @@ class GameBoard(
             return false // Out of bounds positions are blocked
         }
         val token = grid[index] ?: return true
-        return token.allowsMovementToSameSqqare
+        return token.allowsMovement
     }
 
     private companion object {

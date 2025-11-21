@@ -7,11 +7,11 @@ interface Token
 {
     val id: Id<Token>
 
-    val allowsMovementToSameSqqare: Boolean
+    val allowsMovement: Boolean
 }
 
 data class EmptyToken(
     override val id: Id<Token> = Id.generate(),
 ) : Token {
-    override val allowsMovementToSameSqqare: Boolean = true
+    override val allowsMovement: Boolean = true
 }

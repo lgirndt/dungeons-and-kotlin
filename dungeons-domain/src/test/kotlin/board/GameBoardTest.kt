@@ -14,14 +14,14 @@ class GameBoardTest {
     private data class BlockingToken(
         override val id: Id<Token> = Id.generate()
     ) : Token {
-        override val allowsMovementToSameSqqare: Boolean = false
+        override val allowsMovement: Boolean = false
     }
 
     // Test token that allows movement through it
     private data class PassableToken(
         override val id: Id<Token> = Id.generate()
     ) : Token {
-        override val allowsMovementToSameSqqare: Boolean = true
+        override val allowsMovement: Boolean = true
     }
 
     @Nested
