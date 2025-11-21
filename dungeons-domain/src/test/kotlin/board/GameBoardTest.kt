@@ -124,6 +124,16 @@ class GameBoardTest {
 
         @Test
         fun `should route around blocking tokens`() {
+            // Grid layout (showing relevant area):
+            //   3 4 5 6 7
+            // 3 . . t . .  <- we test for (t) to be reachable
+            // 4 . X X t .  <- Two blocking tokens (X) to the north
+            // 5 . . S . .  <- Start position (S) at (5, 5)
+            // 6 . . . . .
+            // 7 . . . . .
+            //
+            // With steps=2, should reach around the wall but not through it
+
             val board = GameBoard(10, 10)
             val start = BoardPosition.from(5, 5)
             val blockingToken1 = BlockingToken()
