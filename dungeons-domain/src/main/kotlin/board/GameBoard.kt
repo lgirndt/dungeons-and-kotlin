@@ -11,7 +11,7 @@ class GameBoard(
     val width: Int,
     val height: Int
 ) {
-    private val grid: Grid<Token> = BoundedGrid(maxX = width - 1, maxY = height - 1)
+    private val grid: Grid<Token> = BoundedGrid.fromDimensions(width, height)
     private val tokenToIndex = mutableMapOf<Id<Token>, GridIndex>()
 
     private fun BoardPosition.toGridIndex(): GridIndex {
@@ -19,16 +19,16 @@ class GameBoard(
     }
 
     fun putTokenTo(position: BoardPosition, token: Token) {
-        require(!tokenToIndex.containsKey(token.id)) {"Token $token is already on the board"}
-        require(!grid.isEmpty(position.toGridIndex())) {"There is already a token at position $position"}
+        require(!tokenToIndex.containsKey(token.id)) { "Token $token is already on the board" }
+        require(!grid.isEmpty(position.toGridIndex())) { "There is already a token at position $position" }
 
         tokenToIndex[token.id] = position.toGridIndex()
         grid[position.toGridIndex()] = token
     }
 
-    fun removeTokenFrom(position: BoardPosition) : Token? {
+    fun removeTokenFrom(position: BoardPosition): Token? {
         return grid.remove(position.toGridIndex())?.also {
-            require(tokenToIndex.containsKey(it.id)) {"Internal Inconsistency. Token $it is not in the index"}
+            require(tokenToIndex.containsKey(it.id)) { "Internal Inconsistency. Token $it is not in the index" }
 
             tokenToIndex.remove(it.id)
         }

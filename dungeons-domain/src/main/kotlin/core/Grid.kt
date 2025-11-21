@@ -93,4 +93,10 @@ class BoundedGrid<T>(
         }
     }
 
+    companion object {
+        fun <U> fromDimensions(width: Int, height: Int) : BoundedGrid<U> {
+            return BoundedGrid(minX = 0, minY = 0, maxX = width - 1, maxY = height - 1)
+        }
+    }
+
 }
