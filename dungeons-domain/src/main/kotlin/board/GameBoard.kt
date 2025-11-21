@@ -34,6 +34,10 @@ class GameBoard(
         gridOnLayer(token.layer).set(position.toGridIndex(), token)
     }
 
+    fun getTokenAt(layer: BoardLayer, position: BoardPosition): Token? {
+        return gridOnLayer(layer)[position.toGridIndex()]
+    }
+
 
     private fun gridOnLayer(layer: BoardLayer): Grid<Token> = layers[layer]!!
 
