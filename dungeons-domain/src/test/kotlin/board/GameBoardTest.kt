@@ -147,7 +147,8 @@ class GameBoardTest {
 
             // Can reach positions around the wall
             assertThat(reach[GridIndex(6, 4)], equalTo(1)) // NE is reachable
-            assertThat(reach[GridIndex(3, 5)], equalTo(2)) // Can reach to the west
+            assertThat(reach[GridIndex(5, 3)], equalTo(2)) // Can reach to the west
+
             // The blocked positions should not be reachable
             assertThat(reach[GridIndex(4, 4)], equalTo(null))
             assertThat(reach[GridIndex(5, 4)], equalTo(null))
@@ -160,7 +161,6 @@ class GameBoardTest {
 
             val reach = board.calculateReach(start, steps = 2)
 
-            // Should reach corner and adjacent positions
             assertThat(reach[GridIndex(0, 0)], equalTo(0))
             assertThat(reach[GridIndex(1, 0)], equalTo(1))
             assertThat(reach[GridIndex(0, 1)], equalTo(1))
@@ -229,6 +229,18 @@ class GameBoardTest {
             surroundingPairs().forEach { (x, y) ->
                 assertThat(reach[GridIndex(x, y)], equalTo(null))
             }
+        }
+
+        @Test
+        fun `should reach diagonal from one corner to the other`() {
+            val board = GameBoard(10, 10)
+            val start = BoardPosition.from(0, 0)
+
+            val reach = board.calculateReach(start, steps = 10)
+
+            (1..9).forEach { i ->
+                assertThat(reach[GridIndex(i, i)], equalTo(i))
+             }
         }
     }
 }
