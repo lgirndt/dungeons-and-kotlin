@@ -57,11 +57,11 @@ class GameBoard(
      * Uses BFS to account for blocking tokens and terrain.
      *
      * @param startPosition The starting position
-     * @param speed The maximum number of movement steps
+     * @param steps The maximum number of movement steps
      * @return A grid where reachable cells contain their distance from the start (in steps), unreachable cells are null
      */
-    fun calculateReach(startPosition: BoardPosition, speed: Int): Grid<Int> {
-        require(speed >= 0) { "Speed must be non-negative, but was $speed" }
+    fun calculateReach(startPosition: BoardPosition, steps: Int): Grid<Int> {
+        require(steps >= 0) { "Steps must be non-negative, but was $steps" }
 
         val startIndex = startPosition.toGridIndex()
         val distances = BoundedGrid.fromDimensions<Int>(width, height)
@@ -74,7 +74,7 @@ class GameBoard(
             val current = queue.removeFirst()
             val currentDistance = distances[current]!!
 
-            if (currentDistance >= speed) {
+            if (currentDistance >= steps) {
                 continue
             }
 

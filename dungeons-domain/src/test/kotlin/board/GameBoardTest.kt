@@ -41,7 +41,7 @@ class GameBoardTest {
             // Place blocking token to the north
             board.putTokenTo(BoardPosition.from(1, 0), blockingToken)
 
-            val reach = board.calculateReach(start, speed = 1)
+            val reach = board.calculateReach(start, steps = 1)
 
             // Should NOT include the blocked position
             assertThat(reach[BoardPosition.from(1, 0).toGridIndex()], equalTo(null))
@@ -50,21 +50,21 @@ class GameBoardTest {
         }
 
         @Test
-        fun `should return only start position when speed is zero`() {
+        fun `should return only start position when steps is zero`() {
             val board = GameBoard(10, 10)
             val start = BoardPosition.from(5, 5)
 
-            val reach = board.calculateReach(start, speed = 0)
+            val reach = board.calculateReach(start, steps = 0)
 
             assertThat(reach[start.toGridIndex()], equalTo(0))
         }
 
         @Test
-        fun `should reach all 8 neighbors with speed 1`() {
+        fun `should reach all 8 neighbors with steps 1`() {
             val board = GameBoard(10, 10)
             val start = BoardPosition.from(5, 5)
 
-            val reach = board.calculateReach(start, speed = 1)
+            val reach = board.calculateReach(start, steps = 1)
 
             assertThat(reach[start.toGridIndex()], equalTo(0))
             assertThat(reach[BoardPosition.from(4, 4).toGridIndex()], equalTo(1)) // NW
@@ -78,11 +78,11 @@ class GameBoardTest {
         }
 
         @Test
-        fun `should expand reach with higher speed`() {
+        fun `should expand reach with higher steps`() {
             val board = GameBoard(10, 10)
             val start = BoardPosition.from(5, 5)
 
-            val reach = board.calculateReach(start, speed = 2)
+            val reach = board.calculateReach(start, steps = 2)
 
             // Should reach positions 2 steps away
             assertThat(reach[BoardPosition.from(5, 3).toGridIndex()], equalTo(2)) // 2 steps north
@@ -100,7 +100,7 @@ class GameBoardTest {
             // Place blocking token to the north
             board.putTokenTo(BoardPosition.from(5, 4), blockingToken)
 
-            val reach = board.calculateReach(start, speed = 1)
+            val reach = board.calculateReach(start, steps = 1)
 
             // Should not include the directly blocked position
             assertThat(reach[BoardPosition.from(5, 4).toGridIndex()], equalTo(null))
@@ -120,7 +120,7 @@ class GameBoardTest {
             // Place passable token to the north
             board.putTokenTo(BoardPosition.from(5, 4), passableToken)
 
-            val reach = board.calculateReach(start, speed = 2)
+            val reach = board.calculateReach(start, steps = 2)
 
             // Should reach through the passable token
             assertThat(reach[BoardPosition.from(5, 4).toGridIndex()], equalTo(1))
@@ -138,7 +138,7 @@ class GameBoardTest {
             board.putTokenTo(BoardPosition.from(4, 4), blockingToken1)
             board.putTokenTo(BoardPosition.from(5, 4), blockingToken2)
 
-            val reach = board.calculateReach(start, speed = 2)
+            val reach = board.calculateReach(start, steps = 2)
 
             // Can reach positions around the wall
             assertThat(reach[BoardPosition.from(6, 4).toGridIndex()], equalTo(1)) // NE is reachable
@@ -153,7 +153,7 @@ class GameBoardTest {
             val board = GameBoard(5, 5)
             val start = BoardPosition.from(0, 0)
 
-            val reach = board.calculateReach(start, speed = 2)
+            val reach = board.calculateReach(start, steps = 2)
 
             // Should reach corner and adjacent positions
             assertThat(reach[BoardPosition.from(0, 0).toGridIndex()], equalTo(0))
@@ -163,11 +163,11 @@ class GameBoardTest {
         }
 
         @Test
-        fun `should handle large speed values`() {
+        fun `should handle large steps values`() {
             val board = GameBoard(10, 10)
             val start = BoardPosition.from(0, 0)
 
-            val reach = board.calculateReach(start, speed = 20)
+            val reach = board.calculateReach(start, steps = 20)
 
             // Should reach diagonal corner
             assertThat(reach[BoardPosition.from(9, 9).toGridIndex()], equalTo(9)) // Diagonal distance
@@ -178,7 +178,7 @@ class GameBoardTest {
             val board = GameBoard(10, 10)
             val start = BoardPosition.from(0, 0)
 
-            val reach = board.calculateReach(start, speed = 1)
+            val reach = board.calculateReach(start, steps = 1)
 
             // Should reach start and 3 neighbors
             assertThat(reach[start.toGridIndex()], equalTo(0))
@@ -188,15 +188,15 @@ class GameBoardTest {
         }
 
         @Test
-        fun `should reject negative speed`() {
+        fun `should reject negative steps`() {
             val board = GameBoard(10, 10)
             val start = BoardPosition.from(5, 5)
 
             val exception = assertThrows<IllegalArgumentException> {
-                board.calculateReach(start, speed = -1)
+                board.calculateReach(start, steps = -1)
             }
 
-            assertThat(exception.message, equalTo("Speed must be non-negative, but was -1"))
+            assertThat(exception.message, equalTo("Steps must be non-negative, but was -1"))
         }
 
         @Test
@@ -222,7 +222,7 @@ class GameBoardTest {
             board.putTokenTo(BoardPosition.from(2, 4), blockingToken7)
             board.putTokenTo(BoardPosition.from(2, 3), blockingToken8)
 
-            val reach = board.calculateReach(start, speed = 1)
+            val reach = board.calculateReach(start, steps = 1)
 
             // Should only reach the starting position (all neighbors are blocked)
             assertThat(reach[start.toGridIndex()], equalTo(0))
