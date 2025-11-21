@@ -41,30 +41,6 @@ class GameBoard(
 
     private fun gridOnLayer(layer: BoardLayer): Grid<Token> = layers[layer]!!
 
-    //    fun removeTokenFrom(position: BoardPosition): Token? {
-//        return layers.remove(position.toGridIndex())?.also {
-//            require(tokenToIndex.containsKey(it.id)) { "Internal Inconsistency. Token $it is not in the index" }
-//
-//            tokenToIndex.remove(it.id)
-//        }
-//    fun moveTokenTo(toPosition: BoardPosition, token: Token) {
-//        val fromPosition = getPositionOf(token)
-//            ?: throw IllegalArgumentException("Token $token is not on the board")
-//
-//        removeTokenFrom(fromPosition)
-//            ?: throw IllegalStateException("Internal Inconsistency. Token $token was not found at position $fromPosition")
-//
-//        putTokenTo(toPosition, token)
-//    }
-
-//    fun getPositionOf(token: Token): BoardPosition? {
-//        val index = tokenToIndex[token.id] ?: return null
-//        return BoardPosition(
-//            Square(index.x),
-//            Square(index.y)
-//        )
-//    }
-
     /**
      * Calculate all positions reachable from a given position within the specified number of movement steps.
      * Uses BFS to account for blocking tokens and terrain.
