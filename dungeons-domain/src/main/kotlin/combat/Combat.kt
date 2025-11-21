@@ -115,19 +115,19 @@ internal class NoopTurnActor : TurnActor {
 }
 
 data class Combatant(
-    val entity: Creature,
+    val creature: Creature,
     val faction: Faction,
     val actor: TurnActor,
 ) {
     val id: Id<Creature>
-        get() = entity.id
+        get() = creature.id
 
     val initiative: DieRoll by lazy {
-        entity.rollInitiative()
+        creature.rollInitiative()
     }
 
     val hitPoints: Int
-        get() = entity.hitPoints
+        get() = creature.hitPoints
 }
 
 class CombatantsStore(
@@ -165,14 +165,14 @@ class CombatantsStore(
 }
 
 interface ProvidesGridPosition {
-    fun getGridPosition(entityId: Id<Creature>): BoardPosition?
+    fun getGridPosition(creatureId: Id<Creature>): BoardPosition?
 }
 
 interface CombatScenario : ProvidesGridPosition {
     fun listVisibleCombatants(observer: Id<Creature>): List<Combatant>
     fun isVisibleTo(observer: Id<Creature>, target: Id<Creature>): Boolean
     fun listCombatantsInRange(observer: Id<Creature>, rangeInSquares: Square): List<Combatant>
-    override fun getGridPosition(entityId: Id<Creature>): BoardPosition?
+    override fun getGridPosition(creatureId: Id<Creature>): BoardPosition?
 }
 
 class SimpleCombatScenario(
@@ -194,18 +194,18 @@ class SimpleCombatScenario(
         rangeInSquares: Square
     ): List<Combatant> {
         val position = getGridPosition(observer)
-            ?: error("No grid position found for entity $observer")
+            ?: error("No grid position found for creature $observer")
 
         return combatantsStore.listAll()
             .filter { it.id != observer }
             .filter {
-                getGridPosition(it.entity.id)?.let { targetPos ->
+                getGridPosition(it.creature.id)?.let { targetPos ->
                     isInRange(position, targetPos, rangeInSquares)
                 } ?: true
             }
     }
 
-    override fun getGridPosition(entityId: Id<Creature>): BoardPosition? {
+    override fun getGridPosition(creatureId: Id<Creature>): BoardPosition? {
         TODO("Not yet implemented")
     }
 

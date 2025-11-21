@@ -50,10 +50,10 @@ internal fun attack(
     rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
     val hitRollD20 = rollModifier.let {
         val attackerPos : BoardPosition = providesGridPosition.getGridPosition(attacker.id)
-            ?: error("No position found for entity $attacker")
+            ?: error("No position found for creature $attacker")
 
         val opponentPos = providesGridPosition.getGridPosition(opponent.id)
-            ?: error("No position found for entity $opponent")
+            ?: error("No position found for creature $opponent")
 
         val distance = attackerPos.distance(opponentPos)
 

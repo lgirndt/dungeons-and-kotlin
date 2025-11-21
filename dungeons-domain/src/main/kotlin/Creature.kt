@@ -49,17 +49,17 @@ abstract class Creature(
     }
 
     internal fun asPhysicalAttacker(): Attacker {
-        val entity = this
+        val creature = this
         return object : Attacker {
             override val id: Id<Creature>
-                get() = entity.id
-            override val attackSource = entity.weapon
+                get() = creature.id
+            override val attackSource = creature.weapon
             override val stats: StatBlock
                 get() = core.stats
 
-            override fun applyAttackModifiers(): Int = entity.attackModifier
+            override fun applyAttackModifiers(): Int = creature.attackModifier
             override fun isCriticalHit(hitRoll: DieRoll): Boolean =
-                entity.isCriticalHit(hitRoll)
+                creature.isCriticalHit(hitRoll)
         }
     }
 

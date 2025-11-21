@@ -24,14 +24,14 @@ class CombatTrackerTest {
     val PLAYER_FACTION = Faction(name = "Players")
     val MONSTER_FACTION = Faction(name = "Monsters")
 
-    fun aTrackerEntity(
+    fun aCombatant(
         name: String = "some name",
         dexMod: Int = 0,
         faction: Faction = PLAYER_FACTION,
         actor: TurnActor = mockk<TurnActor>(relaxed = true)
     ): Combatant {
         return Combatant(
-            entity = PlayerCharacter.aPlayerCharacter(
+            creature = PlayerCharacter.aPlayerCharacter(
                 name = name,
                 stats = StatBlock.fromModifiers(dexMod = dexMod)
             ),
@@ -43,9 +43,9 @@ class CombatTrackerTest {
     @Test
     fun `combatants should be sorted by initiative in descending order`() {
         val trackerEntries = listOf(
-            aTrackerEntity(name = "Slow Character", dexMod = 0),
-            aTrackerEntity(name = "Medium Character", dexMod = 2),
-            aTrackerEntity(name = "Fast Character", dexMod = 4),
+            aCombatant(name = "Slow Character", dexMod = 0),
+            aCombatant(name = "Medium Character", dexMod = 2),
+            aCombatant(name = "Fast Character", dexMod = 4),
         )
         withFixedDice(
             D20 rolls 10,  // lowDexPlayer: 10 + 0 = 10
@@ -58,11 +58,11 @@ class CombatTrackerTest {
             // Verify the combatants are sorted by initiative (descending)
             // Expected order: midDexPlayer (14), highDexPlayer (12), lowDexPlayer (10)
             assertThat(tracker.combatantsOrderedByInitiative.size, equalTo(3))
-            assertThat(tracker.combatantsOrderedByInitiative[0].entity.name, equalTo("Medium Character"))
+            assertThat(tracker.combatantsOrderedByInitiative[0].creature.name, equalTo("Medium Character"))
             assertThat(tracker.combatantsOrderedByInitiative[0].initiative.value, equalTo(14))
-            assertThat(tracker.combatantsOrderedByInitiative[1].entity.name, equalTo("Fast Character"))
+            assertThat(tracker.combatantsOrderedByInitiative[1].creature.name, equalTo("Fast Character"))
             assertThat(tracker.combatantsOrderedByInitiative[1].initiative.value, equalTo(12))
-            assertThat(tracker.combatantsOrderedByInitiative[2].entity.name, equalTo("Slow Character"))
+            assertThat(tracker.combatantsOrderedByInitiative[2].creature.name, equalTo("Slow Character"))
             assertThat(tracker.combatantsOrderedByInitiative[2].initiative.value, equalTo(10))
         }
     }
@@ -74,15 +74,15 @@ class CombatTrackerTest {
             D20 rolls 10   // player2: 10 + 2 = 12
         ) {
             val trackerEntries = listOf(
-                aTrackerEntity(name = "First", dexMod = 2),
-                aTrackerEntity(name = "Second", dexMod = 2),
+                aCombatant(name = "First", dexMod = 2),
+                aCombatant(name = "Second", dexMod = 2),
             )
 
             val tracker = createCombatTracker(trackerEntries)
 
             // Both have initiative 12, should maintain input order
-            assertThat(tracker.combatantsOrderedByInitiative[0].entity.name, equalTo("First"))
-            assertThat(tracker.combatantsOrderedByInitiative[1].entity.name, equalTo("Second"))
+            assertThat(tracker.combatantsOrderedByInitiative[0].creature.name, equalTo("First"))
+            assertThat(tracker.combatantsOrderedByInitiative[1].creature.name, equalTo("Second"))
         }
     }
 
@@ -109,8 +109,8 @@ class CombatTrackerTest {
         val listener = mockk<CombatTrackerListener>(relaxed = true)
 
         val trackerEntries = listOf(
-            aTrackerEntity(name = "First", dexMod = 1),
-            aTrackerEntity(name = "Second", dexMod = 2),
+            aCombatant(name = "First", dexMod = 1),
+            aCombatant(name = "Second", dexMod = 2),
         )
         withFixedDice(
             D20 rolls 10,  // player1: 10 + 1 = 11
@@ -127,9 +127,9 @@ class CombatTrackerTest {
             verify(exactly = 1) {
                 listener.rolledInitiative(match { sortedCombatants ->
                     sortedCombatants.size == 2 &&
-                            sortedCombatants[0].entity.name == "First" &&
+                            sortedCombatants[0].creature.name == "First" &&
                             sortedCombatants[0].initiative.value == 11 &&
-                            sortedCombatants[1].entity.name == "Second" &&
+                            sortedCombatants[1].creature.name == "Second" &&
                             sortedCombatants[1].initiative.value == 10
                 })
             }
@@ -150,16 +150,16 @@ class CombatTrackerTest {
         val FIRST_NAME = "First"
         val SECOND_NAME = "Second"
 
-        val MATCH_FIRST_ENTITY: (Combatant) -> Boolean = { it.entity.name == FIRST_NAME }
-        val MATCH_SECOND_ENTITY: (Combatant) -> Boolean = { it.entity.name == SECOND_NAME }
+        val MATCH_FIRST_CREATURE: (Combatant) -> Boolean = { it.creature.name == FIRST_NAME }
+        val MATCH_SECOND_CREATURE: (Combatant) -> Boolean = { it.creature.name == SECOND_NAME }
 
         @BeforeEach
         fun beforeEach() {
             actor1 = mockk<TurnActor>(name = "Actor1 Mock")
             actor2 = mockk<TurnActor>(name = "Actor2 Mock")
 
-            firstCombatant = aTrackerEntity(name = FIRST_NAME, dexMod = 2, actor = actor1, faction = PLAYER_FACTION)
-            secondCombatant = aTrackerEntity(name = SECOND_NAME, dexMod = 1, actor = actor2, faction = MONSTER_FACTION)
+            firstCombatant = aCombatant(name = FIRST_NAME, dexMod = 2, actor = actor1, faction = PLAYER_FACTION)
+            secondCombatant = aCombatant(name = SECOND_NAME, dexMod = 1, actor = actor2, faction = MONSTER_FACTION)
 
             combatants = listOf(firstCombatant, secondCombatant)
 
@@ -182,21 +182,21 @@ class CombatTrackerTest {
 
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_ENTITY),
+                        match(MATCH_FIRST_CREATURE),
                         match { it.movementAvailable && it.round == 1},
                         any()
                     )
                 }
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_ENTITY),
+                        match(MATCH_FIRST_CREATURE),
                         match { !it.movementAvailable && it.round == 1},
                         any()
                     )
                 }
                 verify(exactly = 0) {
                     actor2.handleTurn(
-                        match(MATCH_SECOND_ENTITY),
+                        match(MATCH_SECOND_CREATURE),
                         any(),
                         any()
                     )
@@ -221,21 +221,21 @@ class CombatTrackerTest {
 
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_ENTITY),
+                        match(MATCH_FIRST_CREATURE),
                         match { it.round == 1},
                         any()
                     )
                 }
                 verify(exactly = 1) {
                     actor2.handleTurn(
-                        match(MATCH_SECOND_ENTITY),
+                        match(MATCH_SECOND_CREATURE),
                         match { it.movementAvailable && it.round == 1},
                         any()
                     )
                 }
                 verify(exactly = 1) {
                     actor2.handleTurn(
-                        match(MATCH_SECOND_ENTITY),
+                        match(MATCH_SECOND_CREATURE),
                         match { !it.movementAvailable},
                         any()
                     )
@@ -257,7 +257,7 @@ class CombatTrackerTest {
                 }
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_ENTITY),
+                        match(MATCH_FIRST_CREATURE),
                         match { it.movementAvailable && it.round == 2 },
                         any()
                     )
@@ -278,28 +278,28 @@ class CombatTrackerTest {
                 tracker.advanceTurn()
 
                 // Reduce actor1's hit points to 0
-                firstCombatant.entity.hitPoints = 0
+                firstCombatant.creature.hitPoints = 0
 
                 tracker.advanceTurn()
 
                 // Verify actor1 was NOT called again (still only called once from round 1)
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_ENTITY),
+                        match(MATCH_FIRST_CREATURE),
                         match { it.round == 1 },
                         any()
                     )
                 }
                 verify(exactly = 1) {
                     actor2.handleTurn(
-                        match(MATCH_SECOND_ENTITY),
+                        match(MATCH_SECOND_CREATURE),
                         match { it.round == 1 },
                         any()
                     )
                 }
                 verify(exactly = 0) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_ENTITY),
+                        match(MATCH_FIRST_CREATURE),
                         match { it.round == 2 },
                         any()
                     )
@@ -339,21 +339,21 @@ class CombatTrackerTest {
                 // 3. with action and bonus action used
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_ENTITY),
+                        match(MATCH_FIRST_CREATURE),
                         match { it.actionAvailable && it.bonusActionAvailable && it.movementAvailable },
                         any()
                     )
                 }
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_ENTITY),
+                        match(MATCH_FIRST_CREATURE),
                         match { !it.actionAvailable && it.bonusActionAvailable && it.movementAvailable },
                         any()
                     )
                 }
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_ENTITY),
+                        match(MATCH_FIRST_CREATURE),
                         match { !it.actionAvailable && !it.bonusActionAvailable && it.movementAvailable },
                         any()
                     )
@@ -361,7 +361,7 @@ class CombatTrackerTest {
                 // Verify actor1 was NOT called a 4th time (all options exhausted)
                 verify(exactly = 0) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_ENTITY),
+                        match(MATCH_FIRST_CREATURE),
                         match { !it.actionAvailable && !it.bonusActionAvailable && !it.movementAvailable },
                         any()
                     )

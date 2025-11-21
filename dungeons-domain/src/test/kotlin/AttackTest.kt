@@ -20,8 +20,8 @@ import org.junit.jupiter.api.Test
 class ProvidesGridPositionMock(
     val positions: Map<Id<Creature>, BoardPosition>
 ) : ProvidesGridPosition  {
-    override fun getGridPosition(entityId: Id<Creature>): BoardPosition? {
-        return positions[entityId]
+    override fun getGridPosition(creatureId: Id<Creature>): BoardPosition? {
+        return positions[creatureId]
     }
 
 }

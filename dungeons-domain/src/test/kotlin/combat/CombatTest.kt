@@ -22,7 +22,7 @@ val FACTION_A = Faction(name = "Faction A")
 val FACTION_B = Faction(name = "Faction B")
 
 val SOME_COMBATANT = Combatant(
-    entity = PlayerCharacter.aPlayerCharacter(name = "Some Combatant"),
+    creature = PlayerCharacter.aPlayerCharacter(name = "Some Combatant"),
     faction = FACTION_A,
     actor = NoopTurnActor()
 )
@@ -118,7 +118,7 @@ class CombatantsStoreTest {
     fun `find an existing combantant`() {
         val found = store.findOrNull(ID[0])
         assertNotNull(found)
-        assertThat(found.entity.name, equalTo("Alpha"))
+        assertThat(found.creature.name, equalTo("Alpha"))
     }
 
     @Test
@@ -131,14 +131,14 @@ class CombatantsStoreTest {
     fun `findAllWithStance should return correct combatants`() {
         val friendlyToA = store.findAllWithStance(ID[0], FactionStance.Friendly)
         assertThat(
-            friendlyToA.map{it.entity.id}.toSet(),
+            friendlyToA.map{it.creature.id}.toSet(),
             hasSize(equalTo(3))
             and equalTo(setOf(ID[0], ID[1], ID[2]))
         )
 
         val hostileToA = store.findAllWithStance(ID[0], FactionStance.Hostile)
         assertThat(
-            hostileToA.map{it.entity.id}.toSet(),
+            hostileToA.map{it.creature.id}.toSet(),
             hasSize(equalTo(3))
             and equalTo(setOf(ID[3], ID[4], ID[5]))
         )
@@ -149,7 +149,7 @@ class CombatantTest {
 
     @Test
     fun `initiative should be cached after first access`() {
-        val entity = PlayerCharacter.aPlayerCharacter(name = "Test Character")
+        val creature = PlayerCharacter.aPlayerCharacter(name = "Test Character")
         val combatant = SOME_COMBATANT.copy()
 
         withFixedDice(D20 rolls 12) {
@@ -170,7 +170,7 @@ class CombatantTest {
             stats = StatBlock.fromModifiers(dexMod=4)
         )
         withFixedDice(D20 rolls 12) {
-            val combatant = SOME_COMBATANT.copy(entity = player)
+            val combatant = SOME_COMBATANT.copy(creature = player)
             val initiative = combatant.initiative
             assertThat(initiative.value, equalTo(12+4))
             assertThat(initiative.die, equalTo(D20))
