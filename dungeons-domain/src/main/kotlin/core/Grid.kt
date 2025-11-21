@@ -23,6 +23,10 @@ abstract class Grid<T> {
         cells[pos] = value
     }
 
+    operator fun contains(pos: GridIndex): Boolean {
+        return cells.containsKey(pos)
+    }
+
     open fun remove(pos: GridIndex): T? {
         return cells.remove(pos)
     }

@@ -64,7 +64,7 @@ class GameBoard(
         require(speed >= 0) { "Speed must be non-negative, but was $speed" }
 
         val startIndex = startPosition.toGridIndex()
-        val distances = mutableMapOf<GridIndex, Int>()
+        val distances = BoundedGrid.fromDimensions<Int>(width, height)
         val queue = ArrayDeque<GridIndex>()
 
         queue.add(startIndex)
@@ -79,20 +79,13 @@ class GameBoard(
             }
 
             for (neighbor in getNeighbors(current)) {
-                if (neighbor !in distances && !isBlocked(neighbor)) {
+                if (neighbor !in distances && allowsMovement(neighbor)) {
                     distances[neighbor] = currentDistance + 1
                     queue.add(neighbor)
                 }
             }
         }
-
-        val result = BoundedGrid.fromDimensions<Int>(width, height)
-        // Populate the result grid with distances
-        distances.forEach { (index, distance) ->
-            result[index] = distance
-        }
-
-        return result
+        return distances
     }
 
     private fun getNeighbors(index: GridIndex): List<GridIndex> {
@@ -101,12 +94,12 @@ class GameBoard(
         }.filter { it in grid.boundingBox }
     }
 
-    private fun isBlocked(index: GridIndex): Boolean {
+    private fun allowsMovement(index: GridIndex): Boolean {
         if (index !in grid.boundingBox) {
-            return true // Out of bounds positions are blocked
+            return false // Out of bounds positions are blocked
         }
-        val token = grid[index] ?: return false
-        return !token.allowsMovementToSameSqqare
+        val token = grid[index] ?: return true
+        return token.allowsMovementToSameSqqare
     }
 
     private companion object {
