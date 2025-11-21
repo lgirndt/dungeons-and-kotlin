@@ -34,6 +34,10 @@ abstract class Grid<T> {
     open fun isEmpty(pos: GridIndex): Boolean {
         return cells.containsKey(pos)
     }
+
+    fun iterateWithIndex(): Iterator<Pair<T,GridIndex>> {
+        return cells.entries.map { Pair(it.value, it.key) }.iterator()
+    }
 }
 
 class UnboundedGrid<T> : Grid<T>() {
