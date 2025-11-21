@@ -24,6 +24,20 @@ class GameBoardTest {
         override val allowsMovement: Boolean = true
     }
 
+    // Test token that blocks sight
+    private data class OpaqueToken(
+        override val id: Id<Token> = Id.generate()
+    ) : Token {
+        override val allowsSight: Boolean = false
+    }
+
+    // Test token that allows sight
+    private data class TransparentToken(
+        override val id: Id<Token> = Id.generate()
+    ) : Token {
+        override val allowsSight: Boolean = true
+    }
+
     @Nested
     inner class CalculateReach {
 
@@ -241,6 +255,121 @@ class GameBoardTest {
             (1..9).forEach { i ->
                 assertThat(reach[GridIndex(i, i)], equalTo(i))
              }
+        }
+    }
+
+    @Nested
+    inner class HasLineOfSight {
+
+        @Test
+        fun `should have clear line of sight with no obstacles`() {
+            val board = GameBoard(10, 10)
+            val from = BoardPosition.from(0, 0)
+            val to = BoardPosition.from(5, 5)
+
+            assertThat(board.hasLineOfSight(from, to), equalTo(true))
+        }
+
+        @Test
+        fun `should have line of sight to adjacent position`() {
+            val board = GameBoard(10, 10)
+            val from = BoardPosition.from(5, 5)
+            val to = BoardPosition.from(5, 6)
+
+            assertThat(board.hasLineOfSight(from, to), equalTo(true))
+        }
+
+        @Test
+        fun `should have line of sight to same position`() {
+            val board = GameBoard(10, 10)
+            val position = BoardPosition.from(5, 5)
+
+            assertThat(board.hasLineOfSight(position, position), equalTo(true))
+        }
+
+        @Test
+        fun `should block line of sight with opaque token in the way`() {
+            // Grid layout:
+            //   3 4 5 6 7
+            // 3 F . . . .  <- From position
+            // 4 . X . . .  <- Opaque token (X) blocks sight
+            // 5 . . T . .  <- To position
+            val board = GameBoard(10, 10)
+            val from = BoardPosition.from(3, 3)
+            val to = BoardPosition.from(5, 5)
+
+            board.putTokenTo(BoardPosition.from(4, 4), OpaqueToken())
+
+            assertThat(board.hasLineOfSight(from, to), equalTo(false))
+        }
+
+        @Test
+        fun `should allow line of sight through transparent token`() {
+            val board = GameBoard(10, 10)
+            val from = BoardPosition.from(0, 0)
+            val to = BoardPosition.from(4, 4)
+
+            board.putTokenTo(BoardPosition.from(2, 2), TransparentToken())
+
+            assertThat(board.hasLineOfSight(from, to), equalTo(true))
+        }
+
+        @Test
+        fun `should work in all directions horizontally`() {
+            val board = GameBoard(10, 10)
+            val center = BoardPosition.from(5, 5)
+
+            assertThat(board.hasLineOfSight(center, BoardPosition.from(0, 5)), equalTo(true)) // West
+            assertThat(board.hasLineOfSight(center, BoardPosition.from(9, 5)), equalTo(true)) // East
+        }
+
+
+        @Test
+        fun `should be symmetric - same result from both directions`() {
+            val board = GameBoard(10, 10)
+            val pos1 = BoardPosition.from(2, 2)
+            val pos2 = BoardPosition.from(7, 7)
+
+            board.putTokenTo(BoardPosition.from(4, 4), OpaqueToken())
+
+            assertThat(board.hasLineOfSight(pos1, pos2), equalTo(false))
+            assertThat(board.hasLineOfSight(pos2, pos1), equalTo(false))
+        }
+
+        @Test
+        fun `should block with multiple opaque tokens in line`() {
+            val board = GameBoard(10, 10)
+            val from = BoardPosition.from(0, 0)
+            val to = BoardPosition.from(6, 6)
+
+            board.putTokenTo(BoardPosition.from(2, 2), OpaqueToken())
+            board.putTokenTo(BoardPosition.from(4, 4), OpaqueToken())
+
+            assertThat(board.hasLineOfSight(from, to), equalTo(false))
+        }
+
+        @Test
+        fun `should have line of sight when obstacle is at endpoint`() {
+            // Start and end positions are excluded from blocking checks
+            val board = GameBoard(10, 10)
+            val from = BoardPosition.from(0, 0)
+            val to = BoardPosition.from(5, 5)
+
+            board.putTokenTo(to, OpaqueToken())
+
+            assertThat(board.hasLineOfSight(from, to), equalTo(true))
+        }
+
+        @Test
+        fun `should block sight with token just off the diagonal`() {
+            val board = GameBoard(10, 10)
+            val from = BoardPosition.from(0, 0)
+            val to = BoardPosition.from(8, 6)
+
+            // Place opaque token along the line
+            board.putTokenTo(BoardPosition.from(4, 3), OpaqueToken())
+
+            assertThat(board.hasLineOfSight(from, to), equalTo(false))
         }
     }
 }

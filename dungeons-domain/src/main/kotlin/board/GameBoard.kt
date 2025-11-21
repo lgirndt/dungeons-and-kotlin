@@ -2,6 +2,7 @@ package io.dungeons.board
 
 import io.dungeons.core.*
 import io.dungeons.world.Square
+import kotlin.math.abs
 
 
 class GameBoard(
@@ -114,7 +115,53 @@ class GameBoard(
     }
 
     fun hasLineOfSight(from: BoardPosition, to: BoardPosition): Boolean {
-        TODO("Implement Bresenham's line algorithm or similar to check line of sight")
+        val fromIndex = from.toGridIndex()
+        val toIndex = to.toGridIndex()
+
+        // Use Bresenham's line algorithm to trace the line
+        val line = bresenhamLine(fromIndex, toIndex)
+
+        // Check each position along the line (excluding start and end positions)
+        for (index in line.drop(1).dropLast(1)) {
+            val token = grid[index]
+            if (token != null && !token.allowsSight) {
+                return false // Line of sight is blocked
+            }
+        }
+
+        return true // No blocking tokens found
+    }
+
+    private fun bresenhamLine(from: GridIndex, to: GridIndex): List<GridIndex> {
+        val result = mutableListOf<GridIndex>()
+        var x0 = from.x
+        var y0 = from.y
+        val x1 = to.x
+        val y1 = to.y
+
+        val dx = abs(x1 - x0)
+        val dy = abs(y1 - y0)
+        val sx = if (x0 < x1) 1 else -1
+        val sy = if (y0 < y1) 1 else -1
+        var err = dx - dy
+
+        while (true) {
+            result.add(GridIndex(x0, y0))
+
+            if (x0 == x1 && y0 == y1) break
+
+            val e2 = 2 * err
+            if (e2 > -dy) {
+                err -= dy
+                x0 += sx
+            }
+            if (e2 < dx) {
+                err += dx
+                y0 += sy
+            }
+        }
+
+        return result
     }
 
 }
