@@ -11,7 +11,9 @@ data class CoreEntityData(
     var hitPoints: Int,
     val armourClass: Int,
     val damageModifiers: DamageModifiers,
-)
+) {
+    val maxHitPoints: Int = hitPoints
+}
 
 abstract class CoreEntity(
     override val id: Id<CoreEntity>,
