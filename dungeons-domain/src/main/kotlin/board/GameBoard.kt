@@ -63,7 +63,6 @@ class GameBoard(
     fun calculateReach(startPosition: BoardPosition, speed: Int): Grid<Int> {
         require(speed >= 0) { "Speed must be non-negative, but was $speed" }
 
-        val result = BoundedGrid<Int>(maxX = width - 1, maxY = height - 1)
         val startIndex = startPosition.toGridIndex()
         val distances = mutableMapOf<GridIndex, Int>()
         val queue = ArrayDeque<GridIndex>()
@@ -87,6 +86,7 @@ class GameBoard(
             }
         }
 
+        val result = BoundedGrid.fromDimensions<Int>(width, height)
         // Populate the result grid with distances
         distances.forEach { (index, distance) ->
             result[index] = distance
