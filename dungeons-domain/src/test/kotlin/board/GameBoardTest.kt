@@ -24,10 +24,6 @@ class GameBoardTest {
         override val allowsMovementToSameSqqare: Boolean = true
     }
 
-    private fun BoardPosition.toGridIndex(): GridIndex {
-        return GridIndex(this.x.value, this.y.value)
-    }
-
     @Nested
     inner class CalculateReach {
 
@@ -43,9 +39,9 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 1)
 
             // Should NOT include the blocked position
-            assertThat(reach[BoardPosition.from(1, 0).toGridIndex()], equalTo(null))
+            assertThat(reach[GridIndex(1, 0)], equalTo(null))
             // Should include other neighbors
-            assertThat(reach[BoardPosition.from(1, 2).toGridIndex()], equalTo(1))
+            assertThat(reach[GridIndex(1, 2)], equalTo(1))
         }
 
         @Test
@@ -55,7 +51,7 @@ class GameBoardTest {
 
             val reach = board.calculateReach(start, steps = 0)
 
-            assertThat(reach[start.toGridIndex()], equalTo(0))
+            assertThat(reach[GridIndex(5, 5)], equalTo(0))
         }
 
         @Test
@@ -65,15 +61,15 @@ class GameBoardTest {
 
             val reach = board.calculateReach(start, steps = 1)
 
-            assertThat(reach[start.toGridIndex()], equalTo(0))
-            assertThat(reach[BoardPosition.from(4, 4).toGridIndex()], equalTo(1)) // NW
-            assertThat(reach[BoardPosition.from(5, 4).toGridIndex()], equalTo(1)) // N
-            assertThat(reach[BoardPosition.from(6, 4).toGridIndex()], equalTo(1)) // NE
-            assertThat(reach[BoardPosition.from(4, 5).toGridIndex()], equalTo(1)) // W
-            assertThat(reach[BoardPosition.from(6, 5).toGridIndex()], equalTo(1)) // E
-            assertThat(reach[BoardPosition.from(4, 6).toGridIndex()], equalTo(1)) // SW
-            assertThat(reach[BoardPosition.from(5, 6).toGridIndex()], equalTo(1)) // S
-            assertThat(reach[BoardPosition.from(6, 6).toGridIndex()], equalTo(1)) // SE
+            assertThat(reach[GridIndex(5, 5)], equalTo(0))
+            assertThat(reach[GridIndex(4, 4)], equalTo(1)) // NW
+            assertThat(reach[GridIndex(5, 4)], equalTo(1)) // N
+            assertThat(reach[GridIndex(6, 4)], equalTo(1)) // NE
+            assertThat(reach[GridIndex(4, 5)], equalTo(1)) // W
+            assertThat(reach[GridIndex(6, 5)], equalTo(1)) // E
+            assertThat(reach[GridIndex(4, 6)], equalTo(1)) // SW
+            assertThat(reach[GridIndex(5, 6)], equalTo(1)) // S
+            assertThat(reach[GridIndex(6, 6)], equalTo(1)) // SE
         }
 
         @Test
@@ -84,10 +80,10 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 2)
 
             // Should reach positions 2 steps away
-            assertThat(reach[BoardPosition.from(5, 3).toGridIndex()], equalTo(2)) // 2 steps north
-            assertThat(reach[BoardPosition.from(7, 5).toGridIndex()], equalTo(2)) // 2 steps east
-            assertThat(reach[BoardPosition.from(3, 5).toGridIndex()], equalTo(2)) // 2 steps west
-            assertThat(reach[BoardPosition.from(5, 7).toGridIndex()], equalTo(2)) // 2 steps south
+            assertThat(reach[GridIndex(5, 3)], equalTo(2)) // 2 steps north
+            assertThat(reach[GridIndex(7, 5)], equalTo(2)) // 2 steps east
+            assertThat(reach[GridIndex(3, 5)], equalTo(2)) // 2 steps west
+            assertThat(reach[GridIndex(5, 7)], equalTo(2)) // 2 steps south
         }
 
         @Test
@@ -102,12 +98,12 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 1)
 
             // Should not include the directly blocked position
-            assertThat(reach[BoardPosition.from(5, 4).toGridIndex()], equalTo(null))
+            assertThat(reach[GridIndex(5, 4)], equalTo(null))
 
             // Should still reach other directions
-            assertThat(reach[BoardPosition.from(5, 6).toGridIndex()], equalTo(1))
-            assertThat(reach[BoardPosition.from(6, 5).toGridIndex()], equalTo(1))
-            assertThat(reach[BoardPosition.from(4, 5).toGridIndex()], equalTo(1))
+            assertThat(reach[GridIndex(5, 6)], equalTo(1))
+            assertThat(reach[GridIndex(6, 5)], equalTo(1))
+            assertThat(reach[GridIndex(4, 5)], equalTo(1))
         }
 
         @Test
@@ -122,8 +118,8 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 2)
 
             // Should reach through the passable token
-            assertThat(reach[BoardPosition.from(5, 4).toGridIndex()], equalTo(1))
-            assertThat(reach[BoardPosition.from(5, 3).toGridIndex()], equalTo(2))
+            assertThat(reach[GridIndex(5, 4)], equalTo(1))
+            assertThat(reach[GridIndex(5, 3)], equalTo(2))
         }
 
         @Test
@@ -140,11 +136,11 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 2)
 
             // Can reach positions around the wall
-            assertThat(reach[BoardPosition.from(6, 4).toGridIndex()], equalTo(1)) // NE is reachable
-            assertThat(reach[BoardPosition.from(3, 5).toGridIndex()], equalTo(2)) // Can reach to the west
+            assertThat(reach[GridIndex(6, 4)], equalTo(1)) // NE is reachable
+            assertThat(reach[GridIndex(3, 5)], equalTo(2)) // Can reach to the west
             // The blocked positions should not be reachable
-            assertThat(reach[BoardPosition.from(4, 4).toGridIndex()], equalTo(null))
-            assertThat(reach[BoardPosition.from(5, 4).toGridIndex()], equalTo(null))
+            assertThat(reach[GridIndex(4, 4)], equalTo(null))
+            assertThat(reach[GridIndex(5, 4)], equalTo(null))
         }
 
         @Test
@@ -155,10 +151,10 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 2)
 
             // Should reach corner and adjacent positions
-            assertThat(reach[BoardPosition.from(0, 0).toGridIndex()], equalTo(0))
-            assertThat(reach[BoardPosition.from(1, 0).toGridIndex()], equalTo(1))
-            assertThat(reach[BoardPosition.from(0, 1).toGridIndex()], equalTo(1))
-            assertThat(reach[BoardPosition.from(2, 2).toGridIndex()], equalTo(2))
+            assertThat(reach[GridIndex(0, 0)], equalTo(0))
+            assertThat(reach[GridIndex(1, 0)], equalTo(1))
+            assertThat(reach[GridIndex(0, 1)], equalTo(1))
+            assertThat(reach[GridIndex(2, 2)], equalTo(2))
         }
 
         @Test
@@ -169,7 +165,7 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 20)
 
             // Should reach diagonal corner
-            assertThat(reach[BoardPosition.from(9, 9).toGridIndex()], equalTo(9)) // Diagonal distance
+            assertThat(reach[GridIndex(9, 9)], equalTo(9)) // Diagonal distance
         }
 
         @Test
@@ -180,10 +176,10 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 1)
 
             // Should reach start and 3 neighbors
-            assertThat(reach[start.toGridIndex()], equalTo(0))
-            assertThat(reach[BoardPosition.from(1, 0).toGridIndex()], equalTo(1))
-            assertThat(reach[BoardPosition.from(0, 1).toGridIndex()], equalTo(1))
-            assertThat(reach[BoardPosition.from(1, 1).toGridIndex()], equalTo(1))
+            assertThat(reach[GridIndex(0, 0)], equalTo(0))
+            assertThat(reach[GridIndex(1, 0)], equalTo(1))
+            assertThat(reach[GridIndex(0, 1)], equalTo(1))
+            assertThat(reach[GridIndex(1, 1)], equalTo(1))
         }
 
         @Test
@@ -224,10 +220,10 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 1)
 
             // Should only reach the starting position (all neighbors are blocked)
-            assertThat(reach[start.toGridIndex()], equalTo(0))
+            assertThat(reach[GridIndex(3, 3)], equalTo(0))
             // Verify neighbors are not reachable
-            assertThat(reach[BoardPosition.from(2, 2).toGridIndex()], equalTo(null))
-            assertThat(reach[BoardPosition.from(4, 4).toGridIndex()], equalTo(null))
+            assertThat(reach[GridIndex(2, 2)], equalTo(null))
+            assertThat(reach[GridIndex(4, 4)], equalTo(null))
         }
     }
 }
