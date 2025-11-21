@@ -11,7 +11,7 @@ class GameBoard(
     val width: Int,
     val height: Int
 ) {
-    private val grid: Grid<Token> = BoundedGrid(maxX = width, maxY = height)
+    private val grid: Grid<Token> = BoundedGrid(maxX = width - 1, maxY = height - 1)
     private val tokenToIndex = mutableMapOf<Id<Token>, GridIndex>()
 
     private fun BoardPosition.toGridIndex(): GridIndex {
@@ -63,7 +63,7 @@ class GameBoard(
     fun calculateReach(startPosition: BoardPosition, speed: Int): Grid<Int> {
         require(speed >= 0) { "Speed must be non-negative, but was $speed" }
 
-        val result = BoundedGrid<Int>(maxX = width, maxY = height)
+        val result = BoundedGrid<Int>(maxX = width - 1, maxY = height - 1)
         val startIndex = startPosition.toGridIndex()
         val distances = mutableMapOf<GridIndex, Int>()
         val queue = ArrayDeque<GridIndex>()

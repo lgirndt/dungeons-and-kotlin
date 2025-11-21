@@ -42,17 +42,17 @@ class BoundedGridTest {
         }
 
         @Test
-        fun `should reject when maxX equals minX`() {
-            assertThrows<IllegalArgumentException> {
-                BoundedGrid<Int>(minX = 5, maxX = 5, maxY = 10)
-            }
+        fun `should allow when maxX equals minX`() {
+            val grid = BoundedGrid<Int>(minX = 5, maxX = 5, maxY = 10)
+            assertThat(grid.minX, equalTo(5))
+            assertThat(grid.maxX, equalTo(5))
         }
 
         @Test
-        fun `should reject when maxY equals minY`() {
-            assertThrows<IllegalArgumentException> {
-                BoundedGrid<Int>(maxX = 10, minY = 5, maxY = 5)
-            }
+        fun `should allow when maxY equals minY`() {
+            val grid = BoundedGrid<Int>(maxX = 10, minY = 5, maxY = 5)
+            assertThat(grid.minY, equalTo(5))
+            assertThat(grid.maxY, equalTo(5))
         }
     }
 
@@ -98,7 +98,7 @@ class BoundedGridTest {
             val grid = BoundedGrid<Int>(maxX = 5, maxY = 5)
 
             assertThrows<IllegalArgumentException> {
-                grid[GridIndex(5, 2)]
+                grid[GridIndex(6, 2)]
             }
         }
 
@@ -107,7 +107,7 @@ class BoundedGridTest {
             val grid = BoundedGrid<Int>(maxX = 5, maxY = 5)
 
             assertThrows<IllegalArgumentException> {
-                grid[GridIndex(2, 5)] = 42
+                grid[GridIndex(2, 6)] = 42
             }
         }
     }
@@ -140,7 +140,7 @@ class BoundedGridTest {
             val grid = BoundedGrid<Int>(maxX = 5, maxY = 5)
 
             assertThrows<IllegalArgumentException> {
-                grid.remove(GridIndex(5, 2))
+                grid.remove(GridIndex(6, 2))
             }
         }
     }
@@ -168,7 +168,7 @@ class BoundedGridTest {
             val grid = BoundedGrid<Int>(maxX = 5, maxY = 5)
 
             assertThrows<IllegalArgumentException> {
-                grid.isEmpty(GridIndex(5, 2))
+                grid.isEmpty(GridIndex(6, 2))
             }
         }
     }
@@ -184,17 +184,17 @@ class BoundedGridTest {
         }
 
         @Test
-        fun `should return true for position just before max bounds`() {
+        fun `should return true for position at max bounds`() {
             val grid = BoundedGrid<Int>(maxX = 5, maxY = 5)
 
-            assertThat(grid.isInBounds(GridIndex(4, 4)), equalTo(true))
+            assertThat(grid.isInBounds(GridIndex(5, 5)), equalTo(true))
         }
 
         @Test
-        fun `should return false for position at max bounds`() {
+        fun `should return false for position beyond max bounds`() {
             val grid = BoundedGrid<Int>(maxX = 5, maxY = 5)
 
-            assertThat(grid.isInBounds(GridIndex(5, 5)), equalTo(false))
+            assertThat(grid.isInBounds(GridIndex(6, 6)), equalTo(false))
         }
 
         @Test
@@ -203,9 +203,9 @@ class BoundedGridTest {
 
             assertThat(grid.isInBounds(GridIndex(10, 10)), equalTo(true))
             assertThat(grid.isInBounds(GridIndex(15, 15)), equalTo(true))
-            assertThat(grid.isInBounds(GridIndex(19, 19)), equalTo(true))
+            assertThat(grid.isInBounds(GridIndex(20, 20)), equalTo(true))
             assertThat(grid.isInBounds(GridIndex(9, 15)), equalTo(false))
-            assertThat(grid.isInBounds(GridIndex(20, 15)), equalTo(false))
+            assertThat(grid.isInBounds(GridIndex(21, 15)), equalTo(false))
         }
 
         @Test
@@ -215,9 +215,9 @@ class BoundedGridTest {
             assertThat(grid.isInBounds(GridIndex(-10, -10)), equalTo(true))
             assertThat(grid.isInBounds(GridIndex(-5, -5)), equalTo(true))
             assertThat(grid.isInBounds(GridIndex(0, 0)), equalTo(true))
-            assertThat(grid.isInBounds(GridIndex(9, 9)), equalTo(true))
+            assertThat(grid.isInBounds(GridIndex(10, 10)), equalTo(true))
             assertThat(grid.isInBounds(GridIndex(-11, 0)), equalTo(false))
-            assertThat(grid.isInBounds(GridIndex(10, 0)), equalTo(false))
+            assertThat(grid.isInBounds(GridIndex(11, 0)), equalTo(false))
         }
     }
 

@@ -132,8 +132,8 @@ class UnboundedGridTest {
 
             assertThat(box.minX, equalTo(5))
             assertThat(box.minY, equalTo(10))
-            assertThat(box.maxX, equalTo(6))
-            assertThat(box.maxY, equalTo(11))
+            assertThat(box.maxX, equalTo(5))
+            assertThat(box.maxY, equalTo(10))
         }
 
         @Test
@@ -147,8 +147,8 @@ class UnboundedGridTest {
 
             assertThat(box.minX, equalTo(0))
             assertThat(box.minY, equalTo(0))
-            assertThat(box.maxX, equalTo(11))
-            assertThat(box.maxY, equalTo(21))
+            assertThat(box.maxX, equalTo(10))
+            assertThat(box.maxY, equalTo(20))
         }
 
         @Test
@@ -161,8 +161,8 @@ class UnboundedGridTest {
 
             assertThat(box.minX, equalTo(-10))
             assertThat(box.minY, equalTo(-20))
-            assertThat(box.maxX, equalTo(11))
-            assertThat(box.maxY, equalTo(21))
+            assertThat(box.maxX, equalTo(10))
+            assertThat(box.maxY, equalTo(20))
         }
 
         @Test
@@ -171,14 +171,14 @@ class UnboundedGridTest {
             grid[GridIndex(0, 0)] = 1
 
             val box1 = grid.boundingBox
-            assertThat(box1.maxX, equalTo(1))
-            assertThat(box1.maxY, equalTo(1))
+            assertThat(box1.maxX, equalTo(0))
+            assertThat(box1.maxY, equalTo(0))
 
             grid[GridIndex(100, 100)] = 2
 
             val box2 = grid.boundingBox
-            assertThat(box2.maxX, equalTo(101))
-            assertThat(box2.maxY, equalTo(101))
+            assertThat(box2.maxX, equalTo(100))
+            assertThat(box2.maxY, equalTo(100))
         }
 
         @Test
@@ -188,14 +188,14 @@ class UnboundedGridTest {
             grid[GridIndex(100, 100)] = 2
 
             val box1 = grid.boundingBox
-            assertThat(box1.maxX, equalTo(101))
-            assertThat(box1.maxY, equalTo(101))
+            assertThat(box1.maxX, equalTo(100))
+            assertThat(box1.maxY, equalTo(100))
 
             grid.remove(GridIndex(100, 100))
 
             val box2 = grid.boundingBox
-            assertThat(box2.maxX, equalTo(1))
-            assertThat(box2.maxY, equalTo(1))
+            assertThat(box2.maxX, equalTo(0))
+            assertThat(box2.maxY, equalTo(0))
         }
     }
 }

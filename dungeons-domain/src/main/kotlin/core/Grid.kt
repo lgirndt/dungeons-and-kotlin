@@ -37,9 +37,9 @@ class UnboundedGrid<T> : Grid<T>() {
             }
 
             val minX = cells.keys.minOf { it.x }
-            val maxX = cells.keys.maxOf { it.x } + 1
+            val maxX = cells.keys.maxOf { it.x }
             val minY = cells.keys.minOf { it.y }
-            val maxY = cells.keys.maxOf { it.y } + 1
+            val maxY = cells.keys.maxOf { it.y }
 
             return BoundingBox(minX, minY, maxX, maxY)
         }
@@ -53,8 +53,8 @@ class BoundedGrid<T>(
 ) : Grid<T>() {
 
     init {
-        require(maxX > minX) { "maxX must be greater than minX, but maxX=$maxX and minX=$minX" }
-        require(maxY > minY) { "maxY must be greater than minY, but maxY=$maxY and minY=$minY" }
+        require(maxX >= minX) { "maxX must be greater than or equal to minX, but maxX=$maxX and minX=$minX" }
+        require(maxY >= minY) { "maxY must be greater than or equal to minY, but maxY=$maxY and minY=$minY" }
     }
 
     override fun set(pos: GridIndex, value: T) {
@@ -78,7 +78,7 @@ class BoundedGrid<T>(
     }
 
     fun isInBounds(pos: GridIndex): Boolean {
-        return pos.x in minX until maxX && pos.y in minY until maxY
+        return pos.x in minX..maxX && pos.y in minY..maxY
     }
 
     override val boundingBox: BoundingBox
@@ -86,7 +86,7 @@ class BoundedGrid<T>(
 
     private fun requireInBounds(pos: GridIndex) {
         require(isInBounds(pos)) {
-            "Position $pos is out of bounds for grid with bounds [$minX..$maxX) x [$minY..$maxY)"
+            "Position $pos is out of bounds for grid with bounds [$minX..$maxX] x [$minY..$maxY]"
         }
     }
 
