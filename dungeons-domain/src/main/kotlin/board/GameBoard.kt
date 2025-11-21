@@ -27,8 +27,12 @@ class GameBoard(
     }
 
     fun putTokenTo(position: BoardPosition, token: Token) {
-        require(!tokenToIndex.containsKey(token.id)) { "Token $token is already on the board" }
-        require(!gridOnLayer(token.layer).isEmpty(position.toGridIndex())) { "There is already a token at position $position" }
+        require(!tokenToIndex.containsKey(token.id)) {
+            "Token $token is already on the board"
+        }
+        require(!gridOnLayer(token.layer).isEmpty(position.toGridIndex())) {
+            "There is already a token at position $position"
+        }
 
         tokenToIndex[token.id] = position.toGridIndex()
         gridOnLayer(token.layer).set(position.toGridIndex(), token)
