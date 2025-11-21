@@ -116,14 +116,14 @@ class CombatantsStoreTest {
 
     @Test
     fun `find an existing combantant`() {
-        val found = store.findOrNull(ID[0])
+        val found = store[ID[0]]
         assertNotNull(found)
         assertThat(found.creature.name, equalTo("Alpha"))
     }
 
     @Test
     fun `do not find a non-existing combantant`() {
-        val found = store.findOrNull(ID[42])
+        val found = store[ID[42]]
         assertThat(found, equalTo(null))
     }
 
