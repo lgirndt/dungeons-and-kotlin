@@ -9,7 +9,7 @@ import org.junit.jupiter.api.assertThrows
 class GridPositionTest {
 
     @Test
-    fun `should create valid position with non-negative coordinates`() {
+    fun `should create valid position with positive coordinates`() {
         val pos = GridIndex(5, 10)
 
         assertThat(pos.x, equalTo(5))
@@ -25,26 +25,27 @@ class GridPositionTest {
     }
 
     @Test
-    fun `should reject negative x`() {
-        val exception = assertThrows<IllegalArgumentException> {
-            GridIndex(-1, 5)
-        }
-        assertThat(exception.message, equalTo("x must be non-negative, but was -1"))
+    fun `should support negative x`() {
+        val pos = GridIndex(-1, 5)
+
+        assertThat(pos.x, equalTo(-1))
+        assertThat(pos.y, equalTo(5))
     }
 
     @Test
-    fun `should reject negative y`() {
-        val exception = assertThrows<IllegalArgumentException> {
-            GridIndex(5, -1)
-        }
-        assertThat(exception.message, equalTo("y must be non-negative, but was -1"))
+    fun `should support negative y`() {
+        val pos = GridIndex(5, -1)
+
+        assertThat(pos.x, equalTo(5))
+        assertThat(pos.y, equalTo(-1))
     }
 
     @Test
-    fun `should reject both negative coordinates`() {
-        assertThrows<IllegalArgumentException> {
-            GridIndex(-1, -1)
-        }
+    fun `should support both negative coordinates`() {
+        val pos = GridIndex(-1, -1)
+
+        assertThat(pos.x, equalTo(-1))
+        assertThat(pos.y, equalTo(-1))
     }
 
     @Test
