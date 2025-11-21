@@ -18,9 +18,9 @@ import org.junit.jupiter.api.Test
 
 
 class ProvidesGridPositionMock(
-    val positions: Map<Id<CoreEntity>, BoardPosition>
+    val positions: Map<Id<Creature>, BoardPosition>
 ) : ProvidesGridPosition  {
-    override fun getGridPosition(entityId: Id<CoreEntity>): BoardPosition? {
+    override fun getGridPosition(entityId: Id<Creature>): BoardPosition? {
         return positions[entityId]
     }
 
@@ -29,7 +29,7 @@ class ProvidesGridPositionMock(
 class AttackTest {
 
     lateinit var providesGridPosition: ProvidesGridPosition
-    val ID = TestId<CoreEntity>()
+    val ID = TestId<Creature>()
 
     @BeforeEach
     fun beforeEach() {

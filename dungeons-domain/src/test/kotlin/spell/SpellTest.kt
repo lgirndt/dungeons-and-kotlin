@@ -30,13 +30,13 @@ val SOME_SPELL = AttackSpell(
 
 class SpellTest {
 
-    val ID = TestId<CoreEntity>()
+    val ID = TestId<Creature>()
 
 
     @Test
     fun `a spell attack that meets AC hits the target`() {
         val caster = object : Caster {
-            override val id: Id<CoreEntity> get() = ID[0]
+            override val id: Id<Creature> get() = ID[0]
             override val spellCastingAbility: Stat = Stat(14) // modifier +2
             override val proficiencyBonus: ProficiencyBonus = ProficiencyBonus.fromLevel(1) // +1
             override val position: Coordinate = Coordinate.from(0, 0)

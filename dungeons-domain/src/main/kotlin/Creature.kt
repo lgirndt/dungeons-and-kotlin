@@ -5,7 +5,7 @@ import io.dungeons.combat.ProvidesGridPosition
 import io.dungeons.core.Id
 
 
-data class CoreEntityData(
+data class CreatureData(
     val name: String,
     val stats: StatBlock,
     var hitPoints: Int,
@@ -15,9 +15,9 @@ data class CoreEntityData(
     val maxHitPoints: Int = hitPoints
 }
 
-abstract class CoreEntity(
-    override val id: Id<CoreEntity>,
-    protected val core: CoreEntityData,
+abstract class Creature(
+    override val id: Id<Creature>,
+    protected val core: CreatureData,
 ) : Attackable {
 
     val name: String
@@ -51,7 +51,7 @@ abstract class CoreEntity(
     internal fun asPhysicalAttacker(): Attacker {
         val entity = this
         return object : Attacker {
-            override val id: Id<CoreEntity>
+            override val id: Id<Creature>
                 get() = entity.id
             override val attackSource = entity.weapon
             override val stats: StatBlock

@@ -29,7 +29,7 @@ sealed class SpellLevel(val level: Int) : Comparable<SpellLevel> {
 }
 
 interface Caster {
-    val id: Id<CoreEntity>
+    val id: Id<Creature>
     val spellCastingAbility: Stat
     val proficiencyBonus: ProficiencyBonus
     val position: Coordinate
@@ -50,7 +50,7 @@ fun castAttackSpell(
     val attackSource = spell.asAttackSource(caster)
     return attack(
         object : Attacker {
-            override val id: Id<CoreEntity>
+            override val id: Id<Creature>
                 get() = caster.id
             override val attackSource = attackSource
             override val stats = caster.stats

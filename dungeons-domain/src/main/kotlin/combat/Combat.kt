@@ -1,6 +1,6 @@
 package io.dungeons.combat
 
-import io.dungeons.CoreEntity
+import io.dungeons.Creature
 import io.dungeons.DieRoll
 import io.dungeons.core.Id
 import io.dungeons.board.BoardPosition
@@ -115,11 +115,11 @@ internal class NoopTurnActor : TurnActor {
 }
 
 data class Combatant(
-    val entity: CoreEntity,
+    val entity: Creature,
     val faction: Faction,
     val actor: TurnActor,
 ) {
-    val id: Id<CoreEntity>
+    val id: Id<Creature>
         get() = entity.id
 
     val initiative: DieRoll by lazy {
@@ -134,7 +134,7 @@ class CombatantsStore(
     combatants: Collection<Combatant>,
     nonHostileFactionRelationships: List<FactionRelationship> = emptyList(),
 ) {
-    val combatants: Map<Id<CoreEntity>, Combatant> = combatants.associateBy { it.id }
+    val combatants: Map<Id<Creature>, Combatant> = combatants.associateBy { it.id }
 
     val factionRelations: FactionRelations = nonHostileFactionRelationships
         .onEach {
@@ -146,11 +146,11 @@ class CombatantsStore(
             builder.add(relationship)
         }.build()
 
-    fun findOrNull(id: Id<CoreEntity>): Combatant? {
+    fun findOrNull(id: Id<Creature>): Combatant? {
         return combatants[id]
     }
 
-    fun findAllWithStance(towards: Id<CoreEntity>, stance: FactionStance): List<Combatant> {
+    fun findAllWithStance(towards: Id<Creature>, stance: FactionStance): List<Combatant> {
         val combatant = combatants[towards] ?: return emptyList()
         val targetFaction = combatant.faction
         return combatants.values.filter {
@@ -165,32 +165,32 @@ class CombatantsStore(
 }
 
 interface ProvidesGridPosition {
-    fun getGridPosition(entityId: Id<CoreEntity>): BoardPosition?
+    fun getGridPosition(entityId: Id<Creature>): BoardPosition?
 }
 
 interface CombatScenario : ProvidesGridPosition {
-    fun listVisibleCombatants(observer: Id<CoreEntity>): List<Combatant>
-    fun isVisibleTo(observer: Id<CoreEntity>, target: Id<CoreEntity>): Boolean
-    fun listCombatantsInRange(observer: Id<CoreEntity>, rangeInSquares: Square): List<Combatant>
-    override fun getGridPosition(entityId: Id<CoreEntity>): BoardPosition?
+    fun listVisibleCombatants(observer: Id<Creature>): List<Combatant>
+    fun isVisibleTo(observer: Id<Creature>, target: Id<Creature>): Boolean
+    fun listCombatantsInRange(observer: Id<Creature>, rangeInSquares: Square): List<Combatant>
+    override fun getGridPosition(entityId: Id<Creature>): BoardPosition?
 }
 
 class SimpleCombatScenario(
     private val combatantsStore: CombatantsStore
 ) : CombatScenario {
 
-    override fun listVisibleCombatants(observer: Id<CoreEntity>): List<Combatant> {
+    override fun listVisibleCombatants(observer: Id<Creature>): List<Combatant> {
         return combatantsStore.listAll().filter { it.id != observer }
     }
 
     override fun isVisibleTo(
-        observer: Id<CoreEntity>,
-        target: Id<CoreEntity>
+        observer: Id<Creature>,
+        target: Id<Creature>
     ): Boolean = true
 
 
     override fun listCombatantsInRange(
-        observer: Id<CoreEntity>,
+        observer: Id<Creature>,
         rangeInSquares: Square
     ): List<Combatant> {
         val position = getGridPosition(observer)
@@ -205,7 +205,7 @@ class SimpleCombatScenario(
             }
     }
 
-    override fun getGridPosition(entityId: Id<CoreEntity>): BoardPosition? {
+    override fun getGridPosition(entityId: Id<Creature>): BoardPosition? {
         TODO("Not yet implemented")
     }
 

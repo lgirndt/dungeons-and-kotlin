@@ -6,7 +6,7 @@ import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import com.natpryce.hamkrest.hasSize
 import fromModifiers
-import io.dungeons.CoreEntity
+import io.dungeons.Creature
 import io.dungeons.Die.Companion.D20
 import io.dungeons.PlayerCharacter
 import io.dungeons.StatBlock
@@ -96,7 +96,7 @@ class CombatantsStoreTest {
     val FACTION_A = Faction(name = "Faction A")
     val FACTION_B = Faction(name = "Faction B")
 
-    lateinit var ID : TestId<CoreEntity>
+    lateinit var ID : TestId<Creature>
     lateinit var store : CombatantsStore
 
     @BeforeEach

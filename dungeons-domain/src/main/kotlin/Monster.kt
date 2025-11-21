@@ -3,18 +3,18 @@ package io.dungeons
 import io.dungeons.core.Id
 
 open class Monster(
-    id: Id<CoreEntity> = Id.generate(),
-    core: CoreEntityData,
+    id: Id<Creature> = Id.generate(),
+    core: CreatureData,
     override val weapon: Weapon,
     override val attackModifier: Int,
-) : CoreEntity(
+) : Creature(
     id,
     core
 )
 
 class Goblin(
-    id: Id<CoreEntity> = Id.generate(),
-    core: CoreEntityData = CoreEntityData(
+    id: Id<Creature> = Id.generate(),
+    core: CreatureData = CreatureData(
         name = "Goblin",
         stats = StatBlock(
             str = Stat(8),
@@ -34,8 +34,8 @@ class Goblin(
     ) : Monster(id, core, weapon, attackModifier)
 
 class KoboldWarrior(
-    id: Id<CoreEntity> = Id.generate(),
-    core: CoreEntityData = CoreEntityData(
+    id: Id<Creature> = Id.generate(),
+    core: CreatureData = CreatureData(
         name = "Kobold Warrior",
         stats = StatBlock(
             str = Stat(7),

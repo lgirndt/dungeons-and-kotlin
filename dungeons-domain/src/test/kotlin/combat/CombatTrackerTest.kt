@@ -1,11 +1,9 @@
 package combat
 
 import aPlayerCharacter
-import com.google.common.collect.ImmutableListMultimap
 import com.natpryce.hamkrest.assertion.assertThat
 import com.natpryce.hamkrest.equalTo
 import fromModifiers
-import io.dungeons.CoreEntity
 import io.dungeons.Die.Companion.D20
 import io.dungeons.DieRoll
 import io.dungeons.PlayerCharacter

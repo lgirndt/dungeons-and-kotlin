@@ -12,7 +12,7 @@ fun main() {
             weapon = Weapons.LONGSWORD
         ),
         classFeatures = Fighter(),
-        core = CoreEntityData(
+        core = CreatureData(
             name = "Aragorn",
             stats = StatBlock.create(
                 str = 16,
@@ -35,7 +35,7 @@ fun main() {
 
     println("${fighter.name} attacks the ${goblin.name} with a ${fighter.weapon.name}.")
     val providesGridPosition : ProvidesGridPosition= object : ProvidesGridPosition {
-        override fun getGridPosition(entityId: Id<CoreEntity>): BoardPosition {
+        override fun getGridPosition(entityId: Id<Creature>): BoardPosition {
             return when (entityId) {
                 fighter.id -> BoardPosition(Square(0), Square(0))
                 goblin.id -> BoardPosition(Square(0), Square(1))

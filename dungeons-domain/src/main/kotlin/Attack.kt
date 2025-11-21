@@ -7,7 +7,7 @@ import io.dungeons.core.Id
 import io.dungeons.board.BoardPosition
 
 interface Attacker {
-    val id: Id<CoreEntity>
+    val id: Id<Creature>
     val attackSource: AttackSource
     val stats: StatBlock
     fun applyAttackModifiers(): Int
@@ -15,7 +15,7 @@ interface Attacker {
 }
 
 interface Attackable {
-    val id: Id<CoreEntity>
+    val id: Id<Creature>
     val armourClass: Int
     val damageModifiers: DamageModifiers
     var hitPoints: Int

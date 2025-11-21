@@ -72,7 +72,7 @@ fun StatBlock.Companion.fromModifiers(
 }
 
 fun PlayerCharacter.Companion.aPlayerCharacter(
-    id: Id<CoreEntity> = Id.generate(),
+    id: Id<Creature> = Id.generate(),
     name: String = "My Name",
     stats: StatBlock = SOME_STAT_BOCK.copy(),
     hitPoints: Int = 10,
@@ -84,7 +84,7 @@ fun PlayerCharacter.Companion.aPlayerCharacter(
 ) : PlayerCharacter {
     return PlayerCharacter(
         id = id,
-        core = CoreEntityData(
+        core = CreatureData(
             name = name,
             stats = stats,
             hitPoints = hitPoints,

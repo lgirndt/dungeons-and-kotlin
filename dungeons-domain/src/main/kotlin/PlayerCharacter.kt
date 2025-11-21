@@ -8,11 +8,11 @@ data class PlayerCharacterData(
 )
 
 class PlayerCharacter(
-    id: Id<CoreEntity> = Id.generate(),
+    id: Id<Creature> = Id.generate(),
     private val data: PlayerCharacterData,
     private val classFeatures : ClassFeatures,
-    core: CoreEntityData,
-) : CoreEntity(id,core) {
+    core: CreatureData,
+) : Creature(id,core) {
 
     companion object {}
 
@@ -20,7 +20,7 @@ class PlayerCharacter(
         get() = ProficiencyBonus.fromLevel(data.level)
 
     fun copy(
-        core: CoreEntityData = this.core,
+        core: CreatureData = this.core,
         data: PlayerCharacterData = this.data,
         classFeatures : ClassFeatures = this.classFeatures
     ): PlayerCharacter {
