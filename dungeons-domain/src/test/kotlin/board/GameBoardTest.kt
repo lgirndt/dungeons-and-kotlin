@@ -199,31 +199,26 @@ class GameBoardTest {
             val board = GameBoard(7, 7)
             val start = BoardPosition.from(3, 3)
 
-            // Create a box around the start position with all 8 neighbors blocked
-            val blockingToken1 = BlockingToken()
-            val blockingToken2 = BlockingToken()
-            val blockingToken3 = BlockingToken()
-            val blockingToken4 = BlockingToken()
-            val blockingToken5 = BlockingToken()
-            val blockingToken6 = BlockingToken()
-            val blockingToken7 = BlockingToken()
-            val blockingToken8 = BlockingToken()
-            board.putTokenTo(BoardPosition.from(2, 2), blockingToken1)
-            board.putTokenTo(BoardPosition.from(3, 2), blockingToken2)
-            board.putTokenTo(BoardPosition.from(4, 2), blockingToken3)
-            board.putTokenTo(BoardPosition.from(4, 3), blockingToken4)
-            board.putTokenTo(BoardPosition.from(4, 4), blockingToken5)
-            board.putTokenTo(BoardPosition.from(3, 4), blockingToken6)
-            board.putTokenTo(BoardPosition.from(2, 4), blockingToken7)
-            board.putTokenTo(BoardPosition.from(2, 3), blockingToken8)
+            fun surroundingPairs(): Sequence<Pair<Int, Int>> = sequence {
+                for (x in 2..4)
+                    for (y in 2..4)
+                        if (x != 3 || y != 3)
+                            yield(Pair(x, y))
+            }
+
+            surroundingPairs().forEach {
+                (x, y) ->
+                board.putTokenTo(BoardPosition.from(x, y), BlockingToken())
+            }
 
             val reach = board.calculateReach(start, steps = 1)
 
             // Should only reach the starting position (all neighbors are blocked)
             assertThat(reach[GridIndex(3, 3)], equalTo(0))
             // Verify neighbors are not reachable
-            assertThat(reach[GridIndex(2, 2)], equalTo(null))
-            assertThat(reach[GridIndex(4, 4)], equalTo(null))
+            surroundingPairs().forEach { (x, y) ->
+                assertThat(reach[GridIndex(x, y)], equalTo(null))
+            }
         }
     }
 }
