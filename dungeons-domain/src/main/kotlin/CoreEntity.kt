@@ -32,6 +32,9 @@ abstract class CoreEntity(
             core.hitPoints = value
         }
 
+    val maxHitPoints: Int
+        get() = core.maxHitPoints
+
     override val damageModifiers: DamageModifiers
         get() = core.damageModifiers
 
