@@ -89,7 +89,7 @@ class CombatTrackerTest {
     private fun toCombatScenario(combatants: List<Combatant>): SimpleCombatScenario =
         SimpleCombatScenario(toCombatStore(combatants))
 
-    private fun toCombatStore(combatants: List<Combatant>): CombatantsStore = CombatantsStore(combatants)
+    private fun toCombatStore(combatants: List<Combatant>): CombatantsCollection = CombatantsCollection(combatants)
 
     private fun createCombatTracker(combatants: List<Combatant>): CombatTracker = CombatTracker(
         combatants = combatants,

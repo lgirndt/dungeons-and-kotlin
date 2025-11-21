@@ -130,7 +130,7 @@ data class Combatant(
         get() = creature.hitPoints
 }
 
-class CombatantsStore(
+class CombatantsCollection(
     combatants: Collection<Combatant>,
     nonHostileFactionRelationships: List<FactionRelationship> = emptyList(),
 ) {
@@ -176,11 +176,11 @@ interface CombatScenario : ProvidesBoardPosition {
 }
 
 class SimpleCombatScenario(
-    private val combatantsStore: CombatantsStore
+    private val combatantsCollection: CombatantsCollection
 ) : CombatScenario {
 
     override fun listVisibleCombatants(observer: Id<Creature>): List<Combatant> {
-        return combatantsStore.listAll().filter { it.id != observer }
+        return combatantsCollection.listAll().filter { it.id != observer }
     }
 
     override fun isVisibleTo(
@@ -196,7 +196,7 @@ class SimpleCombatScenario(
         val position = getBoardPosition(observer)
             ?: error("No grid position found for creature $observer")
 
-        return combatantsStore.listAll()
+        return combatantsCollection.listAll()
             .filter { it.id != observer }
             .filter {
                 getBoardPosition(it.creature.id)?.let { targetPos ->

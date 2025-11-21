@@ -97,12 +97,12 @@ class CombatantsStoreTest {
     val FACTION_B = Faction(name = "Faction B")
 
     lateinit var ID : TestId<Creature>
-    lateinit var store : CombatantsStore
+    lateinit var store : CombatantsCollection
 
     @BeforeEach
     fun setup(){
         ID = TestId()
-        store = CombatantsStore(
+        store = CombatantsCollection(
             listOf(
                 Combatant(PlayerCharacter.Companion.aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A, NoopTurnActor()),
                 Combatant(PlayerCharacter.aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
