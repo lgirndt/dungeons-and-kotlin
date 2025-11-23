@@ -1,5 +1,4 @@
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.Die.Companion.D8
 import io.dungeons.RangeClassification
 import io.dungeons.Weapons
@@ -17,7 +16,7 @@ class WeaponTest {
         withFixedDice(D8 rolls 6) {
             val damage = longsword.dealDamage({ query -> query(stats) }, false)
 
-            assertThat(damage, equalTo(6 + 3)) // 3 is the modifier for str 16
+            assertEquals(6 + 3, damage) // 3 is the modifier for str 16
         }
 
     }
@@ -33,7 +32,7 @@ class WeaponTest {
         ) {
             val damage = longsword.dealDamage({ query -> query(stats) }, true)
 
-            assertThat(damage, equalTo(4 + 7 + 3)) // 3 is the modifier for str 16
+            assertEquals(4 + 7 + 3, damage) // 3 is the modifier for str 16
         }
 
     }
@@ -45,7 +44,7 @@ class RangeCheckersTest {
     fun `melee range checker works correctly`() {
         val meleeChecker = io.dungeons.RangeCheckers.melee(Feet(2.0))
 
-        assertThat(meleeChecker(Feet(1.5)),equalTo(RangeClassification.WithinNormalRange))
-        assertThat(meleeChecker(Feet(2.0)),equalTo(RangeClassification.WithinNormalRange))
-        assertThat(meleeChecker(Feet(2.5)),equalTo(RangeClassification.OutOfRange))
+        assertEquals(RangeClassification.WithinNormalRange, meleeChecker(Feet(1.5)))
+        assertEquals(RangeClassification.WithinNormalRange, meleeChecker(Feet(2.0)))
+        assertEquals(RangeClassification.OutOfRange, meleeChecker(Feet(2.5)))
     }}

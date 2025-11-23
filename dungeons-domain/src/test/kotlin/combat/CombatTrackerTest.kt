@@ -1,8 +1,7 @@
 package combat
 
 import aPlayerCharacter
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import fromModifiers
 import io.dungeons.Die.Companion.D20
 import io.dungeons.DieRoll
@@ -57,13 +56,13 @@ class CombatTrackerTest {
 
             // Verify the combatants are sorted by initiative (descending)
             // Expected order: midDexPlayer (14), highDexPlayer (12), lowDexPlayer (10)
-            assertThat(tracker.combatantsOrderedByInitiative.size, equalTo(3))
-            assertThat(tracker.combatantsOrderedByInitiative[0].creature.name, equalTo("Medium Character"))
-            assertThat(tracker.combatantsOrderedByInitiative[0].initiative.value, equalTo(14))
-            assertThat(tracker.combatantsOrderedByInitiative[1].creature.name, equalTo("Fast Character"))
-            assertThat(tracker.combatantsOrderedByInitiative[1].initiative.value, equalTo(12))
-            assertThat(tracker.combatantsOrderedByInitiative[2].creature.name, equalTo("Slow Character"))
-            assertThat(tracker.combatantsOrderedByInitiative[2].initiative.value, equalTo(10))
+            assertEquals(3, tracker.combatantsOrderedByInitiative.size)
+            assertEquals("Medium Character", tracker.combatantsOrderedByInitiative[0].creature.name)
+            assertEquals(14, tracker.combatantsOrderedByInitiative[0].initiative.value)
+            assertEquals("Fast Character", tracker.combatantsOrderedByInitiative[1].creature.name)
+            assertEquals(12, tracker.combatantsOrderedByInitiative[1].initiative.value)
+            assertEquals("Slow Character", tracker.combatantsOrderedByInitiative[2].creature.name)
+            assertEquals(10, tracker.combatantsOrderedByInitiative[2].initiative.value)
         }
     }
 
@@ -81,8 +80,8 @@ class CombatTrackerTest {
             val tracker = createCombatTracker(trackerEntries)
 
             // Both have initiative 12, should maintain input order
-            assertThat(tracker.combatantsOrderedByInitiative[0].creature.name, equalTo("First"))
-            assertThat(tracker.combatantsOrderedByInitiative[1].creature.name, equalTo("Second"))
+            assertEquals("First", tracker.combatantsOrderedByInitiative[0].creature.name)
+            assertEquals("Second", tracker.combatantsOrderedByInitiative[1].creature.name)
         }
     }
 

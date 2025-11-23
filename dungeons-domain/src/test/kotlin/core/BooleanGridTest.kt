@@ -1,7 +1,6 @@
 package io.dungeons.core
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
@@ -14,7 +13,7 @@ class BooleanGridTest {
         fun `should return false for unset positions`() {
             val grid = BooleanGrid(maxX = 10, maxY = 10)
 
-            assertThat(grid[GridIndex(5, 5)], equalTo(false))
+            assertEquals(false, grid[GridIndex(5, 5)])
         }
 
         @Test
@@ -23,7 +22,7 @@ class BooleanGridTest {
 
             grid[GridIndex(5, 5)] = true
 
-            assertThat(grid[GridIndex(5, 5)], equalTo(true))
+            assertEquals(true, grid[GridIndex(5, 5)])
         }
 
         @Test
@@ -33,7 +32,7 @@ class BooleanGridTest {
 
             grid[GridIndex(5, 5)] = false
 
-            assertThat(grid[GridIndex(5, 5)], equalTo(false))
+            assertEquals(false, grid[GridIndex(5, 5)])
         }
     }
 
@@ -52,10 +51,10 @@ class BooleanGridTest {
 
             val result = grid1.union(grid2)
 
-            assertThat(result[GridIndex(1, 1)], equalTo(true))
-            assertThat(result[GridIndex(2, 2)], equalTo(true))
-            assertThat(result[GridIndex(3, 3)], equalTo(true))
-            assertThat(result[GridIndex(4, 4)], equalTo(false))
+            assertEquals(true, result[GridIndex(1, 1)])
+            assertEquals(true, result[GridIndex(2, 2)])
+            assertEquals(true, result[GridIndex(3, 3)])
+            assertEquals(false, result[GridIndex(4, 4)])
         }
 
         @Test
@@ -68,9 +67,9 @@ class BooleanGridTest {
 
             val result = grid1.union(grid2)
 
-            assertThat(result.boundingBox, equalTo(BoundingBox(0, 0, 10, 10)))
-            assertThat(result[GridIndex(1, 1)], equalTo(true))
-            assertThat(result[GridIndex(8, 8)], equalTo(true))
+            assertEquals(BoundingBox(0, 0, 10, 10), result.boundingBox)
+            assertEquals(true, result[GridIndex(1, 1)])
+            assertEquals(true, result[GridIndex(8, 8)])
         }
     }
 
@@ -91,10 +90,10 @@ class BooleanGridTest {
 
             val result = grid1.intersect(grid2)
 
-            assertThat(result[GridIndex(1, 1)], equalTo(false)) // Only in grid1
-            assertThat(result[GridIndex(2, 2)], equalTo(true))  // In both
-            assertThat(result[GridIndex(3, 3)], equalTo(true))  // In both
-            assertThat(result[GridIndex(4, 4)], equalTo(false)) // Only in grid2
+            assertEquals(false, result[GridIndex(1, 1)]) // Only in grid1
+            assertEquals(true, result[GridIndex(2, 2)])  // In both
+            assertEquals(true, result[GridIndex(3, 3)])  // In both
+            assertEquals(false, result[GridIndex(4, 4)]) // Only in grid2
         }
 
         @Test
@@ -107,8 +106,8 @@ class BooleanGridTest {
 
             val result = grid1.intersect(grid2)
 
-            assertThat(result.boundingBox, equalTo(BoundingBox(5, 5, 10, 10)))
-            assertThat(result[GridIndex(5, 5)], equalTo(true))
+            assertEquals(BoundingBox(5, 5, 10, 10), result.boundingBox)
+            assertEquals(true, result[GridIndex(5, 5)])
         }
 
         @Test
@@ -121,8 +120,8 @@ class BooleanGridTest {
 
             val result = grid1.intersect(grid2)
 
-            assertThat(result[GridIndex(2, 2)], equalTo(false))
-            assertThat(result[GridIndex(3, 3)], equalTo(false))
+            assertEquals(false, result[GridIndex(2, 2)])
+            assertEquals(false, result[GridIndex(3, 3)])
         }
     }
 
@@ -135,7 +134,7 @@ class BooleanGridTest {
 
             grid[GridIndex(15, 15)] = true
 
-            assertThat(grid[GridIndex(15, 15)], equalTo(true))
+            assertEquals(true, grid[GridIndex(15, 15)])
         }
 
         @Test
@@ -144,7 +143,7 @@ class BooleanGridTest {
 
             grid[GridIndex(-5, -5)] = true
 
-            assertThat(grid[GridIndex(-5, -5)], equalTo(true))
+            assertEquals(true, grid[GridIndex(-5, -5)])
         }
     }
 }

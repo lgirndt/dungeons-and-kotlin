@@ -1,6 +1,5 @@
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.*
 import io.dungeons.Die.Companion.D10
 import io.dungeons.Die.Companion.D20
@@ -48,8 +47,8 @@ class AttackTest {
 //
 //        val outcome = attacker.attack(opponent)
 //
-//        assertThat(opponent.hitPoints, equalTo(20))
-//        assertThat(outcome, equalTo(AttackOutcome.MISS))
+//        assertEquals(20, opponent.hitPoints)
+//        assertEquals(AttackOutcome.MISS, outcome)
 //    }
 
     @Test
@@ -63,10 +62,10 @@ class AttackTest {
         withFixedDice(D20 rolls 10) {
             val outcome = target.attack(opponent, providesGridPosition)
 
-            assertThat(outcome.hasBeenHit, equalTo(false))
-            assertThat(
-                "Hit Roll misses as d20 + str mod + prof bonus does not match AC",
-                outcome.hitRoll, equalTo(10 + 1 + 1)
+            assertEquals(false, outcome.hasBeenHit)
+            assertEquals(
+                10 + 1 + 1, outcome.hitRoll,
+                "Hit Roll misses as d20 + str mod + prof bonus does not match AC"
             )
         }
 
@@ -86,10 +85,10 @@ class AttackTest {
         ) {
             val outcome = attacker.attack(opponent, providesGridPosition)
 
-            assertThat(outcome.hasBeenHit, equalTo(true))
-            assertThat(
-                "Hit Roll hits as d20 + str mod + prof bonus  matches AC",
-                outcome.hitRoll, equalTo(10 + 1 + 1)
+            assertEquals(true, outcome.hasBeenHit)
+            assertEquals(
+                10 + 1 + 1, outcome.hitRoll,
+                "Hit Roll hits as d20 + str mod + prof bonus  matches AC"
             )
         }
 
@@ -118,12 +117,12 @@ class AttackTest {
         ) {
             val outcome = cleric.attack(opponent, providesGridPosition)
 
-            assertThat(outcome.hasBeenHit, equalTo(true))
-            assertThat(
-                "Hit roll without proficiency bonus: d20 + str mod (no prof bonus)",
-                outcome.hitRoll, equalTo(10 + 2) // d20 + str mod only, no proficiency bonus
+            assertEquals(true, outcome.hasBeenHit)
+            assertEquals(
+                10 + 2, outcome.hitRoll, // d20 + str mod only, no proficiency bonus
+                "Hit roll without proficiency bonus: d20 + str mod (no prof bonus)"
             )
-            assertThat(outcome.damageDealt, equalTo(5 + 2)) // damage roll + str mod
+            assertEquals(5 + 2, outcome.damageDealt) // damage roll + str mod
         }
     }
 
@@ -164,7 +163,7 @@ class AttackTest {
     @Test
     fun `a hit does normal damage`() {
         hitting(attackerStrMod = 1, damageRolls = listOf(5)) { outcome, _ ->
-            assertThat(outcome.damageDealt, equalTo(5 + 1))
+            assertEquals(5 + 1, outcome.damageDealt)
         }
     }
 
@@ -175,7 +174,7 @@ class AttackTest {
             hitRoll = 20,
             damageRolls = listOf(5, 8)
         ) { outcome, _ ->
-            assertThat(outcome.damageDealt, equalTo(5 + 8 + 1))
+            assertEquals(5 + 8 + 1, outcome.damageDealt)
         }
     }
 
@@ -186,7 +185,7 @@ class AttackTest {
             opponentHitPoints = 30,
             damageRolls = listOf(6)
         ) { _, opponent ->
-            assertThat(opponent.hitPoints, equalTo(30 - 6 - 2))
+            assertEquals(30 - 6 - 2, opponent.hitPoints)
         }
     }
 
@@ -200,7 +199,7 @@ class AttackTest {
             damageType = DamageType.Slashing,
             opponentVulnerableTo = DamageType.Slashing
         ) { _, opponent ->
-            assertThat(opponent.hitPoints, equalTo(0))
+            assertEquals(0, opponent.hitPoints)
         }
     }
 
@@ -218,12 +217,12 @@ class AttackTest {
         ) {
             val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.NORMAL)
 
-            assertThat(outcome.hasBeenHit, equalTo(true))
-            assertThat(
-                "Hit roll uses single d20 roll",
-                outcome.hitRoll, equalTo(10 + 2 + 1) // d20 + str mod + prof bonus
+            assertEquals(true, outcome.hasBeenHit)
+            assertEquals(
+                10 + 2 + 1, outcome.hitRoll, // d20 + str mod + prof bonus
+                "Hit roll uses single d20 roll"
             )
-            assertThat(outcome.damageDealt, equalTo(6 + 2)) // damage roll + str mod
+            assertEquals(6 + 2, outcome.damageDealt) // damage roll + str mod
         }
     }
 
@@ -242,12 +241,12 @@ class AttackTest {
         ) {
             val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.ADVANTAGE)
 
-            assertThat(outcome.hasBeenHit, equalTo(true))
-            assertThat(
-                "Hit roll uses higher of two d20 rolls",
-                outcome.hitRoll, equalTo(15 + 2 + 1) // max(8, 15) + str mod + prof bonus
+            assertEquals(true, outcome.hasBeenHit)
+            assertEquals(
+                15 + 2 + 1, outcome.hitRoll, // max(8, 15) + str mod + prof bonus
+                "Hit roll uses higher of two d20 rolls"
             )
-            assertThat(outcome.damageDealt, equalTo(6 + 2))
+            assertEquals(6 + 2, outcome.damageDealt)
         }
     }
 
@@ -266,12 +265,12 @@ class AttackTest {
         ) {
             val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.DISADVANTAGE)
 
-            assertThat(outcome.hasBeenHit, equalTo(true))
-            assertThat(
-                "Hit roll uses lower of two d20 rolls",
-                outcome.hitRoll, equalTo(8 + 2 + 1) // min(15, 8) + str mod + prof bonus
+            assertEquals(true, outcome.hasBeenHit)
+            assertEquals(
+                8 + 2 + 1, outcome.hitRoll, // min(15, 8) + str mod + prof bonus
+                "Hit roll uses lower of two d20 rolls"
             )
-            assertThat(outcome.damageDealt, equalTo(6 + 2))
+            assertEquals(6 + 2, outcome.damageDealt)
         }
     }
 
@@ -289,8 +288,8 @@ class AttackTest {
         ) {
             val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.ADVANTAGE)
 
-            assertThat(outcome.hasBeenHit, equalTo(true))
-            assertThat(outcome.hitRoll, equalTo(13 + 1 + 1))
+            assertEquals(true, outcome.hasBeenHit)
+            assertEquals(13 + 1 + 1, outcome.hitRoll)
         }
     }
 
@@ -307,8 +306,8 @@ class AttackTest {
         ) {
             val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.DISADVANTAGE)
 
-            assertThat(outcome.hasBeenHit, equalTo(false))
-            assertThat(outcome.hitRoll, equalTo(5 + 1 + 1))
+            assertEquals(false, outcome.hasBeenHit)
+            assertEquals(5 + 1 + 1, outcome.hitRoll)
         }
     }
 
@@ -328,8 +327,8 @@ class AttackTest {
         ) {
             val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.ADVANTAGE)
 
-            assertThat(outcome.hasBeenHit, equalTo(true))
-            assertThat(outcome.damageDealt, equalTo(5 + 7 + 2)) // double dice + str mod
+            assertEquals(true, outcome.hasBeenHit)
+            assertEquals(5 + 7 + 2, outcome.damageDealt) // double dice + str mod
         }
     }
 
@@ -349,8 +348,8 @@ class AttackTest {
         ) {
             val outcome = attacker.attack(opponent, providesGridPosition, RollModifier.DISADVANTAGE)
 
-            assertThat(outcome.hasBeenHit, equalTo(true))
-            assertThat(outcome.damageDealt, equalTo(5 + 7 + 2)) // double dice + str mod
+            assertEquals(true, outcome.hasBeenHit)
+            assertEquals(5 + 7 + 2, outcome.damageDealt) // double dice + str mod
         }
     }
 
@@ -375,7 +374,7 @@ class AttackTest {
             damageDie rolls 6
         ) {
             val outcome = attacker.attack(opponent, providesGridPosition)
-            assertThat(outcome.hasBeenHit, equalTo(true))
+            assertEquals(true, outcome.hasBeenHit)
         }
     }
 
@@ -402,7 +401,7 @@ class AttackTest {
 
         withFixedDice {
             val outcome = attacker.attack(opponent, providesGridPosition)
-            assertThat(outcome, equalTo(AttackOutcome.MISS))
+            assertEquals(AttackOutcome.MISS, outcome)
         }
     }
 
@@ -437,7 +436,7 @@ class AttackTest {
             damageDie rolls 6
         ) {
             val outcome = attacker.attack(opponent, providesGridPosition)
-            assertThat(outcome.hasBeenHit, equalTo(true))
+            assertEquals(true, outcome.hasBeenHit)
         }
     }
 
@@ -470,8 +469,8 @@ class AttackTest {
             damageDie rolls 6
         ) {
             val outcome = attacker.attack(opponent, providesGridPosition)
-            assertThat(outcome.hasBeenHit, equalTo(true))
-            assertThat(outcome.hitRoll, equalTo(10 + 1))
+            assertEquals(true, outcome.hasBeenHit)
+            assertEquals(10 + 1, outcome.hitRoll)
         }
     }
 

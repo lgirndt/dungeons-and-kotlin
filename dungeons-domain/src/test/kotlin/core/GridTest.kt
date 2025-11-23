@@ -1,7 +1,6 @@
 package core
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.core.BoundedGrid
 import io.dungeons.core.BoundingBox
 import io.dungeons.core.GridIndex
@@ -22,7 +21,7 @@ class GridTest {
         items.forEach { (s, idx) -> grid[idx] = s }
 
         val result = grid.iterateWithIndex().asSequence().toSet()
-        assertThat(result, equalTo(items))
+        assertEquals(items, result)
     }
 
     @Nested
@@ -37,9 +36,9 @@ class GridTest {
 
             val mask = grid.toMaskBy { it > 5 }
 
-            assertThat(mask[GridIndex(0, 0)], equalTo(false)) // 5 is not > 5
-            assertThat(mask[GridIndex(1, 1)], equalTo(true))  // 10 > 5
-            assertThat(mask[GridIndex(2, 2)], equalTo(false)) // 3 is not > 5
+            assertEquals(false, mask[GridIndex(0, 0)]) // 5 is not > 5
+            assertEquals(true, mask[GridIndex(1, 1)])  // 10 > 5
+            assertEquals(false, mask[GridIndex(2, 2)]) // 3 is not > 5
         }
 
         @Test
@@ -49,7 +48,7 @@ class GridTest {
 
             val mask = grid.toMaskBy { it.length > 3 }
 
-            assertThat(mask.boundingBox, equalTo(BoundingBox(5, 10, 15, 20)))
+            assertEquals(BoundingBox(5, 10, 15, 20), mask.boundingBox)
         }
 
         @Test
@@ -60,9 +59,9 @@ class GridTest {
 
             val mask = grid.toMaskBy { it == "A" }
 
-            assertThat(mask[GridIndex(0, 0)], equalTo(true))
-            assertThat(mask[GridIndex(5, 5)], equalTo(false))
-            assertThat(mask[GridIndex(2, 2)], equalTo(false)) // Unset position
+            assertEquals(true, mask[GridIndex(0, 0)])
+            assertEquals(false, mask[GridIndex(5, 5)])
+            assertEquals(false, mask[GridIndex(2, 2)]) // Unset position
         }
 
         @Test
@@ -71,7 +70,7 @@ class GridTest {
 
             val mask = grid.toMaskBy { it > 0 }
 
-            assertThat(mask[GridIndex(0, 0)], equalTo(false))
+            assertEquals(false, mask[GridIndex(0, 0)])
         }
 
     }

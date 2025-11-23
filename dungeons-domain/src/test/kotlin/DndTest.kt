@@ -1,6 +1,5 @@
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import io.mockk.mockk
 import io.mockk.verify
 import io.dungeons.AbilityCheckResult
@@ -20,14 +19,14 @@ class DndTest {
     @Test
     fun `a modifier should return the correct value`() {
         assertAll(
-            { assertThat(Stat(8).modifier, equalTo(-1)) },
-            { assertThat(Stat(9).modifier, equalTo(-1)) },
+            { assertEquals(-1, Stat(8).modifier) },
+            { assertEquals(-1, Stat(9).modifier) },
 
-            { assertThat(Stat(10).modifier, equalTo(0)) },
-            { assertThat(Stat(11).modifier, equalTo(0)) },
+            { assertEquals(0, Stat(10).modifier) },
+            { assertEquals(0, Stat(11).modifier) },
 
-            { assertThat(Stat(12).modifier, equalTo(1)) },
-            { assertThat(Stat(13).modifier, equalTo(1)) },
+            { assertEquals(1, Stat(12).modifier) },
+            { assertEquals(1, Stat(13).modifier) },
         )
     }
 
@@ -35,12 +34,12 @@ class DndTest {
     fun `overloaded ctor should assign values correctly`() {
         val statBlocks = SOME_STAT_BOCK.copyByInts(10, 11, 12, 13, 14, 15)
         assertAll(
-            { assertThat(statBlocks.str, equalTo(Stat(10))) },
-            { assertThat(statBlocks.dex, equalTo(Stat(11))) },
-            { assertThat(statBlocks.con, equalTo(Stat(12))) },
-            { assertThat(statBlocks.int, equalTo(Stat(13))) },
-            { assertThat(statBlocks.wis, equalTo(Stat(14))) },
-            { assertThat(statBlocks.cha, equalTo(Stat(15))) },
+            { assertEquals(Stat(10), statBlocks.str) },
+            { assertEquals(Stat(11), statBlocks.dex) },
+            { assertEquals(Stat(12), statBlocks.con) },
+            { assertEquals(Stat(13), statBlocks.int) },
+            { assertEquals(Stat(14), statBlocks.wis) },
+            { assertEquals(Stat(15), statBlocks.cha) },
         )
     }
 
@@ -48,8 +47,8 @@ class DndTest {
     fun `some StatBlock`() {
         val dexBlock = SOME_STAT_BOCK.copyByInts(dex = 12)
         assertAll(
-            { assertThat(dexBlock.dex, equalTo(Stat(12))) },
-            { assertThat(dexBlock.str.toInt(), equalTo(DEFAULT_STAT_VALUE)) },
+            { assertEquals(Stat(12), dexBlock.dex) },
+            { assertEquals(DEFAULT_STAT_VALUE, dexBlock.str.toInt()) },
         )
     }
 
@@ -62,7 +61,7 @@ class DndTest {
             D6 rolls 3,
         ) {
             val result = simpleDamageRoll.roll(false)
-            assertThat(result, equalTo(5 + 3 + 7))
+            assertEquals(5 + 3 + 7, result)
         }
 
     }
@@ -74,7 +73,7 @@ class DndTest {
         fun `NORMAL returns a single die roll`() {
             withFixedDice(D20 rolls 15) {
                 val result = RollModifier.NORMAL.roll(D20)
-                assertThat(result.value, equalTo(15))
+                assertEquals(15, result.value)
             }
         }
 
@@ -85,7 +84,7 @@ class DndTest {
                 D20 rolls 17
             ) {
                 val result = RollModifier.ADVANTAGE.roll(D20)
-                assertThat(result.value, equalTo(17))
+                assertEquals(17, result.value)
             }
         }
 
@@ -96,7 +95,7 @@ class DndTest {
                 D20 rolls 12
             ) {
                 val result = RollModifier.ADVANTAGE.roll(D20)
-                assertThat(result.value, equalTo(19))
+                assertEquals(19, result.value)
             }
         }
 
@@ -107,7 +106,7 @@ class DndTest {
                 D20 rolls 10
             ) {
                 val result = RollModifier.ADVANTAGE.roll(D20)
-                assertThat(result.value, equalTo(10))
+                assertEquals(10, result.value)
             }
         }
 
@@ -118,7 +117,7 @@ class DndTest {
                 D20 rolls 17
             ) {
                 val result = RollModifier.DISADVANTAGE.roll(D20)
-                assertThat(result.value, equalTo(8))
+                assertEquals(8, result.value)
             }
         }
 
@@ -129,7 +128,7 @@ class DndTest {
                 D20 rolls 3
             ) {
                 val result = RollModifier.DISADVANTAGE.roll(D20)
-                assertThat(result.value, equalTo(3))
+                assertEquals(3, result.value)
             }
         }
 
@@ -140,22 +139,22 @@ class DndTest {
                 D20 rolls 14
             ) {
                 val result = RollModifier.DISADVANTAGE.roll(D20)
-                assertThat(result.value, equalTo(14))
+                assertEquals(14, result.value)
             }
         }
 
         @Test
         fun `giveAdvantage works correctly`() {
-            assertThat(RollModifier.NORMAL.giveAdvantage(), equalTo(RollModifier.ADVANTAGE))
-            assertThat(RollModifier.DISADVANTAGE.giveAdvantage(), equalTo(RollModifier.NORMAL))
-            assertThat(RollModifier.ADVANTAGE.giveAdvantage(), equalTo(RollModifier.ADVANTAGE))
+            assertEquals(RollModifier.ADVANTAGE, RollModifier.NORMAL.giveAdvantage())
+            assertEquals(RollModifier.NORMAL, RollModifier.DISADVANTAGE.giveAdvantage())
+            assertEquals(RollModifier.ADVANTAGE, RollModifier.ADVANTAGE.giveAdvantage())
         }
 
         @Test
         fun `giveDisadvantage works correctly`() {
-            assertThat(RollModifier.NORMAL.giveDisadvantage(), equalTo(RollModifier.DISADVANTAGE))
-            assertThat(RollModifier.ADVANTAGE.giveDisadvantage(), equalTo(RollModifier.NORMAL))
-            assertThat(RollModifier.DISADVANTAGE.giveDisadvantage(), equalTo(RollModifier.DISADVANTAGE))
+            assertEquals(RollModifier.DISADVANTAGE, RollModifier.NORMAL.giveDisadvantage())
+            assertEquals(RollModifier.NORMAL, RollModifier.ADVANTAGE.giveDisadvantage())
+            assertEquals(RollModifier.DISADVANTAGE, RollModifier.DISADVANTAGE.giveDisadvantage())
         }
     }
 
@@ -165,8 +164,8 @@ class AbilityCheckResultTest {
 
     @Test
     fun `a abilityCheckResult should have proper isSuccessful`() {
-        assertThat(AbilityCheckResult(true).isSuccessful, equalTo(true))
-        assertThat(AbilityCheckResult(false).isSuccessful, equalTo(false))
+        assertEquals(true, AbilityCheckResult(true).isSuccessful)
+        assertEquals(false, AbilityCheckResult(false).isSuccessful)
     }
 
     @Test

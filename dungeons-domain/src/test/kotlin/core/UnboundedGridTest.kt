@@ -1,7 +1,6 @@
 package core
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.core.GridIndex
 import io.dungeons.core.UnboundedGrid
 import org.junit.jupiter.api.Nested
@@ -16,7 +15,7 @@ class UnboundedGridTest {
         fun `should get null for unset cell`() {
             val grid = UnboundedGrid<String>()
 
-            assertThat(grid[GridIndex(100, 200)], equalTo(null))
+            assertEquals(null, grid[GridIndex(100, 200)])
         }
 
         @Test
@@ -25,7 +24,7 @@ class UnboundedGridTest {
 
             grid[GridIndex(100, 200)] = "test"
 
-            assertThat(grid[GridIndex(100, 200)], equalTo("test"))
+            assertEquals("test", grid[GridIndex(100, 200)])
         }
 
         @Test
@@ -34,7 +33,7 @@ class UnboundedGridTest {
 
             grid[GridIndex(-1000, -2000)] = 42
 
-            assertThat(grid[GridIndex(-1000, -2000)], equalTo(42))
+            assertEquals(42, grid[GridIndex(-1000, -2000)])
         }
 
         @Test
@@ -43,7 +42,7 @@ class UnboundedGridTest {
 
             grid[GridIndex(1000000, 2000000)] = 99
 
-            assertThat(grid[GridIndex(1000000, 2000000)], equalTo(99))
+            assertEquals(99, grid[GridIndex(1000000, 2000000)])
         }
     }
 
@@ -57,8 +56,8 @@ class UnboundedGridTest {
 
             val removed = grid.remove(GridIndex(10, 20))
 
-            assertThat(removed, equalTo("test"))
-            assertThat(grid[GridIndex(10, 20)], equalTo(null))
+            assertEquals("test", removed)
+            assertEquals(null, grid[GridIndex(10, 20)])
         }
 
         @Test
@@ -67,7 +66,7 @@ class UnboundedGridTest {
 
             val removed = grid.remove(GridIndex(10, 20))
 
-            assertThat(removed, equalTo(null))
+            assertEquals(null, removed)
         }
     }
 
@@ -78,7 +77,7 @@ class UnboundedGridTest {
         fun `should return false for unset cell`() {
             val grid = UnboundedGrid<String>()
 
-            assertThat(grid.isEmpty(GridIndex(10, 20)), equalTo(false))
+            assertEquals(false, grid.isEmpty(GridIndex(10, 20)))
         }
 
         @Test
@@ -86,7 +85,7 @@ class UnboundedGridTest {
             val grid = UnboundedGrid<String>()
             grid[GridIndex(10, 20)] = "test"
 
-            assertThat(grid.isEmpty(GridIndex(10, 20)), equalTo(true))
+            assertEquals(true, grid.isEmpty(GridIndex(10, 20)))
         }
     }
 
@@ -101,10 +100,10 @@ class UnboundedGridTest {
             grid[GridIndex(1000, 1000)] = 2
             grid[GridIndex(-500, -500)] = 3
 
-            assertThat(grid[GridIndex(0, 0)], equalTo(1))
-            assertThat(grid[GridIndex(1000, 1000)], equalTo(2))
-            assertThat(grid[GridIndex(-500, -500)], equalTo(3))
-            assertThat(grid[GridIndex(500, 500)], equalTo(null))
+            assertEquals(1, grid[GridIndex(0, 0)])
+            assertEquals(2, grid[GridIndex(1000, 1000)])
+            assertEquals(3, grid[GridIndex(-500, -500)])
+            assertEquals(null, grid[GridIndex(500, 500)])
         }
     }
 
@@ -117,10 +116,10 @@ class UnboundedGridTest {
 
             val box = grid.boundingBox
 
-            assertThat(box.minX, equalTo(0))
-            assertThat(box.minY, equalTo(0))
-            assertThat(box.maxX, equalTo(0))
-            assertThat(box.maxY, equalTo(0))
+            assertEquals(0, box.minX)
+            assertEquals(0, box.minY)
+            assertEquals(0, box.maxX)
+            assertEquals(0, box.maxY)
         }
 
         @Test
@@ -130,10 +129,10 @@ class UnboundedGridTest {
 
             val box = grid.boundingBox
 
-            assertThat(box.minX, equalTo(5))
-            assertThat(box.minY, equalTo(10))
-            assertThat(box.maxX, equalTo(5))
-            assertThat(box.maxY, equalTo(10))
+            assertEquals(5, box.minX)
+            assertEquals(10, box.minY)
+            assertEquals(5, box.maxX)
+            assertEquals(10, box.maxY)
         }
 
         @Test
@@ -145,10 +144,10 @@ class UnboundedGridTest {
 
             val box = grid.boundingBox
 
-            assertThat(box.minX, equalTo(0))
-            assertThat(box.minY, equalTo(0))
-            assertThat(box.maxX, equalTo(10))
-            assertThat(box.maxY, equalTo(20))
+            assertEquals(0, box.minX)
+            assertEquals(0, box.minY)
+            assertEquals(10, box.maxX)
+            assertEquals(20, box.maxY)
         }
 
         @Test
@@ -159,10 +158,10 @@ class UnboundedGridTest {
 
             val box = grid.boundingBox
 
-            assertThat(box.minX, equalTo(-10))
-            assertThat(box.minY, equalTo(-20))
-            assertThat(box.maxX, equalTo(10))
-            assertThat(box.maxY, equalTo(20))
+            assertEquals(-10, box.minX)
+            assertEquals(-20, box.minY)
+            assertEquals(10, box.maxX)
+            assertEquals(20, box.maxY)
         }
 
         @Test
@@ -171,14 +170,14 @@ class UnboundedGridTest {
             grid[GridIndex(0, 0)] = 1
 
             val box1 = grid.boundingBox
-            assertThat(box1.maxX, equalTo(0))
-            assertThat(box1.maxY, equalTo(0))
+            assertEquals(0, box1.maxX)
+            assertEquals(0, box1.maxY)
 
             grid[GridIndex(100, 100)] = 2
 
             val box2 = grid.boundingBox
-            assertThat(box2.maxX, equalTo(100))
-            assertThat(box2.maxY, equalTo(100))
+            assertEquals(100, box2.maxX)
+            assertEquals(100, box2.maxY)
         }
 
         @Test
@@ -188,14 +187,14 @@ class UnboundedGridTest {
             grid[GridIndex(100, 100)] = 2
 
             val box1 = grid.boundingBox
-            assertThat(box1.maxX, equalTo(100))
-            assertThat(box1.maxY, equalTo(100))
+            assertEquals(100, box1.maxX)
+            assertEquals(100, box1.maxY)
 
             grid.remove(GridIndex(100, 100))
 
             val box2 = grid.boundingBox
-            assertThat(box2.maxX, equalTo(0))
-            assertThat(box2.maxY, equalTo(0))
+            assertEquals(0, box2.maxX)
+            assertEquals(0, box2.maxY)
         }
     }
 }

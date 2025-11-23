@@ -4,8 +4,7 @@ import ProvidesGridPositionMock
 import SOME_STAT_BOCK
 import TestId
 import aPlayerCharacter
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.*
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D4
@@ -75,7 +74,7 @@ class SpellTest {
 
             // Hit roll: 10 (d20) + 2 (spell ability mod) + 1 (prof bonus) = 13, which meets AC 12
             // Damage: 6 (d8) + 2 (spell ability mod) = 8
-            assertThat(outcome.hasBeenHit, equalTo(true))
+            assertEquals(true, outcome.hasBeenHit)
         }
     }
 }

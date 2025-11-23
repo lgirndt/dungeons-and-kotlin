@@ -1,7 +1,6 @@
 package board
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.board.BoardPosition
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet
@@ -16,8 +15,8 @@ class GridPositionTest {
         val pos2 = BoardPosition.Companion.from(2, 4)
         val result = pos1 + pos2
 
-        assertThat(result.x, equalTo(Square(5)))
-        assertThat(result.y, equalTo(Square(9)))
+        assertEquals(Square(5), result.x)
+        assertEquals(Square(9), result.y)
     }
 
     @Test
@@ -26,22 +25,22 @@ class GridPositionTest {
         val pos2 = BoardPosition.Companion.from(2, 4)
         val result = pos1 - pos2
 
-        assertThat(result.x, equalTo(Square(3)))
-        assertThat(result.y, equalTo(Square(3)))
+        assertEquals(Square(3), result.x)
+        assertEquals(Square(3), result.y)
     }
 
     @Test
     fun `equality should be correct`() {
         val pos1 = BoardPosition.Companion.from(1, 2)
         val pos2 = BoardPosition.Companion.from(1, 2)
-        assertThat(pos1, equalTo(pos2))
+        assertEquals(pos2, pos1)
     }
 
     @Test
     fun `from factory method should create correct position`() {
         val pos = BoardPosition.Companion.from(5, 10)
-        assertThat(pos.x, equalTo(Square(5)))
-        assertThat(pos.y, equalTo(Square(10)))
+        assertEquals(Square(5), pos.x)
+        assertEquals(Square(10), pos.y)
     }
 
     @Test
@@ -49,7 +48,7 @@ class GridPositionTest {
         val pos1 = BoardPosition.Companion.from(0, 0)
         val pos2 = BoardPosition.Companion.from(1, 0)
 
-        assertThat(pos1.distance(pos2), equalTo(Square(1)))
+        assertEquals(Square(1), pos1.distance(pos2))
     }
 
     @Test
@@ -57,7 +56,7 @@ class GridPositionTest {
         val pos1 = BoardPosition.Companion.from(0, 0)
         val pos2 = BoardPosition.Companion.from(0, 1)
 
-        assertThat(pos1.distance(pos2), equalTo(Square(1)))
+        assertEquals(Square(1), pos1.distance(pos2))
     }
 
     @Test
@@ -66,7 +65,7 @@ class GridPositionTest {
         val pos2 = BoardPosition.Companion.from(1, 1)
 
         // In D&D, diagonal movement counts as 1 square
-        assertThat(pos1.distance(pos2), equalTo(Square(1)))
+        assertEquals(Square(1), pos1.distance(pos2))
     }
 
     @Test
@@ -75,7 +74,7 @@ class GridPositionTest {
         val pos2 = BoardPosition.Companion.from(3, 4)
 
         // Chebyshev distance = max(|3-0|, |4-0|) = 4
-        assertThat(pos1.distance(pos2), equalTo(Square(4)))
+        assertEquals(Square(4), pos1.distance(pos2))
     }
 
     @Test
@@ -83,14 +82,14 @@ class GridPositionTest {
         val pos1 = BoardPosition.Companion.from(1, 2)
         val pos2 = BoardPosition.Companion.from(4, 6)
 
-        assertThat(pos1.distance(pos2), equalTo(pos2.distance(pos1)))
+        assertEquals(pos2.distance(pos1), pos1.distance(pos2))
     }
 
     @Test
     fun `chebyshev distance to same position should be 0`() {
         val pos = BoardPosition.Companion.from(5, 5)
 
-        assertThat(pos.distance(pos), equalTo(Square(0)))
+        assertEquals(Square(0), pos.distance(pos))
     }
 
     @Test
@@ -99,7 +98,7 @@ class GridPositionTest {
         val pos2 = BoardPosition.Companion.from(2, 5)
 
         // Can move diagonally 2 squares, then 3 more vertically = max(2, 5) = 5
-        assertThat(pos1.distance(pos2), equalTo(Square(5)))
+        assertEquals(Square(5), pos1.distance(pos2))
     }
 
     @Test
@@ -107,8 +106,8 @@ class GridPositionTest {
         val pos = BoardPosition.Companion.from(2, 3)
         val coord = pos.toCoordinate()
 
-        assertThat(coord.x, equalTo(Feet(10.0))) // 2 * 5 feet
-        assertThat(coord.y, equalTo(Feet(15.0))) // 3 * 5 feet
+        assertEquals(Feet(10.0), coord.x) // 2 * 5 feet
+        assertEquals(Feet(15.0), coord.y) // 3 * 5 feet
     }
 
     @Test
@@ -116,8 +115,8 @@ class GridPositionTest {
         val pos = BoardPosition.Companion.from(0, 0)
         val coord = pos.toCoordinate()
 
-        assertThat(coord.x, equalTo(Feet(0.0)))
-        assertThat(coord.y, equalTo(Feet(0.0)))
+        assertEquals(Feet(0.0), coord.x)
+        assertEquals(Feet(0.0), coord.y)
     }
 
     @Test
@@ -125,8 +124,8 @@ class GridPositionTest {
         val coord = Coordinate.Companion.from(10.0, 15.0)
         val pos = BoardPosition.Companion.fromCoordinate(coord)
 
-        assertThat(pos.x, equalTo(Square(2))) // 10 / 5
-        assertThat(pos.y, equalTo(Square(3))) // 15 / 5
+        assertEquals(Square(2), pos.x) // 10 / 5
+        assertEquals(Square(3), pos.y) // 15 / 5
     }
 
     @Test
@@ -134,8 +133,8 @@ class GridPositionTest {
         val coord = Coordinate.Companion.from(12.5, 18.9)
         val pos = BoardPosition.Companion.fromCoordinate(coord)
 
-        assertThat(pos.x, equalTo(Square(2))) // 12.5 / 5 = 2.5 -> 2
-        assertThat(pos.y, equalTo(Square(3))) // 18.9 / 5 = 3.78 -> 3
+        assertEquals(Square(2), pos.x) // 12.5 / 5 = 2.5 -> 2
+        assertEquals(Square(3), pos.y) // 18.9 / 5 = 3.78 -> 3
     }
 
     @Test
@@ -143,8 +142,8 @@ class GridPositionTest {
         val coord = Coordinate.Companion.from(0.0, 0.0)
         val pos = BoardPosition.Companion.fromCoordinate(coord)
 
-        assertThat(pos.x, equalTo(Square(0)))
-        assertThat(pos.y, equalTo(Square(0)))
+        assertEquals(Square(0), pos.x)
+        assertEquals(Square(0), pos.y)
     }
 
     @Test
@@ -153,7 +152,7 @@ class GridPositionTest {
         val coord = original.toCoordinate()
         val roundtrip = BoardPosition.Companion.fromCoordinate(coord)
 
-        assertThat(roundtrip, equalTo(original))
+        assertEquals(original, roundtrip)
     }
 
     @Test
@@ -162,7 +161,7 @@ class GridPositionTest {
         val pos2 = BoardPosition.Companion.from(2, 3)
 
         // Chebyshev distance = max(|5-2|, |8-3|) = max(3, 5) = 5
-        assertThat(pos1.distance(pos2), equalTo(Square(5)))
+        assertEquals(Square(5), pos1.distance(pos2))
     }
 
     @Test
@@ -171,8 +170,8 @@ class GridPositionTest {
         val pos2 = BoardPosition(Square(-2), Square(-1))
         val result = pos1 + pos2
 
-        assertThat(result.x, equalTo(Square(3)))
-        assertThat(result.y, equalTo(Square(2)))
+        assertEquals(Square(3), result.x)
+        assertEquals(Square(2), result.y)
     }
 
     @Test
@@ -181,7 +180,7 @@ class GridPositionTest {
         val pos2 = BoardPosition.Companion.from(5, 7)
         val result = pos1 - pos2
 
-        assertThat(result.x, equalTo(Square(-3)))
-        assertThat(result.y, equalTo(Square(-4)))
+        assertEquals(Square(-3), result.x)
+        assertEquals(Square(-4), result.y)
     }
 }

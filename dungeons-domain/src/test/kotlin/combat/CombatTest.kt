@@ -1,10 +1,7 @@
 package combat
 import TestId
 import aPlayerCharacter
-import com.natpryce.hamkrest.and
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.hasSize
+import org.junit.jupiter.api.Assertions.assertEquals
 import fromModifiers
 import io.dungeons.Creature
 import io.dungeons.Die.Companion.D20
@@ -47,15 +44,15 @@ class FactionRelationsTest {
             )
             .build()
 
-        assertThat(relations.queryStance(FACTION_A, FACTION_B), equalTo(FactionStance.Neutral))
-        assertThat(relations.queryStance(FACTION_B, FACTION_A), equalTo(FactionStance.Neutral))
+        assertEquals(FactionStance.Neutral, relations.queryStance(FACTION_A, FACTION_B))
+        assertEquals(FactionStance.Neutral, relations.queryStance(FACTION_B, FACTION_A))
     }
 
     @Test
     fun `queryStance should return Hostile for unadded Relationship`() {
         val relations = FactionRelations.Builder().build()
-        assertThat(relations.queryStance(FACTION_A, FACTION_B), equalTo(FactionStance.Hostile))
-        assertThat(relations.queryStance(FACTION_B, FACTION_A), equalTo(FactionStance.Hostile))
+        assertEquals(FactionStance.Hostile, relations.queryStance(FACTION_A, FACTION_B))
+        assertEquals(FactionStance.Hostile, relations.queryStance(FACTION_B, FACTION_A))
     }
 
     @Test
@@ -70,8 +67,8 @@ class FactionRelationsTest {
             )
             .build()
 
-        assertThat(relations.queryStance(FACTION_A, FACTION_B), equalTo(FactionStance.Hostile))
-        assertThat(relations.queryStance(FACTION_B, FACTION_A), equalTo(FactionStance.Hostile))
+        assertEquals(FactionStance.Hostile, relations.queryStance(FACTION_A, FACTION_B))
+        assertEquals(FactionStance.Hostile, relations.queryStance(FACTION_B, FACTION_A))
     }
 
     @Test
@@ -87,7 +84,7 @@ class FactionRelationsTest {
     @Test
     fun `queryStance for the same faction should be Friendly`() {
         val relations = FactionRelations.Builder().build()
-        assertThat(relations.queryStance(FACTION_A, FACTION_A), equalTo(FactionStance.Friendly))
+        assertEquals(FactionStance.Friendly, relations.queryStance(FACTION_A, FACTION_A))
     }
 }
 
@@ -118,30 +115,26 @@ class CombatantsStoreTest {
     fun `find an existing combantant`() {
         val found = store.findOrNull(ID[0])
         assertNotNull(found)
-        assertThat(found.creature.name, equalTo("Alpha"))
+        assertEquals("Alpha", found.creature.name)
     }
 
     @Test
     fun `do not find a non-existing combantant`() {
         val found = store.findOrNull(ID[42])
-        assertThat(found, equalTo(null))
+        assertEquals(null, found)
     }
 
     @Test
     fun `findAllWithStance should return correct combatants`() {
         val friendlyToA = store.findAllWithStance(ID[0], FactionStance.Friendly)
-        assertThat(
-            friendlyToA.map{it.creature.id}.toSet(),
-            hasSize(equalTo(3))
-            and equalTo(setOf(ID[0], ID[1], ID[2]))
-        )
+        val friendlyIds = friendlyToA.map{it.creature.id}.toSet()
+        assertEquals(3, friendlyIds.size)
+        assertEquals(setOf(ID[0], ID[1], ID[2]), friendlyIds)
 
         val hostileToA = store.findAllWithStance(ID[0], FactionStance.Hostile)
-        assertThat(
-            hostileToA.map{it.creature.id}.toSet(),
-            hasSize(equalTo(3))
-            and equalTo(setOf(ID[3], ID[4], ID[5]))
-        )
+        val hostileIds = hostileToA.map{it.creature.id}.toSet()
+        assertEquals(3, hostileIds.size)
+        assertEquals(setOf(ID[3], ID[4], ID[5]), hostileIds)
     }
 }
 
@@ -158,7 +151,7 @@ class CombatantTest {
             val secondRoll = combatant.initiative
 
             // Should be the exact same instance (lazy evaluation caches the result)
-            assertThat(firstRoll, equalTo(secondRoll))
+            assertEquals(secondRoll, firstRoll)
         }
     }
 
@@ -172,8 +165,8 @@ class CombatantTest {
         withFixedDice(D20 rolls 12) {
             val combatant = SOME_COMBATANT.copy(creature = player)
             val initiative = combatant.initiative
-            assertThat(initiative.value, equalTo(12+4))
-            assertThat(initiative.die, equalTo(D20))
+            assertEquals(12+4, initiative.value)
+            assertEquals(D20, initiative.die)
         }
     }
 }

@@ -1,7 +1,6 @@
 package io.dungeons.world
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class FeetTest {
@@ -11,7 +10,7 @@ class FeetTest {
         val feet1 = Feet(10.0)
         val feet2 = Feet(5.0)
         val result = feet1 + feet2
-        assertThat(result, equalTo(Feet(15.0)))
+        assertEquals(Feet(15.0), result)
     }
 
     @Test
@@ -19,7 +18,7 @@ class FeetTest {
         val feet1 = Feet(10.0)
         val feet2 = Feet(3.0)
         val result = feet1 - feet2
-        assertThat(result, equalTo(Feet(7.0)))
+        assertEquals(Feet(7.0), result)
     }
 
     @Test
@@ -27,7 +26,7 @@ class FeetTest {
         val feet1 = Feet(4.0)
         val feet2 = Feet(2.5)
         val result = feet1 * feet2
-        assertThat(result, equalTo(Feet(10.0)))
+        assertEquals(Feet(10.0), result)
     }
 
     @Test
@@ -35,30 +34,30 @@ class FeetTest {
         val feet1 = Feet(10.0)
         val feet2 = Feet(2.0)
         val result = feet1 / feet2
-        assertThat(result, equalTo(Feet(5.0)))
+        assertEquals(Feet(5.0), result)
     }
 
     @Test
     fun `feet with same value should be equal`() {
         val feet1 = Feet(5.0)
         val feet2 = Feet(5.0)
-        assertThat(feet1, equalTo(feet2))
+        assertEquals(feet2, feet1)
     }
 
     @Test
     fun `operations with zero should work correctly`() {
         val feet = Feet(10.0)
         val zero = Feet(0.0)
-        assertThat(feet + zero, equalTo(Feet(10.0)))
-        assertThat(feet - zero, equalTo(Feet(10.0)))
-        assertThat(feet * zero, equalTo(Feet(0.0)))
+        assertEquals(Feet(10.0), feet + zero)
+        assertEquals(Feet(10.0), feet - zero)
+        assertEquals(Feet(0.0), feet * zero)
     }
 
     @Test
     fun `operations with negative values should work correctly`() {
         val positive = Feet(10.0)
         val negative = Feet(-5.0)
-        assertThat(positive + negative, equalTo(Feet(5.0)))
-        assertThat(positive - negative, equalTo(Feet(15.0)))
+        assertEquals(Feet(5.0), positive + negative)
+        assertEquals(Feet(15.0), positive - negative)
     }
 }

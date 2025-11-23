@@ -1,7 +1,6 @@
 package io.dungeons.world
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class CoordinateTest {
@@ -11,8 +10,8 @@ class CoordinateTest {
         val coord1 = Coordinate.from(3, 5)
         val coord2 = Coordinate.from(2, 4)
         val result = coord1 + coord2
-        assertThat(result.x, equalTo(Feet(3 + 2)))
-        assertThat(result.y, equalTo(Feet(5 + 4)))
+        assertEquals(Feet(3 + 2), result.x)
+        assertEquals(Feet(5 + 4), result.y)
     }
 
     @Test
@@ -20,15 +19,15 @@ class CoordinateTest {
         val coord1 = Coordinate.from(5, 7)
         val coord2 = Coordinate.from(2, 4)
         val result = coord1 - coord2
-        assertThat(result.x, equalTo(Feet(5 - 2)))
-        assertThat(result.y, equalTo(Feet(7 - 4)))
+        assertEquals(Feet(5 - 2), result.x)
+        assertEquals(Feet(7 - 4), result.y)
     }
 
     @Test
     fun `equality should be correct`() {
         val coord1 = Coordinate.from(1, 2)
         val coord2 = Coordinate.from(1, 2)
-        assertThat(coord1, equalTo(coord2))
+        assertEquals(coord2, coord1)
     }
 
     @Test
@@ -36,6 +35,6 @@ class CoordinateTest {
         val coord1 = Coordinate.from(0, 0)
         val coord2 = Coordinate.from(3, 4)
         val distance = coord1.distance(coord2)
-        assertThat(distance, equalTo(Feet(5.0))) // 3-4-5 triangle
+        assertEquals(Feet(5.0), distance) // 3-4-5 triangle
     }
 }

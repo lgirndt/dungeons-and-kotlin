@@ -1,5 +1,4 @@
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import io.mockk.junit5.MockKExtension
 import io.dungeons.*
 import io.dungeons.Die.Companion.D20
@@ -36,7 +35,7 @@ class CharacterTest {
             stats = SOME_STAT_BOCK.copyByInts(dex = 12, con = 14),
         )
 
-        assertThat(myCharacter.stats.dex, equalTo(Stat(12)))
+        assertEquals(Stat(12), myCharacter.stats.dex)
     }
 
     @ParameterizedTest
@@ -49,14 +48,13 @@ class CharacterTest {
         "9, 3"
     )
     fun `proficiency bonus at various levels should be correct`(level: Int, expectedBonus: Int) {
-        assertThat(PlayerCharacter.aPlayerCharacter(level = level).proficiencyBonus.toInt(),
-            equalTo(expectedBonus))
+        assertEquals(expectedBonus, PlayerCharacter.aPlayerCharacter(level = level).proficiencyBonus.toInt())
     }
 
 
     @Test
     fun `CharacterClasses have the proper name`() {
-        assertThat(Barbarian().name, equalTo("Barbarian"))
+        assertEquals("Barbarian", Barbarian().name)
     }
 
     @Test
@@ -65,8 +63,8 @@ class CharacterTest {
             hitPoints = 20
         )
         val damageReceived = character.receiveDamage(8, DamageType.Force)
-        assertThat(damageReceived, equalTo(8))
-        assertThat(character.hitPoints, equalTo(20 - 8))
+        assertEquals(8, damageReceived)
+        assertEquals(20 - 8, character.hitPoints)
     }
 
     @Test
@@ -78,8 +76,8 @@ class CharacterTest {
             )
         )
         val damageReceived = character.receiveDamage(9, DamageType.Force)
-        assertThat(damageReceived, equalTo(4))
-        assertThat(character.hitPoints, equalTo(20 - 4)) // half damage rounded down
+        assertEquals(4, damageReceived)
+        assertEquals(20 - 4, character.hitPoints) // half damage rounded down
     }
 
     @Test
@@ -91,8 +89,8 @@ class CharacterTest {
             )
         )
         val damageReceived = character.receiveDamage(6, DamageType.Force)
-        assertThat(damageReceived, equalTo(12))
-        assertThat(character.hitPoints, equalTo(20 - 6 * 2)) // double damage
+        assertEquals(12, damageReceived)
+        assertEquals(20 - 6 * 2, character.hitPoints) // double damage
     }
 
     @Test
@@ -104,8 +102,8 @@ class CharacterTest {
             )
         )
         val damageReceived = character.receiveDamage(15, DamageType.Force)
-        assertThat(damageReceived, equalTo(0))
-        assertThat(character.hitPoints, equalTo(20)) // no damage
+        assertEquals(0, damageReceived)
+        assertEquals(20, character.hitPoints) // no damage
     }
 
 // TODO: PlayerCharacter doesn't have castSpellAttack method yet. This is only in Character.
@@ -122,7 +120,7 @@ class CharacterTest {
 //
 //        val spell = SOME_SPELL.copy()
 //        val outcome = fighter.castSpellAttack(spell, SpellLevel.Cantrip, opponent, RollModifier.NORMAL)
-//        assertThat(outcome, equalTo(null))
+//        assertEquals(null, outcome)
 //    }
 
 // TODO: PlayerCharacter doesn't have castSpellAttack method yet. This is only in Character.
@@ -151,8 +149,8 @@ class CharacterTest {
 //            assertNotNull(outcome)
 //            // Hit roll: 12 (d20) + 3 (cha mod) + 2 (prof bonus) = 17, which meets AC 12
 //            // Damage: 7 (d10) + 3 (cha mod) = 10
-//            assertThat(outcome.hasBeenHit, equalTo(true))
-//            assertThat(outcome.damageDealt, equalTo(10))
+//            assertEquals(true, outcome.hasBeenHit)
+//            assertEquals(10, outcome.damageDealt)
 //        }
 //    }
 
@@ -168,7 +166,7 @@ class CharacterTest {
                 difficultyClass = 12
             )
             // Roll: 10 + 2 (str mod) = 12, meets DC 12
-            assertThat(result.isSuccessful, equalTo(true))
+            assertEquals(true, result.isSuccessful)
         }
     }
 
@@ -184,7 +182,7 @@ class CharacterTest {
                 difficultyClass = 15
             )
             // Roll: 8 + 1 (dex mod) = 9, fails DC 15
-            assertThat(result.isSuccessful, equalTo(false))
+            assertEquals(false, result.isSuccessful)
         }
     }
 
@@ -204,7 +202,7 @@ class CharacterTest {
                 rollModifier = RollModifier.ADVANTAGE
             )
             // Roll: 15 (higher) + 3 (wis mod) = 18, meets DC 18
-            assertThat(result.isSuccessful, equalTo(true))
+            assertEquals(true, result.isSuccessful)
         }
     }
 
@@ -224,7 +222,7 @@ class CharacterTest {
                 rollModifier = RollModifier.DISADVANTAGE
             )
             // Roll: 9 (lower) + 2 (int mod) = 11, fails DC 15
-            assertThat(result.isSuccessful, equalTo(false))
+            assertEquals(false, result.isSuccessful)
         }
     }
 
@@ -237,7 +235,7 @@ class CharacterTest {
         withFixedDice(D20 rolls 12) {
             val result = character.rollInitiative()
             // Roll: 12 + 3 (dex mod) = 15
-            assertThat(result.value, equalTo(15))
+            assertEquals(15, result.value)
         }
     }
 
@@ -253,7 +251,7 @@ class CharacterTest {
         ) {
             val result = character.rollInitiative(RollModifier.ADVANTAGE)
             // Roll: 16 (higher) + 2 (dex mod) = 18
-            assertThat(result.value, equalTo(18))
+            assertEquals(18, result.value)
         }
     }
 
@@ -269,7 +267,7 @@ class CharacterTest {
         ) {
             val result = character.rollInitiative(RollModifier.DISADVANTAGE)
             // Roll: 6 (lower) + 1 (dex mod) = 7
-            assertThat(result.value, equalTo(7))
+            assertEquals(7, result.value)
         }
     }
 
@@ -282,7 +280,7 @@ class CharacterTest {
         withFixedDice(D20 rolls 10) {
             val result = character.rollInitiative()
             // Roll: 10 + (-1) (dex mod) = 9
-            assertThat(result.value, equalTo(9))
+            assertEquals(9, result.value)
         }
     }
 
@@ -295,7 +293,7 @@ class CharacterTest {
         withFixedDice(D20 rolls 15) {
             val result = character.rollInitiative()
             // Roll: 15 + 0 (dex mod) = 15
-            assertThat(result.value, equalTo(15))
+            assertEquals(15, result.value)
         }
     }
 
@@ -307,7 +305,7 @@ class CharacterTest {
 
         withFixedDice(D20 rolls 10) {
             val result = character.rollInitiative()
-            assertThat(result.die, equalTo(D20))
+            assertEquals(D20, result.die)
         }
     }
 }

@@ -1,7 +1,6 @@
 package core
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.core.GridIndex
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -12,40 +11,40 @@ class GridPositionTest {
     fun `should create valid position with positive coordinates`() {
         val pos = GridIndex(5, 10)
 
-        assertThat(pos.x, equalTo(5))
-        assertThat(pos.y, equalTo(10))
+        assertEquals(5, pos.x)
+        assertEquals(10, pos.y)
     }
 
     @Test
     fun `should create position at origin`() {
         val pos = GridIndex(0, 0)
 
-        assertThat(pos.x, equalTo(0))
-        assertThat(pos.y, equalTo(0))
+        assertEquals(0, pos.x)
+        assertEquals(0, pos.y)
     }
 
     @Test
     fun `should support negative x`() {
         val pos = GridIndex(-1, 5)
 
-        assertThat(pos.x, equalTo(-1))
-        assertThat(pos.y, equalTo(5))
+        assertEquals(-1, pos.x)
+        assertEquals(5, pos.y)
     }
 
     @Test
     fun `should support negative y`() {
         val pos = GridIndex(5, -1)
 
-        assertThat(pos.x, equalTo(5))
-        assertThat(pos.y, equalTo(-1))
+        assertEquals(5, pos.x)
+        assertEquals(-1, pos.y)
     }
 
     @Test
     fun `should support both negative coordinates`() {
         val pos = GridIndex(-1, -1)
 
-        assertThat(pos.x, equalTo(-1))
-        assertThat(pos.y, equalTo(-1))
+        assertEquals(-1, pos.x)
+        assertEquals(-1, pos.y)
     }
 
     @Test
@@ -53,7 +52,7 @@ class GridPositionTest {
         val pos1 = GridIndex(3, 4)
         val pos2 = GridIndex(3, 4)
 
-        assertThat(pos1, equalTo(pos2))
+        assertEquals(pos2, pos1)
     }
 
     @Test
@@ -61,6 +60,6 @@ class GridPositionTest {
         val pos1 = GridIndex(3, 4)
         val pos2 = GridIndex(4, 3)
 
-        assertThat(pos1 == pos2, equalTo(false))
+        assertEquals(false, pos1 == pos2)
     }
 }

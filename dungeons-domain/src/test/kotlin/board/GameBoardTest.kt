@@ -1,9 +1,8 @@
 package io.dungeons.board
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
 import io.dungeons.core.GridIndex
 import io.dungeons.core.Id
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -53,9 +52,9 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 1)
 
             // Should NOT include the blocked position
-            assertThat(reach[GridIndex(1, 0)], equalTo(null))
+            assertEquals(null, reach[GridIndex(1, 0)])
             // Should include other neighbors
-            assertThat(reach[GridIndex(1, 2)], equalTo(1))
+            assertEquals(1, reach[GridIndex(1, 2)])
         }
 
         @Test
@@ -65,7 +64,7 @@ class GameBoardTest {
 
             val reach = board.calculateReach(start, steps = 0)
 
-            assertThat(reach[GridIndex(5, 5)], equalTo(0))
+            assertEquals(0, reach[GridIndex(5, 5)])
         }
 
         @Test
@@ -75,15 +74,15 @@ class GameBoardTest {
 
             val reach = board.calculateReach(start, steps = 1)
 
-            assertThat(reach[GridIndex(5, 5)], equalTo(0))
-            assertThat(reach[GridIndex(4, 4)], equalTo(1)) // NW
-            assertThat(reach[GridIndex(5, 4)], equalTo(1)) // N
-            assertThat(reach[GridIndex(6, 4)], equalTo(1)) // NE
-            assertThat(reach[GridIndex(4, 5)], equalTo(1)) // W
-            assertThat(reach[GridIndex(6, 5)], equalTo(1)) // E
-            assertThat(reach[GridIndex(4, 6)], equalTo(1)) // SW
-            assertThat(reach[GridIndex(5, 6)], equalTo(1)) // S
-            assertThat(reach[GridIndex(6, 6)], equalTo(1)) // SE
+            assertEquals(0, reach[GridIndex(5, 5)])
+            assertEquals(1, reach[GridIndex(4, 4)]) // NW
+            assertEquals(1, reach[GridIndex(5, 4)]) // N
+            assertEquals(1, reach[GridIndex(6, 4)]) // NE
+            assertEquals(1, reach[GridIndex(4, 5)]) // W
+            assertEquals(1, reach[GridIndex(6, 5)]) // E
+            assertEquals(1, reach[GridIndex(4, 6)]) // SW
+            assertEquals(1, reach[GridIndex(5, 6)]) // S
+            assertEquals(1, reach[GridIndex(6, 6)]) // SE
         }
 
         @Test
@@ -94,10 +93,10 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 2)
 
             // Should reach positions 2 steps away
-            assertThat(reach[GridIndex(5, 3)], equalTo(2)) // 2 steps north
-            assertThat(reach[GridIndex(7, 5)], equalTo(2)) // 2 steps east
-            assertThat(reach[GridIndex(3, 5)], equalTo(2)) // 2 steps west
-            assertThat(reach[GridIndex(5, 7)], equalTo(2)) // 2 steps south
+            assertEquals(2, reach[GridIndex(5, 3)]) // 2 steps north
+            assertEquals(2, reach[GridIndex(7, 5)]) // 2 steps east
+            assertEquals(2, reach[GridIndex(3, 5)]) // 2 steps west
+            assertEquals(2, reach[GridIndex(5, 7)]) // 2 steps south
         }
 
         @Test
@@ -112,12 +111,12 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 1)
 
             // Should not include the directly blocked position
-            assertThat(reach[GridIndex(5, 4)], equalTo(null))
+            assertEquals(null, reach[GridIndex(5, 4)])
 
             // Should still reach other directions
-            assertThat(reach[GridIndex(5, 6)], equalTo(1))
-            assertThat(reach[GridIndex(6, 5)], equalTo(1))
-            assertThat(reach[GridIndex(4, 5)], equalTo(1))
+            assertEquals(1, reach[GridIndex(5, 6)])
+            assertEquals(1, reach[GridIndex(6, 5)])
+            assertEquals(1, reach[GridIndex(4, 5)])
         }
 
         @Test
@@ -132,8 +131,8 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 2)
 
             // Should reach through the passable token
-            assertThat(reach[GridIndex(5, 4)], equalTo(1))
-            assertThat(reach[GridIndex(5, 3)], equalTo(2))
+            assertEquals(1, reach[GridIndex(5, 4)])
+            assertEquals(2, reach[GridIndex(5, 3)])
         }
 
         @Test
@@ -160,12 +159,12 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 2)
 
             // Can reach positions around the wall
-            assertThat(reach[GridIndex(6, 4)], equalTo(1)) // NE is reachable
-            assertThat(reach[GridIndex(5, 3)], equalTo(2)) // Can reach to the west
+            assertEquals(1, reach[GridIndex(6, 4)]) // NE is reachable
+            assertEquals(2, reach[GridIndex(5, 3)]) // Can reach to the west
 
             // The blocked positions should not be reachable
-            assertThat(reach[GridIndex(4, 4)], equalTo(null))
-            assertThat(reach[GridIndex(5, 4)], equalTo(null))
+            assertEquals(null, reach[GridIndex(4, 4)])
+            assertEquals(null, reach[GridIndex(5, 4)])
         }
 
         @Test
@@ -175,10 +174,10 @@ class GameBoardTest {
 
             val reach = board.calculateReach(start, steps = 2)
 
-            assertThat(reach[GridIndex(0, 0)], equalTo(0))
-            assertThat(reach[GridIndex(1, 0)], equalTo(1))
-            assertThat(reach[GridIndex(0, 1)], equalTo(1))
-            assertThat(reach[GridIndex(2, 2)], equalTo(2))
+            assertEquals(0, reach[GridIndex(0, 0)])
+            assertEquals(1, reach[GridIndex(1, 0)])
+            assertEquals(1, reach[GridIndex(0, 1)])
+            assertEquals(2, reach[GridIndex(2, 2)])
         }
 
         @Test
@@ -189,7 +188,7 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 20)
 
             // Should reach diagonal corner
-            assertThat(reach[GridIndex(9, 9)], equalTo(9)) // Diagonal distance
+            assertEquals(9, reach[GridIndex(9, 9)]) // Diagonal distance
         }
 
         @Test
@@ -200,10 +199,10 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 1)
 
             // Should reach start and 3 neighbors
-            assertThat(reach[GridIndex(0, 0)], equalTo(0))
-            assertThat(reach[GridIndex(1, 0)], equalTo(1))
-            assertThat(reach[GridIndex(0, 1)], equalTo(1))
-            assertThat(reach[GridIndex(1, 1)], equalTo(1))
+            assertEquals(0, reach[GridIndex(0, 0)])
+            assertEquals(1, reach[GridIndex(1, 0)])
+            assertEquals(1, reach[GridIndex(0, 1)])
+            assertEquals(1, reach[GridIndex(1, 1)])
         }
 
         @Test
@@ -215,7 +214,7 @@ class GameBoardTest {
                 board.calculateReach(start, steps = -1)
             }
 
-            assertThat(exception.message, equalTo("Steps must be non-negative, but was -1"))
+            assertEquals("Steps must be non-negative, but was -1", exception.message)
         }
 
         @Test
@@ -238,10 +237,10 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 1)
 
             // Should only reach the starting position (all neighbors are blocked)
-            assertThat(reach[GridIndex(3, 3)], equalTo(0))
+            assertEquals(0, reach[GridIndex(3, 3)])
             // Verify neighbors are not reachable
             surroundingPairs().forEach { (x, y) ->
-                assertThat(reach[GridIndex(x, y)], equalTo(null))
+                assertEquals(null, reach[GridIndex(x, y)])
             }
         }
 
@@ -253,7 +252,7 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 10)
 
             (1..9).forEach { i ->
-                assertThat(reach[GridIndex(i, i)], equalTo(i))
+                assertEquals(i, reach[GridIndex(i, i)])
              }
         }
     }
@@ -267,7 +266,7 @@ class GameBoardTest {
             val from = BoardPosition.from(0, 0)
             val to = BoardPosition.from(5, 5)
 
-            assertThat(board.hasLineOfSight(from, to), equalTo(true))
+            assertEquals(true, board.hasLineOfSight(from, to))
         }
 
         @Test
@@ -276,7 +275,7 @@ class GameBoardTest {
             val from = BoardPosition.from(5, 5)
             val to = BoardPosition.from(5, 6)
 
-            assertThat(board.hasLineOfSight(from, to), equalTo(true))
+            assertEquals(true, board.hasLineOfSight(from, to))
         }
 
         @Test
@@ -284,7 +283,7 @@ class GameBoardTest {
             val board = GameBoard(10, 10)
             val position = BoardPosition.from(5, 5)
 
-            assertThat(board.hasLineOfSight(position, position), equalTo(true))
+            assertEquals(true, board.hasLineOfSight(position, position))
         }
 
         @Test
@@ -300,7 +299,7 @@ class GameBoardTest {
 
             board.putTokenTo(BoardPosition.from(4, 4), OpaqueToken())
 
-            assertThat(board.hasLineOfSight(from, to), equalTo(false))
+            assertEquals(false, board.hasLineOfSight(from, to))
         }
 
         @Test
@@ -311,7 +310,7 @@ class GameBoardTest {
 
             board.putTokenTo(BoardPosition.from(2, 2), TransparentToken())
 
-            assertThat(board.hasLineOfSight(from, to), equalTo(true))
+            assertEquals(true, board.hasLineOfSight(from, to))
         }
 
         @Test
@@ -319,8 +318,8 @@ class GameBoardTest {
             val board = GameBoard(10, 10)
             val center = BoardPosition.from(5, 5)
 
-            assertThat(board.hasLineOfSight(center, BoardPosition.from(0, 5)), equalTo(true)) // West
-            assertThat(board.hasLineOfSight(center, BoardPosition.from(9, 5)), equalTo(true)) // East
+            assertEquals(true, board.hasLineOfSight(center, BoardPosition.from(0, 5))) // West
+            assertEquals(true, board.hasLineOfSight(center, BoardPosition.from(9, 5))) // East
         }
 
 
@@ -332,8 +331,8 @@ class GameBoardTest {
 
             board.putTokenTo(BoardPosition.from(4, 4), OpaqueToken())
 
-            assertThat(board.hasLineOfSight(pos1, pos2), equalTo(false))
-            assertThat(board.hasLineOfSight(pos2, pos1), equalTo(false))
+            assertEquals(false, board.hasLineOfSight(pos1, pos2))
+            assertEquals(false, board.hasLineOfSight(pos2, pos1))
         }
 
         @Test
@@ -345,7 +344,7 @@ class GameBoardTest {
             board.putTokenTo(BoardPosition.from(2, 2), OpaqueToken())
             board.putTokenTo(BoardPosition.from(4, 4), OpaqueToken())
 
-            assertThat(board.hasLineOfSight(from, to), equalTo(false))
+            assertEquals(false, board.hasLineOfSight(from, to))
         }
 
         @Test
@@ -357,7 +356,7 @@ class GameBoardTest {
 
             board.putTokenTo(to, OpaqueToken())
 
-            assertThat(board.hasLineOfSight(from, to), equalTo(true))
+            assertEquals(true, board.hasLineOfSight(from, to))
         }
 
         @Test
@@ -369,7 +368,7 @@ class GameBoardTest {
             // Place opaque token along the line
             board.putTokenTo(BoardPosition.from(4, 3), OpaqueToken())
 
-            assertThat(board.hasLineOfSight(from, to), equalTo(false))
+            assertEquals(false, board.hasLineOfSight(from, to))
         }
     }
 }

@@ -1,7 +1,6 @@
 package io.dungeons.core
 
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
@@ -15,44 +14,44 @@ class BoundedGridTest {
         fun `should create grid with default min bounds`() {
             val grid = BoundedGrid<Int>(maxX = 10, maxY = 10)
 
-            assertThat(grid.minX, equalTo(0))
-            assertThat(grid.minY, equalTo(0))
-            assertThat(grid.maxX, equalTo(10))
-            assertThat(grid.maxY, equalTo(10))
+            assertEquals(0, grid.minX)
+            assertEquals(0, grid.minY)
+            assertEquals(10, grid.maxX)
+            assertEquals(10, grid.maxY)
         }
 
         @Test
         fun `should create grid with custom min bounds`() {
             val grid = BoundedGrid<Int>(minX = 5, minY = 5, maxX = 10, maxY = 10)
 
-            assertThat(grid.minX, equalTo(5))
-            assertThat(grid.minY, equalTo(5))
-            assertThat(grid.maxX, equalTo(10))
-            assertThat(grid.maxY, equalTo(10))
+            assertEquals(5, grid.minX)
+            assertEquals(5, grid.minY)
+            assertEquals(10, grid.maxX)
+            assertEquals(10, grid.maxY)
         }
 
         @Test
         fun `should support negative coordinates`() {
             val grid = BoundedGrid<Int>(minX = -10, minY = -10, maxX = 10, maxY = 10)
 
-            assertThat(grid.minX, equalTo(-10))
-            assertThat(grid.minY, equalTo(-10))
-            assertThat(grid.maxX, equalTo(10))
-            assertThat(grid.maxY, equalTo(10))
+            assertEquals(-10, grid.minX)
+            assertEquals(-10, grid.minY)
+            assertEquals(10, grid.maxX)
+            assertEquals(10, grid.maxY)
         }
 
         @Test
         fun `should allow when maxX equals minX`() {
             val grid = BoundedGrid<Int>(minX = 5, maxX = 5, maxY = 10)
-            assertThat(grid.minX, equalTo(5))
-            assertThat(grid.maxX, equalTo(5))
+            assertEquals(5, grid.minX)
+            assertEquals(5, grid.maxX)
         }
 
         @Test
         fun `should allow when maxY equals minY`() {
             val grid = BoundedGrid<Int>(maxX = 10, minY = 5, maxY = 5)
-            assertThat(grid.minY, equalTo(5))
-            assertThat(grid.maxY, equalTo(5))
+            assertEquals(5, grid.minY)
+            assertEquals(5, grid.maxY)
         }
     }
 
@@ -63,7 +62,7 @@ class BoundedGridTest {
         fun `should get null for unset cell`() {
             val grid = BoundedGrid<String>(maxX = 5, maxY = 5)
 
-            assertThat(grid[GridIndex(2, 3)], equalTo(null))
+            assertEquals(null, grid[GridIndex(2, 3)])
         }
 
         @Test
@@ -72,7 +71,7 @@ class BoundedGridTest {
 
             grid[GridIndex(2, 3)] = "test"
 
-            assertThat(grid[GridIndex(2, 3)], equalTo("test"))
+            assertEquals("test", grid[GridIndex(2, 3)])
         }
 
         @Test
@@ -81,7 +80,7 @@ class BoundedGridTest {
 
             grid[GridIndex(15, 15)] = 42
 
-            assertThat(grid[GridIndex(15, 15)], equalTo(42))
+            assertEquals(42, grid[GridIndex(15, 15)])
         }
 
         @Test
@@ -90,7 +89,7 @@ class BoundedGridTest {
 
             grid[GridIndex(-5, -5)] = 42
 
-            assertThat(grid[GridIndex(-5, -5)], equalTo(42))
+            assertEquals(42, grid[GridIndex(-5, -5)])
         }
 
         @Test
@@ -122,8 +121,8 @@ class BoundedGridTest {
 
             val removed = grid.remove(GridIndex(2, 3))
 
-            assertThat(removed, equalTo("test"))
-            assertThat(grid[GridIndex(2, 3)], equalTo(null))
+            assertEquals("test", removed)
+            assertEquals(null, grid[GridIndex(2, 3)])
         }
 
         @Test
@@ -132,7 +131,7 @@ class BoundedGridTest {
 
             val removed = grid.remove(GridIndex(2, 3))
 
-            assertThat(removed, equalTo(null))
+            assertEquals(null, removed)
         }
 
         @Test
@@ -152,7 +151,7 @@ class BoundedGridTest {
         fun `should return false for unset cell`() {
             val grid = BoundedGrid<String>(maxX = 5, maxY = 5)
 
-            assertThat(grid.isEmpty(GridIndex(2, 3)), equalTo(false))
+            assertEquals(false, grid.isEmpty(GridIndex(2, 3)))
         }
 
         @Test
@@ -160,7 +159,7 @@ class BoundedGridTest {
             val grid = BoundedGrid<String>(maxX = 5, maxY = 5)
             grid[GridIndex(2, 3)] = "test"
 
-            assertThat(grid.isEmpty(GridIndex(2, 3)), equalTo(true))
+            assertEquals(true, grid.isEmpty(GridIndex(2, 3)))
         }
 
         @Test
@@ -180,44 +179,44 @@ class BoundedGridTest {
         fun `should return true for position at min bounds`() {
             val grid = BoundedGrid<Int>(maxX = 5, maxY = 5)
 
-            assertThat(grid.isInBounds(GridIndex(0, 0)), equalTo(true))
+            assertEquals(true, grid.isInBounds(GridIndex(0, 0)))
         }
 
         @Test
         fun `should return true for position at max bounds`() {
             val grid = BoundedGrid<Int>(maxX = 5, maxY = 5)
 
-            assertThat(grid.isInBounds(GridIndex(5, 5)), equalTo(true))
+            assertEquals(true, grid.isInBounds(GridIndex(5, 5)))
         }
 
         @Test
         fun `should return false for position beyond max bounds`() {
             val grid = BoundedGrid<Int>(maxX = 5, maxY = 5)
 
-            assertThat(grid.isInBounds(GridIndex(6, 6)), equalTo(false))
+            assertEquals(false, grid.isInBounds(GridIndex(6, 6)))
         }
 
         @Test
         fun `should work with offset bounds`() {
             val grid = BoundedGrid<Int>(minX = 10, minY = 10, maxX = 20, maxY = 20)
 
-            assertThat(grid.isInBounds(GridIndex(10, 10)), equalTo(true))
-            assertThat(grid.isInBounds(GridIndex(15, 15)), equalTo(true))
-            assertThat(grid.isInBounds(GridIndex(20, 20)), equalTo(true))
-            assertThat(grid.isInBounds(GridIndex(9, 15)), equalTo(false))
-            assertThat(grid.isInBounds(GridIndex(21, 15)), equalTo(false))
+            assertEquals(true, grid.isInBounds(GridIndex(10, 10)))
+            assertEquals(true, grid.isInBounds(GridIndex(15, 15)))
+            assertEquals(true, grid.isInBounds(GridIndex(20, 20)))
+            assertEquals(false, grid.isInBounds(GridIndex(9, 15)))
+            assertEquals(false, grid.isInBounds(GridIndex(21, 15)))
         }
 
         @Test
         fun `should work with negative coordinates`() {
             val grid = BoundedGrid<Int>(minX = -10, minY = -10, maxX = 10, maxY = 10)
 
-            assertThat(grid.isInBounds(GridIndex(-10, -10)), equalTo(true))
-            assertThat(grid.isInBounds(GridIndex(-5, -5)), equalTo(true))
-            assertThat(grid.isInBounds(GridIndex(0, 0)), equalTo(true))
-            assertThat(grid.isInBounds(GridIndex(10, 10)), equalTo(true))
-            assertThat(grid.isInBounds(GridIndex(-11, 0)), equalTo(false))
-            assertThat(grid.isInBounds(GridIndex(11, 0)), equalTo(false))
+            assertEquals(true, grid.isInBounds(GridIndex(-10, -10)))
+            assertEquals(true, grid.isInBounds(GridIndex(-5, -5)))
+            assertEquals(true, grid.isInBounds(GridIndex(0, 0)))
+            assertEquals(true, grid.isInBounds(GridIndex(10, 10)))
+            assertEquals(false, grid.isInBounds(GridIndex(-11, 0)))
+            assertEquals(false, grid.isInBounds(GridIndex(11, 0)))
         }
     }
 
@@ -230,10 +229,10 @@ class BoundedGridTest {
 
             val box = grid.boundingBox
 
-            assertThat(box.minX, equalTo(0))
-            assertThat(box.minY, equalTo(0))
-            assertThat(box.maxX, equalTo(10))
-            assertThat(box.maxY, equalTo(20))
+            assertEquals(0, box.minX)
+            assertEquals(0, box.minY)
+            assertEquals(10, box.maxX)
+            assertEquals(20, box.maxY)
         }
 
         @Test
@@ -242,10 +241,10 @@ class BoundedGridTest {
 
             val box = grid.boundingBox
 
-            assertThat(box.minX, equalTo(5))
-            assertThat(box.minY, equalTo(10))
-            assertThat(box.maxX, equalTo(15))
-            assertThat(box.maxY, equalTo(30))
+            assertEquals(5, box.minX)
+            assertEquals(10, box.minY)
+            assertEquals(15, box.maxX)
+            assertEquals(30, box.maxY)
         }
 
         @Test
@@ -254,10 +253,10 @@ class BoundedGridTest {
 
             val box = grid.boundingBox
 
-            assertThat(box.minX, equalTo(-10))
-            assertThat(box.minY, equalTo(-20))
-            assertThat(box.maxX, equalTo(10))
-            assertThat(box.maxY, equalTo(20))
+            assertEquals(-10, box.minX)
+            assertEquals(-20, box.minY)
+            assertEquals(10, box.maxX)
+            assertEquals(20, box.maxY)
         }
     }
 }
