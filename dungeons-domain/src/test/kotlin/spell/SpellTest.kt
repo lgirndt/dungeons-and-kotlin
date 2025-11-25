@@ -1,6 +1,6 @@
 package spell
 
-import ProvidesGridPositionMock
+import ProvidesBoardPositionMock
 import SOME_STAT_BOCK
 import TestId
 import aPlayerCharacter
@@ -52,7 +52,7 @@ class SpellTest {
             armourClass = 12,
         )
 
-        val providesBoardPosition = ProvidesGridPositionMock(
+        val providesBoardPosition = ProvidesBoardPositionMock(
             mapOf(
                 ID[0] to BoardPosition(Square(0), Square(0)),
                 ID[1] to BoardPosition(Square(0), Square(2))

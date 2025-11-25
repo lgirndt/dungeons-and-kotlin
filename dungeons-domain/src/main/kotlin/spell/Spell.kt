@@ -2,7 +2,7 @@ package io.dungeons.spell
 
 import com.google.common.base.MoreObjects
 import io.dungeons.*
-import io.dungeons.combat.ProvidesGridPosition
+import io.dungeons.combat.ProvidesBoardPosition
 import io.dungeons.core.Id
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet
@@ -41,7 +41,7 @@ fun castAttackSpell(
     opponent: Attackable,
     spell: AttackSpell,
     onLevel: SpellLevel,
-    providesGridPosition: ProvidesGridPosition,
+    providesBoardPosition: ProvidesBoardPosition,
     rollModifier: RollModifier
 ): AttackOutcome {
     require(onLevel == SpellLevel.Cantrip && spell.level == SpellLevel.Cantrip)
@@ -60,7 +60,7 @@ fun castAttackSpell(
             override fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == 20
         },
         opponent,
-        providesGridPosition,
+        providesBoardPosition,
         rollModifier
     )
 

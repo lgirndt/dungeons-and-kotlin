@@ -37,6 +37,179 @@ class GameBoardTest {
         override val allowsSight: Boolean = true
     }
 
+    // Test tokens for different layers
+    private data class GroundToken(
+        override val id: Id<Token> = Id.generate(),
+        override val allowsMovement: Boolean = true,
+        override val allowsSight: Boolean = true
+    ) : Token {
+        override val layer: BoardLayer = BoardLayer.GROUND
+    }
+
+    private data class ObjectToken(
+        override val id: Id<Token> = Id.generate(),
+        override val allowsMovement: Boolean = false,
+        override val allowsSight: Boolean = false
+    ) : Token {
+        override val layer: BoardLayer = BoardLayer.OBJECT
+    }
+
+    private data class CreatureToken(
+        override val id: Id<Token> = Id.generate(),
+        override val allowsMovement: Boolean = false,
+        override val allowsSight: Boolean = true
+    ) : Token {
+        override val layer: BoardLayer = BoardLayer.CREATURE
+    }
+
+    @Nested
+    inner class MultiLayerTokens {
+
+        @Test
+        fun `should allow placing tokens on different layers at same position`() {
+            val board = GameBoard(10, 10)
+            val position = BoardPosition.from(5, 5)
+
+            val ground = GroundToken()
+            val obj = ObjectToken()
+            val creature = CreatureToken()
+
+            board.putTokenTo(position, ground)
+            board.putTokenTo(position, obj)
+            board.putTokenTo(position, creature)
+
+            assertThat(
+                board.getTokenAt(BoardLayer.GROUND, position)?.id,
+                equalTo(ground.id)
+            )
+            assertThat(
+                board.getTokenAt(BoardLayer.OBJECT, position)?.id,
+                equalTo(obj.id)
+            )
+            assertThat(
+                board.getTokenAt(BoardLayer.CREATURE, position)?.id,
+                equalTo(creature.id)
+            )
+        }
+
+        @Test
+        fun `should reject duplicate token on same layer`() {
+            val board = GameBoard(10, 10)
+            val position = BoardPosition.from(5, 5)
+
+            val ground1 = GroundToken()
+            val ground2 = GroundToken()
+
+            board.putTokenTo(position, ground1)
+
+            assertThrows<IllegalArgumentException> {
+                board.putTokenTo(position, ground2)
+            }
+        }
+
+        @Test
+        fun `should block movement if any layer blocks movement`() {
+            // Grid layout:
+            //   4 5 6
+            // 4 . . .
+            // 5 . S .  <- Start position
+            // 6 . X .  <- Position with blocking object token
+            //
+            // Even with passable ground layer, object layer blocks movement
+
+            val board = GameBoard(10, 10)
+            val start = BoardPosition.from(5, 5)
+            val blockedPos = BoardPosition.from(5, 6)
+
+            // Place passable ground token and blocking object token at same position
+            board.putTokenTo(blockedPos, GroundToken(allowsMovement = true))
+            board.putTokenTo(blockedPos, ObjectToken(allowsMovement = false))
+
+            val reach = board.calculateReach(start, steps = 1)
+
+            assertThat(reach[GridIndex(5, 6)], equalTo(null)) // Blocked by object layer
+            assertThat(reach[GridIndex(5, 4)], equalTo(1))    // North is reachable
+        }
+
+        @Test
+        fun `should allow movement only if all layers allow movement`() {
+            val board = GameBoard(10, 10)
+            val start = BoardPosition.from(5, 5)
+            val targetPos = BoardPosition.from(5, 6)
+
+            // All layers allow movement
+            board.putTokenTo(targetPos, GroundToken(allowsMovement = true))
+            board.putTokenTo(targetPos, ObjectToken(allowsMovement = true))
+            board.putTokenTo(targetPos, CreatureToken(allowsMovement = true))
+
+            val reach = board.calculateReach(start, steps = 1)
+
+            assertThat(reach[GridIndex(5, 6)], equalTo(1)) // All layers allow movement
+        }
+
+        @Test
+        fun `should block sight if any layer blocks sight`() {
+            val board = GameBoard(10, 10)
+            val from = BoardPosition.from(3, 3)
+            val to = BoardPosition.from(7, 7)
+            val middlePos = BoardPosition.from(5, 5)
+
+            // Place transparent ground but opaque object in the middle
+            board.putTokenTo(middlePos, GroundToken(allowsSight = true))
+            board.putTokenTo(middlePos, ObjectToken(allowsSight = false))
+
+            assertThat(board.hasLineOfSight(from, to), equalTo(false))
+        }
+
+        @Test
+        fun `should allow sight only if all layers allow sight`() {
+            val board = GameBoard(10, 10)
+            val from = BoardPosition.from(0, 0)
+            val to = BoardPosition.from(4, 4)
+            val middlePos = BoardPosition.from(2, 2)
+
+            // All layers allow sight
+            board.putTokenTo(middlePos, GroundToken(allowsSight = true))
+            board.putTokenTo(middlePos, ObjectToken(allowsSight = true))
+            board.putTokenTo(middlePos, CreatureToken(allowsSight = true))
+
+            assertThat(board.hasLineOfSight(from, to), equalTo(true))
+        }
+
+        @Test
+        fun `should handle mixed layer properties independently`() {
+            // Test that movement and sight blocking are independent
+            val board = GameBoard(10, 10)
+            val start = BoardPosition.from(5, 5)
+            val targetPos = BoardPosition.from(5, 6)
+
+            // Creature blocks movement but allows sight
+            board.putTokenTo(targetPos, CreatureToken(allowsMovement = false, allowsSight = true))
+
+            val reach = board.calculateReach(start, steps = 1)
+
+            // Cannot move to position with creature
+            assertThat(reach[GridIndex(5, 6)], equalTo(null))
+
+            // But can see through it
+            assertThat(board.hasLineOfSight(start, BoardPosition.from(5, 8)), equalTo(true))
+        }
+
+        @Test
+        fun `should handle empty layers correctly`() {
+            // Position with no tokens should allow both movement and sight
+            val board = GameBoard(10, 10)
+            val start = BoardPosition.from(5, 5)
+
+            // No tokens placed at emptyPos
+
+            val reach = board.calculateReach(start, steps = 1)
+
+            assertThat(reach[GridIndex(5, 6)], equalTo(1)) // Can move
+            assertThat(board.hasLineOfSight(start, BoardPosition.from(5, 7)), equalTo(true)) // Can see
+        }
+    }
+
     @Nested
     inner class CalculateReach {
 

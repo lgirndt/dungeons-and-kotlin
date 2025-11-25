@@ -11,7 +11,6 @@ import io.dungeons.combat.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
-import org.junit.jupiter.api.assertThrows
 import rolls
 import withFixedDice
 
@@ -94,12 +93,12 @@ class CombatantsStoreTest {
     val FACTION_B = Faction(name = "Faction B")
 
     lateinit var ID : TestId<Creature>
-    lateinit var store : CombatantsStore
+    lateinit var store : CombatantsCollection
 
     @BeforeEach
     fun setup(){
         ID = TestId()
-        store = CombatantsStore(
+        store = CombatantsCollection(
             listOf(
                 Combatant(PlayerCharacter.Companion.aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A, NoopTurnActor()),
                 Combatant(PlayerCharacter.aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
@@ -113,14 +112,14 @@ class CombatantsStoreTest {
 
     @Test
     fun `find an existing combantant`() {
-        val found = store.findOrNull(ID[0])
+        val found = store[ID[0]]
         assertNotNull(found)
         assertEquals("Alpha", found.creature.name)
     }
 
     @Test
     fun `do not find a non-existing combantant`() {
-        val found = store.findOrNull(ID[42])
+        val found = store[ID[42]]
         assertEquals(null, found)
     }
 
