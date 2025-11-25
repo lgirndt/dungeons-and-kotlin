@@ -78,17 +78,17 @@ class GameBoardTest {
             board.putTokenTo(position, obj)
             board.putTokenTo(position, creature)
 
-            assertThat(
-                board.getTokenAt(BoardLayer.GROUND, position)?.id,
-                equalTo(ground.id)
+            assertEquals(
+                ground.id,
+                board.getTokenAt(BoardLayer.GROUND, position)?.id
             )
-            assertThat(
-                board.getTokenAt(BoardLayer.OBJECT, position)?.id,
-                equalTo(obj.id)
+            assertEquals(
+                obj.id,
+                board.getTokenAt(BoardLayer.OBJECT, position)?.id
             )
-            assertThat(
-                board.getTokenAt(BoardLayer.CREATURE, position)?.id,
-                equalTo(creature.id)
+            assertEquals(
+                creature.id,
+                board.getTokenAt(BoardLayer.CREATURE, position)?.id
             )
         }
 
@@ -127,8 +127,8 @@ class GameBoardTest {
 
             val reach = board.calculateReach(start, steps = 1)
 
-            assertThat(reach[GridIndex(5, 6)], equalTo(null)) // Blocked by object layer
-            assertThat(reach[GridIndex(5, 4)], equalTo(1))    // North is reachable
+            assertEquals(null, reach[GridIndex(5, 6)]) // Blocked by object layer
+            assertEquals(1, reach[GridIndex(5, 4)])    // North is reachable
         }
 
         @Test
@@ -144,7 +144,7 @@ class GameBoardTest {
 
             val reach = board.calculateReach(start, steps = 1)
 
-            assertThat(reach[GridIndex(5, 6)], equalTo(1)) // All layers allow movement
+            assertEquals(1, reach[GridIndex(5, 6)]) // All layers allow movement
         }
 
         @Test
@@ -158,7 +158,7 @@ class GameBoardTest {
             board.putTokenTo(middlePos, GroundToken(allowsSight = true))
             board.putTokenTo(middlePos, ObjectToken(allowsSight = false))
 
-            assertThat(board.hasLineOfSight(from, to), equalTo(false))
+            assertEquals(false, board.hasLineOfSight(from, to))
         }
 
         @Test
@@ -173,7 +173,7 @@ class GameBoardTest {
             board.putTokenTo(middlePos, ObjectToken(allowsSight = true))
             board.putTokenTo(middlePos, CreatureToken(allowsSight = true))
 
-            assertThat(board.hasLineOfSight(from, to), equalTo(true))
+            assertEquals(true, board.hasLineOfSight(from, to))
         }
 
         @Test
@@ -189,10 +189,10 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 1)
 
             // Cannot move to position with creature
-            assertThat(reach[GridIndex(5, 6)], equalTo(null))
+            assertEquals(null, reach[GridIndex(5, 6)])
 
             // But can see through it
-            assertThat(board.hasLineOfSight(start, BoardPosition.from(5, 8)), equalTo(true))
+            assertEquals(true, board.hasLineOfSight(start, BoardPosition.from(5, 8)))
         }
 
         @Test
@@ -205,8 +205,8 @@ class GameBoardTest {
 
             val reach = board.calculateReach(start, steps = 1)
 
-            assertThat(reach[GridIndex(5, 6)], equalTo(1)) // Can move
-            assertThat(board.hasLineOfSight(start, BoardPosition.from(5, 7)), equalTo(true)) // Can see
+            assertEquals(1, reach[GridIndex(5, 6)]) // Can move
+            assertEquals(true, board.hasLineOfSight(start, BoardPosition.from(5, 7))) // Can see
         }
     }
 

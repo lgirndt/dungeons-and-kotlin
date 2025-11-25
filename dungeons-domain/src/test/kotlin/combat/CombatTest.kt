@@ -11,6 +11,7 @@ import io.dungeons.combat.*
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
+import org.junit.jupiter.api.assertThrows
 import rolls
 import withFixedDice
 

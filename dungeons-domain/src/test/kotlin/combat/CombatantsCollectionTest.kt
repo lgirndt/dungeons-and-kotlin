@@ -2,13 +2,10 @@ package combat
 
 import TestId
 import aPlayerCharacter
-import com.natpryce.hamkrest.and
-import com.natpryce.hamkrest.assertion.assertThat
-import com.natpryce.hamkrest.equalTo
-import com.natpryce.hamkrest.hasSize
 import io.dungeons.Creature
 import io.dungeons.PlayerCharacter
 import io.dungeons.combat.*
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
@@ -40,29 +37,25 @@ class CombatantsCollectionTest {
     fun `get an existing combatant`() {
         val found = store[ID[0]]
         assertNotNull(found)
-        assertThat(found.creature.name, equalTo("Alpha"))
+        assertEquals("Alpha", found.creature.name)
     }
 
     @Test
     fun `do not get a non-existing combantant`() {
         val found = store[ID[42]]
-        assertThat(found, equalTo(null))
+        assertEquals(null, found)
     }
 
     @Test
     fun `findAllWithStance should return correct combatants`() {
         val friendlyToA = store.findAllWithStance(ID[0], FactionStance.Friendly)
-        assertThat(
-            friendlyToA.map{it.creature.id}.toSet(),
-            hasSize(equalTo(3))
-                    and equalTo(setOf(ID[0], ID[1], ID[2]))
-        )
+        val friendlyIds = friendlyToA.map{it.creature.id}.toSet()
+        assertEquals(3, friendlyIds.size)
+        assertEquals(setOf(ID[0], ID[1], ID[2]), friendlyIds)
 
         val hostileToA = store.findAllWithStance(ID[0], FactionStance.Hostile)
-        assertThat(
-            hostileToA.map{it.creature.id}.toSet(),
-            hasSize(equalTo(3))
-                    and equalTo(setOf(ID[3], ID[4], ID[5]))
-        )
+        val hostileIds = hostileToA.map{it.creature.id}.toSet()
+        assertEquals(3, hostileIds.size)
+        assertEquals(setOf(ID[3], ID[4], ID[5]), hostileIds)
     }
 }
