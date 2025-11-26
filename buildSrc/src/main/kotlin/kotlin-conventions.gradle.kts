@@ -7,7 +7,7 @@ repositories {
 }
 
 kotlin {
-    jvmToolchain(24)
+    jvmToolchain(21)
 }
 
 tasks.test {
@@ -41,11 +41,3 @@ tasks.withType<Test>().configureEach {
         }
     }
 }
-
-//dependencies {
-//    testImplementation(platform("org.junit:junit-bom:${Versions.junitBom}"))
-//    testImplementation("org.junit.jupiter:junit-jupiter")
-//    testImplementation("com.natpryce:hamkrest:${Versions.hamkrest}")
-//    testImplementation("io.mockk:mockk:${Versions.mockk}")
-//    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
-//}
