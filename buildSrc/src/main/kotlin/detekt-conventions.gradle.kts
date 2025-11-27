@@ -1,5 +1,5 @@
 plugins {
-    id("io.gitlab.arturbosch.detekt")
+    id("dev.detekt")
 }
 
 detekt {
@@ -10,16 +10,13 @@ detekt {
     parallel = true
 }
 
-tasks.withType<io.gitlab.arturbosch.detekt.Detekt>().configureEach {
+tasks.withType<dev.detekt.gradle.Detekt>().configureEach {
     reports {
         html.required.set(true)
-        xml.required.set(false)
-        txt.required.set(false)
         sarif.required.set(false)
-        md.required.set(false)
     }
 }
 
 dependencies {
-    detektPlugins("io.gitlab.arturbosch.detekt:detekt-formatting:${Versions.detekt}")
+    detektPlugins("dev.detekt:detekt-rules-ktlint-wrapper:${Versions.detekt}")
 }
