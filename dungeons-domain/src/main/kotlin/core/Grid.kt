@@ -61,6 +61,9 @@ class BoundedGrid<T>(val minX: Int = 0, val minY: Int = 0, val maxX: Int, val ma
         require(maxY >= minY) { "maxY must be greater than or equal to minY, but maxY=$maxY and minY=$minY" }
     }
 
+    override val boundingBox: BoundingBox
+        get() = BoundingBox(minX, minY, maxX, maxY)
+
     override fun set(pos: GridIndex, value: T) {
         requireInBounds(pos)
         super.set(pos, value)
@@ -82,9 +85,6 @@ class BoundedGrid<T>(val minX: Int = 0, val minY: Int = 0, val maxX: Int, val ma
     }
 
     fun isInBounds(pos: GridIndex): Boolean = pos.x in minX..maxX && pos.y in minY..maxY
-
-    override val boundingBox: BoundingBox
-        get() = BoundingBox(minX, minY, maxX, maxY)
 
     private fun requireInBounds(pos: GridIndex) {
         require(isInBounds(pos)) {

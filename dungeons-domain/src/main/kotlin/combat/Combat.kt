@@ -20,16 +20,16 @@ data class FactionRelationship(val first: Faction, val second: Faction, val stan
 private typealias FactionRelationsLookupKey = Set<Id<Faction>>
 
 class FactionRelations private constructor(private val relationships: Map<FactionRelationsLookupKey, FactionStance>) {
-    companion object {
-        private val DEFAULT_STANCE = FactionStance.Hostile
-    }
-
     fun queryStance(factionA: Faction, factionB: Faction): FactionStance {
         if (factionA.id == factionB.id) {
             return FactionStance.Friendly
         }
         val key = setOf(factionA.id, factionB.id)
         return relationships[key] ?: DEFAULT_STANCE
+    }
+
+    companion object {
+        private val DEFAULT_STANCE = FactionStance.Hostile
     }
 
     class Builder {

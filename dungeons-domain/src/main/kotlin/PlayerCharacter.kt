@@ -13,16 +13,6 @@ class PlayerCharacter(
     val proficiencyBonus: ProficiencyBonus
         get() = ProficiencyBonus.fromLevel(data.level)
 
-    fun copy(
-        core: CreatureData = this.core,
-        data: PlayerCharacterData = this.data,
-        classFeatures: ClassFeatures = this.classFeatures,
-    ): PlayerCharacter = PlayerCharacter(
-        data = data,
-        core = core,
-        classFeatures = classFeatures,
-    )
-
     override val weapon: Weapon
         get() = data.weapon
 
@@ -38,4 +28,14 @@ class PlayerCharacter(
             val hitRoll = attackStat.modifier + proficiencyModifier.toInt()
             return hitRoll
         }
+
+    fun copy(
+        core: CreatureData = this.core,
+        data: PlayerCharacterData = this.data,
+        classFeatures: ClassFeatures = this.classFeatures,
+    ): PlayerCharacter = PlayerCharacter(
+        data = data,
+        core = core,
+        classFeatures = classFeatures,
+    )
 }

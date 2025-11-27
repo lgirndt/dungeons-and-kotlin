@@ -131,9 +131,9 @@ value class ProficiencyBonus private constructor(private val value: Int) {
     fun toInt(): Int = value
 
     companion object {
-        fun fromLevel(level: Int): ProficiencyBonus = ProficiencyBonus(1 + (level - 1) / 4)
-
         val None = ProficiencyBonus(0)
+
+        fun fromLevel(level: Int): ProficiencyBonus = ProficiencyBonus(1 + (level - 1) / 4)
     }
 }
 

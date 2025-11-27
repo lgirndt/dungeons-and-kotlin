@@ -99,19 +99,6 @@ class GameBoard(val width: Int, val height: Int) {
             }
         }
 
-    private companion object {
-        private val DIRECTIONS = listOf(
-            0 to -1, // N
-            1 to -1, // NE
-            1 to 0, // E
-            1 to 1, // SE
-            0 to 1, // S
-            -1 to 1, // SW
-            -1 to 0, // W
-            -1 to -1, // NW
-        )
-    }
-
     fun hasLineOfSight(from: BoardPosition, to: BoardPosition): Boolean {
         val fromIndex = from.toGridIndex()
         val toIndex = to.toGridIndex()
@@ -166,5 +153,18 @@ class GameBoard(val width: Int, val height: Int) {
         }
 
         return result
+    }
+
+    private companion object {
+        private val DIRECTIONS = listOf(
+            0 to -1, // N
+            1 to -1, // NE
+            1 to 0, // E
+            1 to 1, // SE
+            0 to 1, // S
+            -1 to 1, // SW
+            -1 to 0, // W
+            -1 to -1, // NW
+        )
     }
 }
