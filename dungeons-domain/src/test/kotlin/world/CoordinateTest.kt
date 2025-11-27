@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class CoordinateTest {
-
     @Test
     fun `adding two coordinates should return correct result`() {
         val coord1 = Coordinate.from(3, 5)

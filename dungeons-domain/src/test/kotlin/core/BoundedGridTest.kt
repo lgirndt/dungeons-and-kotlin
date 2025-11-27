@@ -6,10 +6,8 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class BoundedGridTest {
-
     @Nested
     inner class Construction {
-
         @Test
         fun `should create grid with default min bounds`() {
             val grid = BoundedGrid<Int>(maxX = 10, maxY = 10)
@@ -57,7 +55,6 @@ class BoundedGridTest {
 
     @Nested
     inner class GetAndSet {
-
         @Test
         fun `should get null for unset cell`() {
             val grid = BoundedGrid<String>(maxX = 5, maxY = 5)
@@ -113,7 +110,6 @@ class BoundedGridTest {
 
     @Nested
     inner class Remove {
-
         @Test
         fun `should remove and return value`() {
             val grid = BoundedGrid<String>(maxX = 5, maxY = 5)
@@ -146,7 +142,6 @@ class BoundedGridTest {
 
     @Nested
     inner class IsEmpty {
-
         @Test
         fun `should return false for unset cell`() {
             val grid = BoundedGrid<String>(maxX = 5, maxY = 5)
@@ -174,7 +169,6 @@ class BoundedGridTest {
 
     @Nested
     inner class IsInBounds {
-
         @Test
         fun `should return true for position at min bounds`() {
             val grid = BoundedGrid<Int>(maxX = 5, maxY = 5)
@@ -222,7 +216,6 @@ class BoundedGridTest {
 
     @Nested
     inner class BoundingBox {
-
         @Test
         fun `should return grid dimensions as bounding box`() {
             val grid = BoundedGrid<Int>(maxX = 10, maxY = 20)

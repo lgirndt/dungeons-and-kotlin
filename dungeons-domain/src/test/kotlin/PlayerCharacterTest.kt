@@ -1,9 +1,9 @@
-import org.junit.jupiter.api.Assertions.assertEquals
-import io.mockk.junit5.MockKExtension
 import io.dungeons.*
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D8
 import io.dungeons.world.Feet
+import io.mockk.junit5.MockKExtension
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.extension.ExtendWith
 import org.junit.jupiter.params.ParameterizedTest
@@ -12,15 +12,15 @@ import org.junit.jupiter.params.provider.CsvSource
 fun aCharacterWithWeapon(
     strMod: Int = 10,
     damageDie: Die = D8,
-    damageType: DamageType = DamageType.Slashing
+    damageType: DamageType = DamageType.Slashing,
 ): PlayerCharacter {
     val char = PlayerCharacter.aPlayerCharacter(
         stats = StatBlock.fromModifiers(strMod = strMod),
         weapon = SOME_WEAPON.copy(
             damageRoll = SimpleDamageRoll(1, damageDie),
             damageType = damageType,
-            rangeChecker = RangeCheckers.melee(Feet(5.0))
-        )
+            rangeChecker = RangeCheckers.melee(Feet(5.0)),
+        ),
     )
 
     return char
@@ -28,7 +28,6 @@ fun aCharacterWithWeapon(
 
 @ExtendWith(MockKExtension::class)
 class CharacterTest {
-
     @Test
     fun `a character with custom stats and class`() {
         val myCharacter = PlayerCharacter.aPlayerCharacter(
@@ -45,12 +44,11 @@ class CharacterTest {
         "4, 1",
         "5, 2",
         "8, 2",
-        "9, 3"
+        "9, 3",
     )
     fun `proficiency bonus at various levels should be correct`(level: Int, expectedBonus: Int) {
         assertEquals(expectedBonus, PlayerCharacter.aPlayerCharacter(level = level).proficiencyBonus.toInt())
     }
-
 
     @Test
     fun `CharacterClasses have the proper name`() {
@@ -60,7 +58,7 @@ class CharacterTest {
     @Test
     fun `a character receives normal damage`() {
         val character = PlayerCharacter.aPlayerCharacter(
-            hitPoints = 20
+            hitPoints = 20,
         )
         val damageReceived = character.receiveDamage(8, DamageType.Force)
         assertEquals(8, damageReceived)
@@ -72,8 +70,8 @@ class CharacterTest {
         val character = PlayerCharacter.aPlayerCharacter(
             hitPoints = 20,
             damageModifiers = DamageModifiers(
-                resistances = setOf(DamageType.Force)
-            )
+                resistances = setOf(DamageType.Force),
+            ),
         )
         val damageReceived = character.receiveDamage(9, DamageType.Force)
         assertEquals(4, damageReceived)
@@ -85,8 +83,8 @@ class CharacterTest {
         val character = PlayerCharacter.aPlayerCharacter(
             hitPoints = 20,
             damageModifiers = DamageModifiers(
-                vulnerabilities = setOf(DamageType.Force)
-            )
+                vulnerabilities = setOf(DamageType.Force),
+            ),
         )
         val damageReceived = character.receiveDamage(6, DamageType.Force)
         assertEquals(12, damageReceived)
@@ -98,8 +96,8 @@ class CharacterTest {
         val character = PlayerCharacter.aPlayerCharacter(
             hitPoints = 20,
             damageModifiers = DamageModifiers(
-                immunities = setOf(DamageType.Force)
-            )
+                immunities = setOf(DamageType.Force),
+            ),
         )
         val damageReceived = character.receiveDamage(15, DamageType.Force)
         assertEquals(0, damageReceived)
@@ -157,13 +155,13 @@ class CharacterTest {
     @Test
     fun `ability check that meets DC should succeed`() {
         val character = PlayerCharacter.aPlayerCharacter(
-            stats = StatBlock.fromModifiers(strMod = 2) // Strength 14, modifier +2
+            stats = StatBlock.fromModifiers(strMod = 2), // Strength 14, modifier +2
         )
 
         withFixedDice(D20 rolls 10) {
             val result = character.rollAbilityCheck(
                 ability = StatQueries.Str,
-                difficultyClass = 12
+                difficultyClass = 12,
             )
             // Roll: 10 + 2 (str mod) = 12, meets DC 12
             assertEquals(true, result.isSuccessful)
@@ -173,13 +171,13 @@ class CharacterTest {
     @Test
     fun `ability check that fails to meet DC should fail`() {
         val character = PlayerCharacter.aPlayerCharacter(
-            stats = StatBlock.fromModifiers(dexMod = 1) // Dexterity 12, modifier +1
+            stats = StatBlock.fromModifiers(dexMod = 1), // Dexterity 12, modifier +1
         )
 
         withFixedDice(D20 rolls 8) {
             val result = character.rollAbilityCheck(
                 ability = StatQueries.Dex,
-                difficultyClass = 15
+                difficultyClass = 15,
             )
             // Roll: 8 + 1 (dex mod) = 9, fails DC 15
             assertEquals(false, result.isSuccessful)
@@ -189,17 +187,17 @@ class CharacterTest {
     @Test
     fun `ability check with advantage should use higher roll`() {
         val character = PlayerCharacter.aPlayerCharacter(
-            stats = StatBlock.fromModifiers(wisMod = 3) // Wisdom 16, modifier +3
+            stats = StatBlock.fromModifiers(wisMod = 3), // Wisdom 16, modifier +3
         )
 
         withFixedDice(
             D20 rolls 8,
-            D20 rolls 15
+            D20 rolls 15,
         ) {
             val result = character.rollAbilityCheck(
                 ability = StatQueries.Wis,
                 difficultyClass = 18,
-                rollModifier = RollModifier.ADVANTAGE
+                rollModifier = RollModifier.ADVANTAGE,
             )
             // Roll: 15 (higher) + 3 (wis mod) = 18, meets DC 18
             assertEquals(true, result.isSuccessful)
@@ -209,17 +207,17 @@ class CharacterTest {
     @Test
     fun `ability check with disadvantage should use lower roll`() {
         val character = PlayerCharacter.aPlayerCharacter(
-            stats = StatBlock.fromModifiers(intMod = 2) // Intelligence 14, modifier +2
+            stats = StatBlock.fromModifiers(intMod = 2), // Intelligence 14, modifier +2
         )
 
         withFixedDice(
             D20 rolls 16,
-            D20 rolls 9
+            D20 rolls 9,
         ) {
             val result = character.rollAbilityCheck(
                 ability = StatQueries.Int,
                 difficultyClass = 15,
-                rollModifier = RollModifier.DISADVANTAGE
+                rollModifier = RollModifier.DISADVANTAGE,
             )
             // Roll: 9 (lower) + 2 (int mod) = 11, fails DC 15
             assertEquals(false, result.isSuccessful)
@@ -229,7 +227,7 @@ class CharacterTest {
     @Test
     fun `initiative roll should add dexterity modifier`() {
         val character = PlayerCharacter.aPlayerCharacter(
-            stats = StatBlock.fromModifiers(dexMod = 3) // Dexterity 16, modifier +3
+            stats = StatBlock.fromModifiers(dexMod = 3), // Dexterity 16, modifier +3
         )
 
         withFixedDice(D20 rolls 12) {
@@ -242,12 +240,12 @@ class CharacterTest {
     @Test
     fun `initiative roll with advantage should use higher roll`() {
         val character = PlayerCharacter.aPlayerCharacter(
-            stats = StatBlock.fromModifiers(dexMod = 2) // Dexterity 14, modifier +2
+            stats = StatBlock.fromModifiers(dexMod = 2), // Dexterity 14, modifier +2
         )
 
         withFixedDice(
             D20 rolls 8,
-            D20 rolls 16
+            D20 rolls 16,
         ) {
             val result = character.rollInitiative(RollModifier.ADVANTAGE)
             // Roll: 16 (higher) + 2 (dex mod) = 18
@@ -258,12 +256,12 @@ class CharacterTest {
     @Test
     fun `initiative roll with disadvantage should use lower roll`() {
         val character = PlayerCharacter.aPlayerCharacter(
-            stats = StatBlock.fromModifiers(dexMod = 1) // Dexterity 12, modifier +1
+            stats = StatBlock.fromModifiers(dexMod = 1), // Dexterity 12, modifier +1
         )
 
         withFixedDice(
             D20 rolls 14,
-            D20 rolls 6
+            D20 rolls 6,
         ) {
             val result = character.rollInitiative(RollModifier.DISADVANTAGE)
             // Roll: 6 (lower) + 1 (dex mod) = 7
@@ -274,7 +272,7 @@ class CharacterTest {
     @Test
     fun `initiative roll with negative dexterity modifier should subtract`() {
         val character = PlayerCharacter.aPlayerCharacter(
-            stats = StatBlock.fromModifiers(dexMod = -1) // Dexterity 8, modifier -1
+            stats = StatBlock.fromModifiers(dexMod = -1), // Dexterity 8, modifier -1
         )
 
         withFixedDice(D20 rolls 10) {
@@ -287,7 +285,7 @@ class CharacterTest {
     @Test
     fun `initiative roll with zero dexterity modifier should not modify roll`() {
         val character = PlayerCharacter.aPlayerCharacter(
-            stats = StatBlock.fromModifiers(dexMod = 0) // Dexterity 10, modifier +0
+            stats = StatBlock.fromModifiers(dexMod = 0), // Dexterity 10, modifier +0
         )
 
         withFixedDice(D20 rolls 15) {
@@ -300,7 +298,7 @@ class CharacterTest {
     @Test
     fun `initiative roll result should be a D20 die roll`() {
         val character = PlayerCharacter.aPlayerCharacter(
-            stats = StatBlock.fromModifiers(dexMod = 2)
+            stats = StatBlock.fromModifiers(dexMod = 2),
         )
 
         withFixedDice(D20 rolls 10) {

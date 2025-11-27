@@ -8,37 +8,21 @@ value class Stat(private val value: Int) {
     fun toInt(): Int = value
 }
 
-data class StatBlock(
-    val str: Stat,
-    val dex: Stat,
-    val con: Stat,
-    val int: Stat,
-    val wis: Stat,
-    val cha: Stat,
-) {
-
+data class StatBlock(val str: Stat, val dex: Stat, val con: Stat, val int: Stat, val wis: Stat, val cha: Stat) {
     companion object {
-        fun create(
-            str: Int,
-            dex: Int,
-            con: Int,
-            int: Int,
-            wis: Int,
-            cha: Int,
-        ): StatBlock {
-            return StatBlock(
-                Stat(str),
-                Stat(dex),
-                Stat(con),
-                Stat(int),
-                Stat(wis),
-                Stat(cha),
-            )
-        }
+        fun create(str: Int, dex: Int, con: Int, int: Int, wis: Int, cha: Int): StatBlock = StatBlock(
+            Stat(str),
+            Stat(dex),
+            Stat(con),
+            Stat(int),
+            Stat(wis),
+            Stat(cha),
+        )
     }
 }
 
 typealias StatQuery = (StatBlock) -> Stat
+
 object StatQueries {
     val Str: StatQuery = { stats: StatBlock -> stats.str }
     val Dex: StatQuery = { stats: StatBlock -> stats.dex }
@@ -63,14 +47,13 @@ data class DamageModifiers(
 enum class RollModifier {
     ADVANTAGE,
     DISADVANTAGE,
-    NORMAL;
+    NORMAL,
+    ;
 
-    fun roll(die: Die): DieRoll {
-        return when (this) {
-            ADVANTAGE -> maxOf(die.roll(), die.roll())
-            DISADVANTAGE -> minOf(die.roll(), die.roll())
-            NORMAL -> die.roll()
-        }
+    fun roll(die: Die): DieRoll = when (this) {
+        ADVANTAGE -> maxOf(die.roll(), die.roll())
+        DISADVANTAGE -> minOf(die.roll(), die.roll())
+        NORMAL -> die.roll()
     }
 
     fun giveAdvantage(): RollModifier = when (this) {
@@ -88,19 +71,12 @@ enum class RollModifier {
 
 data class DieRoll(val die: Die, val value: Int) : Comparable<DieRoll> {
     override fun compareTo(other: DieRoll): Int = compareBy(DieRoll::value).compare(this, other)
-
-
 }
 
 class Die private constructor(val numberOfFaces: Int) {
+    fun roll(): DieRoll = DieRoll(this, (1..numberOfFaces).random())
 
-    fun roll(): DieRoll {
-        return DieRoll(this, (1..numberOfFaces).random())
-    }
-
-    override fun toString(): String {
-        return "D$numberOfFaces"
-    }
+    override fun toString(): String = "D$numberOfFaces"
 
     companion object {
         val D4 = Die(4)
@@ -134,11 +110,7 @@ interface DamageRoll {
     fun roll(isCritical: Boolean): Int
 }
 
-class SimpleDamageRoll(
-    private val numberOfDice: Int,
-    private val die: Die,
-    private val bonus: Int = 0,
-) : DamageRoll {
+class SimpleDamageRoll(private val numberOfDice: Int, private val die: Die, private val bonus: Int = 0) : DamageRoll {
     override fun roll(isCritical: Boolean): Int {
         val critMultiplier = if (isCritical) 2 else 1
         return (1..(numberOfDice * critMultiplier)).fold(bonus) { total, _ ->
@@ -148,7 +120,6 @@ class SimpleDamageRoll(
 }
 
 object Armours {
-
     val CHAIN_MAIL = { _: StatBlock -> 16 }
     val LEATHER_ARMOUR = { stats: StatBlock -> 11 + stats.dex.toInt() }
 }
@@ -156,22 +127,22 @@ object Armours {
 @JvmInline
 value class ProficiencyBonus private constructor(private val value: Int) {
     fun toInt(): Int = value
+
     companion object {
-        fun fromLevel(level: Int) : ProficiencyBonus = ProficiencyBonus(1 + (level - 1) / 4)
+        fun fromLevel(level: Int): ProficiencyBonus = ProficiencyBonus(1 + (level - 1) / 4)
+
         val None = ProficiencyBonus(0)
     }
 }
 
-class AbilityCheckResult(
-    val isSuccessful: Boolean,
-) {
-
+class AbilityCheckResult(val isSuccessful: Boolean) {
     fun onSuccess(action: () -> Unit): AbilityCheckResult {
         if (isSuccessful) {
             action()
         }
         return this
     }
+
     fun onFailure(action: () -> Unit): AbilityCheckResult {
         if (!isSuccessful) {
             action()

@@ -6,25 +6,19 @@ import kotlin.math.abs
 enum class BoardLayer {
     GROUND,
     OBJECT,
-    CREATURE
+    CREATURE,
 }
 
-class GameBoard(
-    val width: Int,
-    val height: Int
-) {
+class GameBoard(val width: Int, val height: Int) {
     private val layers: Map<BoardLayer, Grid<Token>> =
         BoardLayer.entries.associateWith { BoundedGrid.fromDimensions<Token>(width, height) }
 
     private val tokenToIndex = mutableMapOf<Id<Token>, GridIndex>()
 
-
     private val boundingBox: BoundingBox
         get() = gridOnLayer(BoardLayer.GROUND).boundingBox
 
-    private fun BoardPosition.toGridIndex(): GridIndex {
-        return GridIndex(this.x.value, this.y.value)
-    }
+    private fun BoardPosition.toGridIndex(): GridIndex = GridIndex(this.x.value, this.y.value)
 
     fun putTokenTo(position: BoardPosition, token: Token) {
         require(!tokenToIndex.containsKey(token.id)) {
@@ -38,10 +32,7 @@ class GameBoard(
         gridOnLayer(token.layer).set(position.toGridIndex(), token)
     }
 
-    fun getTokenAt(layer: BoardLayer, position: BoardPosition): Token? {
-        return gridOnLayer(layer)[position.toGridIndex()]
-    }
-
+    fun getTokenAt(layer: BoardLayer, position: BoardPosition): Token? = gridOnLayer(layer)[position.toGridIndex()]
 
     private fun gridOnLayer(layer: BoardLayer): Grid<Token> = layers[layer]!!
 
@@ -81,11 +72,10 @@ class GameBoard(
         return distances
     }
 
-    private fun getNeighbors(index: GridIndex): List<GridIndex> {
-        return DIRECTIONS.map { (dx, dy) ->
+    private fun getNeighbors(index: GridIndex): List<GridIndex> = DIRECTIONS
+        .map { (dx, dy) ->
             GridIndex(index.x + dx, index.y + dy)
         }.filter { it in boundingBox }
-    }
 
     private fun allowsMovement(index: GridIndex): Boolean {
         if (index !in boundingBox) {
@@ -94,33 +84,27 @@ class GameBoard(
         return testOnEachLayer(index, defaultOnAbsence = true) { it.allowsMovement }
     }
 
-    private fun testOnEachLayer(
-        index: GridIndex,
-        defaultOnAbsence: Boolean,
-        predicate: (Token) -> Boolean
-    ): Boolean {
-        return BoardLayer.entries.all { layer ->
+    private fun testOnEachLayer(index: GridIndex, defaultOnAbsence: Boolean, predicate: (Token) -> Boolean): Boolean =
+        BoardLayer.entries.all { layer ->
             val token = gridOnLayer(layer)[index]
             if (token == null) {
                 defaultOnAbsence
             } else {
                 predicate(token)
             }
-
         }
-    }
 
     private companion object {
         // 8 directions: N, NE, E, SE, S, SW, W, NW
         private val DIRECTIONS = listOf(
-            0 to -1,  // N
-            1 to -1,  // NE
-            1 to 0,   // E
-            1 to 1,   // SE
-            0 to 1,   // S
-            -1 to 1,  // SW
-            -1 to 0,  // W
-            -1 to -1  // NW
+            0 to -1, // N
+            1 to -1, // NE
+            1 to 0, // E
+            1 to 1, // SE
+            0 to 1, // S
+            -1 to 1, // SW
+            -1 to 0, // W
+            -1 to -1, // NW
         )
     }
 
@@ -179,5 +163,4 @@ class GameBoard(
 
         return result
     }
-
 }

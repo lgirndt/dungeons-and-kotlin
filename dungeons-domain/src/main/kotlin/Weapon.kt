@@ -76,7 +76,7 @@ object Weapons {
         damageType = DamageType.Slashing,
         statQuery = StatQueries.Str,
         damageRoll = SimpleDamageRoll(1, Die.D8),
-        rangeChecker = RangeCheckers.melee(Feet(5.0))
+        rangeChecker = RangeCheckers.melee(Feet(5.0)),
     )
 
     val Shortbow = Weapon(
@@ -85,7 +85,7 @@ object Weapons {
         damageType = DamageType.Piercing,
         statQuery = StatQueries.Dex,
         damageRoll = SimpleDamageRoll(1, Die.D6),
-        rangeChecker = RangeCheckers.ranged(normalRange = Feet(80.0), longRange = Feet(320.0))
+        rangeChecker = RangeCheckers.ranged(normalRange = Feet(80.0), longRange = Feet(320.0)),
     )
 
     val Dagger = Weapon(
@@ -94,6 +94,6 @@ object Weapons {
         damageType = DamageType.Piercing,
         statQuery = StatQueries.Str,
         damageRoll = SimpleDamageRoll(1, Die.D4),
-        rangeChecker = RangeCheckers.melee(Feet(5.0))
+        rangeChecker = RangeCheckers.melee(Feet(5.0)),
     )
 }

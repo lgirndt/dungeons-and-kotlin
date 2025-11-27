@@ -1,32 +1,25 @@
 
-import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.*
 import io.dungeons.Die.Companion.D10
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D8
 import io.dungeons.WeaponCategory.Martial
+import io.dungeons.board.BoardPosition
 import io.dungeons.combat.ProvidesBoardPosition
 import io.dungeons.core.Id
 import io.dungeons.world.Feet
-import io.dungeons.board.BoardPosition
 import io.dungeons.world.Square
 import io.mockk.every
 import io.mockk.mockk
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-
-class ProvidesBoardPositionMock(
-    val positions: Map<Id<Creature>, BoardPosition>
-) : ProvidesBoardPosition  {
-    override fun getBoardPosition(creatureId: Id<Creature>): BoardPosition? {
-        return positions[creatureId]
-    }
-
+class ProvidesBoardPositionMock(val positions: Map<Id<Creature>, BoardPosition>) : ProvidesBoardPosition {
+    override fun getBoardPosition(creatureId: Id<Creature>): BoardPosition? = positions[creatureId]
 }
 
 class AttackTest {
-
     lateinit var providesBoardPosition: ProvidesBoardPosition
     val ID = TestId<Creature>()
 
@@ -55,7 +48,7 @@ class AttackTest {
     fun `an attacker who does not meet AC misses the attack`() {
         val target = aCharacterWithWeapon(strMod = 1)
         val opponent = PlayerCharacter.aPlayerCharacter(
-            armourClass = 13
+            armourClass = 13,
         )
         expectAnyGridPosition()
 
@@ -64,11 +57,11 @@ class AttackTest {
 
             assertEquals(false, outcome.hasBeenHit)
             assertEquals(
-                10 + 1 + 1, outcome.hitRoll,
-                "Hit Roll misses as d20 + str mod + prof bonus does not match AC"
+                10 + 1 + 1,
+                outcome.hitRoll,
+                "Hit Roll misses as d20 + str mod + prof bonus does not match AC",
             )
         }
-
     }
 
     @Test
@@ -81,17 +74,17 @@ class AttackTest {
 
         withFixedDice(
             D20 rolls 10,
-            damageDie rolls 5
+            damageDie rolls 5,
         ) {
             val outcome = attacker.attack(opponent, providesBoardPosition)
 
             assertEquals(true, outcome.hasBeenHit)
             assertEquals(
-                10 + 1 + 1, outcome.hitRoll,
-                "Hit Roll hits as d20 + str mod + prof bonus  matches AC"
+                10 + 1 + 1,
+                outcome.hitRoll,
+                "Hit Roll hits as d20 + str mod + prof bonus  matches AC",
             )
         }
-
     }
 
     @Test
@@ -99,12 +92,12 @@ class AttackTest {
         val damageDie = D8
         val martialWeapon = SOME_WEAPON.copy(
             category = Martial,
-            damageRoll = SimpleDamageRoll(1, damageDie)
+            damageRoll = SimpleDamageRoll(1, damageDie),
         )
         val cleric = PlayerCharacter.aPlayerCharacter(
             classFeatures = Cleric(),
             stats = StatBlock.fromModifiers(strMod = 2),
-            weapon = martialWeapon
+            weapon = martialWeapon,
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 12)
@@ -113,14 +106,15 @@ class AttackTest {
 
         withFixedDice(
             D20 rolls 10,
-            damageDie rolls 5
+            damageDie rolls 5,
         ) {
             val outcome = cleric.attack(opponent, providesBoardPosition)
 
             assertEquals(true, outcome.hasBeenHit)
             assertEquals(
-                10 + 2, outcome.hitRoll, // d20 + str mod only, no proficiency bonus
-                "Hit roll without proficiency bonus: d20 + str mod (no prof bonus)"
+                10 + 2,
+                outcome.hitRoll, // d20 + str mod only, no proficiency bonus
+                "Hit roll without proficiency bonus: d20 + str mod (no prof bonus)",
             )
             assertEquals(5 + 2, outcome.damageDealt) // damage roll + str mod
         }
@@ -133,20 +127,20 @@ class AttackTest {
         damageRolls: List<Int>,
         damageType: DamageType = DamageType.Slashing,
         opponentVulnerableTo: DamageType? = null,
-        runTest: (outcome: AttackOutcome, opponent: Attackable) -> Unit
+        runTest: (outcome: AttackOutcome, opponent: Attackable) -> Unit,
     ) {
         val damageDie = D10
         val attacker = aCharacterWithWeapon(
             strMod = attackerStrMod,
             damageType = damageType,
-            damageDie = damageDie
+            damageDie = damageDie,
         )
         val opponent = PlayerCharacter.aPlayerCharacter(
             hitPoints = opponentHitPoints,
             armourClass = 10,
             damageModifiers = SOME_DAMAGE_MODIFIERS.copy(
-                vulnerabilities = if (opponentVulnerableTo != null) setOf(opponentVulnerableTo) else emptySet()
-            )
+                vulnerabilities = if (opponentVulnerableTo != null) setOf(opponentVulnerableTo) else emptySet(),
+            ),
         )
 
         val diceRolls = listOf(D20 rolls hitRoll) + damageRolls.map { damageDie rolls it }
@@ -157,7 +151,6 @@ class AttackTest {
             val outcome = attacker.attack(opponent, providesBoardPosition)
             runTest(outcome, opponent)
         }
-
     }
 
     @Test
@@ -172,7 +165,7 @@ class AttackTest {
         hitting(
             attackerStrMod = 1,
             hitRoll = 20,
-            damageRolls = listOf(5, 8)
+            damageRolls = listOf(5, 8),
         ) { outcome, _ ->
             assertEquals(5 + 8 + 1, outcome.damageDealt)
         }
@@ -183,7 +176,7 @@ class AttackTest {
         hitting(
             attackerStrMod = 2,
             opponentHitPoints = 30,
-            damageRolls = listOf(6)
+            damageRolls = listOf(6),
         ) { _, opponent ->
             assertEquals(30 - 6 - 2, opponent.hitPoints)
         }
@@ -197,7 +190,7 @@ class AttackTest {
             hitRoll = 20,
             damageRolls = listOf(8, 9),
             damageType = DamageType.Slashing,
-            opponentVulnerableTo = DamageType.Slashing
+            opponentVulnerableTo = DamageType.Slashing,
         ) { _, opponent ->
             assertEquals(0, opponent.hitPoints)
         }
@@ -213,14 +206,15 @@ class AttackTest {
 
         withFixedDice(
             D20 rolls 10,
-            damageDie rolls 6
+            damageDie rolls 6,
         ) {
             val outcome = attacker.attack(opponent, providesBoardPosition, RollModifier.NORMAL)
 
             assertEquals(true, outcome.hasBeenHit)
             assertEquals(
-                10 + 2 + 1, outcome.hitRoll, // d20 + str mod + prof bonus
-                "Hit roll uses single d20 roll"
+                10 + 2 + 1,
+                outcome.hitRoll, // d20 + str mod + prof bonus
+                "Hit roll uses single d20 roll",
             )
             assertEquals(6 + 2, outcome.damageDealt) // damage roll + str mod
         }
@@ -236,15 +230,16 @@ class AttackTest {
 
         withFixedDice(
             D20 rolls 8,
-            D20 rolls 15,  // higher roll should be used
-            damageDie rolls 6
+            D20 rolls 15, // higher roll should be used
+            damageDie rolls 6,
         ) {
             val outcome = attacker.attack(opponent, providesBoardPosition, RollModifier.ADVANTAGE)
 
             assertEquals(true, outcome.hasBeenHit)
             assertEquals(
-                15 + 2 + 1, outcome.hitRoll, // max(8, 15) + str mod + prof bonus
-                "Hit roll uses higher of two d20 rolls"
+                15 + 2 + 1,
+                outcome.hitRoll, // max(8, 15) + str mod + prof bonus
+                "Hit roll uses higher of two d20 rolls",
             )
             assertEquals(6 + 2, outcome.damageDealt)
         }
@@ -260,15 +255,16 @@ class AttackTest {
 
         withFixedDice(
             D20 rolls 15,
-            D20 rolls 8,  // lower roll should be used
-            damageDie rolls 6
+            D20 rolls 8, // lower roll should be used
+            damageDie rolls 6,
         ) {
             val outcome = attacker.attack(opponent, providesBoardPosition, RollModifier.DISADVANTAGE)
 
             assertEquals(true, outcome.hasBeenHit)
             assertEquals(
-                8 + 2 + 1, outcome.hitRoll, // min(15, 8) + str mod + prof bonus
-                "Hit roll uses lower of two d20 rolls"
+                8 + 2 + 1,
+                outcome.hitRoll, // min(15, 8) + str mod + prof bonus
+                "Hit roll uses lower of two d20 rolls",
             )
             assertEquals(6 + 2, outcome.damageDealt)
         }
@@ -282,9 +278,9 @@ class AttackTest {
         expectAnyGridPosition()
 
         withFixedDice(
-            D20 rolls 5,  // would miss: 5 + 1 + 1 = 7 < 15
+            D20 rolls 5, // would miss: 5 + 1 + 1 = 7 < 15
             D20 rolls 13, // hits: 13 + 1 + 1 = 15
-            D8 rolls 4
+            D8 rolls 4,
         ) {
             val outcome = attacker.attack(opponent, providesBoardPosition, RollModifier.ADVANTAGE)
 
@@ -302,7 +298,7 @@ class AttackTest {
 
         withFixedDice(
             D20 rolls 13, // would hit: 13 + 1 + 1 = 15
-            D20 rolls 5   // misses: 5 + 1 + 1 = 7 < 15
+            D20 rolls 5, // misses: 5 + 1 + 1 = 7 < 15
         ) {
             val outcome = attacker.attack(opponent, providesBoardPosition, RollModifier.DISADVANTAGE)
 
@@ -321,9 +317,9 @@ class AttackTest {
 
         withFixedDice(
             D20 rolls 12,
-            D20 rolls 20,  // critical hit
+            D20 rolls 20, // critical hit
             damageDie rolls 5,
-            damageDie rolls 7   // second damage roll for crit
+            damageDie rolls 7, // second damage roll for crit
         ) {
             val outcome = attacker.attack(opponent, providesBoardPosition, RollModifier.ADVANTAGE)
 
@@ -341,10 +337,10 @@ class AttackTest {
         expectAnyGridPosition()
 
         withFixedDice(
-            D20 rolls 20,  // this is the max, so it's used even with disadvantage
-            D20 rolls 20,  // both are 20, so critical hit triggers
+            D20 rolls 20, // this is the max, so it's used even with disadvantage
+            D20 rolls 20, // both are 20, so critical hit triggers
             damageDie rolls 5,
-            damageDie rolls 7   // second damage roll for crit
+            damageDie rolls 7, // second damage roll for crit
         ) {
             val outcome = attacker.attack(opponent, providesBoardPosition, RollModifier.DISADVANTAGE)
 
@@ -357,10 +353,9 @@ class AttackTest {
     fun `a opponent within melee range can be attacked`() {
         val damageDie = D8
         val attacker = PlayerCharacter.aPlayerCharacter(
-
             weapon = SOME_WEAPON.copy(
-                rangeChecker = RangeCheckers.melee(Feet(5.0))
-            )
+                rangeChecker = RangeCheckers.melee(Feet(5.0)),
+            ),
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
@@ -371,7 +366,7 @@ class AttackTest {
 
         withFixedDice(
             D20 rolls 10,
-            damageDie rolls 6
+            damageDie rolls 6,
         ) {
             val outcome = attacker.attack(opponent, providesBoardPosition)
             assertEquals(true, outcome.hasBeenHit)
@@ -383,8 +378,8 @@ class AttackTest {
         val attacker = PlayerCharacter.aPlayerCharacter(
             id = ID[0],
             weapon = SOME_WEAPON.copy(
-                rangeChecker = RangeCheckers.melee(Feet(5.0))
-            )
+                rangeChecker = RangeCheckers.melee(Feet(5.0)),
+            ),
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
@@ -395,8 +390,8 @@ class AttackTest {
         providesBoardPosition = ProvidesBoardPositionMock(
             mapOf(
                 ID[0] to BoardPosition(Square(0), Square(0)),
-                ID[1] to BoardPosition(Square(2), Square(0))
-            )
+                ID[1] to BoardPosition(Square(2), Square(0)),
+            ),
         )
 
         withFixedDice {
@@ -407,12 +402,11 @@ class AttackTest {
 
     @Test
     fun `a ranged weapon attack within normal range hits normally`() {
-
         providesBoardPosition = ProvidesBoardPositionMock(
             mapOf(
                 ID[0] to BoardPosition(Square(0), Square(0)),
-                ID[1] to BoardPosition(Square(1), Square(0))
-            )
+                ID[1] to BoardPosition(Square(1), Square(0)),
+            ),
         )
 
         val damageDie = D8
@@ -421,8 +415,8 @@ class AttackTest {
             weapon = SOME_WEAPON.copy(
                 name = "Test Weapon",
                 statQuery = StatQueries.Dex,
-                rangeChecker = RangeCheckers.ranged(normalRange = Feet(10.0), longRange = Feet(30.0))
-            )
+                rangeChecker = RangeCheckers.ranged(normalRange = Feet(10.0), longRange = Feet(30.0)),
+            ),
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
@@ -430,10 +424,9 @@ class AttackTest {
             armourClass = 10,
         )
 
-
         withFixedDice(
             D20 rolls 10,
-            damageDie rolls 6
+            damageDie rolls 6,
         ) {
             val outcome = attacker.attack(opponent, providesBoardPosition)
             assertEquals(true, outcome.hasBeenHit)
@@ -447,8 +440,8 @@ class AttackTest {
             id = ID[0],
             weapon = SOME_WEAPON.copy(
                 statQuery = StatQueries.Dex,
-                rangeChecker = RangeCheckers.ranged(normalRange = Feet(10.0), longRange = Feet(30.0))
-            )
+                rangeChecker = RangeCheckers.ranged(normalRange = Feet(10.0), longRange = Feet(30.0)),
+            ),
         )
 
         val opponent = PlayerCharacter.aPlayerCharacter(
@@ -459,19 +452,18 @@ class AttackTest {
         providesBoardPosition = ProvidesBoardPositionMock(
             mapOf(
                 ID[0] to BoardPosition(Square(0), Square(0)),
-                ID[1] to BoardPosition(Square(5), Square(0))
-            )
+                ID[1] to BoardPosition(Square(5), Square(0)),
+            ),
         )
 
         withFixedDice(
             D20 rolls 10, // lower roll should be used
             D20 rolls 15,
-            damageDie rolls 6
+            damageDie rolls 6,
         ) {
             val outcome = attacker.attack(opponent, providesBoardPosition)
             assertEquals(true, outcome.hasBeenHit)
             assertEquals(10 + 1, outcome.hitRoll)
         }
     }
-
 }

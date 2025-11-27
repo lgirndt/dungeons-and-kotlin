@@ -4,7 +4,6 @@ import io.dungeons.Die.Companion.D20
 import io.dungeons.combat.ProvidesBoardPosition
 import io.dungeons.core.Id
 
-
 data class CreatureData(
     val name: String,
     val stats: StatBlock,
@@ -15,11 +14,7 @@ data class CreatureData(
     val maxHitPoints: Int = hitPoints
 }
 
-abstract class Creature(
-    override val id: Id<Creature>,
-    protected val core: CreatureData,
-) : Attackable {
-
+abstract class Creature(override val id: Id<Creature>, protected val core: CreatureData) : Attackable {
     val name: String
         get() = core.name
 
@@ -44,9 +39,8 @@ abstract class Creature(
     abstract val weapon: Weapon
 
     protected abstract val attackModifier: Int
-    protected open fun isCriticalHit(hitRoll: DieRoll): Boolean {
-        return hitRoll.value == 20
-    }
+
+    protected open fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == 20
 
     internal fun asPhysicalAttacker(): Attacker {
         val creature = this
@@ -58,15 +52,16 @@ abstract class Creature(
                 get() = core.stats
 
             override fun applyAttackModifiers(): Int = creature.attackModifier
-            override fun isCriticalHit(hitRoll: DieRoll): Boolean =
-                creature.isCriticalHit(hitRoll)
+
+            override fun isCriticalHit(hitRoll: DieRoll): Boolean = creature.isCriticalHit(hitRoll)
         }
     }
 
     fun attack(
         opponent: Attackable,
         providesBoardPosition: ProvidesBoardPosition,
-        rollModifier: RollModifier = RollModifier.NORMAL): AttackOutcome {
+        rollModifier: RollModifier = RollModifier.NORMAL,
+    ): AttackOutcome {
         val attacker = asPhysicalAttacker()
         return attack(attacker, opponent, providesBoardPosition, rollModifier)
     }
@@ -74,7 +69,8 @@ abstract class Creature(
     fun rollAbilityCheck(
         ability: StatQuery,
         difficultyClass: Int,
-        rollModifier: RollModifier = RollModifier.NORMAL): AbilityCheckResult {
+        rollModifier: RollModifier = RollModifier.NORMAL,
+    ): AbilityCheckResult {
         val roll = rollModifier.roll(D20)
         return AbilityCheckResult(roll.value + ability(stats).modifier >= difficultyClass)
     }

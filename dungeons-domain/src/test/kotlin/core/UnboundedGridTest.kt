@@ -1,16 +1,14 @@
 package core
 
-import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.core.GridIndex
 import io.dungeons.core.UnboundedGrid
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class UnboundedGridTest {
-
     @Nested
     inner class GetAndSet {
-
         @Test
         fun `should get null for unset cell`() {
             val grid = UnboundedGrid<String>()
@@ -48,7 +46,6 @@ class UnboundedGridTest {
 
     @Nested
     inner class Remove {
-
         @Test
         fun `should remove and return value`() {
             val grid = UnboundedGrid<String>()
@@ -72,7 +69,6 @@ class UnboundedGridTest {
 
     @Nested
     inner class IsEmpty {
-
         @Test
         fun `should return false for unset cell`() {
             val grid = UnboundedGrid<String>()
@@ -91,7 +87,6 @@ class UnboundedGridTest {
 
     @Nested
     inner class SparseStorage {
-
         @Test
         fun `should handle sparse data efficiently`() {
             val grid = UnboundedGrid<Int>()
@@ -109,7 +104,6 @@ class UnboundedGridTest {
 
     @Nested
     inner class BoundingBox {
-
         @Test
         fun `should return empty bounding box for empty grid`() {
             val grid = UnboundedGrid<Int>()

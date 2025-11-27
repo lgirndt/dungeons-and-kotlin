@@ -1,50 +1,34 @@
 package io.dungeons.core
 
-data class BoundingBox(
-    val minX: Int,
-    val minY: Int,
-    val maxX: Int,
-    val maxY: Int
-) {
-    operator fun contains(gridIndex: GridIndex): Boolean =
-        gridIndex.x in minX..maxX && gridIndex.y in minY..maxY
+data class BoundingBox(val minX: Int, val minY: Int, val maxX: Int, val maxY: Int) {
+    operator fun contains(gridIndex: GridIndex): Boolean = gridIndex.x in minX..maxX && gridIndex.y in minY..maxY
 }
 
 abstract class Grid<T> {
-    protected val cells: MutableMap<GridIndex,T> = mutableMapOf()
+    protected val cells: MutableMap<GridIndex, T> = mutableMapOf()
 
-    abstract val boundingBox : BoundingBox
+    abstract val boundingBox: BoundingBox
 
-    open operator fun get(pos: GridIndex): T? {
-        return cells[pos]
-    }
+    open operator fun get(pos: GridIndex): T? = cells[pos]
 
     open operator fun set(pos: GridIndex, value: T) {
         cells[pos] = value
     }
 
-    operator fun contains(pos: GridIndex): Boolean {
-        return cells.containsKey(pos)
-    }
+    operator fun contains(pos: GridIndex): Boolean = cells.containsKey(pos)
 
-    open fun remove(pos: GridIndex): T? {
-        return cells.remove(pos)
-    }
+    open fun remove(pos: GridIndex): T? = cells.remove(pos)
 
-    open fun isEmpty(pos: GridIndex): Boolean {
-        return cells.containsKey(pos)
-    }
+    open fun isEmpty(pos: GridIndex): Boolean = cells.containsKey(pos)
 
-    fun iterateWithIndex(): Iterator<Pair<T,GridIndex>> {
-        return cells.entries.map { Pair(it.value, it.key) }.iterator()
-    }
+    fun iterateWithIndex(): Iterator<Pair<T, GridIndex>> = cells.entries.map { Pair(it.value, it.key) }.iterator()
 
     fun toMaskBy(predicate: (T) -> Boolean): BooleanGrid {
         val mask = BooleanGrid(
             minX = boundingBox.minX,
             minY = boundingBox.minY,
             maxX = boundingBox.maxX,
-            maxY = boundingBox.maxY
+            maxY = boundingBox.maxY,
         )
 
         for ((pos, value) in cells) {
@@ -71,13 +55,7 @@ class UnboundedGrid<T> : Grid<T>() {
         }
 }
 
-class BoundedGrid<T>(
-    val minX: Int = 0,
-    val minY: Int = 0,
-    val maxX: Int,
-    val maxY: Int
-) : Grid<T>() {
-
+class BoundedGrid<T>(val minX: Int = 0, val minY: Int = 0, val maxX: Int, val maxY: Int) : Grid<T>() {
     init {
         require(maxX >= minX) { "maxX must be greater than or equal to minX, but maxX=$maxX and minX=$minX" }
         require(maxY >= minY) { "maxY must be greater than or equal to minY, but maxY=$maxY and minY=$minY" }
@@ -103,9 +81,7 @@ class BoundedGrid<T>(
         return super.isEmpty(pos)
     }
 
-    fun isInBounds(pos: GridIndex): Boolean {
-        return pos.x in minX..maxX && pos.y in minY..maxY
-    }
+    fun isInBounds(pos: GridIndex): Boolean = pos.x in minX..maxX && pos.y in minY..maxY
 
     override val boundingBox: BoundingBox
         get() = BoundingBox(minX, minY, maxX, maxY)
@@ -117,9 +93,7 @@ class BoundedGrid<T>(
     }
 
     companion object {
-        fun <U> fromDimensions(width: Int, height: Int) : BoundedGrid<U> {
-            return BoundedGrid(minX = 0, minY = 0, maxX = width - 1, maxY = height - 1)
-        }
+        fun <U> fromDimensions(width: Int, height: Int): BoundedGrid<U> =
+            BoundedGrid(minX = 0, minY = 0, maxX = width - 1, maxY = height - 1)
     }
-
 }

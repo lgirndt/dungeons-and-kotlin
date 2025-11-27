@@ -2,18 +2,14 @@ package io.dungeons
 
 import io.dungeons.core.Id
 
-data class PlayerCharacterData(
-    val level: Int,
-    val weapon: Weapon,
-)
+data class PlayerCharacterData(val level: Int, val weapon: Weapon)
 
 class PlayerCharacter(
     id: Id<Creature> = Id.generate(),
     private val data: PlayerCharacterData,
-    private val classFeatures : ClassFeatures,
+    private val classFeatures: ClassFeatures,
     core: CreatureData,
-) : Creature(id,core) {
-
+) : Creature(id, core) {
     companion object {}
 
     val proficiencyBonus: ProficiencyBonus
@@ -22,24 +18,23 @@ class PlayerCharacter(
     fun copy(
         core: CreatureData = this.core,
         data: PlayerCharacterData = this.data,
-        classFeatures : ClassFeatures = this.classFeatures
-    ): PlayerCharacter {
-        return PlayerCharacter(
-            data = data,
-            core = core,
-            classFeatures = classFeatures
-        )
-    }
+        classFeatures: ClassFeatures = this.classFeatures,
+    ): PlayerCharacter = PlayerCharacter(
+        data = data,
+        core = core,
+        classFeatures = classFeatures,
+    )
 
     override val weapon: Weapon
         get() = data.weapon
 
     override val attackModifier: Int
         get() {
-            val proficiencyModifier = if (classFeatures.isProficientWith(weapon))
+            val proficiencyModifier = if (classFeatures.isProficientWith(weapon)) {
                 proficiencyBonus
-            else
+            } else {
                 ProficiencyBonus.None
+            }
 
             val attackStat = weapon.whichStat(core.stats)
             val hitRoll = attackStat.modifier + proficiencyModifier.toInt()

@@ -5,17 +5,10 @@ import io.dungeons.world.Square
 import kotlin.math.abs
 import kotlin.math.max
 
-data class BoardPosition(
-    val x: Square,
-    val y: Square,
-) {
-    operator fun plus(other: BoardPosition): BoardPosition {
-        return BoardPosition(this.x + other.x, this.y + other.y)
-    }
+data class BoardPosition(val x: Square, val y: Square) {
+    operator fun plus(other: BoardPosition): BoardPosition = BoardPosition(this.x + other.x, this.y + other.y)
 
-    operator fun minus(other: BoardPosition): BoardPosition {
-        return BoardPosition(this.x - other.x, this.y - other.y)
-    }
+    operator fun minus(other: BoardPosition): BoardPosition = BoardPosition(this.x - other.x, this.y - other.y)
 
     /**
      * Calculate Chebyshev distance (in squares) between two grid positions.
@@ -32,14 +25,10 @@ data class BoardPosition(
      * Convert grid position to world coordinate.
      * Each square represents 5 feet.
      */
-    fun toCoordinate(): Coordinate {
-        return Coordinate(this.x.toFeet(), this.y.toFeet())
-    }
+    fun toCoordinate(): Coordinate = Coordinate(this.x.toFeet(), this.y.toFeet())
 
     companion object {
-        fun from(x: Int, y: Int): BoardPosition {
-            return BoardPosition(Square(x), Square(y))
-        }
+        fun from(x: Int, y: Int): BoardPosition = BoardPosition(Square(x), Square(y))
 
         /**
          * Convert world coordinate to grid position.

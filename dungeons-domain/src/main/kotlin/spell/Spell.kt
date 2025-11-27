@@ -7,7 +7,6 @@ import io.dungeons.core.Id
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet
 
-
 enum class SpellSchool {
     Abjuration,
     Conjuration,
@@ -16,15 +15,15 @@ enum class SpellSchool {
 }
 
 sealed class SpellLevel(val level: Int) : Comparable<SpellLevel> {
-
     override fun compareTo(other: SpellLevel): Int = compareBy(SpellLevel::level).compare(this, other)
-    override fun toString(): String {
-        return MoreObjects.toStringHelper(this)
-            .add("level", level)
-            .toString()
-    }
+
+    override fun toString(): String = MoreObjects
+        .toStringHelper(this)
+        .add("level", level)
+        .toString()
 
     object Cantrip : SpellLevel(0)
+
     object Level1 : SpellLevel(1)
 }
 
@@ -42,7 +41,7 @@ fun castAttackSpell(
     spell: AttackSpell,
     onLevel: SpellLevel,
     providesBoardPosition: ProvidesBoardPosition,
-    rollModifier: RollModifier
+    rollModifier: RollModifier,
 ): AttackOutcome {
     require(onLevel == SpellLevel.Cantrip && spell.level == SpellLevel.Cantrip)
     require(spell.level >= onLevel)
@@ -54,16 +53,15 @@ fun castAttackSpell(
                 get() = caster.id
             override val attackSource = attackSource
             override val stats = caster.stats
-            override fun applyAttackModifiers() =
-                caster.spellCastingAbility.modifier + caster.proficiencyBonus.toInt()
+
+            override fun applyAttackModifiers() = caster.spellCastingAbility.modifier + caster.proficiencyBonus.toInt()
 
             override fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == 20
         },
         opponent,
         providesBoardPosition,
-        rollModifier
+        rollModifier,
     )
-
 }
 
 data class AttackSpell(
@@ -72,9 +70,8 @@ data class AttackSpell(
     val level: SpellLevel,
     val damageType: DamageType,
     val damageRoll: DamageRoll,
-    val range: Feet
+    val range: Feet,
 ) {
-
     internal fun asAttackSource(caster: Caster): AttackSource {
         val spell = this
         return object : AttackSource() {
@@ -87,7 +84,4 @@ data class AttackSpell(
     }
 }
 
-class SpellCasting(
-    val ability: StatQuery,
-)
-
+class SpellCasting(val ability: StatQuery)

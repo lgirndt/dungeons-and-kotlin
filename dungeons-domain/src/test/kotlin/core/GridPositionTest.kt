@@ -1,12 +1,10 @@
 package core
 
-import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.core.GridIndex
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import org.junit.jupiter.api.assertThrows
 
 class GridPositionTest {
-
     @Test
     fun `should create valid position with positive coordinates`() {
         val pos = GridIndex(5, 10)

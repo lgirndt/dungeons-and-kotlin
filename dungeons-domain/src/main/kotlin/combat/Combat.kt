@@ -8,29 +8,18 @@ import io.dungeons.core.Id
 enum class FactionStance {
     Friendly,
     Neutral,
-    Hostile
+    Hostile,
 }
 
-data class Faction(
-    val id: Id<Faction> = Id.Companion.generate(),
-    val name: String,
-)
+data class Faction(val id: Id<Faction> = Id.Companion.generate(), val name: String)
 
-data class FactionRelationship(
-    val first: Faction,
-    val second: Faction,
-    val stance: FactionStance
-) {
-    internal fun toLookupKey(): FactionRelationsLookupKey {
-        return setOf(first.id, second.id)
-    }
+data class FactionRelationship(val first: Faction, val second: Faction, val stance: FactionStance) {
+    internal fun toLookupKey(): FactionRelationsLookupKey = setOf(first.id, second.id)
 }
 
 private typealias FactionRelationsLookupKey = Set<Id<Faction>>
 
-class FactionRelations private constructor(
-    private val relationships: Map<FactionRelationsLookupKey, FactionStance>
-) {
+class FactionRelations private constructor(private val relationships: Map<FactionRelationsLookupKey, FactionStance>) {
     companion object {
         private val DEFAULT_STANCE = FactionStance.Hostile
     }
@@ -57,9 +46,7 @@ class FactionRelations private constructor(
             return this
         }
 
-        fun build(): FactionRelations {
-            return FactionRelations(relationships.toMap())
-        }
+        fun build(): FactionRelations = FactionRelations(relationships.toMap())
     }
 }
 
@@ -68,13 +55,12 @@ data class Turn(
     val movementAvailable: Boolean = true,
     val actionAvailable: Boolean = true,
     val bonusActionAvailable: Boolean = true,
-    val reactionAvailable: Boolean = true
+    val reactionAvailable: Boolean = true,
 ) {
-
     val hasOptionsForTurnLeft: Boolean
-        get() = movementAvailable
-                || actionAvailable
-                || bonusActionAvailable
+        get() = movementAvailable ||
+            actionAvailable ||
+            bonusActionAvailable
 
     fun useMovement(): Turn {
         require(movementAvailable) { "Movement already used this turn." }
@@ -95,7 +81,6 @@ data class Turn(
         require(reactionAvailable) { "Reaction already used this turn." }
         return copy(reactionAvailable = false)
     }
-
 }
 
 interface TurnActor {
@@ -103,20 +88,10 @@ interface TurnActor {
 }
 
 internal class NoopTurnActor : TurnActor {
-    override fun handleTurn(
-        combatant: Combatant,
-        turn: Turn,
-        combatScenario: CombatScenario
-    ): CombatCommand? {
-        return null
-    }
+    override fun handleTurn(combatant: Combatant, turn: Turn, combatScenario: CombatScenario): CombatCommand? = null
 }
 
-data class Combatant(
-    val creature: Creature,
-    val faction: Faction,
-    val actor: TurnActor,
-) {
+data class Combatant(val creature: Creature, val faction: Faction, val actor: TurnActor) {
     val id: Id<Creature>
         get() = creature.id
 

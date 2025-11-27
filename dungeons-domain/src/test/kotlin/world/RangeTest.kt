@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class IsInRangeTest {
-
     @Test
     fun `coordinates within range should return true`() {
         val from = Coordinate.from(0, 0)

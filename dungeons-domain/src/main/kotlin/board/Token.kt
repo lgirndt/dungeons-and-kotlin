@@ -2,9 +2,7 @@ package io.dungeons.board
 
 import io.dungeons.core.Id
 
-interface Token
-
-{
+interface Token {
     val id: Id<Token>
 
     val layer: BoardLayer

@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class SquareTest {
-
     @Test
     fun `adding two square values should return correct result`() {
         val square1 = Square(3)

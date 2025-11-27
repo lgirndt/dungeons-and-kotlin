@@ -1,30 +1,25 @@
 
-import org.junit.jupiter.api.Assertions.assertEquals
-import io.mockk.mockk
-import io.mockk.verify
 import io.dungeons.AbilityCheckResult
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D6
 import io.dungeons.RollModifier
 import io.dungeons.SimpleDamageRoll
 import io.dungeons.Stat
+import io.mockk.mockk
+import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertAll
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
-
 class DndTest {
-
-
     @Test
     fun `a modifier should return the correct value`() {
         assertAll(
             { assertEquals(-1, Stat(8).modifier) },
             { assertEquals(-1, Stat(9).modifier) },
-
             { assertEquals(0, Stat(10).modifier) },
             { assertEquals(0, Stat(11).modifier) },
-
             { assertEquals(1, Stat(12).modifier) },
             { assertEquals(1, Stat(13).modifier) },
         )
@@ -63,12 +58,10 @@ class DndTest {
             val result = simpleDamageRoll.roll(false)
             assertEquals(5 + 3 + 7, result)
         }
-
     }
 
     @Nested
     inner class RollModifierTest {
-
         @Test
         fun `NORMAL returns a single die roll`() {
             withFixedDice(D20 rolls 15) {
@@ -81,7 +74,7 @@ class DndTest {
         fun `ADVANTAGE returns the higher of two rolls`() {
             withFixedDice(
                 D20 rolls 8,
-                D20 rolls 17
+                D20 rolls 17,
             ) {
                 val result = RollModifier.ADVANTAGE.roll(D20)
                 assertEquals(17, result.value)
@@ -92,7 +85,7 @@ class DndTest {
         fun `ADVANTAGE when first roll is higher`() {
             withFixedDice(
                 D20 rolls 19,
-                D20 rolls 12
+                D20 rolls 12,
             ) {
                 val result = RollModifier.ADVANTAGE.roll(D20)
                 assertEquals(19, result.value)
@@ -103,7 +96,7 @@ class DndTest {
         fun `ADVANTAGE when both rolls are equal`() {
             withFixedDice(
                 D20 rolls 10,
-                D20 rolls 10
+                D20 rolls 10,
             ) {
                 val result = RollModifier.ADVANTAGE.roll(D20)
                 assertEquals(10, result.value)
@@ -114,7 +107,7 @@ class DndTest {
         fun `DISADVANTAGE returns the lower of two rolls`() {
             withFixedDice(
                 D20 rolls 8,
-                D20 rolls 17
+                D20 rolls 17,
             ) {
                 val result = RollModifier.DISADVANTAGE.roll(D20)
                 assertEquals(8, result.value)
@@ -125,7 +118,7 @@ class DndTest {
         fun `DISADVANTAGE when second roll is lower`() {
             withFixedDice(
                 D20 rolls 15,
-                D20 rolls 3
+                D20 rolls 3,
             ) {
                 val result = RollModifier.DISADVANTAGE.roll(D20)
                 assertEquals(3, result.value)
@@ -136,7 +129,7 @@ class DndTest {
         fun `DISADVANTAGE when both rolls are equal`() {
             withFixedDice(
                 D20 rolls 14,
-                D20 rolls 14
+                D20 rolls 14,
             ) {
                 val result = RollModifier.DISADVANTAGE.roll(D20)
                 assertEquals(14, result.value)
@@ -157,11 +150,9 @@ class DndTest {
             assertEquals(RollModifier.DISADVANTAGE, RollModifier.DISADVANTAGE.giveDisadvantage())
         }
     }
-
 }
 
 class AbilityCheckResultTest {
-
     @Test
     fun `a abilityCheckResult should have proper isSuccessful`() {
         assertEquals(true, AbilityCheckResult(true).isSuccessful)

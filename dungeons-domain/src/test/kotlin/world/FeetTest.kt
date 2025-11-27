@@ -4,7 +4,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class FeetTest {
-
     @Test
     fun `adding two feet values should return correct result`() {
         val feet1 = Feet(10.0)

@@ -8,32 +8,23 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 
 class GameBoardTest {
-
     // Test token that blocks movement
-    private data class BlockingToken(
-        override val id: Id<Token> = Id.generate()
-    ) : Token {
+    private data class BlockingToken(override val id: Id<Token> = Id.generate()) : Token {
         override val allowsMovement: Boolean = false
     }
 
     // Test token that allows movement through it
-    private data class PassableToken(
-        override val id: Id<Token> = Id.generate()
-    ) : Token {
+    private data class PassableToken(override val id: Id<Token> = Id.generate()) : Token {
         override val allowsMovement: Boolean = true
     }
 
     // Test token that blocks sight
-    private data class OpaqueToken(
-        override val id: Id<Token> = Id.generate()
-    ) : Token {
+    private data class OpaqueToken(override val id: Id<Token> = Id.generate()) : Token {
         override val allowsSight: Boolean = false
     }
 
     // Test token that allows sight
-    private data class TransparentToken(
-        override val id: Id<Token> = Id.generate()
-    ) : Token {
+    private data class TransparentToken(override val id: Id<Token> = Id.generate()) : Token {
         override val allowsSight: Boolean = true
     }
 
@@ -41,7 +32,7 @@ class GameBoardTest {
     private data class GroundToken(
         override val id: Id<Token> = Id.generate(),
         override val allowsMovement: Boolean = true,
-        override val allowsSight: Boolean = true
+        override val allowsSight: Boolean = true,
     ) : Token {
         override val layer: BoardLayer = BoardLayer.GROUND
     }
@@ -49,7 +40,7 @@ class GameBoardTest {
     private data class ObjectToken(
         override val id: Id<Token> = Id.generate(),
         override val allowsMovement: Boolean = false,
-        override val allowsSight: Boolean = false
+        override val allowsSight: Boolean = false,
     ) : Token {
         override val layer: BoardLayer = BoardLayer.OBJECT
     }
@@ -57,14 +48,13 @@ class GameBoardTest {
     private data class CreatureToken(
         override val id: Id<Token> = Id.generate(),
         override val allowsMovement: Boolean = false,
-        override val allowsSight: Boolean = true
+        override val allowsSight: Boolean = true,
     ) : Token {
         override val layer: BoardLayer = BoardLayer.CREATURE
     }
 
     @Nested
     inner class MultiLayerTokens {
-
         @Test
         fun `should allow placing tokens on different layers at same position`() {
             val board = GameBoard(10, 10)
@@ -80,15 +70,15 @@ class GameBoardTest {
 
             assertEquals(
                 ground.id,
-                board.getTokenAt(BoardLayer.GROUND, position)?.id
+                board.getTokenAt(BoardLayer.GROUND, position)?.id,
             )
             assertEquals(
                 obj.id,
-                board.getTokenAt(BoardLayer.OBJECT, position)?.id
+                board.getTokenAt(BoardLayer.OBJECT, position)?.id,
             )
             assertEquals(
                 creature.id,
-                board.getTokenAt(BoardLayer.CREATURE, position)?.id
+                board.getTokenAt(BoardLayer.CREATURE, position)?.id,
             )
         }
 
@@ -128,7 +118,7 @@ class GameBoardTest {
             val reach = board.calculateReach(start, steps = 1)
 
             assertEquals(null, reach[GridIndex(5, 6)]) // Blocked by object layer
-            assertEquals(1, reach[GridIndex(5, 4)])    // North is reachable
+            assertEquals(1, reach[GridIndex(5, 4)]) // North is reachable
         }
 
         @Test
@@ -212,7 +202,6 @@ class GameBoardTest {
 
     @Nested
     inner class CalculateReach {
-
         @Test
         fun `should handle single blocking token directly adjacent`() {
             val board = GameBoard(3, 3)
@@ -396,14 +385,16 @@ class GameBoardTest {
             val start = BoardPosition.from(3, 3)
 
             fun surroundingPairs(): Sequence<Pair<Int, Int>> = sequence {
-                for (x in 2..4)
-                    for (y in 2..4)
-                        if (x != 3 || y != 3)
+                for (x in 2..4) {
+                    for (y in 2..4) {
+                        if (x != 3 || y != 3) {
                             yield(Pair(x, y))
+                        }
+                    }
+                }
             }
 
-            surroundingPairs().forEach {
-                (x, y) ->
+            surroundingPairs().forEach { (x, y) ->
                 board.putTokenTo(BoardPosition.from(x, y), BlockingToken())
             }
 
@@ -426,13 +417,12 @@ class GameBoardTest {
 
             (1..9).forEach { i ->
                 assertEquals(i, reach[GridIndex(i, i)])
-             }
+            }
         }
     }
 
     @Nested
     inner class HasLineOfSight {
-
         @Test
         fun `should have clear line of sight with no obstacles`() {
             val board = GameBoard(10, 10)
@@ -494,7 +484,6 @@ class GameBoardTest {
             assertEquals(true, board.hasLineOfSight(center, BoardPosition.from(0, 5))) // West
             assertEquals(true, board.hasLineOfSight(center, BoardPosition.from(9, 5))) // East
         }
-
 
         @Test
         fun `should be symmetric - same result from both directions`() {

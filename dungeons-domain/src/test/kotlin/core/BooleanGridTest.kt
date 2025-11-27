@@ -5,10 +5,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class BooleanGridTest {
-
     @Nested
     inner class GetAndSet {
-
         @Test
         fun `should return false for unset positions`() {
             val grid = BooleanGrid(maxX = 10, maxY = 10)
@@ -38,7 +36,6 @@ class BooleanGridTest {
 
     @Nested
     inner class Union {
-
         @Test
         fun `should combine two grids with OR logic`() {
             val grid1 = BooleanGrid(maxX = 5, maxY = 5)
@@ -75,7 +72,6 @@ class BooleanGridTest {
 
     @Nested
     inner class Intersect {
-
         @Test
         fun `should combine two grids with AND logic`() {
             val grid1 = BooleanGrid(maxX = 5, maxY = 5)
@@ -91,8 +87,8 @@ class BooleanGridTest {
             val result = grid1.intersect(grid2)
 
             assertEquals(false, result[GridIndex(1, 1)]) // Only in grid1
-            assertEquals(true, result[GridIndex(2, 2)])  // In both
-            assertEquals(true, result[GridIndex(3, 3)])  // In both
+            assertEquals(true, result[GridIndex(2, 2)]) // In both
+            assertEquals(true, result[GridIndex(3, 3)]) // In both
             assertEquals(false, result[GridIndex(4, 4)]) // Only in grid2
         }
 
@@ -127,7 +123,6 @@ class BooleanGridTest {
 
     @Nested
     inner class BoundsHandling {
-
         @Test
         fun `should work with custom bounds`() {
             val grid = BooleanGrid(minX = 10, minY = 10, maxX = 20, maxY = 20)

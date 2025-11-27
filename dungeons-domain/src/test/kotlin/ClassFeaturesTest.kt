@@ -1,14 +1,12 @@
-import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.*
 import io.dungeons.Die.Companion.D20
 import io.dungeons.WeaponCategory.Martial
 import io.dungeons.WeaponCategory.Simple
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
-
 class ClassFeaturesTest {
-
-    private fun aWeaponBeing(category: WeaponCategory) : Weapon = SOME_WEAPON.copy(category = category)
+    private fun aWeaponBeing(category: WeaponCategory): Weapon = SOME_WEAPON.copy(category = category)
 
     @Test
     fun `Fighter should be proficient with all weapons`() {
@@ -52,5 +50,4 @@ class ClassFeaturesTest {
         assertEquals(true, fighter.isCriticalHit(DieRoll(D20, 19)))
         assertEquals(false, fighter.isCriticalHit(DieRoll(D20, 18)))
     }
-
 }

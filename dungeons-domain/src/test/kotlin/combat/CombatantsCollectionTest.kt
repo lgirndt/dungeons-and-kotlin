@@ -11,25 +11,28 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 
 class CombatantsCollectionTest {
-
     val FACTION_A = Faction(name = "Faction A")
     val FACTION_B = Faction(name = "Faction B")
 
-    lateinit var ID : TestId<Creature>
-    lateinit var store : CombatantsCollection
+    lateinit var ID: TestId<Creature>
+    lateinit var store: CombatantsCollection
 
     @BeforeEach
-    fun setup(){
+    fun setup() {
         ID = TestId()
         store = CombatantsCollection(
             listOf(
-                Combatant(PlayerCharacter.Companion.aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A, NoopTurnActor()),
+                Combatant(
+                    PlayerCharacter.Companion.aPlayerCharacter(ID[0], name = "Alpha"),
+                    FACTION_A,
+                    NoopTurnActor(),
+                ),
                 Combatant(PlayerCharacter.aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
                 Combatant(PlayerCharacter.aPlayerCharacter(ID[2]), FACTION_A, NoopTurnActor()),
                 Combatant(PlayerCharacter.aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),
                 Combatant(PlayerCharacter.aPlayerCharacter(ID[4]), FACTION_B, NoopTurnActor()),
                 Combatant(PlayerCharacter.aPlayerCharacter(ID[5]), FACTION_B, NoopTurnActor()),
-            )
+            ),
         )
     }
 
@@ -49,12 +52,12 @@ class CombatantsCollectionTest {
     @Test
     fun `findAllWithStance should return correct combatants`() {
         val friendlyToA = store.findAllWithStance(ID[0], FactionStance.Friendly)
-        val friendlyIds = friendlyToA.map{it.creature.id}.toSet()
+        val friendlyIds = friendlyToA.map { it.creature.id }.toSet()
         assertEquals(3, friendlyIds.size)
         assertEquals(setOf(ID[0], ID[1], ID[2]), friendlyIds)
 
         val hostileToA = store.findAllWithStance(ID[0], FactionStance.Hostile)
-        val hostileIds = hostileToA.map{it.creature.id}.toSet()
+        val hostileIds = hostileToA.map { it.creature.id }.toSet()
         assertEquals(3, hostileIds.size)
         assertEquals(setOf(ID[3], ID[4], ID[5]), hostileIds)
     }

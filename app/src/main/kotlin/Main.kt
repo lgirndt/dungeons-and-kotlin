@@ -1,4 +1,12 @@
-import io.dungeons.*
+import io.dungeons.Creature
+import io.dungeons.CreatureData
+import io.dungeons.DamageModifiers
+import io.dungeons.Fighter
+import io.dungeons.Goblin
+import io.dungeons.PlayerCharacter
+import io.dungeons.PlayerCharacterData
+import io.dungeons.StatBlock
+import io.dungeons.Weapons
 import io.dungeons.board.BoardPosition
 import io.dungeons.combat.ProvidesBoardPosition
 import io.dungeons.core.Id
@@ -8,7 +16,7 @@ fun main() {
     val fighter = PlayerCharacter(
         data = PlayerCharacterData(
             level = 5,
-            weapon = Weapons.LONGSWORD
+            weapon = Weapons.LONGSWORD,
         ),
         classFeatures = Fighter(),
         core = CreatureData(
@@ -19,12 +27,12 @@ fun main() {
                 con = 14,
                 int = 10,
                 wis = 12,
-                cha = 14
+                cha = 14,
             ),
             hitPoints = 15,
             armourClass = 13,
             damageModifiers = DamageModifiers.NONE,
-        )
+        ),
     )
 
     println("Hello, ${fighter.name}! You've reached Nowhere.")
@@ -34,12 +42,10 @@ fun main() {
 
     println("${fighter.name} attacks the ${goblin.name} with a ${fighter.weapon.name}.")
     val providesBoardPosition: ProvidesBoardPosition = object : ProvidesBoardPosition {
-        override fun getBoardPosition(creatureId: Id<Creature>): BoardPosition {
-            return when (creatureId) {
-                fighter.id -> BoardPosition(Square(0), Square(0))
-                goblin.id -> BoardPosition(Square(0), Square(1))
-                else -> throw IllegalArgumentException("Unknown creature ID")
-            }
+        override fun getBoardPosition(creatureId: Id<Creature>): BoardPosition = when (creatureId) {
+            fighter.id -> BoardPosition(Square(0), Square(0))
+            goblin.id -> BoardPosition(Square(0), Square(1))
+            else -> throw IllegalArgumentException("Unknown creature ID")
         }
     }
     val outcome = fighter.attack(goblin, providesBoardPosition)

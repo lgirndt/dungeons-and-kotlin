@@ -9,7 +9,7 @@ open class Monster(
     override val attackModifier: Int,
 ) : Creature(
     id,
-    core
+    core,
 )
 
 class Goblin(
@@ -30,8 +30,7 @@ class Goblin(
     ),
     override val weapon: Weapon = Weapons.Shortbow,
     override val attackModifier: Int = weapon.whichStat(core.stats).modifier,
-
-    ) : Monster(id, core, weapon, attackModifier)
+) : Monster(id, core, weapon, attackModifier)
 
 class KoboldWarrior(
     id: Id<Creature> = Id.generate(),

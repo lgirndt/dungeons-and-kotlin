@@ -1,19 +1,12 @@
 package io.dungeons.core
 
-class BooleanGrid(
-    val minX: Int = 0,
-    val minY: Int = 0,
-    val maxX: Int,
-    val maxY: Int
-) {
+class BooleanGrid(val minX: Int = 0, val minY: Int = 0, val maxX: Int, val maxY: Int) {
     private val grid: Grid<Unit> = BoundedGrid(minX, minY, maxX, maxY)
 
     val boundingBox: BoundingBox
         get() = BoundingBox(minX, minY, maxX, maxY)
 
-    operator fun get(index: GridIndex): Boolean {
-        return grid.contains(index)
-    }
+    operator fun get(index: GridIndex): Boolean = grid.contains(index)
 
     operator fun set(index: GridIndex, value: Boolean) {
         if (value) {
@@ -59,5 +52,4 @@ class BooleanGrid(
 
         return result
     }
-
 }

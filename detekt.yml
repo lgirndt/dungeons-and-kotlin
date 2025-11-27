@@ -339,7 +339,7 @@ naming:
   InvalidPackageDeclaration:
     active: true
     aliases: ['PackageDirectoryMismatch']
-    rootPackage: ''
+    rootPackage: 'io.dungeons'
     requireRootInDeclaration: false
   LambdaParameterNaming:
     active: false

@@ -1,7 +1,6 @@
 package combat
 
 import aPlayerCharacter
-import org.junit.jupiter.api.Assertions.assertEquals
 import fromModifiers
 import io.dungeons.Die.Companion.D20
 import io.dungeons.DieRoll
@@ -11,6 +10,7 @@ import io.dungeons.combat.*
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -19,7 +19,6 @@ import rolls
 import withFixedDice
 
 class CombatTrackerTest {
-
     val PLAYER_FACTION = Faction(name = "Players")
     val MONSTER_FACTION = Faction(name = "Monsters")
 
@@ -27,17 +26,15 @@ class CombatTrackerTest {
         name: String = "some name",
         dexMod: Int = 0,
         faction: Faction = PLAYER_FACTION,
-        actor: TurnActor = mockk<TurnActor>(relaxed = true)
-    ): Combatant {
-        return Combatant(
-            creature = PlayerCharacter.aPlayerCharacter(
-                name = name,
-                stats = StatBlock.fromModifiers(dexMod = dexMod)
-            ),
-            faction = faction,
-            actor = actor
-        )
-    }
+        actor: TurnActor = mockk<TurnActor>(relaxed = true),
+    ): Combatant = Combatant(
+        creature = PlayerCharacter.aPlayerCharacter(
+            name = name,
+            stats = StatBlock.fromModifiers(dexMod = dexMod),
+        ),
+        faction = faction,
+        actor = actor,
+    )
 
     @Test
     fun `combatants should be sorted by initiative in descending order`() {
@@ -47,11 +44,10 @@ class CombatTrackerTest {
             aCombatant(name = "Fast Character", dexMod = 4),
         )
         withFixedDice(
-            D20 rolls 10,  // lowDexPlayer: 10 + 0 = 10
-            D20 rolls 12,  // midDexPlayer: 12 + 2 = 14
-            D20 rolls 8    // highDexPlayer: 8 + 4 = 12
+            D20 rolls 10, // lowDexPlayer: 10 + 0 = 10
+            D20 rolls 12, // midDexPlayer: 12 + 2 = 14
+            D20 rolls 8, // highDexPlayer: 8 + 4 = 12
         ) {
-
             val tracker = createCombatTracker(trackerEntries)
 
             // Verify the combatants are sorted by initiative (descending)
@@ -69,8 +65,8 @@ class CombatTrackerTest {
     @Test
     fun `combatants with same initiative should maintain input order`() {
         withFixedDice(
-            D20 rolls 10,  // player1: 10 + 2 = 12
-            D20 rolls 10   // player2: 10 + 2 = 12
+            D20 rolls 10, // player1: 10 + 2 = 12
+            D20 rolls 10, // player2: 10 + 2 = 12
         ) {
             val trackerEntries = listOf(
                 aCombatant(name = "First", dexMod = 2),
@@ -92,7 +88,7 @@ class CombatTrackerTest {
 
     private fun createCombatTracker(combatants: List<Combatant>): CombatTracker = CombatTracker(
         combatants = combatants,
-        combatScenario = toCombatScenario(combatants)
+        combatScenario = toCombatScenario(combatants),
     )
 
     @Test
@@ -104,7 +100,6 @@ class CombatTrackerTest {
 
     @Test
     fun `listener should be called with sorted combatants after initiative is rolled`() {
-
         val listener = mockk<CombatTrackerListener>(relaxed = true)
 
         val trackerEntries = listOf(
@@ -112,34 +107,35 @@ class CombatTrackerTest {
             aCombatant(name = "Second", dexMod = 2),
         )
         withFixedDice(
-            D20 rolls 10,  // player1: 10 + 1 = 11
-            D20 rolls 8    // player2: 8 + 2 = 10
+            D20 rolls 10, // player1: 10 + 1 = 11
+            D20 rolls 8, // player2: 8 + 2 = 10
         ) {
-
             CombatTracker(
                 combatants = trackerEntries,
                 combatScenario = toCombatScenario(trackerEntries),
-                listener = listener
+                listener = listener,
             )
 
             // Verify listener was called with the sorted list
             verify(exactly = 1) {
-                listener.rolledInitiative(match { sortedCombatants ->
+                listener.rolledInitiative(
+                    match { sortedCombatants ->
                     sortedCombatants.size == 2 &&
-                            sortedCombatants[0].creature.name == "First" &&
-                            sortedCombatants[0].initiative.value == 11 &&
-                            sortedCombatants[1].creature.name == "Second" &&
-                            sortedCombatants[1].initiative.value == 10
-                })
+                        sortedCombatants[0].creature.name == "First" &&
+                        sortedCombatants[0].initiative.value == 11 &&
+                        sortedCombatants[1].creature.name == "Second" &&
+                        sortedCombatants[1].initiative.value == 10
+                }
+                )
             }
         }
     }
 
     @Nested
     inner class AdvanceTurnTest {
+        lateinit var actor1: TurnActor
+        lateinit var actor2: TurnActor
 
-        lateinit var actor1: TurnActor;
-        lateinit var actor2: TurnActor;
         // TODO rename properly
         lateinit var combatants: List<Combatant>
         lateinit var expectedRolls: Array<DieRoll>
@@ -163,17 +159,20 @@ class CombatTrackerTest {
             combatants = listOf(firstCombatant, secondCombatant)
 
             expectedRolls = arrayOf(
-                D20 rolls 10,  // player1: 10 + 2 = 12
-                D20 rolls 10   // player2: 12 + 1 = 13
+                D20 rolls 10, // player1: 10 + 2 = 12
+                D20 rolls 10, // player2: 12 + 1 = 13
             )
         }
 
         @Test
         fun `advanceTurn should let the first actor in initiative order take their turn`() {
             withFixedDice(*expectedRolls) {
-                expectTurnForActor(actor1, object : MovementCombatCommand() {
+                expectTurnForActor(
+                    actor1,
+                    object : MovementCombatCommand() {
                     override fun doPerform(combatScenario: CombatScenario) {}
-                })
+                }
+                )
 
                 val tracker = createCombatTracker(combatants)
 
@@ -182,22 +181,22 @@ class CombatTrackerTest {
                 verify(exactly = 1) {
                     actor1.handleTurn(
                         match(MATCH_FIRST_CREATURE),
-                        match { it.movementAvailable && it.round == 1},
-                        any()
+                        match { it.movementAvailable && it.round == 1 },
+                        any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor1.handleTurn(
                         match(MATCH_FIRST_CREATURE),
-                        match { !it.movementAvailable && it.round == 1},
-                        any()
+                        match { !it.movementAvailable && it.round == 1 },
+                        any(),
                     )
                 }
                 verify(exactly = 0) {
                     actor2.handleTurn(
                         match(MATCH_SECOND_CREATURE),
                         any(),
-                        any()
+                        any(),
                     )
                 }
             }
@@ -208,9 +207,12 @@ class CombatTrackerTest {
             withFixedDice(*expectedRolls) {
                 expectTurnForActor(actor1)
 
-                expectTurnForActor(actor2, object : MovementCombatCommand() {
+                expectTurnForActor(
+                    actor2,
+                    object : MovementCombatCommand() {
                     override fun doPerform(combatScenario: CombatScenario) {}
-                })
+                }
+                )
 
                 val tracker = createCombatTracker(combatants)
 
@@ -221,22 +223,22 @@ class CombatTrackerTest {
                 verify(exactly = 1) {
                     actor1.handleTurn(
                         match(MATCH_FIRST_CREATURE),
-                        match { it.round == 1},
-                        any()
+                        match { it.round == 1 },
+                        any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor2.handleTurn(
                         match(MATCH_SECOND_CREATURE),
-                        match { it.movementAvailable && it.round == 1},
-                        any()
+                        match { it.movementAvailable && it.round == 1 },
+                        any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor2.handleTurn(
                         match(MATCH_SECOND_CREATURE),
-                        match { !it.movementAvailable},
-                        any()
+                        match { !it.movementAvailable },
+                        any(),
                     )
                 }
             }
@@ -258,7 +260,7 @@ class CombatTrackerTest {
                     actor1.handleTurn(
                         match(MATCH_FIRST_CREATURE),
                         match { it.movementAvailable && it.round == 2 },
-                        any()
+                        any(),
                     )
                 }
             }
@@ -286,21 +288,21 @@ class CombatTrackerTest {
                     actor1.handleTurn(
                         match(MATCH_FIRST_CREATURE),
                         match { it.round == 1 },
-                        any()
+                        any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor2.handleTurn(
                         match(MATCH_SECOND_CREATURE),
                         match { it.round == 1 },
-                        any()
+                        any(),
                     )
                 }
                 verify(exactly = 0) {
                     actor1.handleTurn(
                         match(MATCH_FIRST_CREATURE),
                         match { it.round == 2 },
-                        any()
+                        any(),
                     )
                 }
             }
@@ -325,7 +327,7 @@ class CombatTrackerTest {
                 every { actor1.handleTurn(any(), any(), any()) } returnsMany listOf(
                     actionCommand,
                     bonusActionCommand,
-                    movementCommand
+                    movementCommand,
                 )
 
                 val tracker = createCombatTracker(combatants)
@@ -340,21 +342,21 @@ class CombatTrackerTest {
                     actor1.handleTurn(
                         match(MATCH_FIRST_CREATURE),
                         match { it.actionAvailable && it.bonusActionAvailable && it.movementAvailable },
-                        any()
+                        any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor1.handleTurn(
                         match(MATCH_FIRST_CREATURE),
                         match { !it.actionAvailable && it.bonusActionAvailable && it.movementAvailable },
-                        any()
+                        any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor1.handleTurn(
                         match(MATCH_FIRST_CREATURE),
                         match { !it.actionAvailable && !it.bonusActionAvailable && it.movementAvailable },
-                        any()
+                        any(),
                     )
                 }
                 // Verify actor1 was NOT called a 4th time (all options exhausted)
@@ -362,7 +364,7 @@ class CombatTrackerTest {
                     actor1.handleTurn(
                         match(MATCH_FIRST_CREATURE),
                         match { !it.actionAvailable && !it.bonusActionAvailable && !it.movementAvailable },
-                        any()
+                        any(),
                     )
                 }
             }

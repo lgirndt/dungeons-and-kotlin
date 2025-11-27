@@ -1,21 +1,20 @@
 package core
 
-import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.core.BoundedGrid
 import io.dungeons.core.BoundingBox
 import io.dungeons.core.GridIndex
 import io.dungeons.core.UnboundedGrid
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class GridTest {
-
     @Test
     fun `iterateWithIndex should return all items`() {
         val items = setOf(
             Pair("A", GridIndex(0, 0)),
             Pair("B", GridIndex(1, 1)),
-            Pair("C", GridIndex(2, 2))
+            Pair("C", GridIndex(2, 2)),
         )
         val grid = UnboundedGrid<String>()
         items.forEach { (s, idx) -> grid[idx] = s }
@@ -26,7 +25,6 @@ class GridTest {
 
     @Nested
     inner class ToMaskBy {
-
         @Test
         fun `should create mask with true for values matching predicate`() {
             val grid = UnboundedGrid<Int>()
@@ -37,7 +35,7 @@ class GridTest {
             val mask = grid.toMaskBy { it > 5 }
 
             assertEquals(false, mask[GridIndex(0, 0)]) // 5 is not > 5
-            assertEquals(true, mask[GridIndex(1, 1)])  // 10 > 5
+            assertEquals(true, mask[GridIndex(1, 1)]) // 10 > 5
             assertEquals(false, mask[GridIndex(2, 2)]) // 3 is not > 5
         }
 
@@ -72,6 +70,5 @@ class GridTest {
 
             assertEquals(false, mask[GridIndex(0, 0)])
         }
-
     }
 }

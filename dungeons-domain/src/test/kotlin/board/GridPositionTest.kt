@@ -1,14 +1,13 @@
 package board
 
-import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.board.BoardPosition
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet
 import io.dungeons.world.Square
+import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
 class GridPositionTest {
-
     @Test
     fun `adding two grid positions should return correct result`() {
         val pos1 = BoardPosition.Companion.from(3, 5)

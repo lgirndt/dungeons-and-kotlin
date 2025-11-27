@@ -9,11 +9,10 @@ import io.mockk.unmockkObject
 import io.mockk.verify
 
 class TestId<T> {
-
-    private val map : MutableMap<Int, Id<T>> = mutableMapOf()
+    private val map: MutableMap<Int, Id<T>> = mutableMapOf()
 
     operator fun get(idx: Int): Id<T> {
-        if(map.contains(idx)) {
+        if (map.contains(idx)) {
             return map[idx]!!
         } else {
             val newId = Id.generate<T>()
@@ -42,16 +41,14 @@ fun StatBlock.copyByInts(
     int: Int = this.int.toInt(),
     wis: Int = this.wis.toInt(),
     cha: Int = this.cha.toInt(),
-): StatBlock {
-    return StatBlock(
-        Stat(str),
-        Stat(dex),
-        Stat(con),
-        Stat(int),
-        Stat(wis),
-        Stat(cha),
-    )
-}
+): StatBlock = StatBlock(
+    Stat(str),
+    Stat(dex),
+    Stat(con),
+    Stat(int),
+    Stat(wis),
+    Stat(cha),
+)
 
 fun StatBlock.Companion.fromModifiers(
     strMod: Int = 0,
@@ -60,16 +57,14 @@ fun StatBlock.Companion.fromModifiers(
     intMod: Int = 0,
     wisMod: Int = 0,
     chaMod: Int = 0,
-): StatBlock {
-    return StatBlock(
-        Stat(DEFAULT_STAT_VALUE + strMod * 2),
-        Stat(DEFAULT_STAT_VALUE + dexMod * 2),
-        Stat(DEFAULT_STAT_VALUE + conMod * 2),
-        Stat(DEFAULT_STAT_VALUE + intMod * 2),
-        Stat(DEFAULT_STAT_VALUE + wisMod * 2),
-        Stat(DEFAULT_STAT_VALUE + chaMod * 2),
-    )
-}
+): StatBlock = StatBlock(
+    Stat(DEFAULT_STAT_VALUE + strMod * 2),
+    Stat(DEFAULT_STAT_VALUE + dexMod * 2),
+    Stat(DEFAULT_STAT_VALUE + conMod * 2),
+    Stat(DEFAULT_STAT_VALUE + intMod * 2),
+    Stat(DEFAULT_STAT_VALUE + wisMod * 2),
+    Stat(DEFAULT_STAT_VALUE + chaMod * 2),
+)
 
 fun PlayerCharacter.Companion.aPlayerCharacter(
     id: Id<Creature> = Id.generate(),
@@ -80,25 +75,22 @@ fun PlayerCharacter.Companion.aPlayerCharacter(
     damageModifiers: DamageModifiers = DamageModifiers.NONE,
     level: Int = 1,
     weapon: Weapon = SOME_WEAPON.copy(),
-    classFeatures : ClassFeatures = Fighter(),
-) : PlayerCharacter {
-    return PlayerCharacter(
-        id = id,
-        core = CreatureData(
-            name = name,
-            stats = stats,
-            hitPoints = hitPoints,
-            armourClass = armourClass,
-            damageModifiers = damageModifiers,
-        ),
-        data = PlayerCharacterData(
-            level = level,
-            weapon = weapon
-        ),
-        classFeatures = classFeatures
-    )
-}
-
+    classFeatures: ClassFeatures = Fighter(),
+): PlayerCharacter = PlayerCharacter(
+    id = id,
+    core = CreatureData(
+        name = name,
+        stats = stats,
+        hitPoints = hitPoints,
+        armourClass = armourClass,
+        damageModifiers = damageModifiers,
+    ),
+    data = PlayerCharacterData(
+        level = level,
+        weapon = weapon,
+    ),
+    classFeatures = classFeatures,
+)
 
 val SOME_WEAPON = Weapon(
     name = "Surgebinder",
@@ -106,7 +98,7 @@ val SOME_WEAPON = Weapon(
     damageType = DamageType.Slashing,
     statQuery = StatQueries.Str,
     damageRoll = SimpleDamageRoll(1, Die.D8),
-    rangeChecker = RangeCheckers.melee(Feet(5.0))
+    rangeChecker = RangeCheckers.melee(Feet(5.0)),
 )
 
 val SOME_DAMAGE_MODIFIERS = DamageModifiers(
@@ -117,13 +109,12 @@ val SOME_DAMAGE_MODIFIERS = DamageModifiers(
 
 infix fun Die.rolls(result: Int) = DieRoll(this, result)
 
-inline fun withFixedDice(
-    vararg expectedRolls: DieRoll,
-    runWithFixedDice: () -> Unit
-) {
-    val multimap = ImmutableListMultimap.builder<Die, Int>().apply {
-        expectedRolls.forEach { put(it.die, it.value) }
-    }.build()
+inline fun withFixedDice(vararg expectedRolls: DieRoll, runWithFixedDice: () -> Unit) {
+    val multimap = ImmutableListMultimap
+        .builder<Die, Int>()
+        .apply {
+            expectedRolls.forEach { put(it.die, it.value) }
+        }.build()
 
     val mockedDice = multimap.asMap().map { (die, allRolls) ->
         // TODO more functional

@@ -5,10 +5,8 @@ import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
 
 class BoundingBoxTest {
-
     @Nested
     inner class Contains {
-
         @Test
         fun `should return true for position at minX and minY`() {
             val box = BoundingBox(minX = 0, minY = 0, maxX = 10, maxY = 10)
@@ -66,7 +64,6 @@ class BoundingBoxTest {
             assertEquals(true, GridIndex(-5, -5) in box)
             assertEquals(false, GridIndex(-11, 0) in box)
         }
-
 
         @Test
         fun `should work with single cell bounding box`() {

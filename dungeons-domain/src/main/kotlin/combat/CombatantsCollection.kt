@@ -14,14 +14,11 @@ class CombatantsCollection(
             require(it.stance == FactionStance.Hostile) {
                 "CombatantsStore can only accept non-hostile relationships."
             }
-        }
-        .fold(FactionRelations.Builder()) { builder, relationship ->
+        }.fold(FactionRelations.Builder()) { builder, relationship ->
             builder.add(relationship)
         }.build()
 
-    operator fun get(id: Id<Creature>): Combatant? {
-        return combatants[id]
-    }
+    operator fun get(id: Id<Creature>): Combatant? = combatants[id]
 
     fun findAllWithStance(towards: Id<Creature>, stance: FactionStance): List<Combatant> {
         val combatant = combatants[towards] ?: return emptyList()
@@ -32,7 +29,5 @@ class CombatantsCollection(
         }
     }
 
-    fun listAll(): List<Combatant> {
-        return combatants.values.toList()
-    }
+    fun listAll(): List<Combatant> = combatants.values.toList()
 }
