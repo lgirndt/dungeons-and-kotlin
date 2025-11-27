@@ -24,6 +24,9 @@ import io.mockk.mockkObject
 import io.mockk.unmockkObject
 import io.mockk.verify
 
+// fake till you make it
+class AnotherClass
+
 class TestId<T> {
     private val map: MutableMap<Int, Id<T>> = mutableMapOf()
 
