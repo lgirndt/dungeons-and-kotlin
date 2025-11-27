@@ -15,6 +15,7 @@ tasks.withType<dev.detekt.gradle.Detekt>().configureEach {
         html.required.set(true)
         sarif.required.set(false)
     }
+    mustRunAfter(tasks.withType<Test>())
 }
 
 dependencies {
