@@ -6,7 +6,6 @@ import io.dungeons.core.Grid
 import io.dungeons.core.GridIndex
 import io.dungeons.core.Id
 import io.dungeons.core.UnboundedGrid
-import kotlin.collections.drop
 import kotlin.math.abs
 
 enum class BoardLayer {
@@ -101,7 +100,6 @@ class GameBoard(val width: Int, val height: Int) {
         }
 
     private companion object {
-        // 8 directions: N, NE, E, SE, S, SW, W, NW
         private val DIRECTIONS = listOf(
             0 to -1, // N
             1 to -1, // NE
