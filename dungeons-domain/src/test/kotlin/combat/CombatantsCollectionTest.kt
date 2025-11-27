@@ -22,17 +22,13 @@ class CombatantsCollectionTest {
         ID = TestId()
         store = CombatantsCollection(
             listOf(
-                Combatant(
-                    PlayerCharacter.Companion.aPlayerCharacter(ID[0], name = "Alpha"),
-                    FACTION_A,
-                    NoopTurnActor(),
-                ),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[2]), FACTION_A, NoopTurnActor()),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[4]), FACTION_B, NoopTurnActor()),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[5]), FACTION_B, NoopTurnActor()),
-            ),
+                Combatant(aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[2]), FACTION_A, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[4]), FACTION_B, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[5]), FACTION_B, NoopTurnActor()),
+            )
         )
     }
 

@@ -82,7 +82,7 @@ fun StatBlock.Companion.fromModifiers(
     Stat(DEFAULT_STAT_VALUE + chaMod * 2),
 )
 
-fun PlayerCharacter.Companion.aPlayerCharacter(
+fun aPlayerCharacter(
     id: Id<Creature> = Id.generate(),
     name: String = "My Name",
     stats: StatBlock = SOME_STAT_BOCK.copy(),

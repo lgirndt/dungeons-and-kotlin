@@ -26,15 +26,17 @@ class CombatTrackerTest {
         name: String = "some name",
         dexMod: Int = 0,
         faction: Faction = PLAYER_FACTION,
-        actor: TurnActor = mockk<TurnActor>(relaxed = true),
-    ): Combatant = Combatant(
-        creature = PlayerCharacter.aPlayerCharacter(
-            name = name,
-            stats = StatBlock.fromModifiers(dexMod = dexMod),
-        ),
-        faction = faction,
-        actor = actor,
-    )
+        actor: TurnActor = mockk<TurnActor>(relaxed = true)
+    ): Combatant {
+        return Combatant(
+            creature = aPlayerCharacter(
+                name = name,
+                stats = StatBlock.fromModifiers(dexMod = dexMod)
+            ),
+            faction = faction,
+            actor = actor
+        )
+    }
 
     @Test
     fun `combatants should be sorted by initiative in descending order`() {
