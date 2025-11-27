@@ -538,11 +538,6 @@ potential-bugs:
   WrongEqualsTypeParameter:
     active: true
 
-formatting:
-  active: true
-  ChainMethodContinuation:
-    active: false
-
 style:
   active: true
   AbstractClassCanBeConcreteClass:
@@ -856,3 +851,13 @@ style:
     active: true
     excludeImports:
       - 'java.util.*'
+
+ktlint:
+  active: true
+  code_style: 'intellij_idea'
+  autoCorrect: true
+  ChainMethodContinuation:
+    active: false
+    autoCorrect: true
+    indentSize: 4
+    forceMultilineWhenChainOperatorCountGreaterOrEqualThan: 4
