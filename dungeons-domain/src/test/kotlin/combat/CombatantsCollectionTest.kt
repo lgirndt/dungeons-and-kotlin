@@ -3,7 +3,6 @@ package combat
 import TestId
 import aPlayerCharacter
 import io.dungeons.Creature
-import io.dungeons.PlayerCharacter
 import io.dungeons.combat.*
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
@@ -28,7 +27,7 @@ class CombatantsCollectionTest {
                 Combatant(aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),
                 Combatant(aPlayerCharacter(ID[4]), FACTION_B, NoopTurnActor()),
                 Combatant(aPlayerCharacter(ID[5]), FACTION_B, NoopTurnActor()),
-            )
+            ),
         )
     }
 

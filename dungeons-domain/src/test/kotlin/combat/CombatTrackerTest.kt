@@ -4,7 +4,6 @@ import aPlayerCharacter
 import fromModifiers
 import io.dungeons.Die.Companion.D20
 import io.dungeons.DieRoll
-import io.dungeons.PlayerCharacter
 import io.dungeons.StatBlock
 import io.dungeons.combat.*
 import io.mockk.every
@@ -26,17 +25,15 @@ class CombatTrackerTest {
         name: String = "some name",
         dexMod: Int = 0,
         faction: Faction = PLAYER_FACTION,
-        actor: TurnActor = mockk<TurnActor>(relaxed = true)
-    ): Combatant {
-        return Combatant(
-            creature = aPlayerCharacter(
-                name = name,
-                stats = StatBlock.fromModifiers(dexMod = dexMod)
-            ),
-            faction = faction,
-            actor = actor
-        )
-    }
+        actor: TurnActor = mockk<TurnActor>(relaxed = true),
+    ): Combatant = Combatant(
+        creature = aPlayerCharacter(
+            name = name,
+            stats = StatBlock.fromModifiers(dexMod = dexMod),
+        ),
+        faction = faction,
+        actor = actor,
+    )
 
     @Test
     fun `combatants should be sorted by initiative in descending order`() {
@@ -122,12 +119,12 @@ class CombatTrackerTest {
             verify(exactly = 1) {
                 listener.rolledInitiative(
                     match { sortedCombatants ->
-                    sortedCombatants.size == 2 &&
-                        sortedCombatants[0].creature.name == "First" &&
-                        sortedCombatants[0].initiative.value == 11 &&
-                        sortedCombatants[1].creature.name == "Second" &&
-                        sortedCombatants[1].initiative.value == 10
-                }
+                        sortedCombatants.size == 2 &&
+                            sortedCombatants[0].creature.name == "First" &&
+                            sortedCombatants[0].initiative.value == 11 &&
+                            sortedCombatants[1].creature.name == "Second" &&
+                            sortedCombatants[1].initiative.value == 10
+                    },
                 )
             }
         }
@@ -172,8 +169,8 @@ class CombatTrackerTest {
                 expectTurnForActor(
                     actor1,
                     object : MovementCombatCommand() {
-                    override fun doPerform(combatScenario: CombatScenario) {}
-                }
+                        override fun doPerform(combatScenario: CombatScenario) {}
+                    },
                 )
 
                 val tracker = createCombatTracker(combatants)
@@ -212,8 +209,8 @@ class CombatTrackerTest {
                 expectTurnForActor(
                     actor2,
                     object : MovementCombatCommand() {
-                    override fun doPerform(combatScenario: CombatScenario) {}
-                }
+                        override fun doPerform(combatScenario: CombatScenario) {}
+                    },
                 )
 
                 val tracker = createCombatTracker(combatants)

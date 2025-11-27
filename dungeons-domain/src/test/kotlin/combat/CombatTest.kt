@@ -4,7 +4,6 @@ import aPlayerCharacter
 import fromModifiers
 import io.dungeons.Creature
 import io.dungeons.Die.Companion.D20
-import io.dungeons.PlayerCharacter
 import io.dungeons.StatBlock
 import io.dungeons.combat.*
 import org.junit.jupiter.api.Assertions.assertEquals
@@ -106,7 +105,7 @@ class CombatantsStoreTest {
                 Combatant(aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),
                 Combatant(aPlayerCharacter(ID[4]), FACTION_B, NoopTurnActor()),
                 Combatant(aPlayerCharacter(ID[5]), FACTION_B, NoopTurnActor()),
-            )
+            ),
         )
     }
 
