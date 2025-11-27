@@ -27,10 +27,10 @@ import org.junit.jupiter.api.assertThrows
 import rolls
 import withFixedDice
 
-class CombatTrackerTest {
-    val PLAYER_FACTION = Faction(name = "Players")
-    val MONSTER_FACTION = Faction(name = "Monsters")
+val PLAYER_FACTION = Faction(name = "Players")
+val MONSTER_FACTION = Faction(name = "Monsters")
 
+class CombatTrackerTest {
     fun aCombatant(
         name: String = "some name",
         dexMod: Int = 0,
@@ -151,19 +151,19 @@ class CombatTrackerTest {
         lateinit var firstCombatant: Combatant
         lateinit var secondCombatant: Combatant
 
-        val FIRST_NAME = "First"
-        val SECOND_NAME = "Second"
+        val firstName = "First"
+        val secondName = "Second"
 
-        val MATCH_FIRST_CREATURE: (Combatant) -> Boolean = { it.creature.name == FIRST_NAME }
-        val MATCH_SECOND_CREATURE: (Combatant) -> Boolean = { it.creature.name == SECOND_NAME }
+        val matchFirstCreature: (Combatant) -> Boolean = { it.creature.name == firstName }
+        val matchSecondCreature: (Combatant) -> Boolean = { it.creature.name == secondName }
 
         @BeforeEach
         fun beforeEach() {
             actor1 = mockk<TurnActor>(name = "Actor1 Mock")
             actor2 = mockk<TurnActor>(name = "Actor2 Mock")
 
-            firstCombatant = aCombatant(name = FIRST_NAME, dexMod = 2, actor = actor1, faction = PLAYER_FACTION)
-            secondCombatant = aCombatant(name = SECOND_NAME, dexMod = 1, actor = actor2, faction = MONSTER_FACTION)
+            firstCombatant = aCombatant(name = firstName, dexMod = 2, actor = actor1, faction = PLAYER_FACTION)
+            secondCombatant = aCombatant(name = secondName, dexMod = 1, actor = actor2, faction = MONSTER_FACTION)
 
             combatants = listOf(firstCombatant, secondCombatant)
 
@@ -189,21 +189,21 @@ class CombatTrackerTest {
 
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_CREATURE),
+                        match(matchFirstCreature),
                         match { it.movementAvailable && it.round == 1 },
                         any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_CREATURE),
+                        match(matchFirstCreature),
                         match { !it.movementAvailable && it.round == 1 },
                         any(),
                     )
                 }
                 verify(exactly = 0) {
                     actor2.handleTurn(
-                        match(MATCH_SECOND_CREATURE),
+                        match(matchSecondCreature),
                         any(),
                         any(),
                     )
@@ -231,21 +231,21 @@ class CombatTrackerTest {
 
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_CREATURE),
+                        match(matchFirstCreature),
                         match { it.round == 1 },
                         any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor2.handleTurn(
-                        match(MATCH_SECOND_CREATURE),
+                        match(matchSecondCreature),
                         match { it.movementAvailable && it.round == 1 },
                         any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor2.handleTurn(
-                        match(MATCH_SECOND_CREATURE),
+                        match(matchSecondCreature),
                         match { !it.movementAvailable },
                         any(),
                     )
@@ -267,7 +267,7 @@ class CombatTrackerTest {
                 }
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_CREATURE),
+                        match(matchFirstCreature),
                         match { it.movementAvailable && it.round == 2 },
                         any(),
                     )
@@ -295,21 +295,21 @@ class CombatTrackerTest {
                 // Verify actor1 was NOT called again (still only called once from round 1)
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_CREATURE),
+                        match(matchFirstCreature),
                         match { it.round == 1 },
                         any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor2.handleTurn(
-                        match(MATCH_SECOND_CREATURE),
+                        match(matchSecondCreature),
                         match { it.round == 1 },
                         any(),
                     )
                 }
                 verify(exactly = 0) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_CREATURE),
+                        match(matchFirstCreature),
                         match { it.round == 2 },
                         any(),
                     )
@@ -349,21 +349,21 @@ class CombatTrackerTest {
                 // 3. with action and bonus action used
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_CREATURE),
+                        match(matchFirstCreature),
                         match { it.actionAvailable && it.bonusActionAvailable && it.movementAvailable },
                         any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_CREATURE),
+                        match(matchFirstCreature),
                         match { !it.actionAvailable && it.bonusActionAvailable && it.movementAvailable },
                         any(),
                     )
                 }
                 verify(exactly = 1) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_CREATURE),
+                        match(matchFirstCreature),
                         match { !it.actionAvailable && !it.bonusActionAvailable && it.movementAvailable },
                         any(),
                     )
@@ -371,7 +371,7 @@ class CombatTrackerTest {
                 // Verify actor1 was NOT called a 4th time (all options exhausted)
                 verify(exactly = 0) {
                     actor1.handleTurn(
-                        match(MATCH_FIRST_CREATURE),
+                        match(matchFirstCreature),
                         match { !it.actionAvailable && !it.bonusActionAvailable && !it.movementAvailable },
                         any(),
                     )

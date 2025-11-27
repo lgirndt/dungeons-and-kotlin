@@ -13,11 +13,12 @@ import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 
-class CombatantsCollectionTest {
-    val FACTION_A = Faction(name = "Faction A")
-    val FACTION_B = Faction(name = "Faction B")
+private val FACTION_A = Faction(name = "Faction A")
+private val FACTION_B = Faction(name = "Faction B")
 
-    lateinit var ID: TestId<Creature>
+private var ID: TestId<Creature> = TestId()
+
+class CombatantsCollectionTest {
     lateinit var store: CombatantsCollection
 
     @BeforeEach

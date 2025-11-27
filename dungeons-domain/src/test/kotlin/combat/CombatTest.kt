@@ -20,22 +20,24 @@ import org.junit.jupiter.api.assertThrows
 import rolls
 import withFixedDice
 
-val FACTION_A = Faction(name = "Faction A")
-val FACTION_B = Faction(name = "Faction B")
+private val FACTION_A = Faction(name = "Faction A")
+private val FACTION_B = Faction(name = "Faction B")
 
-val SOME_COMBATANT = Combatant(
+private val SOME_COMBATANT = Combatant(
     creature = aPlayerCharacter(name = "Some Combatant"),
     faction = FACTION_A,
     actor = NoopTurnActor(),
 )
 
-class FactionRelationsTest {
-    val SOME_RELATIONSHIP = FactionRelationship(
-        FACTION_A,
-        FACTION_B,
-        FactionStance.Friendly,
-    )
+private val SOME_RELATIONSHIP = FactionRelationship(
+    FACTION_A,
+    FACTION_B,
+    FactionStance.Friendly,
+)
 
+private val ID: TestId<Creature> = TestId()
+
+class FactionRelationsTest {
     @Test
     fun `queryStance should return an added Relationship`() {
         val relations = FactionRelations
@@ -94,23 +96,21 @@ class FactionRelationsTest {
 }
 
 class CombatantsStoreTest {
-    val FACTION_A = Faction(name = "Faction A")
-    val FACTION_B = Faction(name = "Faction B")
+    val factionA = Faction(name = "Faction A")
+    val factionB = Faction(name = "Faction B")
 
-    lateinit var ID: TestId<Creature>
     lateinit var store: CombatantsCollection
 
     @BeforeEach
     fun setup() {
-        ID = TestId()
         store = CombatantsCollection(
             listOf(
-                Combatant(aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A, NoopTurnActor()),
-                Combatant(aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
-                Combatant(aPlayerCharacter(ID[2]), FACTION_A, NoopTurnActor()),
-                Combatant(aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),
-                Combatant(aPlayerCharacter(ID[4]), FACTION_B, NoopTurnActor()),
-                Combatant(aPlayerCharacter(ID[5]), FACTION_B, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[0], name = "Alpha"), factionA, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[1]), factionA, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[2]), factionA, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[3]), factionB, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[4]), factionB, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[5]), factionB, NoopTurnActor()),
             ),
         )
     }

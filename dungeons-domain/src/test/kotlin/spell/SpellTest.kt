@@ -28,7 +28,7 @@ import org.junit.jupiter.api.Test
 import rolls
 import withFixedDice
 
-val SOME_SPELL = AttackSpell(
+private val SOME_SPELL = AttackSpell(
     name = "Magic Missile",
     school = SpellSchool.Evocation,
     level = SpellLevel.Level1,
@@ -37,9 +37,9 @@ val SOME_SPELL = AttackSpell(
     range = Feet(120.0),
 )
 
-class SpellTest {
-    val ID = TestId<Creature>()
+private val ID = TestId<Creature>()
 
+class SpellTest {
     @Test
     fun `a spell attack that meets AC hits the target`() {
         val caster = object : Caster {
