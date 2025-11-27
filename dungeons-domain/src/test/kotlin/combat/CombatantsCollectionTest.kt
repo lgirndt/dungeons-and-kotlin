@@ -16,14 +16,13 @@ import org.junit.jupiter.api.assertNotNull
 private val FACTION_A = Faction(name = "Faction A")
 private val FACTION_B = Faction(name = "Faction B")
 
-private var ID: TestId<Creature> = TestId()
+private val ID: TestId<Creature> = TestId()
 
 class CombatantsCollectionTest {
     lateinit var store: CombatantsCollection
 
     @BeforeEach
     fun setup() {
-        ID = TestId()
         store = CombatantsCollection(
             listOf(
                 Combatant(aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A, NoopTurnActor()),
