@@ -4,12 +4,22 @@ import ProvidesBoardPositionMock
 import SOME_STAT_BOCK
 import TestId
 import aPlayerCharacter
-import io.dungeons.*
+import io.dungeons.Creature
+import io.dungeons.DamageType
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D4
+import io.dungeons.ProficiencyBonus
+import io.dungeons.RollModifier
+import io.dungeons.SimpleDamageRoll
+import io.dungeons.Stat
+import io.dungeons.StatBlock
 import io.dungeons.board.BoardPosition
 import io.dungeons.core.Id
-import io.dungeons.spell.*
+import io.dungeons.spell.AttackSpell
+import io.dungeons.spell.Caster
+import io.dungeons.spell.SpellLevel
+import io.dungeons.spell.SpellSchool
+import io.dungeons.spell.castAttackSpell
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet
 import io.dungeons.world.Square
@@ -23,7 +33,7 @@ val SOME_SPELL = AttackSpell(
     school = SpellSchool.Evocation,
     level = SpellLevel.Level1,
     damageType = DamageType.Force,
-    damageRoll = SimpleDamageRoll(1, Die.D4, 1),
+    damageRoll = SimpleDamageRoll(1, D4, 1),
     range = Feet(120.0),
 )
 

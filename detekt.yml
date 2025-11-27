@@ -387,7 +387,7 @@ naming:
     active: false
     minimumVariableNameLength: 1
   VariableNaming:
-    active: true
+    active: false # TODO enable again
     aliases: ['PropertyName']
     variablePattern: '[a-z][A-Za-z0-9]*'
     privateVariablePattern: '(_)?[a-z][A-Za-z0-9]*'

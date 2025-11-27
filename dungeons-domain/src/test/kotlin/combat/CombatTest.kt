@@ -5,7 +5,13 @@ import fromModifiers
 import io.dungeons.Creature
 import io.dungeons.Die.Companion.D20
 import io.dungeons.StatBlock
-import io.dungeons.combat.*
+import io.dungeons.combat.Combatant
+import io.dungeons.combat.CombatantsCollection
+import io.dungeons.combat.Faction
+import io.dungeons.combat.FactionRelations
+import io.dungeons.combat.FactionRelationship
+import io.dungeons.combat.FactionStance
+import io.dungeons.combat.NoopTurnActor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

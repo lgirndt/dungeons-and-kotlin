@@ -3,7 +3,11 @@ package combat
 import TestId
 import aPlayerCharacter
 import io.dungeons.Creature
-import io.dungeons.combat.*
+import io.dungeons.combat.Combatant
+import io.dungeons.combat.CombatantsCollection
+import io.dungeons.combat.Faction
+import io.dungeons.combat.FactionStance
+import io.dungeons.combat.NoopTurnActor
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test

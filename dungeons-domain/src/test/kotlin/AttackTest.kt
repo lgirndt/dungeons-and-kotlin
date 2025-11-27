@@ -29,7 +29,8 @@ class ProvidesBoardPositionMock(val positions: Map<Id<Creature>, BoardPosition>)
 
 class AttackTest {
     lateinit var providesBoardPosition: ProvidesBoardPosition
-    val ID = TestId<Creature>()
+
+    val id = TestId<Creature>()
 
     @BeforeEach
     fun beforeEach() {
@@ -384,21 +385,21 @@ class AttackTest {
     @Test
     fun `an attack out of melee range misses automatically`() {
         val attacker = aPlayerCharacter(
-            id = ID[0],
+            id = id[0],
             weapon = SOME_WEAPON.copy(
                 rangeChecker = RangeCheckers.melee(Feet(5.0)),
             ),
         )
 
         val opponent = aPlayerCharacter(
-            id = ID[1],
+            id = id[1],
             armourClass = 10,
         )
 
         providesBoardPosition = ProvidesBoardPositionMock(
             mapOf(
-                ID[0] to BoardPosition(Square(0), Square(0)),
-                ID[1] to BoardPosition(Square(2), Square(0)),
+                id[0] to BoardPosition(Square(0), Square(0)),
+                id[1] to BoardPosition(Square(2), Square(0)),
             ),
         )
 
@@ -412,14 +413,14 @@ class AttackTest {
     fun `a ranged weapon attack within normal range hits normally`() {
         providesBoardPosition = ProvidesBoardPositionMock(
             mapOf(
-                ID[0] to BoardPosition(Square(0), Square(0)),
-                ID[1] to BoardPosition(Square(1), Square(0)),
+                id[0] to BoardPosition(Square(0), Square(0)),
+                id[1] to BoardPosition(Square(1), Square(0)),
             ),
         )
 
         val damageDie = D8
         val attacker = aPlayerCharacter(
-            id = ID[0],
+            id = id[0],
             weapon = SOME_WEAPON.copy(
                 name = "Test Weapon",
                 statQuery = StatQueries.Dex,
@@ -428,7 +429,7 @@ class AttackTest {
         )
 
         val opponent = aPlayerCharacter(
-            id = ID[1],
+            id = id[1],
             armourClass = 10,
         )
 
@@ -445,7 +446,7 @@ class AttackTest {
     fun `a ranged weapon attack within long range hits with disadvantage`() {
         val damageDie = D8
         val attacker = aPlayerCharacter(
-            id = ID[0],
+            id = id[0],
             weapon = SOME_WEAPON.copy(
                 statQuery = StatQueries.Dex,
                 rangeChecker = RangeCheckers.ranged(normalRange = Feet(10.0), longRange = Feet(30.0)),
@@ -453,14 +454,14 @@ class AttackTest {
         )
 
         val opponent = aPlayerCharacter(
-            id = ID[1],
+            id = id[1],
             armourClass = 10,
         )
 
         providesBoardPosition = ProvidesBoardPositionMock(
             mapOf(
-                ID[0] to BoardPosition(Square(0), Square(0)),
-                ID[1] to BoardPosition(Square(5), Square(0)),
+                id[0] to BoardPosition(Square(0), Square(0)),
+                id[1] to BoardPosition(Square(5), Square(0)),
             ),
         )
 
