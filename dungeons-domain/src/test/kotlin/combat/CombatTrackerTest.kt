@@ -30,7 +30,7 @@ class CombatTrackerTest {
         actor: TurnActor = mockk<TurnActor>(relaxed = true)
     ): Combatant {
         return Combatant(
-            creature = PlayerCharacter.aPlayerCharacter(
+            creature = aPlayerCharacter(
                 name = name,
                 stats = StatBlock.fromModifiers(dexMod = dexMod)
             ),

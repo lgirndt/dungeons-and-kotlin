@@ -1,4 +1,4 @@
-
+import aPlayerCharacter
 import org.junit.jupiter.api.Assertions.assertEquals
 import io.dungeons.*
 import io.dungeons.Die.Companion.D10
@@ -54,7 +54,7 @@ class AttackTest {
     @Test
     fun `an attacker who does not meet AC misses the attack`() {
         val target = aCharacterWithWeapon(strMod = 1)
-        val opponent = PlayerCharacter.aPlayerCharacter(
+        val opponent = aPlayerCharacter(
             armourClass = 13
         )
         expectAnyGridPosition()
@@ -75,7 +75,7 @@ class AttackTest {
     fun `an attacker who meets AC hits the attack`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 1, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10 + 1 + 1)
+        val opponent = aPlayerCharacter(armourClass = 10 + 1 + 1)
 
         expectAnyGridPosition()
 
@@ -101,13 +101,13 @@ class AttackTest {
             category = Martial,
             damageRoll = SimpleDamageRoll(1, damageDie)
         )
-        val cleric = PlayerCharacter.aPlayerCharacter(
+        val cleric = aPlayerCharacter(
             classFeatures = Cleric(),
             stats = StatBlock.fromModifiers(strMod = 2),
             weapon = martialWeapon
         )
 
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 12)
+        val opponent = aPlayerCharacter(armourClass = 12)
 
         expectAnyGridPosition()
 
@@ -141,7 +141,7 @@ class AttackTest {
             damageType = damageType,
             damageDie = damageDie
         )
-        val opponent = PlayerCharacter.aPlayerCharacter(
+        val opponent = aPlayerCharacter(
             hitPoints = opponentHitPoints,
             armourClass = 10,
             damageModifiers = SOME_DAMAGE_MODIFIERS.copy(
@@ -207,7 +207,7 @@ class AttackTest {
     fun `attacking with NORMAL modifier uses single die roll`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
+        val opponent = aPlayerCharacter(armourClass = 10)
 
         expectAnyGridPosition()
 
@@ -230,7 +230,7 @@ class AttackTest {
     fun `attacking with ADVANTAGE uses higher of two rolls to hit`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
+        val opponent = aPlayerCharacter(armourClass = 10)
 
         expectAnyGridPosition()
 
@@ -254,7 +254,7 @@ class AttackTest {
     fun `attacking with DISADVANTAGE uses lower of two rolls to hit`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
+        val opponent = aPlayerCharacter(armourClass = 10)
 
         expectAnyGridPosition()
 
@@ -277,7 +277,7 @@ class AttackTest {
     @Test
     fun `attacking with ADVANTAGE can turn a miss into a hit`() {
         val attacker = aCharacterWithWeapon(strMod = 1)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 15)
+        val opponent = aPlayerCharacter(armourClass = 15)
 
         expectAnyGridPosition()
 
@@ -296,7 +296,7 @@ class AttackTest {
     @Test
     fun `attacking with DISADVANTAGE can turn a hit into a miss`() {
         val attacker = aCharacterWithWeapon(strMod = 1)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 15)
+        val opponent = aPlayerCharacter(armourClass = 15)
 
         expectAnyGridPosition()
 
@@ -315,7 +315,7 @@ class AttackTest {
     fun `critical hit works with ADVANTAGE when either roll is 20`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
+        val opponent = aPlayerCharacter(armourClass = 10)
 
         expectAnyGridPosition()
 
@@ -336,7 +336,7 @@ class AttackTest {
     fun `critical hit works with DISADVANTAGE when higher roll is 20`() {
         val damageDie = D8
         val attacker = aCharacterWithWeapon(strMod = 2, damageDie = damageDie)
-        val opponent = PlayerCharacter.aPlayerCharacter(armourClass = 10)
+        val opponent = aPlayerCharacter(armourClass = 10)
 
         expectAnyGridPosition()
 
@@ -356,14 +356,14 @@ class AttackTest {
     @Test
     fun `a opponent within melee range can be attacked`() {
         val damageDie = D8
-        val attacker = PlayerCharacter.aPlayerCharacter(
+        val attacker = aPlayerCharacter(
 
             weapon = SOME_WEAPON.copy(
                 rangeChecker = RangeCheckers.melee(Feet(5.0))
             )
         )
 
-        val opponent = PlayerCharacter.aPlayerCharacter(
+        val opponent = aPlayerCharacter(
             armourClass = 10,
         )
 
@@ -380,14 +380,14 @@ class AttackTest {
 
     @Test
     fun `an attack out of melee range misses automatically`() {
-        val attacker = PlayerCharacter.aPlayerCharacter(
+        val attacker = aPlayerCharacter(
             id = ID[0],
             weapon = SOME_WEAPON.copy(
                 rangeChecker = RangeCheckers.melee(Feet(5.0))
             )
         )
 
-        val opponent = PlayerCharacter.aPlayerCharacter(
+        val opponent = aPlayerCharacter(
             id = ID[1],
             armourClass = 10,
         )
@@ -416,7 +416,7 @@ class AttackTest {
         )
 
         val damageDie = D8
-        val attacker = PlayerCharacter.aPlayerCharacter(
+        val attacker = aPlayerCharacter(
             id = ID[0],
             weapon = SOME_WEAPON.copy(
                 name = "Test Weapon",
@@ -425,7 +425,7 @@ class AttackTest {
             )
         )
 
-        val opponent = PlayerCharacter.aPlayerCharacter(
+        val opponent = aPlayerCharacter(
             id = ID[1],
             armourClass = 10,
         )
@@ -443,7 +443,7 @@ class AttackTest {
     @Test
     fun `a ranged weapon attack within long range hits with disadvantage`() {
         val damageDie = D8
-        val attacker = PlayerCharacter.aPlayerCharacter(
+        val attacker = aPlayerCharacter(
             id = ID[0],
             weapon = SOME_WEAPON.copy(
                 statQuery = StatQueries.Dex,
@@ -451,7 +451,7 @@ class AttackTest {
             )
         )
 
-        val opponent = PlayerCharacter.aPlayerCharacter(
+        val opponent = aPlayerCharacter(
             id = ID[1],
             armourClass = 10,
         )

@@ -47,7 +47,7 @@ class SpellTest {
             damageRoll = SimpleDamageRoll(1, D4)
         )
 
-        val opponent = PlayerCharacter.aPlayerCharacter(
+        val opponent = aPlayerCharacter(
             id = ID[1],
             armourClass = 12,
         )

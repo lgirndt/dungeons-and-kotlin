@@ -19,7 +19,7 @@ val FACTION_A = Faction(name = "Faction A")
 val FACTION_B = Faction(name = "Faction B")
 
 val SOME_COMBATANT = Combatant(
-    creature = PlayerCharacter.aPlayerCharacter(name = "Some Combatant"),
+    creature = aPlayerCharacter(name = "Some Combatant"),
     faction = FACTION_A,
     actor = NoopTurnActor()
 )
@@ -101,12 +101,12 @@ class CombatantsStoreTest {
         ID = TestId()
         store = CombatantsCollection(
             listOf(
-                Combatant(PlayerCharacter.Companion.aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A, NoopTurnActor()),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[2]), FACTION_A, NoopTurnActor()),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[4]), FACTION_B, NoopTurnActor()),
-                Combatant(PlayerCharacter.aPlayerCharacter(ID[5]), FACTION_B, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[2]), FACTION_A, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[4]), FACTION_B, NoopTurnActor()),
+                Combatant(aPlayerCharacter(ID[5]), FACTION_B, NoopTurnActor()),
             )
         )
     }
@@ -142,7 +142,7 @@ class CombatantTest {
 
     @Test
     fun `initiative should be cached after first access`() {
-        val creature = PlayerCharacter.aPlayerCharacter(name = "Test Character")
+        val creature = aPlayerCharacter(name = "Test Character")
         val combatant = SOME_COMBATANT.copy()
 
         withFixedDice(D20 rolls 12) {
@@ -158,7 +158,7 @@ class CombatantTest {
     @Test
     fun `initiative should include dexterity modifier`() {
 
-        val player = PlayerCharacter.aPlayerCharacter(
+        val player = aPlayerCharacter(
             name = "Dexterous Character",
             stats = StatBlock.fromModifiers(dexMod=4)
         )

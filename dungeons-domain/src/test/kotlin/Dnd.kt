@@ -71,7 +71,7 @@ fun StatBlock.Companion.fromModifiers(
     )
 }
 
-fun PlayerCharacter.Companion.aPlayerCharacter(
+fun aPlayerCharacter(
     id: Id<Creature> = Id.generate(),
     name: String = "My Name",
     stats: StatBlock = SOME_STAT_BOCK.copy(),
