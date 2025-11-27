@@ -10,8 +10,6 @@ class PlayerCharacter(
     private val classFeatures: ClassFeatures,
     core: CreatureData,
 ) : Creature(id, core) {
-    companion object {}
-
     val proficiencyBonus: ProficiencyBonus
         get() = ProficiencyBonus.fromLevel(data.level)
 

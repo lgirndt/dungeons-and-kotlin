@@ -1,9 +1,16 @@
-import aPlayerCharacter
-import org.junit.jupiter.api.Assertions.assertEquals
-import io.dungeons.*
+import io.dungeons.AttackOutcome
+import io.dungeons.Attackable
+import io.dungeons.Cleric
+import io.dungeons.Creature
+import io.dungeons.DamageType
 import io.dungeons.Die.Companion.D10
 import io.dungeons.Die.Companion.D20
 import io.dungeons.Die.Companion.D8
+import io.dungeons.RangeCheckers
+import io.dungeons.RollModifier
+import io.dungeons.SimpleDamageRoll
+import io.dungeons.StatBlock
+import io.dungeons.StatQueries
 import io.dungeons.WeaponCategory.Martial
 import io.dungeons.board.BoardPosition
 import io.dungeons.combat.ProvidesBoardPosition
@@ -49,7 +56,7 @@ class AttackTest {
     fun `an attacker who does not meet AC misses the attack`() {
         val target = aCharacterWithWeapon(strMod = 1)
         val opponent = aPlayerCharacter(
-            armourClass = 13
+            armourClass = 13,
         )
         expectAnyGridPosition()
 
