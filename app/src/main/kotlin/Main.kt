@@ -1,4 +1,3 @@
-
 import io.dungeons.*
 import io.dungeons.board.BoardPosition
 import io.dungeons.combat.ProvidesBoardPosition
@@ -34,7 +33,7 @@ fun main() {
     println("A wild ${goblin.name} appears!")
 
     println("${fighter.name} attacks the ${goblin.name} with a ${fighter.weapon.name}.")
-    val providesBoardPosition : ProvidesBoardPosition= object : ProvidesBoardPosition {
+    val providesBoardPosition: ProvidesBoardPosition = object : ProvidesBoardPosition {
         override fun getBoardPosition(creatureId: Id<Creature>): BoardPosition {
             return when (creatureId) {
                 fighter.id -> BoardPosition(Square(0), Square(0))
@@ -50,7 +49,7 @@ fun main() {
     } else {
         println("${fighter.name} misses the ${goblin.name}.")
     }
-    when{
+    when {
         goblin.hitPoints == goblin.maxHitPoints -> println("The ${goblin.name} is unscathed and laughs at you.")
         goblin.hitPoints <= 0 -> println("The ${goblin.name} has been defeated!")
         else -> println("The ${goblin.name} has ${goblin.hitPoints} hit points remaining.")
