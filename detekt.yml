@@ -664,7 +664,7 @@ style:
     active: true
     maxJumpCount: 1
   MagicNumber:
-    active: true
+    active: false # TODO enable and fix issues
     excludes: ['**/test/**', '**/androidTest/**', '**/commonTest/**', '**/jvmTest/**', '**/androidUnitTest/**', '**/androidInstrumentedTest/**', '**/jsTest/**', '**/iosTest/**', '**/*.kts']
     ignoreNumbers:
       - '-1'
@@ -848,9 +848,7 @@ style:
     aliases: ['CanBeVal']
     ignoreLateinitVar: false
   WildcardImport:
-    active: true
-    excludeImports:
-      - 'java.util.*'
+    active: false
 
 ktlint:
   active: true

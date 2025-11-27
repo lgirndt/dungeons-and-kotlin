@@ -1,5 +1,12 @@
-import io.dungeons.*
+import io.dungeons.Bard
+import io.dungeons.Cleric
 import io.dungeons.Die.Companion.D20
+import io.dungeons.DieRoll
+import io.dungeons.Druid
+import io.dungeons.Fighter
+import io.dungeons.Paladin
+import io.dungeons.Weapon
+import io.dungeons.WeaponCategory
 import io.dungeons.WeaponCategory.Martial
 import io.dungeons.WeaponCategory.Simple
 import org.junit.jupiter.api.Assertions.assertEquals

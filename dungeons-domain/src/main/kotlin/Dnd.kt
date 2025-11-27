@@ -21,6 +21,8 @@ data class StatBlock(val str: Stat, val dex: Stat, val con: Stat, val int: Stat,
     }
 }
 
+const val NATURAL_TWENTY = 20
+
 typealias StatQuery = (StatBlock) -> Stat
 
 object StatQueries {

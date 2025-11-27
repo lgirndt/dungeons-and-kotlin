@@ -1,6 +1,22 @@
 
 import com.google.common.collect.ImmutableListMultimap
-import io.dungeons.*
+import io.dungeons.ClassFeatures
+import io.dungeons.Creature
+import io.dungeons.CreatureData
+import io.dungeons.DamageModifiers
+import io.dungeons.DamageType
+import io.dungeons.Die
+import io.dungeons.DieRoll
+import io.dungeons.Fighter
+import io.dungeons.PlayerCharacter
+import io.dungeons.PlayerCharacterData
+import io.dungeons.RangeCheckers
+import io.dungeons.SimpleDamageRoll
+import io.dungeons.Stat
+import io.dungeons.StatBlock
+import io.dungeons.StatQueries
+import io.dungeons.Weapon
+import io.dungeons.WeaponCategory
 import io.dungeons.core.Id
 import io.dungeons.world.Feet
 import io.mockk.every

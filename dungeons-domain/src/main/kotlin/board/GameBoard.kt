@@ -1,6 +1,12 @@
 package io.dungeons.board
 
-import io.dungeons.core.*
+import io.dungeons.core.BoundedGrid
+import io.dungeons.core.BoundingBox
+import io.dungeons.core.Grid
+import io.dungeons.core.GridIndex
+import io.dungeons.core.Id
+import io.dungeons.core.UnboundedGrid
+import kotlin.collections.drop
 import kotlin.math.abs
 
 enum class BoardLayer {

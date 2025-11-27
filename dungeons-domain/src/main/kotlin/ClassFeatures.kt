@@ -16,12 +16,14 @@ interface ClassFeatures {
 // missing classes
 // Ranger, Rogue, Monk, Sorcerer, Wizard
 
-private val normalCrit: (DieRoll) -> Boolean = { it.value == 20 }
+private const val CRITICAL_HIT_FOR_FIGHTER = 19
+
+private val normalCrit: (DieRoll) -> Boolean = { it.value == NATURAL_TWENTY }
 
 class Fighter : ClassFeatures {
     override fun isProficientWith(weapon: Weapon): Boolean = WeaponProficiencies.all(weapon)
 
-    override fun isCriticalHit(die: DieRoll): Boolean = die.value >= 19
+    override fun isCriticalHit(die: DieRoll): Boolean = die.value >= CRITICAL_HIT_FOR_FIGHTER
 }
 
 class Cleric : ClassFeatures {

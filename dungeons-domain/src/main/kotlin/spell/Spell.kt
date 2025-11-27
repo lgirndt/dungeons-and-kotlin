@@ -1,7 +1,22 @@
 package io.dungeons.spell
 
 import com.google.common.base.MoreObjects
-import io.dungeons.*
+import io.dungeons.AttackOutcome
+import io.dungeons.AttackSource
+import io.dungeons.Attackable
+import io.dungeons.Attacker
+import io.dungeons.Creature
+import io.dungeons.DamageRoll
+import io.dungeons.DamageType
+import io.dungeons.DieRoll
+import io.dungeons.ProficiencyBonus
+import io.dungeons.RangeChecker
+import io.dungeons.RangeCheckers
+import io.dungeons.RollModifier
+import io.dungeons.Stat
+import io.dungeons.StatBlock
+import io.dungeons.StatQuery
+import io.dungeons.attack
 import io.dungeons.combat.ProvidesBoardPosition
 import io.dungeons.core.Id
 import io.dungeons.world.Coordinate

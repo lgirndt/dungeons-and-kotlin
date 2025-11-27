@@ -40,7 +40,7 @@ abstract class Creature(override val id: Id<Creature>, protected val core: Creat
 
     protected abstract val attackModifier: Int
 
-    protected open fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == 20
+    protected open fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == NATURAL_TWENTY
 
     internal fun asPhysicalAttacker(): Attacker {
         val creature = this
