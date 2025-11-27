@@ -11,17 +11,6 @@ data class BoardPosition(val x: Square, val y: Square) {
     operator fun minus(other: BoardPosition): BoardPosition = BoardPosition(this.x - other.x, this.y - other.y)
 
     /**
-     * Calculate Chebyshev distance (in squares) between two grid positions.
-     * This represents the minimum number of moves including diagonals (D&D grid movement).
-     * In D&D 5e, diagonal movement counts as 1 square.
-     */
-    fun distance(other: BoardPosition): Square {
-        val dx = abs((this.x - other.x).value)
-        val dy = abs((this.y - other.y).value)
-        return Square(max(dx, dy))
-    }
-
-    /**
      * Convert grid position to world coordinate.
      * Each square represents 5 feet.
      */
@@ -40,4 +29,15 @@ data class BoardPosition(val x: Square, val y: Square) {
             return BoardPosition(Square(xSquares), Square(ySquares))
         }
     }
+}
+
+/**
+ * Calculate Chebyshev distance (in squares) between two grid positions.
+ * This represents the minimum number of moves including diagonals (D&D grid movement).
+ * In D&D 5e, diagonal movement counts as 1 square.
+ */
+fun distance(from: BoardPosition, to: BoardPosition): Square {
+    val dx = abs((from.x - to.x).value)
+    val dy = abs((from.y - to.y).value)
+    return Square(max(dx, dy))
 }

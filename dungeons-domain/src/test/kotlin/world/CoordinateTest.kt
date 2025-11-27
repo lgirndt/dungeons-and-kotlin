@@ -33,7 +33,7 @@ class CoordinateTest {
     fun `distance between two coordinates should be correct`() {
         val coord1 = Coordinate.from(0, 0)
         val coord2 = Coordinate.from(3, 4)
-        val distance = coord1.distance(coord2)
+        val distance = distance(coord1, coord2)
         assertEquals(Feet(5.0), distance) // 3-4-5 triangle
     }
 }

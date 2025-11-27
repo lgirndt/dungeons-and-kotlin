@@ -496,28 +496,28 @@ potential-bugs:
     active: false
     excludes: ['**/*.kts']
   MissingSuperCall:
-    active: false
+    active: true
     mustInvokeSuperAnnotations:
       - 'androidx.annotation.CallSuper'
       - 'javax.annotation.OverridingMethodsMustInvokeSuper'
   MissingUseCall:
-    active: false
+    active: true
   NullCheckOnMutableProperty:
     active: false
   NullableToStringCall:
-    active: false
+    active: true
   PropertyUsedBeforeDeclaration:
-    active: false
+    active: true
   UnconditionalJumpStatementInLoop:
-    active: false
+    active: true
   UnnamedParameterUse:
-    active: false
+    active: true
     allowAdjacentDifferentTypeParams: true
     allowSingleParamUse: true
     ignoreArgumentsMatchingNames: true
     ignoreFunctionCall: []
   UnnecessaryNotNullCheck:
-    active: false
+    active: true
   UnnecessaryNotNullOperator:
     active: true
   UnnecessarySafeCall:
@@ -546,7 +546,7 @@ style:
   AbstractClassCanBeInterface:
     active: true
   AlsoCouldBeApply:
-    active: false
+    active: true
   BracesOnIfStatements:
     active: true
     singleLine: 'never'
@@ -563,12 +563,13 @@ style:
   ClassOrdering:
     active: true
   CollapsibleIfStatements:
-    active: false
+    active: true
   DataClassContainsFunctions:
-    active: false
+    active: true
     conversionFunctionPrefix:
       - 'to'
-    allowOperators: false
+      - 'as'
+    allowOperators: true
   DataClassShouldBeImmutable:
     active: false
   DestructuringDeclarationWithTooManyEntries:

@@ -62,21 +62,25 @@ data class Turn(
             actionAvailable ||
             bonusActionAvailable
 
+    @Suppress("DataClassContainsFunctions")
     fun useMovement(): Turn {
         require(movementAvailable) { "Movement already used this turn." }
         return copy(movementAvailable = false)
     }
 
+    @Suppress("DataClassContainsFunctions")
     fun useAction(): Turn {
         require(actionAvailable) { "Action already used this turn." }
         return copy(actionAvailable = false)
     }
 
+    @Suppress("DataClassContainsFunctions")
     fun useBonusAction(): Turn {
         require(bonusActionAvailable) { "Bonus action already used this turn." }
         return copy(bonusActionAvailable = false)
     }
 
+    @Suppress("DataClassContainsFunctions")
     fun useReaction(): Turn {
         require(reactionAvailable) { "Reaction already used this turn." }
         return copy(reactionAvailable = false)

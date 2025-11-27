@@ -1,6 +1,7 @@
 package board
 
 import io.dungeons.board.BoardPosition
+import io.dungeons.board.distance
 import io.dungeons.world.Coordinate
 import io.dungeons.world.Feet
 import io.dungeons.world.Square
@@ -47,7 +48,7 @@ class GridPositionTest {
         val pos1 = BoardPosition.Companion.from(0, 0)
         val pos2 = BoardPosition.Companion.from(1, 0)
 
-        assertEquals(Square(1), pos1.distance(pos2))
+        assertEquals(Square(1), distance(pos1, pos2))
     }
 
     @Test
@@ -55,7 +56,7 @@ class GridPositionTest {
         val pos1 = BoardPosition.Companion.from(0, 0)
         val pos2 = BoardPosition.Companion.from(0, 1)
 
-        assertEquals(Square(1), pos1.distance(pos2))
+        assertEquals(Square(1), distance(pos1, pos2))
     }
 
     @Test
@@ -64,7 +65,7 @@ class GridPositionTest {
         val pos2 = BoardPosition.Companion.from(1, 1)
 
         // In D&D, diagonal movement counts as 1 square
-        assertEquals(Square(1), pos1.distance(pos2))
+        assertEquals(Square(1), distance(pos1, pos2))
     }
 
     @Test
@@ -73,7 +74,7 @@ class GridPositionTest {
         val pos2 = BoardPosition.Companion.from(3, 4)
 
         // Chebyshev distance = max(|3-0|, |4-0|) = 4
-        assertEquals(Square(4), pos1.distance(pos2))
+        assertEquals(Square(4), distance(pos1, pos2))
     }
 
     @Test
@@ -81,14 +82,14 @@ class GridPositionTest {
         val pos1 = BoardPosition.Companion.from(1, 2)
         val pos2 = BoardPosition.Companion.from(4, 6)
 
-        assertEquals(pos2.distance(pos1), pos1.distance(pos2))
+        assertEquals(distance(pos2, pos1), distance(pos1, pos2))
     }
 
     @Test
     fun `chebyshev distance to same position should be 0`() {
         val pos = BoardPosition.Companion.from(5, 5)
 
-        assertEquals(Square(0), pos.distance(pos))
+        assertEquals(Square(0), distance(pos, pos))
     }
 
     @Test
@@ -97,7 +98,7 @@ class GridPositionTest {
         val pos2 = BoardPosition.Companion.from(2, 5)
 
         // Can move diagonally 2 squares, then 3 more vertically = max(2, 5) = 5
-        assertEquals(Square(5), pos1.distance(pos2))
+        assertEquals(Square(5), distance(pos1, pos2))
     }
 
     @Test
@@ -160,7 +161,7 @@ class GridPositionTest {
         val pos2 = BoardPosition.Companion.from(2, 3)
 
         // Chebyshev distance = max(|5-2|, |8-3|) = max(3, 5) = 5
-        assertEquals(Square(5), pos1.distance(pos2))
+        assertEquals(Square(5), distance(pos1, pos2))
     }
 
     @Test

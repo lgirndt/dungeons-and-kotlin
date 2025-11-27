@@ -2,6 +2,7 @@ package io.dungeons
 
 import io.dungeons.Die.Companion.D20
 import io.dungeons.board.BoardPosition
+import io.dungeons.board.distance
 import io.dungeons.combat.ProvidesBoardPosition
 import io.dungeons.core.Id
 
@@ -55,7 +56,7 @@ internal fun attack(
             val opponentPos = providesBoardPosition.getBoardPosition(opponent.id)
                 ?: error("No position found for creature $opponent")
 
-            val distance = attackerPos.distance(opponentPos)
+            val distance = distance(attackerPos, opponentPos)
 
             when (attacker.attackSource.isTargetInRange(distance.toFeet())) {
                 RangeClassification.OutOfRange -> return AttackOutcome.MISS
