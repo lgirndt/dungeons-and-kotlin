@@ -1,4 +1,5 @@
 package combat
+
 import TestId
 import aPlayerCharacter
 import fromModifiers
@@ -48,7 +49,8 @@ class FactionRelationsTest {
                     FACTION_B,
                     FactionStance.Neutral,
                 ),
-            ).build()
+            )
+            .build()
 
         assertEquals(FactionStance.Neutral, relations.queryStance(FACTION_A, FACTION_B))
         assertEquals(FactionStance.Neutral, relations.queryStance(FACTION_B, FACTION_A))
@@ -71,7 +73,8 @@ class FactionRelationsTest {
                     FACTION_B,
                     FactionStance.Hostile,
                 ),
-            ).build()
+            )
+            .build()
 
         assertEquals(FactionStance.Hostile, relations.queryStance(FACTION_A, FACTION_B))
         assertEquals(FactionStance.Hostile, relations.queryStance(FACTION_B, FACTION_A))

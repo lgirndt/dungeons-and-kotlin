@@ -78,9 +78,8 @@ class GameBoard(val width: Int, val height: Int) {
     }
 
     private fun getNeighbors(index: GridIndex): List<GridIndex> = DIRECTIONS
-        .map { (dx, dy) ->
-            GridIndex(index.x + dx, index.y + dy)
-        }.filter { it in boundingBox }
+        .map { (dx, dy) -> GridIndex(index.x + dx, index.y + dy) }
+        .filter { it in boundingBox }
 
     private fun allowsMovement(index: GridIndex): Boolean {
         if (index !in boundingBox) {

@@ -14,9 +14,11 @@ class CombatantsCollection(
             require(it.stance == FactionStance.Hostile) {
                 "CombatantsStore can only accept non-hostile relationships."
             }
-        }.fold(FactionRelations.Builder()) { builder, relationship ->
+        }
+        .fold(FactionRelations.Builder()) { builder, relationship ->
             builder.add(relationship)
-        }.build()
+        }
+        .build()
 
     operator fun get(id: Id<Creature>): Combatant? = combatants[id]
 

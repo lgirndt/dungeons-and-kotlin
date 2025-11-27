@@ -62,7 +62,9 @@ internal fun attack(
                 RangeClassification.WithinNormalRange -> it
                 RangeClassification.WithinLongRange -> it.giveDisadvantage()
             }
-        }.roll(D20)
+        }
+        .roll(D20)
+
     val isCrit = attacker.isCriticalHit(hitRollD20)
 
     val hitRoll = hitRollD20.value + attacker.applyAttackModifiers()

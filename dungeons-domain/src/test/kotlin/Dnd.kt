@@ -133,7 +133,8 @@ inline fun withFixedDice(vararg expectedRolls: DieRoll, runWithFixedDice: () -> 
         .builder<Die, Int>()
         .apply {
             expectedRolls.forEach { put(it.die, it.value) }
-        }.build()
+        }
+        .build()
 
     val mockedDice = multimap.asMap().map { (die, allRolls) ->
         // TODO more functional

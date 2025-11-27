@@ -538,6 +538,11 @@ potential-bugs:
   WrongEqualsTypeParameter:
     active: true
 
+formatting:
+  active: true
+  ChainMethodContinuation:
+    active: false
+
 style:
   active: true
   AbstractClassCanBeConcreteClass:
@@ -547,17 +552,17 @@ style:
   AlsoCouldBeApply:
     active: false
   BracesOnIfStatements:
-    active: false
+    active: true
     singleLine: 'never'
     multiLine: 'always'
   BracesOnWhenStatements:
-    active: false
+    active: true
     singleLine: 'necessary'
     multiLine: 'consistent'
   CanBeNonNullable:
     active: true
   CascadingCallWrapping:
-    active: false
+    active: true
     includeElvis: true
   ClassOrdering:
     active: true
