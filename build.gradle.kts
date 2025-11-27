@@ -8,6 +8,8 @@ allprojects {
 }
 
 subprojects {
+    apply(plugin = "kotlin-conventions")
+    apply(plugin = "test-deps-conventions")
     apply(plugin = "detekt-conventions")
 }
 
