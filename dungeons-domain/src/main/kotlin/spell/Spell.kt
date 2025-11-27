@@ -9,6 +9,7 @@ import io.dungeons.Creature
 import io.dungeons.DamageRoll
 import io.dungeons.DamageType
 import io.dungeons.DieRoll
+import io.dungeons.NATURAL_TWENTY
 import io.dungeons.ProficiencyBonus
 import io.dungeons.RangeChecker
 import io.dungeons.RangeCheckers
@@ -71,7 +72,7 @@ fun castAttackSpell(
 
             override fun applyAttackModifiers() = caster.spellCastingAbility.modifier + caster.proficiencyBonus.toInt()
 
-            override fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == 20
+            override fun isCriticalHit(hitRoll: DieRoll): Boolean = hitRoll.value == NATURAL_TWENTY
         },
         opponent,
         providesBoardPosition,

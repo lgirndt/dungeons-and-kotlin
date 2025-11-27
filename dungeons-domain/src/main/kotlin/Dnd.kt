@@ -115,7 +115,7 @@ interface DamageRoll {
 class SimpleDamageRoll(private val numberOfDice: Int, private val die: Die, private val bonus: Int = 0) : DamageRoll {
     override fun roll(isCritical: Boolean): Int {
         val critMultiplier = if (isCritical) 2 else 1
-        return (1..(numberOfDice * critMultiplier)).fold(bonus) { total, _ ->
+        return (1..numberOfDice * critMultiplier).fold(bonus) { total, _ ->
             total + die.roll().value
         }
     }
