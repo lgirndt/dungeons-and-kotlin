@@ -571,7 +571,7 @@ style:
       - 'as'
     allowOperators: true
   DataClassShouldBeImmutable:
-    active: false
+    active: true
   DestructuringDeclarationWithTooManyEntries:
     active: true
     maxDestructuringEntries: 3

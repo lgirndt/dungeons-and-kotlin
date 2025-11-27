@@ -4,6 +4,7 @@ import io.dungeons.Die.Companion.D20
 import io.dungeons.combat.ProvidesBoardPosition
 import io.dungeons.core.Id
 
+@Suppress("DataClassShouldBeImmutable") // we are still learning how to model the creature properly
 data class CreatureData(
     val name: String,
     val stats: StatBlock,
