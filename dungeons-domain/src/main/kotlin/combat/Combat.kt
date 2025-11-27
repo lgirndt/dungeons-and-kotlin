@@ -11,7 +11,7 @@ enum class FactionStance {
     Hostile,
 }
 
-data class Faction(val id: Id<Faction> = Id.Companion.generate(), val name: String)
+data class Faction(val id: Id<Faction> = Id.generate(), val name: String)
 
 data class FactionRelationship(val first: Faction, val second: Faction, val stance: FactionStance) {
     internal fun toLookupKey(): FactionRelationsLookupKey = setOf(first.id, second.id)
