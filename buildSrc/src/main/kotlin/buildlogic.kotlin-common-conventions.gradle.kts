@@ -36,7 +36,7 @@ dependencyManagement {
 
 dependencies {
     // Test dependencies - versions managed by dependencyManagement
-    testImplementation(kotlin("test"))
+    testImplementation("org.jetbrains.kotlin:kotlin-test-junit5")
     testImplementation("org.junit.jupiter:junit-jupiter")
     testImplementation("io.mockk:mockk")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
