@@ -1,18 +1,18 @@
 package io.dungeons.app
 
-import io.dungeons.Creature
-import io.dungeons.CreatureData
-import io.dungeons.DamageModifiers
-import io.dungeons.Fighter
-import io.dungeons.Goblin
-import io.dungeons.PlayerCharacter
-import io.dungeons.PlayerCharacterData
-import io.dungeons.StatBlock
-import io.dungeons.Weapons
-import io.dungeons.board.BoardPosition
-import io.dungeons.combat.ProvidesBoardPosition
-import io.dungeons.core.Id
-import io.dungeons.world.Square
+import io.dungeons.domain.Creature
+import io.dungeons.domain.CreatureData
+import io.dungeons.domain.DamageModifiers
+import io.dungeons.domain.Fighter
+import io.dungeons.domain.Goblin
+import io.dungeons.domain.PlayerCharacter
+import io.dungeons.domain.PlayerCharacterData
+import io.dungeons.domain.StatBlock
+import io.dungeons.domain.Weapons
+import io.dungeons.domain.board.BoardPosition
+import io.dungeons.domain.combat.ProvidesBoardPosition
+import io.dungeons.domain.core.Id
+import io.dungeons.domain.world.Square
 
 fun main() {
     val fighter = PlayerCharacter(
