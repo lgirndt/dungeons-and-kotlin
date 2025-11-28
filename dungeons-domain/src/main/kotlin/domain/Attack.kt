@@ -63,7 +63,7 @@ internal fun attack(
                 RangeClassification.WithinLongRange -> it.giveDisadvantage()
             }
         }
-        .roll(Die.Companion.D20)
+        .roll(Die.D20)
 
     val isCrit = attacker.isCriticalHit(hitRollD20)
 

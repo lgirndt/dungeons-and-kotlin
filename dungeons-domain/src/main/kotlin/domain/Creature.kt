@@ -72,12 +72,12 @@ abstract class Creature(override val id: Id<Creature>, protected val core: Creat
         difficultyClass: Int,
         rollModifier: RollModifier = RollModifier.NORMAL,
     ): AbilityCheckResult {
-        val roll = rollModifier.roll(Die.Companion.D20)
+        val roll = rollModifier.roll(Die.D20)
         return AbilityCheckResult(roll.value + ability(stats).modifier >= difficultyClass)
     }
 
     fun rollInitiative(rollModifier: RollModifier = RollModifier.NORMAL): DieRoll {
-        val roll = rollModifier.roll(Die.Companion.D20)
+        val roll = rollModifier.roll(Die.D20)
         val dexMod = StatQueries.Dex(stats).modifier
         return DieRoll(D20, roll.value + dexMod)
     }

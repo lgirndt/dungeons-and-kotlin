@@ -24,8 +24,8 @@ data class BoardPosition(val x: Square, val y: Square) {
          * Rounds down to the nearest grid square.
          */
         fun fromCoordinate(coordinate: Coordinate): BoardPosition {
-            val xSquares = (coordinate.x.value / Square.Companion.FEET_PER_SQUARE).toInt()
-            val ySquares = (coordinate.y.value / Square.Companion.FEET_PER_SQUARE).toInt()
+            val xSquares = (coordinate.x.value / Square.FEET_PER_SQUARE).toInt()
+            val ySquares = (coordinate.y.value / Square.FEET_PER_SQUARE).toInt()
             return BoardPosition(Square(xSquares), Square(ySquares))
         }
     }
