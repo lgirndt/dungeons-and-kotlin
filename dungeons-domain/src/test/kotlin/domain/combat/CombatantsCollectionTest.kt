@@ -14,7 +14,7 @@ import org.junit.jupiter.api.assertNotNull
 private val FACTION_A = Faction(name = "Faction A")
 private val FACTION_B = Faction(name = "Faction B")
 
-private val ID: domain.TestId<Creature> = _root_ide_package_.domain.TestId()
+private val ID: domain.TestId<Creature> = domain.TestId()
 
 class CombatantsCollectionTest {
     lateinit var store: CombatantsCollection
@@ -24,15 +24,15 @@ class CombatantsCollectionTest {
         store = CombatantsCollection(
             listOf(
                 Combatant(
-                    _root_ide_package_.domain.aPlayerCharacter(ID[0], name = "Alpha"),
+                    domain.aPlayerCharacter(ID[0], name = "Alpha"),
                     FACTION_A,
                     NoopTurnActor(),
                 ),
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[2]), FACTION_A, NoopTurnActor()),
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[4]), FACTION_B, NoopTurnActor()),
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[5]), FACTION_B, NoopTurnActor()),
+                Combatant(domain.aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
+                Combatant(domain.aPlayerCharacter(ID[2]), FACTION_A, NoopTurnActor()),
+                Combatant(domain.aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),
+                Combatant(domain.aPlayerCharacter(ID[4]), FACTION_B, NoopTurnActor()),
+                Combatant(domain.aPlayerCharacter(ID[5]), FACTION_B, NoopTurnActor()),
             ),
         )
     }

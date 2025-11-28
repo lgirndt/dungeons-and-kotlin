@@ -32,7 +32,7 @@ private val SOME_SPELL = AttackSpell(
     range = Feet(120.0),
 )
 
-private val ID = _root_ide_package_.domain.TestId<Creature>()
+private val ID = domain.TestId<Creature>()
 
 class SpellTest {
     @Test
@@ -42,7 +42,7 @@ class SpellTest {
             override val spellCastingAbility: Stat = Stat(14) // modifier +2
             override val proficiencyBonus: ProficiencyBonus = ProficiencyBonus.fromLevel(1) // +1
             override val position: Coordinate = Coordinate.from(0, 0)
-            override val stats: StatBlock = _root_ide_package_.domain.SOME_STAT_BOCK
+            override val stats: StatBlock = domain.SOME_STAT_BOCK
         }
 
         val spell = SOME_SPELL.copy(
@@ -50,19 +50,19 @@ class SpellTest {
             damageRoll = SimpleDamageRoll(1, D4),
         )
 
-        val opponent = _root_ide_package_.domain.aPlayerCharacter(
+        val opponent = domain.aPlayerCharacter(
             id = ID[1],
             armourClass = 12,
         )
 
-        val providesBoardPosition = _root_ide_package_.domain.ProvidesBoardPositionMock(
+        val providesBoardPosition = domain.ProvidesBoardPositionMock(
             mapOf(
                 ID[0] to BoardPosition(Square(0), Square(0)),
                 ID[1] to BoardPosition(Square(0), Square(2)),
             ),
         )
 
-        _root_ide_package_.domain.withFixedDice(
+        domain.withFixedDice(
             D20 rolls 10, // hit roll
             D4 rolls 6, // damage roll
         ) {

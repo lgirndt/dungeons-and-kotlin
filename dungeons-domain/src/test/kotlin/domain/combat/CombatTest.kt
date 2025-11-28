@@ -21,7 +21,7 @@ private val FACTION_A = Faction(name = "Faction A")
 private val FACTION_B = Faction(name = "Faction B")
 
 private val SOME_COMBATANT = Combatant(
-    creature = _root_ide_package_.domain.aPlayerCharacter(name = "Some Combatant"),
+    creature = domain.aPlayerCharacter(name = "Some Combatant"),
     faction = FACTION_A,
     actor = NoopTurnActor(),
 )
@@ -32,7 +32,7 @@ private val SOME_RELATIONSHIP = FactionRelationship(
     FactionStance.Friendly,
 )
 
-private val ID: domain.TestId<Creature> = _root_ide_package_.domain.TestId()
+private val ID: domain.TestId<Creature> = domain.TestId()
 
 class FactionRelationsTest {
     @Test
@@ -104,12 +104,12 @@ class CombatantsStoreTest {
     fun setup() {
         store = CombatantsCollection(
             listOf(
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[0], name = "Alpha"), factionA, NoopTurnActor()),
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[1]), factionA, NoopTurnActor()),
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[2]), factionA, NoopTurnActor()),
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[3]), factionB, NoopTurnActor()),
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[4]), factionB, NoopTurnActor()),
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[5]), factionB, NoopTurnActor()),
+                Combatant(domain.aPlayerCharacter(ID[0], name = "Alpha"), factionA, NoopTurnActor()),
+                Combatant(domain.aPlayerCharacter(ID[1]), factionA, NoopTurnActor()),
+                Combatant(domain.aPlayerCharacter(ID[2]), factionA, NoopTurnActor()),
+                Combatant(domain.aPlayerCharacter(ID[3]), factionB, NoopTurnActor()),
+                Combatant(domain.aPlayerCharacter(ID[4]), factionB, NoopTurnActor()),
+                Combatant(domain.aPlayerCharacter(ID[5]), factionB, NoopTurnActor()),
             ),
         )
     }
@@ -144,10 +144,10 @@ class CombatantsStoreTest {
 class CombatantTest {
     @Test
     fun `initiative should be cached after first access`() {
-        val creature = _root_ide_package_.domain.aPlayerCharacter(name = "Test Character")
+        val creature = domain.aPlayerCharacter(name = "Test Character")
         val combatant = SOME_COMBATANT.copy()
 
-        _root_ide_package_.domain.withFixedDice(D20 rolls 12) {
+        domain.withFixedDice(D20 rolls 12) {
             // Access initiative twice
             val firstRoll = combatant.initiative
             val secondRoll = combatant.initiative
@@ -159,11 +159,11 @@ class CombatantTest {
 
     @Test
     fun `initiative should include dexterity modifier`() {
-        val player = _root_ide_package_.domain.aPlayerCharacter(
+        val player = domain.aPlayerCharacter(
             name = "Dexterous Character",
-            stats = _root_ide_package_.io.dungeons.domain.StatBlock.fromModifiers(dexMod = 4),
+            stats = io.dungeons.domain.StatBlock.fromModifiers(dexMod = 4),
         )
-        _root_ide_package_.domain.withFixedDice(D20 rolls 12) {
+        domain.withFixedDice(D20 rolls 12) {
             val combatant = SOME_COMBATANT.copy(creature = player)
             val initiative = combatant.initiative
             assertEquals(12 + 4, initiative.value)

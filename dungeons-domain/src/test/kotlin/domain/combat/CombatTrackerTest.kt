@@ -34,9 +34,9 @@ class CombatTrackerTest {
         faction: Faction = PLAYER_FACTION,
         actor: TurnActor = mockk<TurnActor>(relaxed = true),
     ): Combatant = Combatant(
-        creature = _root_ide_package_.domain.aPlayerCharacter(
+        creature = domain.aPlayerCharacter(
             name = name,
-            stats = _root_ide_package_.io.dungeons.domain.StatBlock.fromModifiers(dexMod = dexMod),
+            stats = io.dungeons.domain.StatBlock.fromModifiers(dexMod = dexMod),
         ),
         faction = faction,
         actor = actor,
@@ -49,7 +49,7 @@ class CombatTrackerTest {
             aCombatant(name = "Medium Character", dexMod = 2),
             aCombatant(name = "Fast Character", dexMod = 4),
         )
-        _root_ide_package_.domain.withFixedDice(
+        domain.withFixedDice(
             D20 rolls 10, // lowDexPlayer: 10 + 0 = 10
             D20 rolls 12, // midDexPlayer: 12 + 2 = 14
             D20 rolls 8, // highDexPlayer: 8 + 4 = 12
@@ -70,7 +70,7 @@ class CombatTrackerTest {
 
     @Test
     fun `combatants with same initiative should maintain input order`() {
-        _root_ide_package_.domain.withFixedDice(
+        domain.withFixedDice(
             D20 rolls 10, // player1: 10 + 2 = 12
             D20 rolls 10, // player2: 10 + 2 = 12
         ) {
@@ -112,7 +112,7 @@ class CombatTrackerTest {
             aCombatant(name = "First", dexMod = 1),
             aCombatant(name = "Second", dexMod = 2),
         )
-        _root_ide_package_.domain.withFixedDice(
+        domain.withFixedDice(
             D20 rolls 10, // player1: 10 + 1 = 11
             D20 rolls 8, // player2: 8 + 2 = 10
         ) {
@@ -172,7 +172,7 @@ class CombatTrackerTest {
 
         @Test
         fun `advanceTurn should let the first actor in initiative order take their turn`() {
-            _root_ide_package_.domain.withFixedDice(*expectedRolls) {
+            domain.withFixedDice(*expectedRolls) {
                 expectTurnForActor(
                     actor1,
                     object : MovementCombatCommand() {
@@ -210,7 +210,7 @@ class CombatTrackerTest {
 
         @Test
         fun `advance to the 2nd turn should let the second actor in initiative order take their turn`() {
-            _root_ide_package_.domain.withFixedDice(*expectedRolls) {
+            domain.withFixedDice(*expectedRolls) {
                 expectTurnForActor(actor1)
 
                 expectTurnForActor(
@@ -252,7 +252,7 @@ class CombatTrackerTest {
 
         @Test
         fun `advance to the 3rd turn should start a new round and let the first actor take their turn`() {
-            _root_ide_package_.domain.withFixedDice(*expectedRolls) {
+            domain.withFixedDice(*expectedRolls) {
                 expectTurnForActor(actor1)
                 expectTurnForActor(actor2)
                 expectTurnForActor(actor1)
@@ -274,7 +274,7 @@ class CombatTrackerTest {
 
         @Test
         fun `advanceTurn should skip combatants with 0 hit points`() {
-            _root_ide_package_.domain.withFixedDice(*expectedRolls) {
+            domain.withFixedDice(*expectedRolls) {
                 expectTurnForActor(actor1)
                 expectTurnForActor(actor2)
 
@@ -316,7 +316,7 @@ class CombatTrackerTest {
 
         @Test
         fun `actor using all three command types should exhaust turn options`() {
-            _root_ide_package_.domain.withFixedDice(*expectedRolls) {
+            domain.withFixedDice(*expectedRolls) {
                 val actionCommand = object : ActionCombatCommand() {
                     override fun doPerform(combatScenario: CombatScenario) {}
                 }
