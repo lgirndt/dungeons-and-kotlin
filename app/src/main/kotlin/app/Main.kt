@@ -1,3 +1,5 @@
+package io.dungeons.app
+
 import io.dungeons.Creature
 import io.dungeons.CreatureData
 import io.dungeons.DamageModifiers
