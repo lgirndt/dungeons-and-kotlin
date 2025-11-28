@@ -1,4 +1,4 @@
-package io.dungeons.board
+package domain.board
 
 import io.dungeons.domain.board.BoardLayer
 import io.dungeons.domain.board.BoardPosition

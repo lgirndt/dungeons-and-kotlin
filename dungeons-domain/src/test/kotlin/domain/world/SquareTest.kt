@@ -1,4 +1,4 @@
-package io.dungeons.world
+package domain.world
 
 import io.dungeons.domain.world.Feet
 import io.dungeons.domain.world.Square

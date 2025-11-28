@@ -1,4 +1,4 @@
-package io.dungeons.world
+package domain.world
 
 import io.dungeons.domain.world.Feet
 import org.junit.jupiter.api.Assertions.assertEquals

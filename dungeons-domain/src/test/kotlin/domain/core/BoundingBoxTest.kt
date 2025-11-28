@@ -1,4 +1,4 @@
-package io.dungeons.core
+package domain.core
 
 import io.dungeons.domain.core.BoundingBox
 import io.dungeons.domain.core.GridIndex
