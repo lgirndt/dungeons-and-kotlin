@@ -161,7 +161,7 @@ class CombatantTest {
     fun `initiative should include dexterity modifier`() {
         val player = _root_ide_package_.domain.aPlayerCharacter(
             name = "Dexterous Character",
-            stats = _root_ide_package_.io.dungeons.domain.StatBlock.Companion.fromModifiers(dexMod = 4),
+            stats = _root_ide_package_.io.dungeons.domain.StatBlock.fromModifiers(dexMod = 4),
         )
         _root_ide_package_.domain.withFixedDice(D20 rolls 12) {
             val combatant = SOME_COMBATANT.copy(creature = player)

@@ -36,7 +36,7 @@ class CombatTrackerTest {
     ): Combatant = Combatant(
         creature = _root_ide_package_.domain.aPlayerCharacter(
             name = name,
-            stats = _root_ide_package_.io.dungeons.domain.StatBlock.Companion.fromModifiers(dexMod = dexMod),
+            stats = _root_ide_package_.io.dungeons.domain.StatBlock.fromModifiers(dexMod = dexMod),
         ),
         faction = faction,
         actor = actor,

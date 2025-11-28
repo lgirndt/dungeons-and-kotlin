@@ -16,7 +16,7 @@ enum class BoardLayer {
 
 class GameBoard(val width: Int, val height: Int) {
     private val layers: Map<BoardLayer, Grid<Token>> =
-        BoardLayer.entries.associateWith { BoundedGrid.Companion.fromDimensions<Token>(width, height) }
+        BoardLayer.entries.associateWith { BoundedGrid.fromDimensions<Token>(width, height) }
 
     private val tokenToIndex = mutableMapOf<Id<Token>, GridIndex>()
 
