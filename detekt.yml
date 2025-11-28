@@ -180,11 +180,11 @@ coroutines:
   SleepInsteadOfDelay:
     active: true
   SuspendFunInFinallySection:
-    active: false
+    active: true
   SuspendFunSwallowedCancellation:
-    active: false
+    active: true
   SuspendFunWithCoroutineScopeReceiver:
-    active: false
+    active: true
     aliases: ['SuspendFunctionOnCoroutineScope']
   SuspendFunWithFlowReturnType:
     active: true
@@ -503,7 +503,7 @@ potential-bugs:
   MissingUseCall:
     active: true
   NullCheckOnMutableProperty:
-    active: false
+    active: true
   NullableToStringCall:
     active: true
   PropertyUsedBeforeDeclaration:
@@ -748,7 +748,7 @@ style:
   SpacingAfterPackageDeclaration:
     active: true
   StringShouldBeRawString:
-    active: false
+    active: true
     maxEscapedCharacterCount: 2
     ignoredCharacters: []
   ThrowsCount:
