@@ -1,17 +1,5 @@
-allprojects {
-    group = "io.dungeons"
-    version = "1.0-SNAPSHOT"
-
-    repositories {
-        mavenCentral()
-    }
-}
-
-subprojects {
-    apply(plugin = "kotlin-conventions")
-    apply(plugin = "test-deps-conventions")
-    apply(plugin = "detekt-conventions")
-}
+group = "io.dungeons"
+version = "1.0-SNAPSHOT"
 
 tasks.register("test") {
     dependsOn(subprojects.map { it.tasks.named("test") })

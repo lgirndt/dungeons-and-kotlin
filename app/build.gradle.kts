@@ -1,7 +1,13 @@
-group = "io.dungeons"
-version = "1.0-SNAPSHOT"
+plugins {
+    id("buildlogic.kotlin-application-conventions")
+}
 
 dependencies {
-    implementation("com.google.guava:guava:${Versions.guava}")
-    implementation((project(":dungeons-domain")))
+    implementation(libs.guava)
+    implementation(project(":dungeons-domain"))
+}
+
+application {
+    // Define the main class for the application.
+    mainClass = "io.dungeons.app.MainKt"
 }

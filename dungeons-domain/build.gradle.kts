@@ -1,5 +1,7 @@
-dependencies {
-    implementation("com.google.guava:guava:${Versions.guava}")
+plugins {
+    id("buildlogic.kotlin-library-conventions")
+}
 
-    testImplementation(kotlin("test"))
+dependencies {
+    implementation(libs.guava)
 }

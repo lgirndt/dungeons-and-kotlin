@@ -1,6 +1,5 @@
 package io.dungeons
 
-
 import io.dungeons.Die.Companion.D20
 import io.dungeons.board.BoardPosition
 import io.dungeons.board.distance

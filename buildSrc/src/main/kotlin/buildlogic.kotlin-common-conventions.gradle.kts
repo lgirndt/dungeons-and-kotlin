@@ -1,13 +1,33 @@
+/*
+ * Common conventions for Kotlin projects.
+ * This plugin is applied to all library and application projects.
+ */
+
 plugins {
-    kotlin("jvm")
+    // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
+    id("org.jetbrains.kotlin.jvm")
+    id("dev.detekt")
 }
 
 repositories {
+    // Use Maven Central for resolving dependencies.
     mavenCentral()
 }
 
 kotlin {
     jvmToolchain(21)
+}
+
+dependencies {
+    // Test dependencies
+    testImplementation(kotlin("test"))
+    testImplementation(platform("org.junit:junit-bom:6.0.1"))
+    testImplementation("org.junit.jupiter:junit-jupiter")
+    testImplementation("io.mockk:mockk:1.14.6")
+    testRuntimeOnly("org.junit.platform:junit-platform-launcher")
+
+    // Detekt
+    detektPlugins("dev.detekt:detekt-rules-ktlint-wrapper:2.0.0-alpha.1")
 }
 
 tasks.test {
@@ -40,4 +60,21 @@ tasks.withType<Test>().configureEach {
             jvmArgs("-javaagent:${mockkAgent.absolutePath}")
         }
     }
+}
+
+// Detekt configuration
+detekt {
+    buildUponDefaultConfig = true
+    allRules = false
+    config.setFrom(files("$rootDir/detekt.yml"))
+    baseline = file("$rootDir/detekt-baseline.xml")
+    parallel = true
+}
+
+tasks.withType<dev.detekt.gradle.Detekt>().configureEach {
+    reports {
+        html.required = true
+        sarif.required = false
+    }
+    mustRunAfter(tasks.withType<Test>())
 }
