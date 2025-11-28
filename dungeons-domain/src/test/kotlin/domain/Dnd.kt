@@ -1,4 +1,5 @@
 package domain
+
 import com.google.common.collect.ImmutableListMultimap
 import io.dungeons.domain.ClassFeatures
 import io.dungeons.domain.Creature

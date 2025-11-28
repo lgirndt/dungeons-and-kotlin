@@ -23,7 +23,11 @@ class CombatantsCollectionTest {
     fun setup() {
         store = CombatantsCollection(
             listOf(
-                Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[0], name = "Alpha"), FACTION_A, NoopTurnActor()),
+                Combatant(
+                    _root_ide_package_.domain.aPlayerCharacter(ID[0], name = "Alpha"),
+                    FACTION_A,
+                    NoopTurnActor(),
+                ),
                 Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[1]), FACTION_A, NoopTurnActor()),
                 Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[2]), FACTION_A, NoopTurnActor()),
                 Combatant(_root_ide_package_.domain.aPlayerCharacter(ID[3]), FACTION_B, NoopTurnActor()),

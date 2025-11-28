@@ -1,4 +1,5 @@
 package domain
+
 import io.dungeons.domain.Die.Companion.D8
 import io.dungeons.domain.RangeCheckers
 import io.dungeons.domain.RangeClassification

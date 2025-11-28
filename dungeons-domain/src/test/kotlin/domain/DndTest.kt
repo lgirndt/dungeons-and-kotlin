@@ -1,4 +1,5 @@
 package domain
+
 import io.dungeons.domain.AbilityCheckResult
 import io.dungeons.domain.Die.Companion.D20
 import io.dungeons.domain.Die.Companion.D6
