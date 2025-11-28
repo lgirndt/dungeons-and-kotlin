@@ -4,6 +4,7 @@ import domain.fromModifiers
 import domain.rolls
 import io.dungeons.domain.Die.Companion.D20
 import io.dungeons.domain.DieRoll
+import io.dungeons.domain.StatBlock
 import io.dungeons.domain.combat.ActionCombatCommand
 import io.dungeons.domain.combat.BonusActionCombatCommand
 import io.dungeons.domain.combat.CombatScenario
@@ -36,7 +37,7 @@ class CombatTrackerTest {
     ): Combatant = Combatant(
         creature = domain.aPlayerCharacter(
             name = name,
-            stats = io.dungeons.domain.StatBlock.fromModifiers(dexMod = dexMod),
+            stats = StatBlock.fromModifiers(dexMod = dexMod),
         ),
         faction = faction,
         actor = actor,
