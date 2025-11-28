@@ -7,6 +7,7 @@ plugins {
     // Apply the org.jetbrains.kotlin.jvm Plugin to add support for Kotlin.
     id("org.jetbrains.kotlin.jvm")
     id("dev.detekt")
+    id("io.spring.dependency-management")
 }
 
 repositories {
@@ -18,16 +19,30 @@ kotlin {
     jvmToolchain(21)
 }
 
+// Centralized dependency version management
+dependencyManagement {
+    imports {
+        // Import JUnit BOM for test dependencies
+        mavenBom("org.junit:junit-bom:6.0.1")
+    }
+
+    dependencies {
+        // Define versions for all project dependencies
+        dependency("com.google.guava:guava:33.5.0-jre")
+        dependency("io.mockk:mockk:1.14.6")
+        dependency("dev.detekt:detekt-rules-ktlint-wrapper:2.0.0-alpha.1")
+    }
+}
+
 dependencies {
-    // Test dependencies
+    // Test dependencies - versions managed by dependencyManagement
     testImplementation(kotlin("test"))
-    testImplementation(platform("org.junit:junit-bom:6.0.1"))
     testImplementation("org.junit.jupiter:junit-jupiter")
-    testImplementation("io.mockk:mockk:1.14.6")
+    testImplementation("io.mockk:mockk")
     testRuntimeOnly("org.junit.platform:junit-platform-launcher")
 
-    // Detekt
-    detektPlugins("dev.detekt:detekt-rules-ktlint-wrapper:2.0.0-alpha.1")
+    // Detekt - version managed by dependencyManagement
+    detektPlugins("dev.detekt:detekt-rules-ktlint-wrapper")
 }
 
 tasks.test {
