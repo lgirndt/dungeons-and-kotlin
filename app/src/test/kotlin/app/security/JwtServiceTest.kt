@@ -11,12 +11,11 @@ import org.springframework.security.core.userdetails.User
 import java.util.Date
 
 class JwtServiceTest {
-
     private val jwtProperties = JwtProperties().apply {
         secret = "testSecretKeyThatIsLongEnoughForHMACSHA512AlgorithmToWorkProperly"
         expiration = 3600000 // 1 hour in milliseconds
     }
-    
+
     private val jwtService = JwtService(jwtProperties)
 
     private val testUser = User.builder()
@@ -51,8 +50,8 @@ class JwtServiceTest {
             .authorities(
                 listOf(
                     SimpleGrantedAuthority("ROLE_ADMIN"),
-                    SimpleGrantedAuthority("ROLE_USER")
-                )
+                    SimpleGrantedAuthority("ROLE_USER"),
+                ),
             )
             .build()
 

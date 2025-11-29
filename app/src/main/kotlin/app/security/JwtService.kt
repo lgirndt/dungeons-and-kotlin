@@ -10,10 +10,7 @@ import java.util.*
 import javax.crypto.SecretKey
 
 @Service
-class JwtService(
-    private val jwtProperties: JwtProperties
-) {
-
+class JwtService(private val jwtProperties: JwtProperties) {
     private val secretKey: SecretKey by lazy {
         Keys.hmacShaKeyFor(jwtProperties.secret.toByteArray())
     }
@@ -21,7 +18,7 @@ class JwtService(
     fun generateToken(userDetails: UserDetails): String {
         val claims = mutableMapOf<String, Any>()
         claims["roles"] = userDetails.authorities.map { it.authority }
-        
+
         return createToken(claims, userDetails.username)
     }
 
@@ -38,33 +35,25 @@ class JwtService(
             .compact()
     }
 
-    fun extractUsername(token: String): String {
-        return extractClaim(token) { it.subject }
-    }
+    fun extractUsername(token: String): String = extractClaim(token) { it.subject }
 
-    fun extractExpiration(token: String): Date {
-        return extractClaim(token) { it.expiration }
-    }
+    fun extractExpiration(token: String): Date = extractClaim(token) { it.expiration }
 
     fun <T> extractClaim(token: String, claimsResolver: (Claims) -> T): T {
         val claims = extractAllClaims(token)
         return claimsResolver(claims)
     }
 
-    private fun extractAllClaims(token: String): Claims {
-        return Jwts.parser()
-            .verifyWith(secretKey)
-            .build()
-            .parseSignedClaims(token)
-            .payload
-    }
+    private fun extractAllClaims(token: String): Claims = Jwts.parser()
+        .verifyWith(secretKey)
+        .build()
+        .parseSignedClaims(token)
+        .payload
 
     fun isTokenValid(token: String, userDetails: UserDetails): Boolean {
         val username = extractUsername(token)
         return username == userDetails.username && !isTokenExpired(token)
     }
 
-    private fun isTokenExpired(token: String): Boolean {
-        return extractExpiration(token).before(Date())
-    }
+    private fun isTokenExpired(token: String): Boolean = extractExpiration(token).before(Date())
 }

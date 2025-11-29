@@ -1,7 +1,6 @@
 package io.dungeons.app.config
 
 import io.dungeons.app.security.JwtAuthenticationFilter
-import io.dungeons.app.security.JwtService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -22,8 +21,7 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
-
-//    @Bean
+    //    @Bean
 //    fun jwtAuthenticationFilter(
 //        jwtService: JwtService,
 //        userDetailsService: UserDetailsService,
@@ -41,8 +39,10 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { authorize ->
                 authorize
-                    .requestMatchers("/api/auth/**").permitAll()
-                    .anyRequest().authenticated()
+                    .requestMatchers("/api/auth/**")
+                    .permitAll()
+                    .anyRequest()
+                    .authenticated()
             }
             .sessionManagement { session ->
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
@@ -71,22 +71,16 @@ class SecurityConfig {
     }
 
     @Bean
-    fun passwordEncoder(): PasswordEncoder {
-        return BCryptPasswordEncoder()
-    }
+    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
 
     @Bean
     fun authenticationProvider(
         userDetailsService: UserDetailsService,
         passwordEncoder: PasswordEncoder,
-    ): AuthenticationProvider {
-        return DaoAuthenticationProvider(userDetailsService).apply {
-            setPasswordEncoder(passwordEncoder)
-        }
+    ): AuthenticationProvider = DaoAuthenticationProvider(userDetailsService).apply {
+        setPasswordEncoder(passwordEncoder)
     }
 
     @Bean
-    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager {
-        return config.authenticationManager
-    }
+    fun authenticationManager(config: AuthenticationConfiguration): AuthenticationManager = config.authenticationManager
 }

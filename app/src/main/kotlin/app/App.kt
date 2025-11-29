@@ -8,7 +8,6 @@ import org.springframework.context.annotation.Bean
 
 @SpringBootApplication
 class App {
-
     private val log = LoggerFactory.getLogger(App::class.java)
 
     @Bean

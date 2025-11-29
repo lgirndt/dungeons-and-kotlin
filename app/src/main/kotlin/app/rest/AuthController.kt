@@ -19,25 +19,22 @@ import org.springframework.web.bind.annotation.RestController
 class AuthController(
     private val authenticationManager: AuthenticationManager,
     private val userDetailsService: UserDetailsService,
-    private val jwtService: JwtService
+    private val jwtService: JwtService,
 ) {
-
     @PostMapping("/login")
-    fun login(@RequestBody loginRequest: LoginRequest): ResponseEntity<AuthResponse> {
-        return try {
-            authenticationManager.authenticate(
-                UsernamePasswordAuthenticationToken(
-                    loginRequest.username,
-                    loginRequest.password
-                )
-            )
+    fun login(@RequestBody loginRequest: LoginRequest): ResponseEntity<AuthResponse> = try {
+        authenticationManager.authenticate(
+            UsernamePasswordAuthenticationToken(
+                loginRequest.username,
+                loginRequest.password,
+            ),
+        )
 
-            val userDetails = userDetailsService.loadUserByUsername(loginRequest.username)
-            val token = jwtService.generateToken(userDetails)
+        val userDetails = userDetailsService.loadUserByUsername(loginRequest.username)
+        val token = jwtService.generateToken(userDetails)
 
-            ResponseEntity.ok(AuthResponse(accessToken = token))
-        } catch (_: BadCredentialsException) {
-            ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
-        }
+        ResponseEntity.ok(AuthResponse(accessToken = token))
+    } catch (_: BadCredentialsException) {
+        ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
     }
 }
