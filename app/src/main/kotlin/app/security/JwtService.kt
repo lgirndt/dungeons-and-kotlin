@@ -27,7 +27,7 @@ class JwtService(
 
     private fun createToken(claims: Map<String, Any>, subject: String): String {
         val now = Date()
-        val expirationDate = Date(now.time + jwtProperties.expiration.inWholeMilliseconds)
+        val expirationDate = Date(now.time + jwtProperties.expiration)
 
         return Jwts.builder()
             .claims(claims)

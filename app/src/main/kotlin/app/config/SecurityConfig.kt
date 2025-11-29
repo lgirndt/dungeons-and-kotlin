@@ -1,6 +1,7 @@
 package io.dungeons.app.config
 
 import io.dungeons.app.security.JwtAuthenticationFilter
+import io.dungeons.app.security.JwtService
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -22,11 +23,19 @@ import org.springframework.security.web.authentication.UsernamePasswordAuthentic
 @EnableWebSecurity
 class SecurityConfig {
 
+//    @Bean
+//    fun jwtAuthenticationFilter(
+//        jwtService: JwtService,
+//        userDetailsService: UserDetailsService,
+//    ): JwtAuthenticationFilter {
+//        return JwtAuthenticationFilter(jwtService, userDetailsService)
+//    }
+
     @Bean
     fun securityFilterChain(
         http: HttpSecurity,
         jwtAuthenticationFilter: JwtAuthenticationFilter,
-        authenticationProvider: AuthenticationProvider
+        authenticationProvider: AuthenticationProvider,
     ): SecurityFilterChain {
         http
             .csrf { it.disable() }
@@ -69,7 +78,7 @@ class SecurityConfig {
     @Bean
     fun authenticationProvider(
         userDetailsService: UserDetailsService,
-        passwordEncoder: PasswordEncoder
+        passwordEncoder: PasswordEncoder,
     ): AuthenticationProvider {
         return DaoAuthenticationProvider(userDetailsService).apply {
             setPasswordEncoder(passwordEncoder)
