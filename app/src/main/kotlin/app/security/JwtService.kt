@@ -13,9 +13,7 @@ import kotlin.time.Instant
 import kotlin.time.toJavaInstant
 
 @Service
-class JwtService(
-    private val jwtProperties: JwtProperties,
-    private val clock: Clock) {
+class JwtService(private val jwtProperties: JwtProperties, private val clock: Clock) {
     private val secretKey: SecretKey by lazy {
         Keys.hmacShaKeyFor(jwtProperties.secret.toByteArray())
     }
@@ -61,8 +59,7 @@ class JwtService(
         return username == userDetails.username && !isTokenExpired(token)
     }
 
-    private fun isTokenExpired(token: String): Boolean =
-        extractExpiration(token).before(clock.now().toJavaDate())
+    private fun isTokenExpired(token: String): Boolean = extractExpiration(token).before(clock.now().toJavaDate())
 }
 
 internal fun Instant.toJavaDate() = Date.from(this.toJavaInstant())

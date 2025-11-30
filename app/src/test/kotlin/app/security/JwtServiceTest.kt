@@ -12,9 +12,7 @@ import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.time.toJavaInstant
 
-class FixedClock(
-    private val fixedInstant: Instant = Instant.parse("1978-09-23T10:11:12Z"),
-) : Clock {
+class FixedClock(private val fixedInstant: Instant = Instant.parse("1978-09-23T10:11:12Z")) : Clock {
     override fun now(): Instant = fixedInstant
 }
 
@@ -104,7 +102,6 @@ class JwtServiceTest {
         val nowAsDate = fixedClock.now().toJavaDate()
         assertTrue(expiration.after(nowAsDate))
     }
-
 
     @Test
     fun `token expiration is set according to configuration`() {
