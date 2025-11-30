@@ -1,9 +1,6 @@
 package io.dungeons.app.security
 
 import io.dungeons.app.config.JwtProperties
-import io.mockk.every
-import io.mockk.mockkObject
-import io.mockk.unmockkObject
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
@@ -11,10 +8,15 @@ import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertNotNull
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
-import java.util.*
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.time.toJavaInstant
+
+class FixedClock(
+    private val fixedInstant: Instant = Instant.parse("1978-09-23T10:11:12Z"),
+) : Clock {
+    override fun now(): Instant = fixedInstant
+}
 
 class JwtServiceTest {
     private val jwtProperties = JwtProperties().apply {
@@ -22,7 +24,9 @@ class JwtServiceTest {
         expiration = 3600000 // 1 hour in milliseconds
     }
 
-    private val jwtService = JwtService(jwtProperties)
+    private val fixedClock = FixedClock()
+
+    private val jwtService = JwtService(jwtProperties, fixedClock)
 
     private val testUser = User.builder()
         .username("testuser")
@@ -97,27 +101,16 @@ class JwtServiceTest {
         val token = jwtService.generateToken(testUser)
 
         val expiration = jwtService.extractExpiration(token)
-
-        assertTrue(expiration.after(Date()))
+        val nowAsDate = fixedClock.now().toJavaDate()
+        assertTrue(expiration.after(nowAsDate))
     }
 
-    inline fun withFixedClock(fixedInstant: Instant = Instant.parse("1978-09-23T10:11:12Z"), block: () -> Unit) {
-        try {
-            mockkObject(Clock.System)
-            every { Clock.System.now() } returns fixedInstant
-            block()
-        } finally {
-            unmockkObject(Clock.System)
-        }
-    }
 
     @Test
     fun `token expiration is set according to configuration`() {
-        withFixedClock {
-            val token = jwtService.generateToken(testUser)
-            val expiration = jwtService.extractExpiration(token)
-            val expectedExpiration = Clock.System.now() + jwtProperties.expirationAsDuration
-            assertEquals(expectedExpiration.toJavaInstant(), expiration.toInstant())
-        }
+        val token = jwtService.generateToken(testUser)
+        val expiration = jwtService.extractExpiration(token)
+        val expectedExpiration = fixedClock.now() + jwtProperties.expirationAsDuration
+        assertEquals(expectedExpiration.toJavaInstant(), expiration.toInstant())
     }
 }

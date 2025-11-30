@@ -5,6 +5,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import kotlin.time.Clock
 
 @SpringBootApplication
 class App {
@@ -14,6 +15,9 @@ class App {
     fun init() = CommandLineRunner {
         log.info("This is coming from the CommandLineRunner.")
     }
+
+    @Bean
+    fun clock() = Clock.System
 }
 
 fun main(args: Array<String>) {
