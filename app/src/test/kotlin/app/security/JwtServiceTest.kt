@@ -8,6 +8,7 @@ import org.junit.jupiter.api.assertNotNull
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import kotlin.time.Clock
+import kotlin.time.Duration.Companion.hours
 import kotlin.time.Instant
 
 class FixedClock(private val fixedInstant: Instant = Instant.parse("1978-09-23T10:11:12Z")) : Clock {
@@ -15,13 +16,12 @@ class FixedClock(private val fixedInstant: Instant = Instant.parse("1978-09-23T1
 }
 
 private const val ROLE_USER = "ROLE_USER"
-
 private const val ROLE_ADMIN = "ROLE_ADMIN"
 
 class JwtServiceTest {
     private val jwtProperties = JwtProperties().apply {
         secret = "testSecretKeyThatIsLongEnoughForHMACSHA512AlgorithmToWorkProperly"
-        expiration = 3600000 // 1 hour in milliseconds
+        expiration = 1.hours
     }
 
     private val fixedClock = FixedClock()
@@ -103,7 +103,7 @@ class JwtServiceTest {
     fun `token expiration is set according to configuration`() {
         val token = jwtService.generateToken(testUser)
         val expiration = jwtService.extractExpiration(token)
-        val expectedExpiration = fixedClock.now() + jwtProperties.expirationAsDuration
+        val expectedExpiration = fixedClock.now() + jwtProperties.expiration
         assertEquals(expectedExpiration, expiration)
     }
 }

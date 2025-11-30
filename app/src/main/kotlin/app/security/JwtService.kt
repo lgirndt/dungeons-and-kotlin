@@ -27,13 +27,13 @@ class JwtService(private val jwtProperties: JwtProperties, private val clock: Cl
 
     private fun createToken(claims: Map<String, Any>, subject: String): String {
         val now = clock.now()
-        val expirationDate = now + jwtProperties.expirationAsDuration
+        val expirationInstant = now + jwtProperties.expiration
 
         return Jwts.builder()
             .claims(claims)
             .subject(subject)
             .issuedAt(now.toJavaDate())
-            .expiration(expirationDate.toJavaDate())
+            .expiration(expirationInstant.toJavaDate())
             .signWith(secretKey)
             .compact()
     }
