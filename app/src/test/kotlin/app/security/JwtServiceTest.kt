@@ -10,11 +10,14 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import kotlin.time.Clock
 import kotlin.time.Instant
-import kotlin.time.toJavaInstant
 
 class FixedClock(private val fixedInstant: Instant = Instant.parse("1978-09-23T10:11:12Z")) : Clock {
     override fun now(): Instant = fixedInstant
 }
+
+private const val ROLE_USER = "ROLE_USER"
+
+private const val ROLE_ADMIN = "ROLE_ADMIN"
 
 class JwtServiceTest {
     private val jwtProperties = JwtProperties().apply {
@@ -29,7 +32,7 @@ class JwtServiceTest {
     private val testUser = User.builder()
         .username("testuser")
         .password("password")
-        .authorities(listOf(SimpleGrantedAuthority("ROLE_USER")))
+        .authorities(listOf(SimpleGrantedAuthority(ROLE_USER)))
         .build()
 
     @Test
@@ -44,9 +47,7 @@ class JwtServiceTest {
     @Test
     fun `extractUsername returns correct username from token`() {
         val token = jwtService.generateToken(testUser)
-
         val username = jwtService.extractUsername(token)
-
         assertEquals("testuser", username)
     }
 
@@ -57,8 +58,8 @@ class JwtServiceTest {
             .password("password")
             .authorities(
                 listOf(
-                    SimpleGrantedAuthority("ROLE_ADMIN"),
-                    SimpleGrantedAuthority("ROLE_USER"),
+                    SimpleGrantedAuthority(ROLE_ADMIN),
+                    SimpleGrantedAuthority(ROLE_USER),
                 ),
             )
             .build()
@@ -73,9 +74,7 @@ class JwtServiceTest {
     @Test
     fun `isTokenValid returns true for valid token`() {
         val token = jwtService.generateToken(testUser)
-
         val isValid = jwtService.isTokenValid(token, testUser)
-
         assertTrue(isValid)
     }
 
@@ -86,7 +85,7 @@ class JwtServiceTest {
         val differentUser = User.builder()
             .username("differentuser")
             .password("password")
-            .authorities(listOf(SimpleGrantedAuthority("ROLE_USER")))
+            .authorities(listOf(SimpleGrantedAuthority(ROLE_USER)))
             .build()
 
         val isValid = jwtService.isTokenValid(token, differentUser)
@@ -97,10 +96,8 @@ class JwtServiceTest {
     @Test
     fun `extractExpiration returns future date for new token`() {
         val token = jwtService.generateToken(testUser)
-
         val expiration = jwtService.extractExpiration(token)
-        val nowAsDate = fixedClock.now().toJavaDate()
-        assertTrue(expiration.after(nowAsDate))
+        assertTrue(expiration > fixedClock.now())
     }
 
     @Test
@@ -108,6 +105,6 @@ class JwtServiceTest {
         val token = jwtService.generateToken(testUser)
         val expiration = jwtService.extractExpiration(token)
         val expectedExpiration = fixedClock.now() + jwtProperties.expirationAsDuration
-        assertEquals(expectedExpiration.toJavaInstant(), expiration.toInstant())
+        assertEquals(expectedExpiration, expiration)
     }
 }

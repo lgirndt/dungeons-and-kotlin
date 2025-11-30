@@ -11,6 +11,7 @@ import javax.crypto.SecretKey
 import kotlin.time.Clock
 import kotlin.time.Instant
 import kotlin.time.toJavaInstant
+import kotlin.time.toKotlinInstant
 
 @Service
 class JwtService(private val jwtProperties: JwtProperties, private val clock: Clock) {
@@ -40,7 +41,9 @@ class JwtService(private val jwtProperties: JwtProperties, private val clock: Cl
 
     fun extractUsername(token: String): String = extractClaim(token) { it.subject }
 
-    fun extractExpiration(token: String): Date = extractClaim(token) { it.expiration }
+    fun extractExpiration(token: String): Instant = extractClaim(token) {
+        it.expiration.toInstant().toKotlinInstant()
+    }
 
     fun <T> extractClaim(token: String, claimsResolver: (Claims) -> T): T {
         val claims = extractAllClaims(token)
@@ -59,7 +62,7 @@ class JwtService(private val jwtProperties: JwtProperties, private val clock: Cl
         return username == userDetails.username && !isTokenExpired(token)
     }
 
-    private fun isTokenExpired(token: String): Boolean = extractExpiration(token).before(clock.now().toJavaDate())
+    private fun isTokenExpired(token: String): Boolean = extractExpiration(token) < clock.now()
 }
 
 internal fun Instant.toJavaDate() = Date.from(this.toJavaInstant())
