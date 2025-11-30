@@ -1,0 +1,14 @@
+{
+  "variables": [
+    {
+      "name": "baseUrl",
+      "value": "http://localhost:8080",
+      "enabled": true
+    },
+    {
+      "name": "devToken",
+      "value": "this-is-our-dev-token",
+      "enabled": true
+    }
+  ]
+}

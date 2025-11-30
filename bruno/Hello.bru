@@ -5,13 +5,13 @@ meta {
 }
 
 get {
-  url: http://localhost:8080/hello
+  url: {{baseUrl}}/hello
   body: none
   auth: bearer
 }
 
 auth:bearer {
-  token: {{authToken}}
+  token: {{devToken}}
 }
 
 tests {

@@ -3,48 +3,14 @@ meta {
 }
 
 script:pre-request {
-  const baseUrl = bru.getEnvVar("baseUrl") || "http://localhost:8080";
-  const username = bru.getEnvVar("username") || "user";
-  const password = bru.getEnvVar("password") || "password";
-
-  // Skip authentication for the login endpoint itself
+  // Use dev token from environment for all requests except login
   if (req.getUrl().includes("/api/auth/login")) {
     return;
   }
 
-  // Check if we already have a token
-  const existingToken = bru.getVar("authToken");
-  if (existingToken) {
-    return;
+  // Set authToken to the dev token from environment
+  const devToken = bru.getEnvVar("devToken");
+  if (devToken) {
+    bru.setVar("authToken", devToken);
   }
-
-  // Use Bruno's sendRequest API to authenticate
-  const authEndpoint = `${baseUrl}/api/auth/login`;
-
-  await new Promise((resolve, reject) => {
-    bru.sendRequest({
-      method: 'POST',
-      url: authEndpoint,
-      headers: {
-        'Content-Type': 'application/json'
-      },
-      data: {
-        username: username,
-        password: password
-      }
-    }, function(err, res) {
-      if (err) {
-        console.error('Authentication error:', err);
-        reject(err);
-        return;
-      }
-
-      if (res && res.data && res.data.accessToken) {
-        bru.setVar("authToken", res.data.accessToken);
-        resolve();
-      } else {
-        reject(new Error('No access token in response'));
-      }
-    });
-  });
 }
