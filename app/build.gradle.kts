@@ -28,3 +28,7 @@ application {
     // Define the main class for the application.
     mainClass = "io.dungeons.app.AppKt"
 }
+
+tasks.named<org.springframework.boot.gradle.tasks.run.BootRun>("bootRun") {
+    systemProperty("spring.profiles.active", System.getProperty("spring.profiles.active", "dev"))
+}

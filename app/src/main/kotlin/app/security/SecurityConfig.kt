@@ -16,6 +16,7 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
+import java.util.Optional
 
 @Configuration
 @EnableWebSecurity
@@ -33,6 +34,7 @@ class SecurityConfig {
         http: HttpSecurity,
         jwtAuthenticationFilter: JwtAuthenticationFilter,
         authenticationProvider: AuthenticationProvider,
+        devTokenAuthenticationFilter: Optional<DevTokenAuthenticationFilter>,
     ): SecurityFilterChain {
         http
             .csrf { it.disable() }
@@ -47,7 +49,15 @@ class SecurityConfig {
                 session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)
             }
             .authenticationProvider(authenticationProvider)
-            .addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+
+        // Add JWT filter before UsernamePasswordAuthenticationFilter
+        http.addFilterBefore(jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter::class.java)
+
+        // Add dev token filter before UsernamePasswordAuthenticationFilter (and thus before JWT)
+        // This results in filter chain: DevToken -> JWT -> UsernamePassword
+        devTokenAuthenticationFilter.ifPresent { devFilter ->
+            http.addFilterBefore(devFilter, UsernamePasswordAuthenticationFilter::class.java)
+        }
 
         return http.build()
     }
