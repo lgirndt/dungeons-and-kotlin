@@ -1,0 +1,5 @@
+# JWT Configuration for Production
+jwt:
+  # IMPORTANT: Override these values with environment variables in production!
+  secret: ${JWT_SECRET}
+  expirationInSeconds: ${JWT_EXPIRATION_IN_SECONDS:3600}

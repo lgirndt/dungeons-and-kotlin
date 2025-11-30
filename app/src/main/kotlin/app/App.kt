@@ -1,10 +1,12 @@
 package io.dungeons.app
 
+import app.config.ProfileValidator
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.core.env.Environment
 import kotlin.time.Clock
 
 @SpringBootApplication
@@ -18,6 +20,10 @@ class App {
 
     @Bean
     fun clock() = Clock.System
+
+    @Bean
+    fun profileValidator(environment: Environment): ProfileValidator = ProfileValidator(environment)
+
 }
 
 fun main(args: Array<String>) {
