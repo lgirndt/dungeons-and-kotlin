@@ -1,6 +1,5 @@
 package io.dungeons.app.security
 
-import io.dungeons.app.config.JwtProperties
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertFalse
 import org.junit.jupiter.api.Assertions.assertTrue
