@@ -1,0 +1,26 @@
+meta {
+  name: Hello-Invalid-Token
+  type: http
+  seq: 2
+}
+
+get {
+  url: {{baseUrl}}/hello
+  body: none
+  auth: bearer
+}
+
+auth:bearer {
+  token: invalid-token-12345
+}
+
+tests {
+  test("should return 403 Forbidden", function() {
+    expect(res.status).to.equal(403);
+  });
+}
+
+settings {
+  encodeUrl: true
+  timeout: 0
+}
