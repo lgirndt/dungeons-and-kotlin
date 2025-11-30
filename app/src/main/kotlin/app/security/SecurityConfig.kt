@@ -1,5 +1,6 @@
 package io.dungeons.app.security
 
+import org.slf4j.LoggerFactory
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -16,7 +17,9 @@ import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import java.util.Optional
+import java.util.*
+
+private val logger = LoggerFactory.getLogger(SecurityConfig::class.java)
 
 @Configuration
 @EnableWebSecurity
@@ -56,6 +59,7 @@ class SecurityConfig {
         // Add dev token filter before UsernamePasswordAuthenticationFilter (and thus before JWT)
         // This results in filter chain: DevToken -> JWT -> UsernamePassword
         devTokenAuthenticationFilter.ifPresent { devFilter ->
+            logger.info("DevTokenAuthenticationFilter is configured")
             http.addFilterBefore(devFilter, UsernamePasswordAuthenticationFilter::class.java)
         }
 
