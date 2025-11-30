@@ -8,6 +8,9 @@ import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.stereotype.Service
 import java.util.*
 import javax.crypto.SecretKey
+import kotlin.time.Clock
+import kotlin.time.Instant
+import kotlin.time.toJavaInstant
 
 @Service
 class JwtService(private val jwtProperties: JwtProperties) {
@@ -23,14 +26,14 @@ class JwtService(private val jwtProperties: JwtProperties) {
     }
 
     private fun createToken(claims: Map<String, Any>, subject: String): String {
-        val now = Date()
-        val expirationDate = Date(now.time + jwtProperties.expiration)
+        val now = Clock.System.now()
+        val expirationDate = now + jwtProperties.expirationAsDuration
 
         return Jwts.builder()
             .claims(claims)
             .subject(subject)
-            .issuedAt(now)
-            .expiration(expirationDate)
+            .issuedAt(now.toJavaDate())
+            .expiration(expirationDate.toJavaDate())
             .signWith(secretKey)
             .compact()
     }
@@ -45,6 +48,7 @@ class JwtService(private val jwtProperties: JwtProperties) {
     }
 
     private fun extractAllClaims(token: String): Claims = Jwts.parser()
+        .clock { Clock.System.asJwtClock() }
         .verifyWith(secretKey)
         .build()
         .parseSignedClaims(token)
@@ -56,4 +60,11 @@ class JwtService(private val jwtProperties: JwtProperties) {
     }
 
     private fun isTokenExpired(token: String): Boolean = extractExpiration(token).before(Date())
+}
+
+private fun Instant.toJavaDate() = Date.from(this.toJavaInstant())
+
+private fun Clock.asJwtClock(): java.util.Date {
+    val now = this.now()
+    return Date.from(now.toJavaInstant())
 }
