@@ -43,22 +43,22 @@ The collection uses a **development token** for easy testing in the dev environm
 
 ```bash
 # Run a single request (recommended syntax)
-bru run bruno/Hello.bru --env-file bruno/environments/dev.json
+bru bru run --env-file environments/dev.bru Hello.bru
 
 # Run the full collection
-bru run bruno --env-file bruno/environments/dev.json
+bru run bruno --env-file environments/dev.bru
 ```
 
 ### Bruno GUI
 
 1. Open Bruno desktop application
 2. Load this collection
-3. The environment should be auto-detected from `environments/dev.json`
+3. The environment should be auto-detected from `environments/dev.bru`
 4. Run any request - authentication happens automatically
 
 ## Request Files
 
-- `environments/dev.json` - Development environment with dev token (checked in)
+- `environments/dev.bru` - Development environment with dev token (checked in)
 - `collection.bru` - Collection-level configuration
 - `Hello.bru` - Example authenticated endpoint
 - `Login.bru` - Login endpoint (for testing JWT authentication flow)
@@ -81,24 +81,6 @@ bru run bruno --env-file bruno/environments/dev.json
 In-memory test users (for Login.bru):
 - Username: `user`, Password: `password` (Role: USER)
 - Username: `admin`, Password: `admin` (Roles: ADMIN, USER)
-
-## Environment File Format
-
-Bruno CLI requires environment files in JSON format with this structure:
-
-```json
-{
-  "variables": [
-    {
-      "name": "variableName",
-      "value": "variableValue",
-      "enabled": true
-    }
-  ]
-}
-```
-
-**Note**: The `.bru` format for environment files is not yet fully supported in Bruno CLI 2.14.2. Use JSON format for CLI compatibility.
 
 ## References
 
