@@ -1,0 +1,21 @@
+package io.dungeons.app.rest
+
+import io.dungeons.app.rest.dto.WorldIdResponse
+import org.slf4j.LoggerFactory
+import org.springframework.security.core.annotation.AuthenticationPrincipal
+import org.springframework.security.core.userdetails.User
+import org.springframework.web.bind.annotation.PostMapping
+import org.springframework.web.bind.annotation.RestController
+
+@RestController
+class WorldController {
+
+    private val logger = LoggerFactory.getLogger(WorldController::class.java)
+
+    @PostMapping("/world")
+    fun createWorld(@AuthenticationPrincipal user: User) : WorldIdResponse{
+        logger.info("User ${user.username} was provided")
+        return WorldIdResponse("world-id-placeholder")
+    }
+
+}

@@ -8,3 +8,4 @@ rootProject.name = "learn-kotlin"
 include("dungeons-domain")
 include("app")
 include("persistence")
+include("cli")
