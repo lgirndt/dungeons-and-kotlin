@@ -45,3 +45,5 @@ bin/
 .DS_Store
 .idea
 /.claude/settings.local.json
+/logs/cli-application.2025-12-01.log
+/logs/cli-application.log

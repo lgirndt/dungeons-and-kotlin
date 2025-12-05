@@ -16,9 +16,15 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+
+    implementation("com.varabyte.kotter:kotter-jvm:1.2.1")
+//    implementation("com.varabyte.kotterx:kotter-grid-jvm:1.2.1")
+
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+    testImplementation("com.varabyte.kotterx:kotter-test-support-jvm:1.2.1")
 }
+
 
 application {
     // Define the main class for the application.

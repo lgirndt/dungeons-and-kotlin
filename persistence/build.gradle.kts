@@ -12,5 +12,5 @@ dependencies {
 //    implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     // Testing
-    testImplementation("org.springframework.boot:spring-boot-starter-test")
+//    testImplementation("org.springframework.boot:spring-boot-starter-test")
 }
