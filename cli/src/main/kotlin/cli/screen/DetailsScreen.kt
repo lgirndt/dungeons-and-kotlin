@@ -12,7 +12,6 @@ import org.springframework.stereotype.Component
 
 @Component()
 class DetailsScreen() : Screen<ScreenTransition>(
-//    session = session,
     ownTransition =  ScreenTransition.Details,
     defaultTransition =  ScreenTransition.Exit,
 ) {
