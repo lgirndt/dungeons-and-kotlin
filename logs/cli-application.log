@@ -422,3 +422,7 @@ java.lang.IllegalStateException: No terminals could successfully be created. Enc
 2025-12-06 08:25:37 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
 2025-12-06 08:25:37 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
 2025-12-06 08:25:37 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.639 seconds (process running for 1.026)
+2025-12-06 08:36:20 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 51465 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:36:20 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:36:20 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:36:21 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 1.248 seconds (process running for 1.674)

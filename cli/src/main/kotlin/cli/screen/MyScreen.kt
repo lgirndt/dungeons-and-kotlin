@@ -41,14 +41,21 @@ fun LiveList<ChatLine>.appendText(line: ChatLine) {
     }
 }
 
-class MyScreen(session: Session) :
+class MyScreen(
+//    session: Session
+) :
     Screen<ScreenTransition>(
-        session = session,
+//        session = session,
         ownTransition = ScreenTransition.MyScreen,
         defaultTransition = ScreenTransition.Details,
     ) {
 
-    val history: LiveList<ChatLine> = session.liveListOf()
+    lateinit var history: LiveList<ChatLine>
+
+    override fun init(session: Session) {
+        history = session.liveListOf()
+    }
+
 
     override val sectionBlock: MainRenderScope.() -> Unit = {
         grid(
@@ -76,7 +83,6 @@ class MyScreen(session: Session) :
         text("> ")
         input(Completions("Lord Peter Wimsey", "Sherlock Holmes", "Hercule Poirot"))
     }
-
 
     override val runBlock: RunScope.() -> Unit = {
 

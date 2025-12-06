@@ -31,16 +31,15 @@ class KotterCli {
             ).firstSuccess(),
         ) {
             val screens = listOf(
-                MyScreen(this),
-                DetailsScreen(this),
+                MyScreen(),
+                DetailsScreen(),
             ).associateBy { it.ownTransition }
 
             var transition = ScreenTransition.MyScreen
             while (transition != ScreenTransition.Exit) {
                 clearScreen()
                 val screen = screens[transition] ?: break
-
-                transition = screen.run()
+                transition = screen.run(this)
             }
         }
     }

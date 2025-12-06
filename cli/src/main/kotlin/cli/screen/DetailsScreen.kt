@@ -9,11 +9,14 @@ import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 
-class DetailsScreen(session: Session) : Screen<ScreenTransition>(
-    session = session,
+class DetailsScreen() : Screen<ScreenTransition>(
+//    session = session,
     ownTransition =  ScreenTransition.Details,
     defaultTransition =  ScreenTransition.Exit,
 ) {
+    override fun init(session: Session) {
+    }
+
     override val sectionBlock: MainRenderScope.() -> Unit = {
         textLine("Hallo, tell me some details")
         text("> ")

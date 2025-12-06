@@ -12,7 +12,7 @@ enum class ScreenTransition {
 }
 
 abstract class Screen<T>(
-    protected val session: Session,
+//    protected val session: Session,
     val ownTransition : T,
     defaultTransition: T,
 ) {
@@ -22,12 +22,19 @@ abstract class Screen<T>(
     abstract protected val sectionBlock: MainRenderScope.() -> Unit
     abstract protected val runBlock: RunScope.() -> Unit
 
+    abstract protected fun init(session: Session)
+    private var isInitialized = false
+
     protected fun exit(scope: RunScope, nextScreen: T) {
         transition = nextScreen
         scope.signal()
     }
 
-    fun run(): T {
+    fun run(session: Session): T {
+        if (!isInitialized) {
+            init(session)
+            isInitialized = true
+        }
         session.section(sectionBlock).runUntilSignal(runBlock)
         return transition
     }
