@@ -1,5 +1,7 @@
 package cli
 
+import cli.screen.Screen
+import cli.screen.ScreenTransition
 import com.varabyte.kotter.foundation.collections.LiveList
 import com.varabyte.kotter.foundation.collections.liveListOf
 import com.varabyte.kotter.foundation.firstSuccess
@@ -7,7 +9,6 @@ import com.varabyte.kotter.foundation.input.Completions
 import com.varabyte.kotter.foundation.input.input
 import com.varabyte.kotter.foundation.input.onInputEntered
 import com.varabyte.kotter.foundation.input.setInput
-import com.varabyte.kotter.foundation.runUntilSignal
 import com.varabyte.kotter.foundation.session
 import com.varabyte.kotter.foundation.text.text
 import com.varabyte.kotter.foundation.text.textLine
@@ -37,12 +38,6 @@ enum class InputType {
     User
 }
 
-enum class ScreenTransition {
-    Exit,
-    Details,
-    MyScreen
-}
-
 data class ChatLine(val type: InputType, val text: String)
 
 fun LiveList<ChatLine>.appendText(line: ChatLine): Unit {
@@ -51,27 +46,6 @@ fun LiveList<ChatLine>.appendText(line: ChatLine): Unit {
             this.removeAt(0)
         }
         this.add(line)
-    }
-}
-
-abstract class Screen<T>(
-    protected val session: Session,
-    defaultTransition: T,
-) {
-
-    private var transition: T = defaultTransition
-
-    abstract protected val sectionBlock: MainRenderScope.() -> Unit
-    abstract protected val runBlock: RunScope.() -> Unit
-
-    protected fun exit(scope: RunScope, nextScreen: T) {
-        transition = nextScreen
-        scope.signal()
-    }
-
-    fun run(): T {
-        session.section(sectionBlock).runUntilSignal(runBlock)
-        return transition
     }
 }
 
@@ -144,6 +118,12 @@ fun main() {
     ) {
         var transition = ScreenTransition.MyScreen
         while (transition != ScreenTransition.Exit) {
+            section {
+                repeat(height) {
+                    textLine()
+                }
+            }.run()
+
             val screen = when (transition) {
                 ScreenTransition.MyScreen -> MyScreen(this)
                 ScreenTransition.Details -> MyScreen(this)
