@@ -15,6 +15,7 @@ import com.varabyte.kotter.runtime.Session
 import com.varabyte.kotterx.grid.Cols
 import com.varabyte.kotterx.grid.GridCharacters
 import com.varabyte.kotterx.grid.grid
+import org.springframework.stereotype.Component
 import kotlin.time.Duration.Companion.milliseconds
 
 val someLines = listOf(
@@ -41,6 +42,7 @@ fun LiveList<ChatLine>.appendText(line: ChatLine) {
     }
 }
 
+@Component
 class MyScreen(
 //    session: Session
 ) :

@@ -25,12 +25,6 @@ class KotterCli {
     private val logger = LoggerFactory.getLogger(KotterCli::class.java)
 
     @Bean
-    fun myScreen() = MyScreen()
-
-    @Bean
-    fun detailsScreen() = DetailsScreen()
-
-    @Bean
     fun screens(
         myScreen: MyScreen,
         detailsScreen: DetailsScreen,

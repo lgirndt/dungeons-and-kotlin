@@ -8,7 +8,9 @@ import com.varabyte.kotter.foundation.text.textLine
 import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
+import org.springframework.stereotype.Component
 
+@Component()
 class DetailsScreen() : Screen<ScreenTransition>(
 //    session = session,
     ownTransition =  ScreenTransition.Details,
