@@ -12,8 +12,8 @@ import com.varabyte.kotter.foundation.session
 import com.varabyte.kotter.foundation.text.text
 import com.varabyte.kotter.foundation.text.textLine
 import com.varabyte.kotter.foundation.timer.addTimer
+import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
-import com.varabyte.kotter.runtime.Section
 import com.varabyte.kotter.runtime.Session
 import com.varabyte.kotter.runtime.terminal.TerminalSize
 import com.varabyte.kotter.terminal.system.SystemTerminal
@@ -61,8 +61,7 @@ abstract class Screen<T>(
 
     private var transition: T = defaultTransition
 
-    //    abstract protected val sectionBlock: MainRenderScope.() -> Unit
-    abstract protected fun section(): Section
+    abstract protected val sectionBlock: MainRenderScope.() -> Unit
     abstract protected val runBlock: RunScope.() -> Unit
 
     protected fun exit(scope: RunScope, nextScreen: T) {
@@ -71,7 +70,7 @@ abstract class Screen<T>(
     }
 
     fun run(): T {
-        section().runUntilSignal(runBlock)
+        session.section(sectionBlock).runUntilSignal(runBlock)
         return transition
     }
 }
@@ -80,35 +79,31 @@ class MyScreen(session: Session) : Screen<ScreenTransition>(session, ScreenTrans
 
     val history: LiveList<ChatLine> = session.liveListOf()
 
-    //    override val sectionBlock : MainRenderScope.() -> Unit = {
-    override fun section(): Section {
-        return session.section {
-            grid(
-                Cols {
-                    fixed(width - 2)
-                },
-                characters = GridCharacters.INVISIBLE,
-            ) {
-                cell(0, 0) {
-                    textLine("hello")
-                }
-                cell(1, 0) {
-                    for (line in history) {
-                        when (line.type) {
-                            InputType.System -> textLine("\uD83E\uDD16: ${line.text}")
-                            InputType.User -> textLine("\uD83D\uDC69\u200D\uFE0F: ${line.text}")
-                        }
+    override val sectionBlock: MainRenderScope.() -> Unit = {
+        grid(
+            Cols {
+                fixed(width - 2)
+            },
+            characters = GridCharacters.INVISIBLE,
+        ) {
+            cell(0, 0) {
+                textLine("hello")
+            }
+            cell(1, 0) {
+                for (line in history) {
+                    when (line.type) {
+                        InputType.System -> textLine("\uD83E\uDD16: ${line.text}")
+                        InputType.User -> textLine("\uD83D\uDC69\u200D\uFE0F: ${line.text}")
                     }
                 }
-                cell(2, 0) {
-                    textLine("Press ESC to quit")
-                }
             }
-
-            text("> ")
-            input(Completions("Lord Peter Wimsey", "Sherlock Holmes", "Hercule Poirot"))
-
+            cell(2, 0) {
+                textLine("Press ESC to quit")
+            }
         }
+
+        text("> ")
+        input(Completions("Lord Peter Wimsey", "Sherlock Holmes", "Hercule Poirot"))
     }
 
 
