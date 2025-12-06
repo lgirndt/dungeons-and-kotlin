@@ -14,20 +14,18 @@ import com.varabyte.kotterx.grid.Cols
 import com.varabyte.kotterx.grid.GridCharacters
 import com.varabyte.kotterx.grid.grid
 import org.springframework.boot.CommandLineRunner
-import org.springframework.boot.autoconfigure.SpringBootApplication
-import org.springframework.context.annotation.Bean
 import org.springframework.web.client.RestClient
 import kotlin.time.Duration.Companion.milliseconds
 
-@SpringBootApplication
+//@SpringBootApplication
 class CliApplication {
 
-    @Bean
+//    @Bean
     fun restClient(): RestClient {
         return RestClient.builder().build()
     }
 
-    @Bean
+//    @Bean
     fun runner(restClient: RestClient) = CommandLineRunner {
 //        println("CLI Application started! What do you want to do?")
 //

@@ -1,20 +1,424 @@
-2025-12-01 18:47:37 [main] INFO  cli.CliApplicationKt - Starting CliApplicationKt using Java 21.0.2 with PID 24302 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
-2025-12-01 18:47:37 [main] DEBUG cli.CliApplicationKt - Running with Spring Boot v4.0.0, Spring v7.0.1
-2025-12-01 18:47:37 [main] INFO  cli.CliApplicationKt - No active profile set, falling back to 1 default profile: "default"
-2025-12-01 18:47:38 [main] INFO  cli.CliApplicationKt - Started CliApplicationKt in 1.065 seconds (process running for 1.536)
-2025-12-01 18:48:26 [main] INFO  cli.CliApplicationKt - Starting CliApplicationKt using Java 21.0.2 with PID 24330 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
-2025-12-01 18:48:26 [main] DEBUG cli.CliApplicationKt - Running with Spring Boot v4.0.0, Spring v7.0.1
-2025-12-01 18:48:26 [main] INFO  cli.CliApplicationKt - No active profile set, falling back to 1 default profile: "default"
-2025-12-01 18:48:26 [main] INFO  cli.CliApplicationKt - Started CliApplicationKt in 0.784 seconds (process running for 1.133)
-2025-12-01 18:48:54 [main] INFO  cli.CliApplicationKt - Starting CliApplicationKt using Java 21.0.2 with PID 24352 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
-2025-12-01 18:48:54 [main] DEBUG cli.CliApplicationKt - Running with Spring Boot v4.0.0, Spring v7.0.1
-2025-12-01 18:48:54 [main] INFO  cli.CliApplicationKt - No active profile set, falling back to 1 default profile: "default"
-2025-12-01 18:48:55 [main] INFO  cli.CliApplicationKt - Started CliApplicationKt in 0.715 seconds (process running for 1.042)
-2025-12-01 18:50:09 [main] INFO  cli.CliApplicationKt - Starting CliApplicationKt using Java 21.0.2 with PID 24409 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
-2025-12-01 18:50:09 [main] DEBUG cli.CliApplicationKt - Running with Spring Boot v4.0.0, Spring v7.0.1
-2025-12-01 18:50:09 [main] INFO  cli.CliApplicationKt - No active profile set, falling back to 1 default profile: "default"
-2025-12-01 18:50:09 [main] INFO  cli.CliApplicationKt - Started CliApplicationKt in 0.809 seconds (process running for 1.184)
-2025-12-01 18:56:04 [main] INFO  cli.CliApplicationKt - Starting CliApplicationKt using Java 21.0.2 with PID 25019 (/Users/lars/devel/playground/learn-kotlin/cli/build/libs/cli.jar started by lars in /Users/lars/devel/playground/learn-kotlin)
-2025-12-01 18:56:04 [main] DEBUG cli.CliApplicationKt - Running with Spring Boot v4.0.0, Spring v7.0.1
-2025-12-01 18:56:04 [main] INFO  cli.CliApplicationKt - No active profile set, falling back to 1 default profile: "default"
-2025-12-01 18:56:05 [main] INFO  cli.CliApplicationKt - Started CliApplicationKt in 0.921 seconds (process running for 1.242)
+2025-12-06 07:57:57 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 24.0.1 with PID 50499 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 07:57:57 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 07:57:57 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 07:57:57 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.9 seconds (process running for 1.125)
+2025-12-06 07:57:57 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06 07:57:57 [main] ERROR o.s.boot.SpringApplication - Application run failed
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.CliApplication.runner$lambda$0(CliApplication.kt:42)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:46)
+2025-12-06 07:59:00 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 24.0.1 with PID 50544 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 07:59:00 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 07:59:00 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 07:59:01 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.849 seconds (process running for 1.066)
+2025-12-06 07:59:01 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06 07:59:01 [main] ERROR o.s.boot.SpringApplication - Application run failed
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.CliApplication.runner$lambda$0(CliApplication.kt:42)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:46)
+2025-12-06 08:01:22 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 24.0.1 with PID 50560 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:01:22 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:01:22 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:01:23 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.98 seconds (process running for 1.24)
+2025-12-06 08:01:23 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06 08:01:23 [main] ERROR o.s.boot.SpringApplication - Application run failed
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.CliApplication.runner$lambda$0(CliApplication.kt:42)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:186)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:571)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:560)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:153)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:176)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:265)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:636)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:46)
+2025-12-06 08:01:59 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50582 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:01:59 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:01:59 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:02:00 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.807 seconds (process running for 1.298)
+2025-12-06 08:02:00 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06 08:02:00 [main] ERROR o.s.boot.SpringApplication - Application run failed
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.CliApplication.runner$lambda$0(CliApplication.kt:42)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:46)
+2025-12-06 08:04:53 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50670 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:04:53 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:04:53 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:04:53 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.618 seconds (process running for 1.091)
+2025-12-06 08:05:18 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50694 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:05:18 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:05:18 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:05:19 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.575 seconds (process running for 0.893)
+2025-12-06 08:05:50 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50709 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:05:50 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:05:50 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:05:51 [main] WARN  o.s.c.a.AnnotationConfigApplicationContext - Exception encountered during context initialization - cancelling refresh attempt: org.springframework.beans.factory.UnsatisfiedDependencyException: Error creating bean with name 'runner' defined in cli.KotterCli: Unsatisfied dependency expressed through method 'runner' parameter 0: No qualifying bean of type 'org.springframework.web.client.RestClient' available: expected at least 1 bean which qualifies as autowire candidate. Dependency annotations: {}
+2025-12-06 08:05:51 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06 08:05:51 [main] ERROR o.s.b.d.LoggingFailureAnalysisReporter - 
+
+***************************
+APPLICATION FAILED TO START
+***************************
+
+Description:
+
+Parameter 0 of method runner in cli.KotterCli required a bean of type 'org.springframework.web.client.RestClient' that could not be found.
+
+
+Action:
+
+Consider defining a bean of type 'org.springframework.web.client.RestClient' in your configuration.
+
+2025-12-06 08:06:14 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50730 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:06:14 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:06:14 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:06:14 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.682 seconds (process running for 1.044)
+2025-12-06 08:07:06 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50754 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:07:06 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:07:06 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:07:07 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.65 seconds (process running for 0.989)
+2025-12-06 08:07:07 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06 08:07:07 [main] ERROR o.s.boot.SpringApplication - Application run failed
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.IllegalStateException: Unable to create a system terminal
+	java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.KotterCli.runner$lambda$0(KotterCli.kt:28)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:82)
+2025-12-06 08:10:37 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50804 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:10:37 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:10:37 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:10:37 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.689 seconds (process running for 1.113)
+2025-12-06 08:10:37 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06 08:10:37 [main] ERROR o.s.boot.SpringApplication - Application run failed
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.KotterCli.runner$lambda$0(KotterCli.kt:27)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:80)
+2025-12-06 08:13:23 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50861 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:13:23 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:13:23 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:13:23 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.685 seconds (process running for 1.087)
+2025-12-06 08:13:23 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06 08:13:23 [main] ERROR o.s.boot.SpringApplication - Application run failed
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.IllegalStateException: Unable to create a system terminal
+	java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.KotterCli.runner$lambda$0(KotterCli.kt:28)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:81)
+2025-12-06 08:13:58 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50897 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:13:58 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:13:58 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:13:58 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.744 seconds (process running for 1.062)
+2025-12-06 08:13:59 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06 08:13:59 [main] ERROR o.s.boot.SpringApplication - Application run failed
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.IllegalStateException: Unable to create a system terminal
+	java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.KotterCli.runner$lambda$0(KotterCli.kt:28)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:81)
+2025-12-06 08:14:48 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50914 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:14:48 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:14:48 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:14:48 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.692 seconds (process running for 1.016)
+2025-12-06 08:14:48 [main] INFO  o.s.b.a.l.ConditionEvaluationReportLogger - 
+
+Error starting ApplicationContext. To display the condition evaluation report re-run your application with 'debug' enabled.
+2025-12-06 08:14:48 [main] ERROR o.s.boot.SpringApplication - Application run failed
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.KotterCli.runner$lambda$0(KotterCli.kt:27)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:80)
+2025-12-06 08:17:59 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50970 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:17:59 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:17:59 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:18:00 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.693 seconds (process running for 1.122)
+2025-12-06 08:18:00 [main] ERROR cli.KotterCli - An error occurred during CLI execution
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.KotterCli.runner$lambda$0(KotterCli.kt:31)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:87)
+2025-12-06 08:18:56 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 50997 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:18:56 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:18:56 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:18:57 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.748 seconds (process running for 1.674)
+2025-12-06 08:20:28 [main] ERROR cli.KotterCli - An error occurred during CLI execution
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.KotterCli.runner$lambda$0(KotterCli.kt:31)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:87)
+2025-12-06 08:20:46 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 51010 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:20:46 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:20:46 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:20:46 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.754 seconds (process running for 1.46)
+2025-12-06 08:22:42 [main] ERROR cli.KotterCli - An error occurred during CLI execution
+java.lang.IllegalStateException: No terminals could successfully be created. Encountered exceptions:
+	{java.lang.reflect.InvocationTargetException
+	at com.varabyte.kotter.foundation.SessionKt.firstSuccess(Session.kt:34)
+	at cli.KotterCli.runner$lambda$0(KotterCli.kt:31)
+	at org.springframework.boot.SpringApplication.lambda$callRunner$1(SpringApplication.java:801)
+	at org.springframework.util.function.ThrowingConsumer$1.acceptWithException(ThrowingConsumer.java:82)
+	at org.springframework.util.function.ThrowingConsumer.accept(ThrowingConsumer.java:60)
+	at org.springframework.util.function.ThrowingConsumer$1.accept(ThrowingConsumer.java:86)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:809)
+	at org.springframework.boot.SpringApplication.callRunner(SpringApplication.java:800)
+	at org.springframework.boot.SpringApplication.lambda$callRunners$0(SpringApplication.java:785)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.accept(ForEachOps.java:184)
+	at java.base/java.util.stream.SortedOps$SizedRefSortingSink.end(SortedOps.java:357)
+	at java.base/java.util.stream.AbstractPipeline.copyInto(AbstractPipeline.java:510)
+	at java.base/java.util.stream.AbstractPipeline.wrapAndCopyInto(AbstractPipeline.java:499)
+	at java.base/java.util.stream.ForEachOps$ForEachOp.evaluateSequential(ForEachOps.java:151)
+	at java.base/java.util.stream.ForEachOps$ForEachOp$OfRef.evaluateSequential(ForEachOps.java:174)
+	at java.base/java.util.stream.AbstractPipeline.evaluate(AbstractPipeline.java:234)
+	at java.base/java.util.stream.ReferencePipeline.forEach(ReferencePipeline.java:596)
+	at org.springframework.boot.SpringApplication.callRunners(SpringApplication.java:785)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:328)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1374)
+	at org.springframework.boot.SpringApplication.run(SpringApplication.java:1363)
+	at cli.KotterCliKt.main(KotterCli.kt:87)
+2025-12-06 08:22:45 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 51081 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:22:45 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:22:45 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:22:46 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.657 seconds (process running for 0.986)
+2025-12-06 08:24:57 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 51115 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:24:57 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:24:57 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:24:58 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.65 seconds (process running for 0.97)
+2025-12-06 08:25:37 [main] INFO  cli.KotterCliKt - Starting KotterCliKt using Java 21.0.2 with PID 51137 (/Users/lars/devel/playground/learn-kotlin/cli/build/classes/kotlin/main started by lars in /Users/lars/devel/playground/learn-kotlin)
+2025-12-06 08:25:37 [main] DEBUG cli.KotterCliKt - Running with Spring Boot v4.0.0, Spring v7.0.1
+2025-12-06 08:25:37 [main] INFO  cli.KotterCliKt - No active profile set, falling back to 1 default profile: "default"
+2025-12-06 08:25:37 [main] INFO  cli.KotterCliKt - Started KotterCliKt in 0.639 seconds (process running for 1.026)
