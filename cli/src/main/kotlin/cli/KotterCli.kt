@@ -2,6 +2,7 @@ package cli
 
 import cli.screen.DetailsScreen
 import cli.screen.MyScreen
+import cli.screen.PickAdventureScreen
 import cli.screen.Screen
 import cli.screen.ScreenTransition
 import com.varabyte.kotter.foundation.firstSuccess
@@ -11,6 +12,7 @@ import com.varabyte.kotter.runtime.Session
 import com.varabyte.kotter.runtime.terminal.TerminalSize
 import com.varabyte.kotter.terminal.system.SystemTerminal
 import com.varabyte.kotter.terminal.virtual.VirtualTerminal
+import io.dungeons.domain.core.Id
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -28,25 +30,35 @@ class KotterCli {
     fun screens(
         myScreen: MyScreen,
         detailsScreen: DetailsScreen,
+        pickAdventureScreen: PickAdventureScreen,
     )
         : ScreenMap {
         // It makes much more sense to build this lazy
         return listOf(
             myScreen,
             detailsScreen,
+            pickAdventureScreen,
         ).associateBy { it.ownTransition }
     }
 
+    private fun login(gameStateHolder: GameStateHolder) {
+        val gameState = gameStateHolder.gameState
+        gameStateHolder.gameState = gameState.copy(
+            player = Player(Id.generate())
+        )
+    }
 
     @Bean
-    fun runner(screens: ScreenMap) = CommandLineRunner {
+    fun runner(screens: ScreenMap, gameStateHolder: GameStateHolder) = CommandLineRunner {
+        login(gameStateHolder)
+
         session(
             terminal = listOf(
                 { SystemTerminal() },
                 { VirtualTerminal.create(title = "D&D", terminalSize = TerminalSize(80, 40)) },
             ).firstSuccess(),
         ) {
-            var transition = ScreenTransition.MyScreen
+            var transition = ScreenTransition.PickAdventure
             while (transition != ScreenTransition.Exit) {
                 clearScreen()
                 val screen = screens[transition] ?: break

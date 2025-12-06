@@ -8,7 +8,8 @@ import com.varabyte.kotter.runtime.Session
 enum class ScreenTransition {
     Exit,
     Details,
-    MyScreen
+    MyScreen,
+    PickAdventure,
 }
 
 abstract class Screen<T>(
