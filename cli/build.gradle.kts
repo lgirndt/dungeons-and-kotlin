@@ -28,5 +28,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = "cli.CliApplicationKt"
+    mainClass = "cli.KotterCliKt"
 }

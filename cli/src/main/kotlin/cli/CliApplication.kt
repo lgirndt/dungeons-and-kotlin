@@ -6,6 +6,7 @@ import com.varabyte.kotter.foundation.input.runUntilKeyPressed
 import com.varabyte.kotter.foundation.session
 import com.varabyte.kotter.foundation.text.text
 import com.varabyte.kotter.foundation.text.textLine
+import com.varabyte.kotter.foundation.timer.addTimer
 import com.varabyte.kotter.runtime.terminal.TerminalSize
 import com.varabyte.kotter.terminal.system.SystemTerminal
 import com.varabyte.kotter.terminal.virtual.VirtualTerminal
@@ -16,6 +17,7 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.context.annotation.Bean
 import org.springframework.web.client.RestClient
+import kotlin.time.Duration.Companion.milliseconds
 
 @SpringBootApplication
 class CliApplication {
@@ -57,26 +59,33 @@ fun main(args: Array<String>) {
         section {
             textLine("Press ESC to quit")
             textLine()
-            
+
             grid(
-                Cols { star(); fixed(25) },
-                characters = GridCharacters.CURVED
-            ) {
+//                Cols { fit(); fixed(25) },
+                Cols {
+                    fixed(width - 25 - 3)
+                    fixed(25)
+                },
+                characters = GridCharacters.INVISIBLE,
+                targetWidth = width - 3,
+
+                ) {
                 // Header row
-                cell { text("Left Column (fills space)") }
+                cell {
+                    // Fill the entire terminal height
+                    repeat(height - 4) { line ->
+                        textLine("Content at line $line")
+                    }
+                }
                 cell { text("Right Column (25 chars)") }
-                
-                // Content rows
-                cell { text("This column expands to fill the remaining terminal width") }
-                cell { text("This is fixed at 25") }
-                
-                cell { text("More content here...") }
-                cell { text("Sidebar info") }
-                
-                cell { text("You can add as many rows as you need") }
-                cell { text("Status: Ready") }
+
             }
-        }.runUntilKeyPressed(Keys.ESC)
+        }.runUntilKeyPressed(Keys.ESC) {
+            // Periodically rerender to pick up size changes
+            addTimer(100.milliseconds, repeat = true) {
+                rerender()
+            }
+        }
 
     }
 }
