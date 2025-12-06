@@ -1,8 +1,8 @@
 package cli
 
+import cli.screen.DetailsScreen
 import cli.screen.MyScreen
 import cli.screen.ScreenTransition
-import com.varabyte.kotter.foundation.collections.LiveList
 import com.varabyte.kotter.foundation.firstSuccess
 import com.varabyte.kotter.foundation.session
 import com.varabyte.kotter.foundation.text.textLine
@@ -17,6 +17,12 @@ fun main() {
             { VirtualTerminal.create(title = "My App", terminalSize = TerminalSize(80, 40)) },
         ).firstSuccess(),
     ) {
+
+        val screens = listOf(
+            MyScreen(this),
+            DetailsScreen(this),
+        ).associateBy { it.ownTransition }
+
         var transition = ScreenTransition.MyScreen
         while (transition != ScreenTransition.Exit) {
             section {
@@ -25,11 +31,9 @@ fun main() {
                 }
             }.run()
 
-            val screen = when (transition) {
-                ScreenTransition.MyScreen -> MyScreen(this)
-                ScreenTransition.Details -> MyScreen(this)
-                ScreenTransition.Exit -> break
-            }
+            val screen = screens[transition] ?:
+                break
+
             transition = screen.run()
         }
     }

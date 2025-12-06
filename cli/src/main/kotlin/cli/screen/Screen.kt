@@ -13,6 +13,7 @@ enum class ScreenTransition {
 
 abstract class Screen<T>(
     protected val session: Session,
+    val ownTransition : T,
     defaultTransition: T,
 ) {
 

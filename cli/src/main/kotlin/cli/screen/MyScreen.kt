@@ -41,7 +41,12 @@ fun LiveList<ChatLine>.appendText(line: ChatLine) {
     }
 }
 
-class MyScreen(session: Session) : Screen<ScreenTransition>(session, ScreenTransition.Details) {
+class MyScreen(session: Session) :
+    Screen<ScreenTransition>(
+        session = session,
+        ownTransition = ScreenTransition.MyScreen,
+        defaultTransition = ScreenTransition.Details,
+    ) {
 
     val history: LiveList<ChatLine> = session.liveListOf()
 
@@ -64,7 +69,7 @@ class MyScreen(session: Session) : Screen<ScreenTransition>(session, ScreenTrans
                 }
             }
             cell(2, 0) {
-                textLine("Press ESC to quit")
+                textLine("Type 'quit' to exit, 'next' for details screen.")
             }
         }
 
