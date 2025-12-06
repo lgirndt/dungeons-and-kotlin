@@ -6,9 +6,18 @@ import cli.screen.ScreenTransition
 import com.varabyte.kotter.foundation.firstSuccess
 import com.varabyte.kotter.foundation.session
 import com.varabyte.kotter.foundation.text.textLine
+import com.varabyte.kotter.runtime.Session
 import com.varabyte.kotter.runtime.terminal.TerminalSize
 import com.varabyte.kotter.terminal.system.SystemTerminal
 import com.varabyte.kotter.terminal.virtual.VirtualTerminal
+
+private fun Session.clearScreen() {
+    section {
+        repeat(height) {
+            textLine()
+        }
+    }.run()
+}
 
 fun main() {
     session(
@@ -25,12 +34,7 @@ fun main() {
 
         var transition = ScreenTransition.MyScreen
         while (transition != ScreenTransition.Exit) {
-            section {
-                repeat(height) {
-                    textLine()
-                }
-            }.run()
-
+            clearScreen()
             val screen = screens[transition] ?:
                 break
 
