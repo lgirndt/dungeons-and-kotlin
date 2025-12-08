@@ -1,8 +1,7 @@
-package cli
+package io.dungeons.cli
 
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.adventure.ListAdventuresQuery
-import io.dungeons.domain.adventure.MockAdventureRepository
 import io.dungeons.domain.narrator.NarrateRoomQuery
 import io.dungeons.domain.savegame.MockSaveGameRepository
 import io.dungeons.domain.savegame.NewGameUseCase
@@ -17,10 +16,10 @@ class DomainConfig {
         return ListAdventuresQuery(adventureRepository)
     }
 
-    @Bean
-    fun adventureRepository(): AdventureRepository {
-        return MockAdventureRepository()
-    }
+//    @Bean
+//    fun adventureRepository(): AdventureRepository {
+//        return MockAdventureRepository()
+//    }
 
     @Bean
     fun saveGameRepository(): SaveGameRepository {

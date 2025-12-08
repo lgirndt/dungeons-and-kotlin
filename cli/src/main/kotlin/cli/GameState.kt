@@ -1,4 +1,4 @@
-package cli
+package io.dungeons.cli
 
 import io.dungeons.domain.core.Id
 import io.dungeons.domain.savegame.SaveGame

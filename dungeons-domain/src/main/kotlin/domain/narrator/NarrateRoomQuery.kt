@@ -14,7 +14,7 @@ class NarrateRoomQuery(
         val saveGame = saveGameRepository.findByUserId(userId, saveGameId)
         require(saveGame != null) { "No save game found for user $userId" }
 
-        val adventure = adventureRepository.find(saveGame.adventureId)
+        val adventure = adventureRepository.findByIdOrNull(saveGame.adventureId)
         require(adventure != null) { "No adventure found for id ${saveGame.adventureId}" }
 
         return NarratedRoom(

@@ -30,5 +30,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = "cli.KotterCliKt"
+    mainClass = "io.dungeons.cli.KotterCliKt"
 }

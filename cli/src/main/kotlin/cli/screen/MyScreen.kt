@@ -1,4 +1,4 @@
-package cli.screen
+package io.dungeons.cli.screen
 
 import com.varabyte.kotter.foundation.collections.LiveList
 import com.varabyte.kotter.foundation.collections.liveListOf

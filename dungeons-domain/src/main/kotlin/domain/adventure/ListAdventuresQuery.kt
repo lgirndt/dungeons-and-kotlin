@@ -4,6 +4,6 @@ class ListAdventuresQuery(
     private val adventureRepository: AdventureRepository) {
 
     fun execute(): List<Adventure> {
-        return adventureRepository.listAdventures()
+        return adventureRepository.findAll()
     }
 }

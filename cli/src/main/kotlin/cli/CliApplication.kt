@@ -1,4 +1,4 @@
-package cli
+package io.dungeons.cli
 
 import com.varabyte.kotter.foundation.firstSuccess
 import com.varabyte.kotter.foundation.input.Keys

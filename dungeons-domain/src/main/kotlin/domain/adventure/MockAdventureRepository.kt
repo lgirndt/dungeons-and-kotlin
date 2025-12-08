@@ -25,7 +25,7 @@ class MockAdventureRepository : AdventureRepository {
     )
 
 
-    override fun listAdventures(): List<Adventure> = adventures
+    override fun findAll(): List<Adventure> = adventures
 
-    override fun find(id: Id<Adventure>): Adventure? = adventures.find { it.id == id }
+    override fun findByIdOrNull(id: Id<Adventure>): Adventure? = adventures.find { it.id == id }
 }

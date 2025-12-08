@@ -1,6 +1,5 @@
-package cli.screen
+package io.dungeons.cli.screen
 
-import cli.GameStateHolder
 import com.varabyte.kotter.foundation.LiveVar
 import com.varabyte.kotter.foundation.collections.LiveList
 import com.varabyte.kotter.foundation.collections.liveListOf
@@ -11,6 +10,7 @@ import com.varabyte.kotter.foundation.text.textLine
 import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
+import io.dungeons.cli.GameStateHolder
 import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.ListAdventuresQuery
 import io.dungeons.domain.savegame.NewGameUseCase

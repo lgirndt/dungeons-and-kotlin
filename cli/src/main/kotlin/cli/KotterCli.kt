@@ -1,11 +1,6 @@
-package cli
+package io.dungeons.cli
 
-import cli.screen.DetailsScreen
-import cli.screen.MyScreen
-import cli.screen.PickAdventureScreen
-import cli.screen.RoomScreen
-import cli.screen.Screen
-import cli.screen.ScreenTransition
+
 import com.varabyte.kotter.foundation.firstSuccess
 import com.varabyte.kotter.foundation.session
 import com.varabyte.kotter.foundation.text.textLine
@@ -13,6 +8,12 @@ import com.varabyte.kotter.runtime.Session
 import com.varabyte.kotter.runtime.terminal.TerminalSize
 import com.varabyte.kotter.terminal.system.SystemTerminal
 import com.varabyte.kotter.terminal.virtual.VirtualTerminal
+import io.dungeons.cli.screen.DetailsScreen
+import io.dungeons.cli.screen.MyScreen
+import io.dungeons.cli.screen.PickAdventureScreen
+import io.dungeons.cli.screen.RoomScreen
+import io.dungeons.cli.screen.Screen
+import io.dungeons.cli.screen.ScreenTransition
 import io.dungeons.domain.core.Id
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
@@ -22,7 +23,7 @@ import org.springframework.context.annotation.Bean
 
 typealias ScreenMap = Map<ScreenTransition, Screen<ScreenTransition>>
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = ["io.dungeons"])
 class KotterCli {
 
     private val logger = LoggerFactory.getLogger(KotterCli::class.java)

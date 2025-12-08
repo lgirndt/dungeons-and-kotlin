@@ -1,7 +1,5 @@
-package cli.screen
+package io.dungeons.cli.screen
 
-import cli.GameStateHolder
-import cli.Player
 import com.varabyte.kotter.foundation.LiveVar
 import com.varabyte.kotter.foundation.liveVarOf
 import com.varabyte.kotter.foundation.text.text
@@ -9,6 +7,8 @@ import com.varabyte.kotter.foundation.text.textLine
 import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
+import io.dungeons.cli.GameStateHolder
+import io.dungeons.cli.Player
 import io.dungeons.domain.core.Id
 import io.dungeons.domain.narrator.NarrateRoomQuery
 import io.dungeons.domain.narrator.NarratedRoom

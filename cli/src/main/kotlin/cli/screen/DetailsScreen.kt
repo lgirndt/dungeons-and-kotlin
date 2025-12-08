@@ -1,4 +1,4 @@
-package cli.screen
+package io.dungeons.cli.screen
 
 import com.varabyte.kotter.foundation.input.input
 import com.varabyte.kotter.foundation.input.onInputEntered

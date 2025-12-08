@@ -1,4 +1,4 @@
-package cli.screen
+package io.dungeons.cli.screen
 
 import com.varabyte.kotter.foundation.runUntilSignal
 import com.varabyte.kotter.runtime.MainRenderScope
