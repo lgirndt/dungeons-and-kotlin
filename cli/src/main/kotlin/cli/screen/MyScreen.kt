@@ -18,7 +18,7 @@ import com.varabyte.kotterx.grid.grid
 import org.springframework.stereotype.Component
 import kotlin.time.Duration.Companion.milliseconds
 
-val someLines = listOf(
+private val someLines = listOf(
     "The quick brown fox jumps over the lazy dog.",
     "Lorem ipsum dolor sit amet, consectetur adipiscing elit.",
     "In a village of La Mancha, the name of which I have no desire to call to mind...",
@@ -26,14 +26,14 @@ val someLines = listOf(
     "All happy families are alike; each unhappy family is unhappy in its own way.",
 )
 
-enum class InputType {
+private enum class InputType {
     System,
     User
 }
 
-data class ChatLine(val type: InputType, val text: String)
+private data class ChatLine(val type: InputType, val text: String)
 
-fun LiveList<ChatLine>.appendText(line: ChatLine) {
+private fun LiveList<ChatLine>.appendText(line: ChatLine) {
     this.withWriteLock {
         if (this.size >= 5) {
             this.removeAt(0)
@@ -52,7 +52,7 @@ class MyScreen(
         defaultTransition = ScreenTransition.Details,
     ) {
 
-    lateinit var history: LiveList<ChatLine>
+    private lateinit var history: LiveList<ChatLine>
 
     override fun init(session: Session) {
         history = session.liveListOf()
