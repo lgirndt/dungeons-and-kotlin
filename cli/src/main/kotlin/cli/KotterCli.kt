@@ -3,6 +3,7 @@ package cli
 import cli.screen.DetailsScreen
 import cli.screen.MyScreen
 import cli.screen.PickAdventureScreen
+import cli.screen.RoomScreen
 import cli.screen.Screen
 import cli.screen.ScreenTransition
 import com.varabyte.kotter.foundation.firstSuccess
@@ -31,6 +32,7 @@ class KotterCli {
         myScreen: MyScreen,
         detailsScreen: DetailsScreen,
         pickAdventureScreen: PickAdventureScreen,
+        roomScreen: RoomScreen,
     )
         : ScreenMap {
         // It makes much more sense to build this lazy
@@ -38,6 +40,7 @@ class KotterCli {
             myScreen,
             detailsScreen,
             pickAdventureScreen,
+            roomScreen,
         ).associateBy { it.ownTransition }
     }
 

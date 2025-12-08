@@ -24,4 +24,12 @@ class GameStateHolder {
         set(value) {
             _gameState.set(value)
         }
+
+    fun unpackIdsOrThrow(): Pair<Id<Player>, Id<SaveGame>> {
+        val playerId = gameState.player?.id
+            ?: throw IllegalStateException("Player ID is not set in game state")
+        val gameId = gameState.currentGameId
+            ?: throw IllegalStateException("Current Game ID is not set in game state")
+        return Pair(playerId, gameId)
+    }
 }

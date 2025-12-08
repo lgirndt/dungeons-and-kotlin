@@ -64,7 +64,7 @@ class PickAdventureScreen(
                 Keys.ENTER -> {
                     val adventure = adventures[selectedAvdenture.value]
                     createNewGame(adventure)
-                    exit(scope, ScreenTransition.MyScreen)
+                    exit(scope, ScreenTransition.Room)
                 }
             }
         }

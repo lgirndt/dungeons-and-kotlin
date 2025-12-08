@@ -12,5 +12,9 @@ class MockSaveGameRepository : SaveGameRepository {
         storage[saveGame.userId] = saveGame
     }
 
-    override fun findByUserId(userId: Id<User>): SaveGame? = storage[userId]
+    override fun findByUserId(
+        userId: Id<User>,
+        saveGameId: Id<SaveGame>,
+    ): SaveGame? = storage[userId]
+
 }

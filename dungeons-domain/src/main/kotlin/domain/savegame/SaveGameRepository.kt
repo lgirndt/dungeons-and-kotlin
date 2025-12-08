@@ -5,5 +5,5 @@ import io.dungeons.domain.core.User
 
 interface SaveGameRepository {
     fun save(saveGame: SaveGame)
-    fun findByUserId(userId: Id<User>): SaveGame?
+    fun findByUserId(userId: Id<User>, saveGameId: Id<SaveGame>): SaveGame?
 }

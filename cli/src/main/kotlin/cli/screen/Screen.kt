@@ -10,6 +10,7 @@ enum class ScreenTransition {
     Details,
     MyScreen,
     PickAdventure,
+    Room,
 }
 
 abstract class Screen<T>(

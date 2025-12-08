@@ -3,6 +3,7 @@ package cli
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.adventure.ListAdventuresQuery
 import io.dungeons.domain.adventure.MockAdventureRepository
+import io.dungeons.domain.narrator.NarrateRoomQuery
 import io.dungeons.domain.savegame.MockSaveGameRepository
 import io.dungeons.domain.savegame.NewGameUseCase
 import io.dungeons.domain.savegame.SaveGameRepository
@@ -22,11 +23,16 @@ class DomainConfig {
     }
 
     @Bean
-    fun saveGameRepository() : SaveGameRepository {
+    fun saveGameRepository(): SaveGameRepository {
         return MockSaveGameRepository()
     }
 
     @Bean
     fun newGameUseCase(saveGameRepository: SaveGameRepository) = NewGameUseCase(saveGameRepository)
 
+    @Bean
+    fun narrateRoomQuery(
+        saveGameRepository: SaveGameRepository,
+        adventureRepository: AdventureRepository,
+    ) = NarrateRoomQuery(saveGameRepository, adventureRepository)
 }
