@@ -1,6 +1,6 @@
 plugins {
     id("buildlogic.kotlin-application-conventions")
-    id("org.springframework.boot") version "4.0.0"
+//    id("org.springframework.boot") // version "4.0.0"
 }
 
 dependencies {
@@ -11,6 +11,8 @@ dependencies {
 
     // HTTP Client for making REST calls
     implementation("org.springframework.boot:spring-boot-starter-web-services")
+
+    implementation("org.springframework.boot:spring-boot-docker-compose")
 
     // JSON processing
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

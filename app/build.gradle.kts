@@ -1,6 +1,6 @@
 plugins {
     id("buildlogic.kotlin-application-conventions")
-    id("org.springframework.boot") version "4.0.0"
+//    id("org.springframework.boot") // version "4.0.0"
 }
 
 dependencies {
