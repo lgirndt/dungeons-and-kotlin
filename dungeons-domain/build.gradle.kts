@@ -4,4 +4,5 @@ plugins {
 
 dependencies {
     implementation(libs.guava)
+    implementation("org.springframework:spring-context")
 }

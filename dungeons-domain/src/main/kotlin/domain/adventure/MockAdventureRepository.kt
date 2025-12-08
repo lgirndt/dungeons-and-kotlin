@@ -2,6 +2,7 @@ package io.dungeons.domain.adventure
 
 
 import io.dungeons.domain.core.Id
+import java.util.*
 
 class MockAdventureRepository : AdventureRepository {
 
@@ -27,5 +28,7 @@ class MockAdventureRepository : AdventureRepository {
 
     override fun findAll(): List<Adventure> = adventures
 
-    override fun findByIdOrNull(id: Id<Adventure>): Adventure? = adventures.find { it.id == id }
+    override fun findById(id: Id<Adventure>): Optional<Adventure> {
+        return Optional.ofNullable(adventures.find { it.id == id })
+    }
 }

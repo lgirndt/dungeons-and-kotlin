@@ -1,11 +1,15 @@
 package io.dungeons.domain.narrator
 
+import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.core.Id
 import io.dungeons.domain.core.User
 import io.dungeons.domain.savegame.SaveGame
 import io.dungeons.domain.savegame.SaveGameRepository
+import org.springframework.stereotype.Component
+import kotlin.jvm.optionals.getOrNull
 
+@Component
 class NarrateRoomQuery(
     private val saveGameRepository: SaveGameRepository,
     private val adventureRepository: AdventureRepository,
@@ -14,7 +18,7 @@ class NarrateRoomQuery(
         val saveGame = saveGameRepository.findByUserId(userId, saveGameId)
         require(saveGame != null) { "No save game found for user $userId" }
 
-        val adventure = adventureRepository.findByIdOrNull(saveGame.adventureId)
+        val adventure : Adventure? = adventureRepository.findById(saveGame.adventureId).getOrNull()
         require(adventure != null) { "No adventure found for id ${saveGame.adventureId}" }
 
         return NarratedRoom(

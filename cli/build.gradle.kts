@@ -5,6 +5,7 @@ plugins {
 
 dependencies {
     implementation(project(":dungeons-domain"))
+    implementation(project(":persistence"))
 
     // Spring Boot (without web)
     implementation("org.springframework.boot:spring-boot-starter")
