@@ -6,6 +6,7 @@ import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
 import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
+import io.dungeons.domain.core.Id
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -20,7 +21,10 @@ class ToolApplication {
     fun runner() = CommandLineRunner { args ->
         logger.info("Starting tool application with arguments: ${args.joinToString()}")
         ToolCli()
-            .subcommands(HelloCommand())
+            .subcommands(
+                HelloCommand(),
+                GenIdCommand(),
+            )
             .main(args)
     }
 }
@@ -45,6 +49,15 @@ class HelloCommand : CliktCommand(name = "hello") {
             "Hello, World!"
         }
         echo(greeting)
+    }
+}
+
+class GenIdCommand : CliktCommand(name = "gen-id") {
+    override fun help(context: Context) = "Generate a new unique ID"
+
+    override fun run() {
+        val newId = Id.generate<String>()
+        echo(newId.asStringRepresentation())
     }
 }
 
