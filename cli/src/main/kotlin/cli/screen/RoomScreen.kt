@@ -19,8 +19,7 @@ class RoomScreen(private val narrateRoomQuery: NarrateRoomQuery, private val gam
         ownTransition = ScreenTransition.Room,
         defaultTransition = ScreenTransition.Exit,
     ) {
-    @Suppress("LateinitUsage")
-    private lateinit var room: LiveVar<NarratedRoom>
+    private var room: LiveVar<NarratedRoom> by InitOnce()
 
     override val sectionBlock: MainRenderScope.() -> Unit
         get() = {

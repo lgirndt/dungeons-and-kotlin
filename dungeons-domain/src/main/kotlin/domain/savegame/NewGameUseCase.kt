@@ -4,11 +4,11 @@ import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.core.Id
 import io.dungeons.domain.core.User
 import org.springframework.stereotype.Component
-import java.util.logging.Logger.getLogger
+import java.util.logging.Logger
 
 @Component
 class NewGameUseCase(private val saveGameRepository: SaveGameRepository) {
-    private val logger = getLogger(NewGameUseCase::class.java.name)
+    private val logger = Logger.getLogger(NewGameUseCase::class.java.name)
 
     fun execute(userId: Id<User>, adventure: Adventure): Id<SaveGame> {
         logger.info("New game with id $userId")

@@ -7,8 +7,7 @@ import java.util.concurrent.atomic.AtomicReference
 
 data class Player(val id: Id<Player>)
 
-@Suppress("DataClassContainsFunctions", "DataClassShouldBeImmutable")
-data class GameState(var player: Player? = null, var currentGameId: Id<SaveGame>? = null)
+data class GameState(val player: Player? = null, val currentGameId: Id<SaveGame>? = null)
 
 @Component
 class GameStateHolder {
