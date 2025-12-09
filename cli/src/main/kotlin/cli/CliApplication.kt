@@ -17,15 +17,13 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.web.client.RestClient
 import kotlin.time.Duration.Companion.milliseconds
 
-//@SpringBootApplication
+// @SpringBootApplication
 class CliApplication {
+    // @Bean
+    fun restClient(): RestClient = RestClient.builder().build()
 
-//    @Bean
-    fun restClient(): RestClient {
-        return RestClient.builder().build()
-    }
-
-//    @Bean
+    // @Bean
+    @Suppress("UnusedParameter")
     fun runner(restClient: RestClient) = CommandLineRunner {
 //        println("CLI Application started! What do you want to do?")
 //
@@ -35,19 +33,17 @@ class CliApplication {
 
         session(
             terminal = listOf(
-//                { SystemTerminal() },
+                // { SystemTerminal() },
                 { VirtualTerminal.create(title = "My App", terminalSize = TerminalSize(30, 30)) },
             ).firstSuccess(),
         ) {
             section { textLine("Hello, World") }.run()
         }
-
     }
 }
 
-
 fun main(args: Array<String>) {
-//    runApplication<CliApplication>(*args)
+    // runApplication<CliApplication>(*args)
     session(
         terminal = listOf(
             { SystemTerminal() },
@@ -59,15 +55,14 @@ fun main(args: Array<String>) {
             textLine()
 
             grid(
-//                Cols { fit(); fixed(25) },
+                // Cols { fit(); fixed(25) },
                 Cols {
                     fixed(width - 25 - 3)
                     fixed(25)
                 },
                 characters = GridCharacters.INVISIBLE,
                 targetWidth = width - 3,
-
-                ) {
+            ) {
                 // Header row
                 cell {
                     // Fill the entire terminal height
@@ -76,7 +71,6 @@ fun main(args: Array<String>) {
                     }
                 }
                 cell { text("Right Column (25 chars)") }
-
             }
         }.runUntilKeyPressed(Keys.ESC) {
             // Periodically rerender to pick up size changes
@@ -84,6 +78,5 @@ fun main(args: Array<String>) {
                 rerender()
             }
         }
-
     }
 }

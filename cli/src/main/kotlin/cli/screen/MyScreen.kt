@@ -28,7 +28,7 @@ private val someLines = listOf(
 
 private enum class InputType {
     System,
-    User
+    User,
 }
 
 private data class ChatLine(val type: InputType, val text: String)
@@ -43,21 +43,13 @@ private fun LiveList<ChatLine>.appendText(line: ChatLine) {
 }
 
 @Component
-class MyScreen(
-//    session: Session
-) :
+class MyScreen :
     Screen<ScreenTransition>(
-//        session = session,
         ownTransition = ScreenTransition.MyScreen,
         defaultTransition = ScreenTransition.Details,
     ) {
-
+    @Suppress("LateinitUsage")
     private lateinit var history: LiveList<ChatLine>
-
-    override fun init(session: Session) {
-        history = session.liveListOf()
-    }
-
 
     override val sectionBlock: MainRenderScope.() -> Unit = {
         grid(
@@ -111,5 +103,9 @@ class MyScreen(
             }
             setInput("")
         }
+    }
+
+    override fun init(session: Session) {
+        history = session.liveListOf()
     }
 }

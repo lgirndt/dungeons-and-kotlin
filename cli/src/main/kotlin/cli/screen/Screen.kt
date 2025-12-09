@@ -14,18 +14,17 @@ enum class ScreenTransition {
 }
 
 abstract class Screen<T>(
-//    protected val session: Session,
-    val ownTransition : T,
+    // protected val session: Session,
+    val ownTransition: T,
     defaultTransition: T,
 ) {
-
     private var transition: T = defaultTransition
-
-    abstract protected val sectionBlock: MainRenderScope.() -> Unit
-    abstract protected val runBlock: RunScope.() -> Unit
-
-    abstract protected fun init(session: Session)
     private var isInitialized = false
+
+    protected abstract val sectionBlock: MainRenderScope.() -> Unit
+    protected abstract val runBlock: RunScope.() -> Unit
+
+    protected abstract fun init(session: Session)
 
     protected fun exit(scope: RunScope, nextScreen: T) {
         transition = nextScreen

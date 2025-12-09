@@ -5,5 +5,4 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
 
 @Configuration
 @EnableMongoRepositories(basePackages = ["io.dungeons.persistence.mongodb"])
-class PersistenceConfig {
-}
+class PersistenceConfig

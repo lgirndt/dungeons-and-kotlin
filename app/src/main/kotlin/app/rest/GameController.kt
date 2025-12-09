@@ -6,9 +6,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class GameController {
-
     @PostMapping("/game")
-    fun createGame() : GameIdResponse {
-        return GameIdResponse("game-id-placeholder")
-    }
+    fun createGame(): GameIdResponse = GameIdResponse("game-id-placeholder")
 }
