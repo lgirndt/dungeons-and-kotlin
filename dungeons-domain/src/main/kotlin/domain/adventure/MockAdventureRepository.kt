@@ -9,16 +9,19 @@ class MockAdventureRepository : AdventureRepository {
             id = Id.generate(),
             name = "The Lost City",
             initialRoomId = Id.generate(),
+            emptyList(),
         ),
         Adventure(
             id = Id.generate(),
             name = "Dragon's Lair",
             initialRoomId = Id.generate(),
+            emptyList(),
         ),
         Adventure(
             id = Id.generate(),
             name = "Cursed Forest",
             initialRoomId = Id.generate(),
+            emptyList(),
         ),
     )
 
