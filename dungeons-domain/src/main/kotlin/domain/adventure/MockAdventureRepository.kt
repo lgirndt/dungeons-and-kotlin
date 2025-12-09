@@ -4,7 +4,7 @@ import io.dungeons.domain.core.Id
 import java.util.*
 
 class MockAdventureRepository : AdventureRepository {
-    private val adventures = listOf(
+    private val adventures = mutableListOf(
         Adventure(
             id = Id.generate(),
             name = "The Lost City",
@@ -28,7 +28,14 @@ class MockAdventureRepository : AdventureRepository {
     override fun findAll(): List<Adventure> = adventures
 
     override fun findById(id: Id<Adventure>): Optional<Adventure> = Optional.ofNullable(adventures.find { it.id == id })
-    override fun save(entity: Adventure): Adventure? {
-        TODO("Not yet implemented")
+
+    override fun save(entity: Adventure): Adventure {
+        val existingIndex = adventures.indexOfFirst { it.id == entity.id }
+        if (existingIndex >= 0) {
+            adventures[existingIndex] = entity
+        } else {
+            adventures.add(entity)
+        }
+        return entity
     }
 }

@@ -20,7 +20,7 @@ class World(val id: Id<World>, val name: String, val description: String, val ro
     fun getRoomById(roomId: Id<Room>): Room? = rooms.find { it.id == roomId }
 }
 
-data class GameState(val id: Id<GameState>, val worldId: Id<World>, val currentRoom: Id<Room>)
+data class WorldState(val id: Id<WorldState>, val worldId: Id<World>, val currentRoom: Id<Room>)
 
 fun createWorld() {
     val maxX = 3

@@ -13,9 +13,10 @@ import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
 import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.ListAdventuresQuery
+import io.dungeons.domain.core.Id
+import io.dungeons.domain.core.User
 import io.dungeons.domain.savegame.NewGameUseCase
 import org.springframework.stereotype.Component
-import java.util.*
 
 @Component
 class PickAdventureScreen(
@@ -76,7 +77,7 @@ class PickAdventureScreen(
         val player = gameStateHolder.gameState.player
         require(player != null)
 
-        val userId: UUID = player.id.toUUID()
+        val userId: Id<User> = Id.fromUUID(player.id.toUUID())
         val gameId = newGameUseCase.execute(userId, adventure)
         val newGameState = gameStateHolder.gameState.copy(
             currentGameId = gameId,

@@ -10,10 +10,8 @@ import io.dungeons.domain.world.WorldBuilder
 import org.springframework.stereotype.Component
 
 @Component
-class CreateAdventureCommand(
-    private val adventureRepository: AdventureRepository,
-) : CliktCommand(name = "create-adventure") {
-
+class CreateAdventureCommand(private val adventureRepository: AdventureRepository) :
+    CliktCommand(name = "create-adventure") {
     override fun help(context: Context) = "Say hello"
 
     override fun run() {
@@ -27,7 +25,8 @@ class CreateAdventureCommand(
         // 6b751b53-20b9-4fa6-948a-ac5fccea9be7
         val world = WorldBuilder()
             .room(
-                x = 1, y = 1,
+                x = 1,
+                y = 1,
                 room = Room(
                     id = Id.fromString("ae894d71-b501-42fd-b1a3-213e2e82f79c"),
                     name = "Starting Room",
@@ -35,7 +34,8 @@ class CreateAdventureCommand(
                 ),
             )
             .room(
-                x = 1, y = 2,
+                x = 1,
+                y = 2,
                 room = Room(
                     id = Id.fromString("5a06b938-4e0c-4a8b-b2e4-94167417b395"),
                     name = "Hallway",
@@ -43,19 +43,20 @@ class CreateAdventureCommand(
                 ),
             )
             .room(
-                x = 2, y = 1,
+                x = 2,
+                y = 1,
                 room = Room(
                     id = Id.fromString("4bfb93d0-a064-4c1b-993e-8211639569d5"),
                     name = "Treasure Room",
                     description = "A room glittering with gold and jewels. You've found the treasure!",
                 ),
             )
-            .build();
+            .build()
 
         val adventure = Adventure(
             id = Id.fromString("8b4dc8c3-c3d5-4484-8d4e-0b7fe85bafd4"),
             name = "New Adventure",
-            initialRoomId = Id.fromString("c5b563b7-d4c6-40da-b4ac-d9d081ac0f34"),
+            initialRoomId = Id.fromString("ae894d71-b501-42fd-b1a3-213e2e82f79c"),
             rooms = world.rooms,
         )
         val result = adventureRepository.save(adventure)
