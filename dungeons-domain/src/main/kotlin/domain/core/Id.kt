@@ -6,6 +6,8 @@ import java.util.*
 value class Id<T>(val value: UUID) {
     fun toUUID(): UUID = value
 
+    fun asStringRepresentation(): String = value.toString()
+
     companion object {
         fun <T> generate(): Id<T> = Id(UUID.randomUUID())
 
