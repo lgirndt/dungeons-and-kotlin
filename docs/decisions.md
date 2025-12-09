@@ -26,3 +26,5 @@ We are listing all architectural and significant technical decisions made on thi
 # Spring Boot
 - Since we are using a multimodule project, every module needs to be a spring boot gradle project, otherwise
   we could not use spring boot dependencies in these modules.
+- We are implementing Repositories with Spring Data, especially Spring Data MongoDB. As a consequence, query
+  methods will return a Java Optional<T> instead of Kotlin nullable types. We need to accept this.
