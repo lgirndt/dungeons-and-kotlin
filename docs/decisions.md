@@ -1,0 +1,28 @@
+# Decisions
+
+We are listing all architectural and significant technical decisions made on this project. 
+
+# Hexagonal Architecture
+- We need to separate the core business logic from external systems and frameworks.
+- We will implement Hexagonal Architecture (also known as Ports and Adapters) to achieve this separation.
+- Driver adapters are implemented as follows:
+    - Access to Drivers are provided by Repository interfaces in the core domain.
+    - The implementation of the Driver is done in the infrastructure layer.
+- Driving adapters are implemented as follows:
+    - We use Command Query Responsibility Segregation (CQRS) pattern.
+    - Commands are realized as XyUseCase in the domain layer.
+    - Queries are realized as XyQuery in the domain layer and they expose either Domain Objects or
+      DTOs to the application layer.
+
+# Domain Layer
+- We use Spring intentionally in the domain layer to annotate Services. We want to keep the effort of
+  wiring the application together as low as possible.
+- We use domain objects also as our entities in the persistence layer to avoid mapping overhead.
+
+# Gradle Multi Module Project
+- We realize the hexagonal architecture using a Gradle multi module project to clearly separate the different 
+  layers and their dependencies.
+
+# Spring Boot
+- Since we are using a multimodule project, every module needs to be a spring boot gradle project, otherwise
+  we could not use spring boot dependencies in these modules.
