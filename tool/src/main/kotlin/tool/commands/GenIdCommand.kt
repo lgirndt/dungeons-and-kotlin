@@ -7,7 +7,9 @@ import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
 import io.dungeons.domain.core.Id
+import org.springframework.stereotype.Component
 
+@Component
 class GenIdCommand : CliktCommand(name = "gen-id") {
     private val count by option("--count", "-c")
         .int()

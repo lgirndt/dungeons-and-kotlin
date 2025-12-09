@@ -7,4 +7,6 @@ interface AdventureRepository {
     fun findAll(): List<Adventure>
 
     fun findById(id: Id<Adventure>): Optional<Adventure>
+
+    fun save(entity: Adventure): Adventure?
 }

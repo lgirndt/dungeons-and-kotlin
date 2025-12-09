@@ -4,6 +4,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
+import io.dungeons.tool.commands.CreateAdventureCommand
 import io.dungeons.tool.commands.GenIdCommand
 import io.dungeons.tool.commands.HelloCommand
 import org.slf4j.LoggerFactory
@@ -17,12 +18,17 @@ class ToolApplication {
     private val logger = LoggerFactory.getLogger(ToolApplication::class.java)
 
     @Bean
-    fun runner() = CommandLineRunner { args ->
+    fun runner(
+        genIdCommand: GenIdCommand,
+        helloCommand: HelloCommand,
+        createAdventureCommand: CreateAdventureCommand,
+    ) = CommandLineRunner { args ->
         logger.info("Starting tool application with arguments: ${args.joinToString()}")
         ToolCli()
             .subcommands(
-                HelloCommand(),
-                GenIdCommand(),
+                genIdCommand,
+                helloCommand,
+                createAdventureCommand,
             )
             .main(args)
     }

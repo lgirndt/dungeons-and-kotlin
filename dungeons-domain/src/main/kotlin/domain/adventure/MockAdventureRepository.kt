@@ -25,4 +25,7 @@ class MockAdventureRepository : AdventureRepository {
     override fun findAll(): List<Adventure> = adventures
 
     override fun findById(id: Id<Adventure>): Optional<Adventure> = Optional.ofNullable(adventures.find { it.id == id })
+    override fun save(entity: Adventure): Adventure? {
+        TODO("Not yet implemented")
+    }
 }
