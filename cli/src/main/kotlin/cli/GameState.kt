@@ -3,7 +3,6 @@ package io.dungeons.cli
 import io.dungeons.domain.core.Id
 import io.dungeons.domain.savegame.SaveGame
 import org.springframework.stereotype.Component
-import java.util.concurrent.atomic.AtomicReference
 
 data class Player(val id: Id<Player>)
 
@@ -11,13 +10,7 @@ data class GameState(val player: Player? = null, val currentGameId: Id<SaveGame>
 
 @Component
 class GameStateHolder {
-    private var _gameState: AtomicReference<GameState> = AtomicReference(GameState())
-
-    var gameState: GameState
-        get() = _gameState.get()
-        set(value) {
-            _gameState.set(value)
-        }
+    var gameState: GameState = GameState()
 
     fun unpackIdsOrThrow(): Pair<Id<Player>, Id<SaveGame>> {
         val playerId = gameState.player?.id

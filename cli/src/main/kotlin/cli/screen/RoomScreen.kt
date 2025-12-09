@@ -41,7 +41,9 @@ class RoomScreen(private val narrateRoomQuery: NarrateRoomQuery, private val gam
             Id.fromUUID(playerId.toUUID()),
             gameId,
         )
-        require(narratedRoom != null)
+        if (narratedRoom == null) {
+            error("Cannot load room: save game or adventure not found")
+        }
         room = session.liveVarOf(narratedRoom)
     }
 }
