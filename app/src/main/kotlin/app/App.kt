@@ -23,7 +23,6 @@ class App {
 
     @Bean
     fun profileValidator(environment: Environment): ProfileValidator = ProfileValidator(environment)
-
 }
 
 fun main(args: Array<String>) {

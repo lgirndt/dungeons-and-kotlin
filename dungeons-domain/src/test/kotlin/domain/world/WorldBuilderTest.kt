@@ -12,17 +12,13 @@ import org.junit.jupiter.api.fail
 
 private val ROOM_ID = TestId<Room>()
 
-private fun World.roomOrFail(id: Id<Room>): Room {
-    return this.getRoomById(id)
-        ?: fail { "room with id $id should exist in the world" }
-}
+private fun World.roomOrFail(id: Id<Room>): Room = this.getRoomById(id)
+    ?: fail { "room with id $id should exist in the world" }
 
-private fun Room.connectionSet(): Set<Pair<Direction, Id<Room>>> {
-    return this.connections.map { (key, value) -> key to value }.toSet()
-}
+private fun Room.connectionSet(): Set<Pair<Direction, Id<Room>>> =
+    this.connections.map { (key, value) -> key to value }.toSet()
 
 class WorldBuilderTest {
-
     @Test
     fun `should associate rooms correctly`() {
         val world = WorldBuilder()

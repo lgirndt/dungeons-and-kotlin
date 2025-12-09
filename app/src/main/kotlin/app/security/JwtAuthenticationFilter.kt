@@ -16,7 +16,6 @@ import org.springframework.web.filter.OncePerRequestFilter
 @Component
 class JwtAuthenticationFilter(private val jwtService: JwtService, private val userDetailsService: UserDetailsService) :
     OncePerRequestFilter() {
-    
     private val logger = LoggerFactory.getLogger(JwtAuthenticationFilter::class.java)
 
     override fun doFilterInternal(
@@ -32,7 +31,7 @@ class JwtAuthenticationFilter(private val jwtService: JwtService, private val us
         }
 
         val jwt = authHeader.substring(7)
-        
+
         try {
             val username = jwtService.extractUsername(jwt)
 

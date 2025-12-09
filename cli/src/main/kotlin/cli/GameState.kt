@@ -5,15 +5,10 @@ import io.dungeons.domain.savegame.SaveGame
 import org.springframework.stereotype.Component
 import java.util.concurrent.atomic.AtomicReference
 
-
 data class Player(val id: Id<Player>)
 
-
-data class GameState(
-    var player: Player? = null,
-    var currentGameId: Id<SaveGame>? = null
-) {
-}
+@Suppress("DataClassContainsFunctions", "DataClassShouldBeImmutable")
+data class GameState(var player: Player? = null, var currentGameId: Id<SaveGame>? = null)
 
 @Component
 class GameStateHolder {

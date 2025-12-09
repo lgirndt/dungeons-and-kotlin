@@ -16,21 +16,11 @@ data class Room(
     val connections: Map<Direction, Id<Room>> = emptyMap(),
 )
 
-
-class World(
-    val id: Id<World>,
-    val name: String,
-    val description: String,
-    val rooms: List<Room>,
-) {
+class World(val id: Id<World>, val name: String, val description: String, val rooms: List<Room>) {
     fun getRoomById(roomId: Id<Room>): Room? = rooms.find { it.id == roomId }
 }
 
-data class GameState(
-    val id: Id<GameState>,
-    val worldId: Id<World>,
-    val currentRoom: Id<Room>,
-)
+data class GameState(val id: Id<GameState>, val worldId: Id<World>, val currentRoom: Id<Room>)
 
 fun createWorld() {
     val maxX = 3
@@ -70,7 +60,7 @@ class WorldBuilder {
 
     fun build(): World {
         val connectedRooms = rooms.map { (coord, room) ->
-            val connectedTo : Map<Direction, Id<Room>> = coord
+            val connectedTo: Map<Direction, Id<Room>> = coord
                 .toAdjacentDirections()
                 .mapNotNull { (direction, coord) ->
                     rooms[coord]?.let { adjacentRoom -> direction to adjacentRoom.id }

@@ -14,21 +14,13 @@ import org.springframework.web.filter.OncePerRequestFilter
 
 @Component
 @Profile("dev")
-class DevTokenAuthenticationFilter(
-    private val userDetailsService: UserDetailsService
-) : OncePerRequestFilter() {
-
+class DevTokenAuthenticationFilter(private val userDetailsService: UserDetailsService) : OncePerRequestFilter() {
     private val logger = LoggerFactory.getLogger(DevTokenAuthenticationFilter::class.java)
-
-    companion object {
-        private const val DEV_TOKEN = "this-is-our-dev-token"
-        private const val DEFAULT_USERNAME = "user"
-    }
 
     override fun doFilterInternal(
         request: HttpServletRequest,
         response: HttpServletResponse,
-        filterChain: FilterChain
+        filterChain: FilterChain,
     ) {
         val authHeader = request.getHeader("Authorization")
 
@@ -41,12 +33,13 @@ class DevTokenAuthenticationFilter(
 
         // Check if it's the dev token
         if (token == DEV_TOKEN && SecurityContextHolder.getContext().authentication == null) {
+            @Suppress("TooGenericExceptionCaught")
             try {
                 val userDetails = userDetailsService.loadUserByUsername(DEFAULT_USERNAME)
                 val authToken = UsernamePasswordAuthenticationToken(
                     userDetails,
                     null,
-                    userDetails.authorities
+                    userDetails.authorities,
                 )
                 authToken.details = WebAuthenticationDetailsSource().buildDetails(request)
                 SecurityContextHolder.getContext().authentication = authToken
@@ -58,5 +51,10 @@ class DevTokenAuthenticationFilter(
         }
 
         filterChain.doFilter(request, response)
+    }
+
+    companion object {
+        private const val DEV_TOKEN = "this-is-our-dev-token"
+        private const val DEFAULT_USERNAME = "user"
     }
 }

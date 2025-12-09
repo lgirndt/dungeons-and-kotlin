@@ -4,10 +4,11 @@ import java.util.*
 
 @JvmInline
 value class Id<T>(val value: UUID) {
+    fun toUUID(): UUID = value
+
     companion object {
         fun <T> generate(): Id<T> = Id(UUID.randomUUID())
+
         fun <T> fromUUID(uuid: UUID): Id<T> = Id(uuid)
     }
-
-    fun toUUID(): UUID = value
 }

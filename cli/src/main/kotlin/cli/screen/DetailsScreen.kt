@@ -10,14 +10,12 @@ import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import org.springframework.stereotype.Component
 
-@Component()
-class DetailsScreen() : Screen<ScreenTransition>(
-    ownTransition =  ScreenTransition.Details,
-    defaultTransition =  ScreenTransition.Exit,
-) {
-    override fun init(session: Session) {
-    }
-
+@Component
+class DetailsScreen :
+    Screen<ScreenTransition>(
+        ownTransition = ScreenTransition.Details,
+        defaultTransition = ScreenTransition.Exit,
+    ) {
     override val sectionBlock: MainRenderScope.() -> Unit = {
         textLine("Hallo, tell me some details")
         text("> ")
@@ -33,6 +31,8 @@ class DetailsScreen() : Screen<ScreenTransition>(
             }
             setInput("")
         }
+    }
 
+    override fun init(session: Session) {
     }
 }

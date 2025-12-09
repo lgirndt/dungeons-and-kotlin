@@ -1,6 +1,5 @@
 package io.dungeons.cli
 
-
 import com.varabyte.kotter.foundation.firstSuccess
 import com.varabyte.kotter.foundation.session
 import com.varabyte.kotter.foundation.text.textLine
@@ -25,7 +24,6 @@ typealias ScreenMap = Map<ScreenTransition, Screen<ScreenTransition>>
 
 @SpringBootApplication(scanBasePackages = ["io.dungeons"])
 class KotterCli {
-
     private val logger = LoggerFactory.getLogger(KotterCli::class.java)
 
     @Bean
@@ -34,8 +32,7 @@ class KotterCli {
         detailsScreen: DetailsScreen,
         pickAdventureScreen: PickAdventureScreen,
         roomScreen: RoomScreen,
-    )
-        : ScreenMap {
+    ): ScreenMap {
         // It makes much more sense to build this lazy
         return listOf(
             myScreen,
@@ -48,7 +45,7 @@ class KotterCli {
     private fun login(gameStateHolder: GameStateHolder) {
         val gameState = gameStateHolder.gameState
         gameStateHolder.gameState = gameState.copy(
-            player = Player(Id.generate())
+            player = Player(Id.generate()),
         )
     }
 
@@ -71,7 +68,6 @@ class KotterCli {
         }
     }
 }
-
 
 private fun Session.clearScreen() {
     section {

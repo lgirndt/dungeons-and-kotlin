@@ -8,32 +8,19 @@ import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
-import io.dungeons.cli.Player
 import io.dungeons.domain.core.Id
 import io.dungeons.domain.narrator.NarrateRoomQuery
 import io.dungeons.domain.narrator.NarratedRoom
-import io.dungeons.domain.savegame.SaveGame
 import org.springframework.stereotype.Component
 
 @Component
-class RoomScreen(
-    private val narrateRoomQuery: NarrateRoomQuery,
-    private val gameStateHolder: GameStateHolder,
-) : Screen<ScreenTransition>(
-    ownTransition = ScreenTransition.Room,
-    defaultTransition = ScreenTransition.Exit,
-) {
-    private lateinit var room : LiveVar<NarratedRoom>
-
-    override fun init(session: Session) {
-        val (playerId: Id<Player>, gameId: Id<SaveGame>) = gameStateHolder.unpackIdsOrThrow()
-        val narratedRoom = narrateRoomQuery.execute(
-            Id.fromUUID(playerId.toUUID()),
-            gameId
-        )
-        require(narratedRoom != null)
-        room = session.liveVarOf(narratedRoom)
-    }
+class RoomScreen(private val narrateRoomQuery: NarrateRoomQuery, private val gameStateHolder: GameStateHolder) :
+    Screen<ScreenTransition>(
+        ownTransition = ScreenTransition.Room,
+        defaultTransition = ScreenTransition.Exit,
+    ) {
+    @Suppress("LateinitUsage")
+    private lateinit var room: LiveVar<NarratedRoom>
 
     override val sectionBlock: MainRenderScope.() -> Unit
         get() = {
@@ -49,4 +36,13 @@ class RoomScreen(
     override val runBlock: RunScope.() -> Unit
         get() = {}
 
+    override fun init(session: Session) {
+        val (playerId, gameId) = gameStateHolder.unpackIdsOrThrow()
+        val narratedRoom = narrateRoomQuery.execute(
+            Id.fromUUID(playerId.toUUID()),
+            gameId,
+        )
+        require(narratedRoom != null)
+        room = session.liveVarOf(narratedRoom)
+    }
 }

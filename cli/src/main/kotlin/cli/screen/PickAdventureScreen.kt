@@ -21,19 +21,16 @@ import java.util.*
 class PickAdventureScreen(
     private val listAdventuresQuery: ListAdventuresQuery,
     private val newGameUseCase: NewGameUseCase,
-    private val gameStateHolder: GameStateHolder
+    private val gameStateHolder: GameStateHolder,
 ) : Screen<ScreenTransition>(
     ownTransition = ScreenTransition.PickAdventure,
     defaultTransition = ScreenTransition.Exit,
 ) {
-
+    @Suppress("LateinitUsage")
     private lateinit var adventures: LiveList<Adventure>
-    private lateinit var selectedAvdenture: LiveVar<Int>
 
-    override fun init(session: Session) {
-        adventures = session.liveListOf(listAdventuresQuery.execute())
-        selectedAvdenture = session.liveVarOf(0)
-    }
+    @Suppress("LateinitUsage")
+    private lateinit var selectedAvdenture: LiveVar<Int>
 
     override val sectionBlock: MainRenderScope.() -> Unit
         get() = {
@@ -70,16 +67,20 @@ class PickAdventureScreen(
         }
     }
 
+    override fun init(session: Session) {
+        adventures = session.liveListOf(listAdventuresQuery.execute())
+        selectedAvdenture = session.liveVarOf(0)
+    }
+
     private fun createNewGame(adventure: Adventure) {
         val player = gameStateHolder.gameState.player
         require(player != null)
 
-        val userId : UUID = player.id.toUUID()
+        val userId: UUID = player.id.toUUID()
         val gameId = newGameUseCase.execute(userId, adventure)
         val newGameState = gameStateHolder.gameState.copy(
             currentGameId = gameId,
         )
         gameStateHolder.gameState = newGameState
     }
-
 }

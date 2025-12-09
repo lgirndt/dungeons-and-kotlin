@@ -9,13 +9,11 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class WorldController {
-
     private val logger = LoggerFactory.getLogger(WorldController::class.java)
 
     @PostMapping("/world")
-    fun createWorld(@AuthenticationPrincipal user: User) : WorldIdResponse{
+    fun createWorld(@AuthenticationPrincipal user: User): WorldIdResponse {
         logger.info("User ${user.username} was provided")
         return WorldIdResponse("world-id-placeholder")
     }
-
 }
