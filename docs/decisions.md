@@ -18,6 +18,11 @@ We are listing all architectural and significant technical decisions made on thi
 - We use Spring intentionally in the domain layer to annotate Services. We want to keep the effort of
   wiring the application together as low as possible.
 - We use domain objects also as our entities in the persistence layer to avoid mapping overhead.
+- We do not annotate domain objects with spring data annotations. Neither @Id, @Document or @MongoId 
+  annotations are used in the domain layer.
+- Instead we make sure that our domain objects comply the to the spring conventions for mapping objects
+  to MongoDB documents. For example, we make sure that every domain object has a field named "id" of type
+  UUID.
 
 # Gradle Multi Module Project
 - We realize the hexagonal architecture using a Gradle multi module project to clearly separate the different 
