@@ -23,11 +23,11 @@ class MongoDBAdventureRepositoryTest {
         repository.save(adventure)
 
         // Then
-        val found = repository.findById(adventure.id)
-        assertTrue(found.isPresent)
-        assertEquals(adventure.id, found.get().id)
-        assertEquals(adventure.name, found.get().name)
-        assertEquals(adventure.initialRoomId, found.get().initialRoomId)
+        val found = repository.findById(adventure.id).orElseThrow()
+        assertTrue(found != null)
+        assertEquals(adventure.id, found.id)
+        assertEquals(adventure.name, found.name)
+        assertEquals(adventure.initialRoomId, found.initialRoomId)
     }
 
     @Test

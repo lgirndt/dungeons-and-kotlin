@@ -3,6 +3,7 @@ package io.dungeons.persistence.mongodb
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest
+import kotlin.jvm.optionals.getOrNull
 import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
@@ -22,10 +23,10 @@ class MongoDBSaveGameRepositoryTest {
         repository.save(saveGame)
 
         // Then
-        val found = repository.findById(saveGame.id)
-        assertTrue(found.isPresent)
-        assertEquals(saveGame.id, found.get().id)
-        assertEquals(saveGame.userId, found.get().userId)
+        val found = repository.findById(saveGame.id).orElseThrow()
+        assertTrue(found != null)
+        assertEquals(saveGame.id, found.id)
+        assertEquals(saveGame.userId, found.userId)
     }
 
     @Test
@@ -35,12 +36,12 @@ class MongoDBSaveGameRepositoryTest {
         repository.save(saveGame)
 
         // When
-        val found = repository.findByUserId(saveGame.userId, saveGame.id)
+        val found = repository.findByUserId(saveGame.userId, saveGame.id).orElseThrow()
 
         // Then
-        assertTrue(found.isPresent)
-        assertEquals(saveGame.id, found.get().id)
-        assertEquals(saveGame.userId, found.get().userId)
+        assertTrue(found != null)
+        assertEquals(saveGame.id, found.id)
+        assertEquals(saveGame.userId, found.userId)
     }
 
     @Test
@@ -52,9 +53,9 @@ class MongoDBSaveGameRepositoryTest {
         val differentPlayerId = io.dungeons.domain.core.Id.generate<io.dungeons.domain.core.Player>()
 
         // When
-        val found = repository.findByUserId(differentPlayerId, saveGame.id)
+        val found = repository.findByUserId(differentPlayerId, saveGame.id).getOrNull()
 
         // Then
-        assertTrue(found.isEmpty)
+        assertEquals(found, null)
     }
 }
