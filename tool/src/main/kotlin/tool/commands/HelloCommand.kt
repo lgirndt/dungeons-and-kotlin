@@ -24,9 +24,9 @@ class HelloCommand(private val adventureRepository: AdventureRepository, private
         echo(greeting)
 
         val adventures = adventureRepository.findAll()
-        echo("You have ${adventures.count()} adventures in the repository.")
+        echo("You have ${adventures.size} adventures in the repository.")
 
-        if (adventures.count() == 0) {
+        if (adventures.isEmpty()) {
             echo("No adventures found, skipping room lookup.")
             return
         }
