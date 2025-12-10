@@ -14,7 +14,7 @@ class WorldController {
     // TODO: Implement world creation logic
     @PostMapping("/world")
     fun createWorld(@AuthenticationPrincipal user: User): WorldIdResponse {
-        logger.info("User ${user.username} was provided")
+        logger.info("Player ${user.username} was provided")
         return WorldIdResponse("world-id-placeholder")
     }
 }

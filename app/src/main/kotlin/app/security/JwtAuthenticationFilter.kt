@@ -48,7 +48,7 @@ class JwtAuthenticationFilter(private val jwtService: JwtService, private val us
         } catch (e: JwtException) {
             logger.warn("Invalid JWT token: {}", e)
         } catch (e: UsernameNotFoundException) {
-            logger.warn("User not found for JWT token: {}", e)
+            logger.warn("Player not found for JWT token: {}", e)
         }
 
         filterChain.doFilter(request, response)

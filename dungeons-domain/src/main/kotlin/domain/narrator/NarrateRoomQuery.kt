@@ -2,7 +2,7 @@ package io.dungeons.domain.narrator
 
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.core.Id
-import io.dungeons.domain.core.User
+import io.dungeons.domain.core.Player
 import io.dungeons.domain.savegame.SaveGame
 import io.dungeons.domain.savegame.SaveGameRepository
 import org.springframework.stereotype.Component
@@ -13,7 +13,7 @@ class NarrateRoomQuery(
     private val saveGameRepository: SaveGameRepository,
     private val adventureRepository: AdventureRepository,
 ) {
-    fun execute(userId: Id<User>, saveGameId: Id<SaveGame>): NarratedRoom? {
+    fun execute(userId: Id<Player>, saveGameId: Id<SaveGame>): NarratedRoom? {
         val saveGame = saveGameRepository.findByUserId(userId, saveGameId) ?: return null
         val adventure = adventureRepository.findById(saveGame.adventureId).getOrNull()
 

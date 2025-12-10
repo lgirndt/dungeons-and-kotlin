@@ -14,7 +14,7 @@ import io.dungeons.cli.GameStateHolder
 import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.ListAdventuresQuery
 import io.dungeons.domain.core.Id
-import io.dungeons.domain.core.User
+import io.dungeons.domain.core.Player
 import io.dungeons.domain.savegame.NewGameUseCase
 import org.springframework.stereotype.Component
 
@@ -76,7 +76,7 @@ class PickAdventureScreen(
             error("Cannot create game: player not initialized")
         }
 
-        val userId: Id<User> = Id.fromUUID(player.id.toUUID())
+        val userId: Id<Player> = Id.fromUUID(player.id.toUUID())
         val gameId = newGameUseCase.execute(userId, adventure)
         val newGameState = gameStateHolder.gameState.copy(
             currentGameId = gameId,

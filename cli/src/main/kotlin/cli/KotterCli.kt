@@ -14,6 +14,7 @@ import io.dungeons.cli.screen.RoomScreen
 import io.dungeons.cli.screen.Screen
 import io.dungeons.cli.screen.ScreenTransition
 import io.dungeons.domain.core.Id
+import io.dungeons.domain.core.Player
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
