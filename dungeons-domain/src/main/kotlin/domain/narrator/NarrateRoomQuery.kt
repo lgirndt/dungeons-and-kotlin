@@ -14,7 +14,9 @@ class NarrateRoomQuery(
     private val adventureRepository: AdventureRepository,
 ) {
     fun execute(userId: Id<Player>, saveGameId: Id<SaveGame>): NarratedRoom? {
-        val saveGame = saveGameRepository.findByUserId(userId, saveGameId) ?: return null
+        val saveGame = saveGameRepository.findByUserId(userId, saveGameId).getOrNull()
+            ?: error("Cannot find game with id $saveGameId")
+
         val adventure = adventureRepository.findById(saveGame.adventureId).getOrNull()
 
         return adventure?.let {
