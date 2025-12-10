@@ -18,8 +18,8 @@ val SOME_ROOM = Room(
 val SOME_ADVENTURE = Adventure(
     id = Id.generate(),
     name = "Test Adventure",
-    initialRoomId = Id.generate(),
-    rooms = listOf(),
+    initialRoomId = SOME_ROOM.id,
+    rooms = listOf(SOME_ROOM),
 )
 
 val SOME_SAVE_GAME = SaveGame(

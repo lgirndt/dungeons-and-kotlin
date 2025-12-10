@@ -33,7 +33,6 @@ class MongoDBAdventureRepositoryTest {
     @Test
     fun `should return all saved adventures`() {
         // Given
-//        repository.deleteAll()
         val adventure1 = SOME_ADVENTURE.copy(id = io.dungeons.domain.core.Id.generate())
         val adventure2 = SOME_ADVENTURE.copy(id = io.dungeons.domain.core.Id.generate())
         repository.save(adventure1)
