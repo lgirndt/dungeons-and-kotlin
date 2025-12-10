@@ -7,6 +7,7 @@ import kotlin.test.assertEquals
 import kotlin.test.assertTrue
 
 @DataMongoTest
+@CleanMongoRepositories
 class MongoDBSaveGameRepositoryTest {
 
     @Autowired

@@ -6,6 +6,8 @@ import org.bson.UuidRepresentation
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.context.annotation.Bean
+import org.springframework.data.mongodb.MongoDatabaseFactory
+import org.springframework.data.mongodb.MongoTransactionManager
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.testcontainers.mongodb.MongoDBContainer
 
@@ -23,7 +25,7 @@ class TestConfiguration {
     @Bean
     @ServiceConnection
     fun mongoDBContainer(): MongoDBContainer {
-        return MongoDBContainer("mongo:latest")
+        return MongoDBContainer("mongo:8")
     }
 
     /**
@@ -33,7 +35,7 @@ class TestConfiguration {
     @Bean
     fun mongoClientSettings(container: MongoDBContainer): MongoClientSettings {
         return MongoClientSettings.builder()
-            .applyConnectionString(ConnectionString(container.connectionString))
+            .applyConnectionString(ConnectionString(container.connectionString + "?retryWrites=false"))
             .uuidRepresentation(UuidRepresentation.STANDARD)
             .build()
     }
