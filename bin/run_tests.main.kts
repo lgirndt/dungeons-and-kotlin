@@ -27,17 +27,37 @@ class RunTests : CliktCommand(name = "run_tests", help = "Run tests with concise
             .redirectErrorStream(true)
             .start()
 
-        // Capture output but don't print it (reduce noise)
-        process.inputStream.bufferedReader().use { it.readText() }
+        // Capture output
+        val gradleOutput = process.inputStream.bufferedReader().use { it.readText() }
         val exitCode = process.waitFor()
 
         if (exitCode == 0) {
             echo("✓ All tests passed successfully")
             exitProcess(0)
         } else {
-            echo("✗ Tests failed\n", err = true)
-            val failures = parseTestFailures(projectRoot)
-            printFailures(failures)
+            echo("✗ Build/tests failed\n", err = true)
+
+            // Detect if it's a compilation error by checking Gradle output
+            val hasCompilationError = gradleOutput.contains("Compilation error") ||
+                    gradleOutput.contains("compileKotlin FAILED") ||
+                    gradleOutput.contains("compileTestKotlin FAILED") ||
+                    gradleOutput.contains("e: file:///")
+
+            if (hasCompilationError) {
+                // Compilation failed - show Gradle output
+                echo("Compilation error detected. Gradle output:\n")
+                echo(gradleOutput)
+            } else {
+                // Tests ran but failed - parse XML for concise output
+                val failures = parseTestFailures(projectRoot)
+                if (failures.isEmpty()) {
+                    // No test failures but build failed - show gradle output
+                    echo("Build failed but no test failures detected. Gradle output:\n")
+                    echo(gradleOutput)
+                } else {
+                    printFailures(failures)
+                }
+            }
             exitProcess(1)
         }
     }
