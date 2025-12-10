@@ -9,25 +9,29 @@ import org.springframework.data.convert.WritingConverter
 import org.springframework.data.mongodb.core.convert.MongoCustomConversions
 import java.util.*
 
+/**
+ * MongoDB configuration for custom type conversions.
+ * Registers converters for the Id<T> value class to/from UUID.
+ */
 @Configuration
-class MongoConfiguration {
+class MongoDbConfiguration {
     @Bean
-    fun customConversions(): MongoCustomConversions {
+    fun mongoCustomConversions(): MongoCustomConversions {
         return MongoCustomConversions(
             listOf(
-                IdWritingConverter(),
-                IdReadingConverter()
+                IdToUuidConverter(),
+                UuidToIdConverter()
             )
         )
     }
 }
 
 @WritingConverter
-class IdWritingConverter : Converter<Id<*>, UUID> {
+class IdToUuidConverter : Converter<Id<*>, UUID> {
     override fun convert(source: Id<*>): UUID = source.value
 }
 
 @ReadingConverter
-class IdReadingConverter : Converter<UUID, Id<*>> {
+class UuidToIdConverter : Converter<UUID, Id<*>> {
     override fun convert(source: UUID): Id<*> = Id.fromUUID<Any>(source)
 }

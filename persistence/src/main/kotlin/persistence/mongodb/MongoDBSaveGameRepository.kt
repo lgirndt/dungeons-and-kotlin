@@ -12,10 +12,13 @@ import java.util.*
 @Repository
 interface MongoDBSaveGameRepository : SaveGameRepository, MongoRepository<SaveGame, Id<SaveGame>> {
 
+    @Query("{ '_id': ?0 }")
+    override fun findById(id: Id<SaveGame>): Optional<SaveGame>
+
     @Query("""
-        { 
-            "userId": ?0, 
-            "id": ?1 
+        {
+            "userId": ?0,
+            "_id": ?1
         }
     """)
     override fun findByUserId(

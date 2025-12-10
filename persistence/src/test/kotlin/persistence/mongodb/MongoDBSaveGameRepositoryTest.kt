@@ -3,7 +3,7 @@ package io.dungeons.persistence.mongodb
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest
-import org.springframework.test.context.DynamicPropertySource
+import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.testcontainers.containers.MongoDBContainer
 import org.testcontainers.junit.jupiter.Container
 import org.testcontainers.junit.jupiter.Testcontainers
@@ -16,15 +16,8 @@ class MongoDBSaveGameRepositoryTest {
 
     companion object {
         @Container
+        @ServiceConnection
         val mongoDBContainer = MongoDBContainer("mongo:8.0")
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun setProperties(registry: org.springframework.test.context.DynamicPropertyRegistry) {
-            registry.add("spring.data.mongodb.uri") {
-                "${mongoDBContainer.connectionString}?uuidRepresentation=standard"
-            }
-        }
     }
 
     @Autowired
@@ -66,10 +59,10 @@ class MongoDBSaveGameRepositoryTest {
         val saveGame = SOME_SAVE_GAME.copy()
         repository.save(saveGame)
 
-        val differentPlayer = SOME_PLAYER.copy()
+        val differentPlayerId = io.dungeons.domain.core.Id.generate<io.dungeons.domain.core.Player>()
 
         // When
-        val found = repository.findByUserId(differentPlayer.id, saveGame.id)
+        val found = repository.findByUserId(differentPlayerId, saveGame.id)
 
         // Then
         assertTrue(found.isEmpty)
