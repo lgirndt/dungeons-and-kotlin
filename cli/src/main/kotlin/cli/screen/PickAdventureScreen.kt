@@ -13,8 +13,6 @@ import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
 import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.ListAdventuresQuery
-import io.dungeons.domain.core.Id
-import io.dungeons.domain.core.Player
 import io.dungeons.domain.savegame.NewGameUseCase
 import org.springframework.stereotype.Component
 
@@ -71,13 +69,9 @@ class PickAdventureScreen(
     }
 
     private fun createNewGame(adventure: Adventure) {
-        val player = gameStateHolder.gameState.player
-        if (player == null) {
-            error("Cannot create game: player not initialized")
-        }
+        val player = gameStateHolder.gameState.player ?: error("Cannot create game: player not initialized")
 
-        val userId: Id<Player> = Id.fromUUID(player.id.toUUID())
-        val gameId = newGameUseCase.execute(userId, adventure)
+        val gameId = newGameUseCase.execute(player.id, adventure)
         val newGameState = gameStateHolder.gameState.copy(
             currentGameId = gameId,
         )
