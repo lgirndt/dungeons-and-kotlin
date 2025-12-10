@@ -1,6 +1,5 @@
 package io.dungeons.domain.narrator
 
-import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.core.Id
 import io.dungeons.domain.core.User
@@ -15,21 +14,20 @@ class NarrateRoomQuery(
     private val adventureRepository: AdventureRepository,
 ) {
     fun execute(userId: Id<User>, saveGameId: Id<SaveGame>): NarratedRoom? {
-        val saveGame = saveGameRepository.findByUserId(userId, saveGameId)
-        require(saveGame != null) { "No save game found for user $userId" }
+        val saveGame = saveGameRepository.findByUserId(userId, saveGameId) ?: return null
+        val adventure = adventureRepository.findById(saveGame.adventureId).getOrNull()
 
-        val adventure: Adventure? = adventureRepository.findById(saveGame.adventureId).getOrNull()
-        require(adventure != null) { "No adventure found for id ${saveGame.adventureId}" }
-
-        return NarratedRoom(
-            roomId = saveGame.currentRoomId,
-            party = Party(
-                heroes = listOf(
-                    Hero(name = "Aragorn"),
-                    Hero(name = "Legolas"),
+        return adventure?.let {
+            NarratedRoom(
+                roomId = saveGame.currentRoomId,
+                party = Party(
+                    heroes = listOf(
+                        Hero(name = "Aragorn"),
+                        Hero(name = "Legolas"),
+                    ),
                 ),
-            ),
-            readOut = "You are in a dark room. There is a door to the north.",
-        )
+                readOut = "You are in a dark room. There is a door to the north.",
+            )
+        }
     }
 }

@@ -9,10 +9,8 @@ import io.dungeons.domain.adventure.RoomRepository
 import org.springframework.stereotype.Component
 
 @Component
-class HelloCommand(
-    private val adventureRepository: AdventureRepository,
-    private val roomRepository: RoomRepository,
-) : CliktCommand(name = "hello") {
+class HelloCommand(private val adventureRepository: AdventureRepository, private val roomRepository: RoomRepository) :
+    CliktCommand(name = "hello") {
     private val name by option("--name", "-n").help("Name to greet")
 
     override fun help(context: Context) = "Say hello"
@@ -28,7 +26,7 @@ class HelloCommand(
         val adventures = adventureRepository.findAll()
         echo("You have ${adventures.count()} adventures in the repository.")
 
-        if(adventures.count() == 0) {
+        if (adventures.count() == 0) {
             echo("No adventures found, skipping room lookup.")
             return
         }
@@ -38,7 +36,7 @@ class HelloCommand(
 
         val room = roomRepository.find(
             adventureId = adventure.id,
-            roomId =  adventure.initialRoomId
+            roomId = adventure.initialRoomId,
         )
         echo("I found the room '${room?.name ?: "<not found>"}' in the adventure.")
     }

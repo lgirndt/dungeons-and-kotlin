@@ -4,6 +4,8 @@ import com.varabyte.kotter.foundation.runUntilSignal
 import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
+import kotlin.properties.ReadWriteProperty
+import kotlin.reflect.KProperty
 
 enum class ScreenTransition {
     Exit,
@@ -11,6 +13,24 @@ enum class ScreenTransition {
     MyScreen,
     PickAdventure,
     Room,
+}
+
+/**
+ * Property delegate for properties that should be initialized exactly once.
+ * Provides better error messages than lateinit and prevents re-initialization.
+ */
+class InitOnce<T> : ReadWriteProperty<Any?, T> {
+    private var value: T? = null
+
+    override fun getValue(thisRef: Any?, property: KProperty<*>): T =
+        value ?: error("Property ${property.name} accessed before initialization")
+
+    override fun setValue(thisRef: Any?, property: KProperty<*>, newValue: T) {
+        if (value != null) {
+            error("Property ${property.name} is already initialized and cannot be set again")
+        }
+        value = newValue
+    }
 }
 
 abstract class Screen<T>(

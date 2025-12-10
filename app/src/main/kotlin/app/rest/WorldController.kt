@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RestController
 class WorldController {
     private val logger = LoggerFactory.getLogger(WorldController::class.java)
 
+    // TODO: Implement world creation logic
     @PostMapping("/world")
     fun createWorld(@AuthenticationPrincipal user: User): WorldIdResponse {
         logger.info("User ${user.username} was provided")
