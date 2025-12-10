@@ -5,5 +5,4 @@ plugins {
 dependencies {
     implementation(libs.guava)
     implementation("org.springframework:spring-context")
-    implementation("org.springframework.data:spring-data-commons")
 }
