@@ -10,19 +10,19 @@ import org.springframework.stereotype.Repository
 import java.util.*
 
 @Repository
-interface MongoDBSaveGameRepository : SaveGameRepository, MongoRepository<SaveGame, Id<SaveGame>> {
-
+interface MongoDBSaveGameRepository :
+    SaveGameRepository,
+    MongoRepository<SaveGame, Id<SaveGame>> {
     @Query("{ '_id': ?0 }")
     override fun findById(id: Id<SaveGame>): Optional<SaveGame>
 
-    @Query("""
+    @Query(
+        """
         {
             "userId": ?0,
             "_id": ?1
         }
-    """)
-    override fun findByUserId(
-        userId: Id<Player>,
-        saveGameId: Id<SaveGame>,
-    ): Optional<SaveGame>
+    """,
+    )
+    override fun findByUserId(userId: Id<Player>, saveGameId: Id<SaveGame>): Optional<SaveGame>
 }

@@ -5,7 +5,6 @@ import io.dungeons.domain.core.Player
 import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
-
 class MockSaveGameRepository : SaveGameRepository {
     private val storage: MutableMap<Id<Player>, SaveGame> = ConcurrentHashMap()
 

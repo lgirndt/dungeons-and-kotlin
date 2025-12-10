@@ -18,6 +18,7 @@ import org.springframework.stereotype.Repository
 @Repository
 class MongoDBRoomRepository(private val mongoTemplate: MongoTemplate) : RoomRepository {
     override fun find(adventureId: Id<Adventure>, roomId: Id<Room>): Room? {
+        @Suppress("StringLiteralDuplication")
         val aggregation = Aggregation.newAggregation(
             match(Criteria.where("_id").isEqualTo(adventureId.value)),
             project("rooms"),

@@ -10,7 +10,6 @@ import kotlin.test.assertTrue
 @DataMongoTest
 @CleanMongoRepositories
 class MongoDBAdventureRepositoryTest {
-
     @Autowired
     private lateinit var repository: MongoDBAdventureRepository
 

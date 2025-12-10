@@ -12,7 +12,6 @@ import java.util.*
 interface MongoDBAdventureRepository :
     AdventureRepository,
     MongoRepository<Adventure, Id<Adventure>> {
-
     @Query("{ '_id': ?0 }")
     override fun findById(id: Id<Adventure>): Optional<Adventure>
 }

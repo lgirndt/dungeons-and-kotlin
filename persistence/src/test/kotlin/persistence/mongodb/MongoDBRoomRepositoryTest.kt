@@ -13,7 +13,6 @@ import kotlin.test.assertNull
 @CleanMongoRepositories
 @Import(MongoDBRoomRepository::class)
 class MongoDBRoomRepositoryTest {
-
     @Autowired
     private lateinit var roomRepository: MongoDBRoomRepository
 
@@ -27,7 +26,7 @@ class MongoDBRoomRepositoryTest {
         val room2 = SOME_ROOM.copy(id = Id.generate(), name = "Room 2")
         val adventure = SOME_ADVENTURE.copy(
             id = Id.generate(),
-            rooms = listOf(room1, room2)
+            rooms = listOf(room1, room2),
         )
         adventureRepository.save(adventure)
 
@@ -46,7 +45,7 @@ class MongoDBRoomRepositoryTest {
         val existingRoom = SOME_ROOM.copy(id = Id.generate())
         val adventure = SOME_ADVENTURE.copy(
             id = Id.generate(),
-            rooms = listOf(existingRoom)
+            rooms = listOf(existingRoom),
         )
         adventureRepository.save(adventure)
 
@@ -77,14 +76,14 @@ class MongoDBRoomRepositoryTest {
         val room1 = SOME_ROOM.copy(id = Id.generate(), name = "Adventure 1 Room")
         val adventure1 = SOME_ADVENTURE.copy(
             id = Id.generate(),
-            rooms = listOf(room1)
+            rooms = listOf(room1),
         )
         adventureRepository.save(adventure1)
 
         val room2 = SOME_ROOM.copy(id = Id.generate(), name = "Adventure 2 Room")
         val adventure2 = SOME_ADVENTURE.copy(
             id = Id.generate(),
-            rooms = listOf(room2)
+            rooms = listOf(room2),
         )
         adventureRepository.save(adventure2)
 
