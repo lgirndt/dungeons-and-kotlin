@@ -10,6 +10,7 @@ import com.varabyte.kotter.terminal.virtual.VirtualTerminal
 import io.dungeons.cli.screen.DetailsScreen
 import io.dungeons.cli.screen.MyScreen
 import io.dungeons.cli.screen.PickAdventureScreen
+import io.dungeons.cli.screen.PickGameScreen
 import io.dungeons.cli.screen.RoomScreen
 import io.dungeons.cli.screen.Screen
 import io.dungeons.cli.screen.ScreenTransition
@@ -32,6 +33,7 @@ class KotterCli {
         myScreen: MyScreen,
         detailsScreen: DetailsScreen,
         pickAdventureScreen: PickAdventureScreen,
+        pickGameScreen: PickGameScreen,
         roomScreen: RoomScreen,
     ): ScreenMap {
         // It makes much more sense to build this lazy
@@ -39,6 +41,7 @@ class KotterCli {
             myScreen,
             detailsScreen,
             pickAdventureScreen,
+            pickGameScreen,
             roomScreen,
         ).associateBy { it.ownTransition }
     }
@@ -60,7 +63,7 @@ class KotterCli {
                 { VirtualTerminal.create(title = "D&D", terminalSize = TerminalSize(80, 40)) },
             ).firstSuccess(),
         ) {
-            var transition = ScreenTransition.PickAdventure
+            var transition = ScreenTransition.PickGame
             while (transition != ScreenTransition.Exit) {
                 clearScreen()
                 val screen = screens[transition] ?: break

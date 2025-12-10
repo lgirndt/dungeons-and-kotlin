@@ -6,12 +6,16 @@ import java.util.*
 import java.util.concurrent.ConcurrentHashMap
 
 class MockSaveGameRepository : SaveGameRepository {
-    private val storage: MutableMap<Id<Player>, SaveGame> = ConcurrentHashMap()
+    private val storage: MutableMap<Id<SaveGame>, SaveGame> = ConcurrentHashMap()
 
     override fun save(saveGame: SaveGame) {
-        storage[saveGame.userId] = saveGame
+        storage[saveGame.id] = saveGame
     }
 
     override fun findByUserId(userId: Id<Player>, saveGameId: Id<SaveGame>): Optional<SaveGame> =
-        Optional.ofNullable(storage[userId])
+        Optional.ofNullable(storage[saveGameId])
+            .filter { it.userId == userId }
+
+    override fun findAllByUserId(userId: Id<Player>): List<SaveGame> =
+        storage.values.filter { it.userId == userId }
 }

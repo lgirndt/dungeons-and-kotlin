@@ -12,6 +12,7 @@ enum class ScreenTransition {
     Details,
     MyScreen,
     PickAdventure,
+    PickGame,
     Room,
 }
 
