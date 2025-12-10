@@ -10,5 +10,4 @@ import org.springframework.stereotype.Repository
 @Repository
 interface MongoDBAdventureRepository :
     AdventureRepository,
-    MongoRepository<Adventure, Id<Adventure>>,
-    CrudRepository<Adventure, Id<Adventure>>
+    MongoRepository<Adventure, Id<Adventure>>
