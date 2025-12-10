@@ -20,16 +20,16 @@ enum class ScreenTransition {
  * Provides better error messages than lateinit and prevents re-initialization.
  */
 class InitOnce<T> : ReadWriteProperty<Any?, T> {
-    private var value: T? = null
+    private var internalValue: T? = null
 
     override fun getValue(thisRef: Any?, property: KProperty<*>): T =
-        value ?: error("Property ${property.name} accessed before initialization")
+        internalValue ?: error("Property ${property.name} accessed before initialization")
 
-    override fun setValue(thisRef: Any?, property: KProperty<*>, newValue: T) {
-        if (value != null) {
+    override fun setValue(thisRef: Any?, property: KProperty<*>, value: T) {
+        if (this@InitOnce.internalValue != null) {
             error("Property ${property.name} is already initialized and cannot be set again")
         }
-        value = newValue
+        this@InitOnce.internalValue = value
     }
 }
 
