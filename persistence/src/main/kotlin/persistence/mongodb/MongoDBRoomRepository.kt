@@ -19,19 +19,13 @@ import org.springframework.stereotype.Repository
 class MongoDBRoomRepository(private val mongoTemplate: MongoTemplate) : RoomRepository {
     override fun find(adventureId: Id<Adventure>, roomId: Id<Room>): Room? {
         val aggregation = Aggregation.newAggregation(
-            match(Criteria.where(ID_FIELD).isEqualTo(adventureId.value)),
-            project(ROOMS_FIELD),
-            unwind(ROOMS_FIELD),
-            match(Criteria.where("$ROOMS_FIELD.$ID_FIELD").isEqualTo(roomId.value)),
-            replaceRoot(ROOMS_FIELD),
+            match(Criteria.where("_id").isEqualTo(adventureId.value)),
+            project("rooms"),
+            unwind("rooms"),
+            match(Criteria.where("rooms._id").isEqualTo(roomId.value)),
+            replaceRoot("rooms"),
         )
 
-        return mongoTemplate.aggregate<Room>(aggregation, ADVENTURE_COLLECTION).uniqueMappedResult
-    }
-
-    companion object {
-        private const val ID_FIELD = "_id"
-        private const val ROOMS_FIELD = "rooms"
-        private const val ADVENTURE_COLLECTION = "adventure"
+        return mongoTemplate.aggregate<Room>(aggregation, "adventure").uniqueMappedResult
     }
 }
