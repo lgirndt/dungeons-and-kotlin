@@ -7,7 +7,7 @@ import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.context.annotation.Bean
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
-import org.testcontainers.containers.MongoDBContainer
+import org.testcontainers.mongodb.MongoDBContainer
 
 // DataMongoTest are looking for this annotation
 @SpringBootConfiguration
@@ -23,7 +23,7 @@ class TestConfiguration {
     @Bean
     @ServiceConnection
     fun mongoDBContainer(): MongoDBContainer {
-        return MongoDBContainer("mongo:8.0")
+        return MongoDBContainer("mongo:latest")
     }
 
     /**
