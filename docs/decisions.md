@@ -33,3 +33,11 @@ We are listing all architectural and significant technical decisions made on thi
   we could not use spring boot dependencies in these modules.
 - We are implementing Repositories with Spring Data, especially Spring Data MongoDB. As a consequence, query
   methods will return a Java Optional<T> instead of Kotlin nullable types. We need to accept this.
+
+# Test Data Organization
+- Test data prototype instances (SOME_X pattern) are organized in a structured, maintainable way.
+- Each SOME_X instance is defined in the test scope of the module where class X is defined.
+- Test data instances are placed in `TestDataInstances.kt` files within the same package as their corresponding domain object.
+- This ensures test data lives close to the code it supports while remaining in the test scope.
+- Modules that need test data from other modules (e.g., persistence tests using domain test data) include the test package as a dependency via Gradle's `testClasses` configuration.
+- This approach maintains DRY principles while respecting module boundaries and avoiding circular dependencies.
