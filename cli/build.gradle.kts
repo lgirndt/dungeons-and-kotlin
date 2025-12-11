@@ -10,6 +10,8 @@ dependencies {
     // Spring Boot (without web)
     implementation("org.springframework.boot:spring-boot-starter")
 
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime")
+
     // HTTP Client for making REST calls
     implementation("org.springframework.boot:spring-boot-starter-web-services")
 
@@ -33,5 +35,5 @@ dependencies {
 
 application {
     // Define the main class for the application.
-    mainClass = "io.dungeons.cli.KotterCliKt"
+    mainClass = "io.dungeons.cli.CliKt"
 }

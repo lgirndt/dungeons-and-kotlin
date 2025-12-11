@@ -16,6 +16,13 @@ import io.dungeons.domain.core.Id
 import io.dungeons.domain.savegame.ListSaveGamesQuery
 import io.dungeons.domain.savegame.NewGameUseCase
 import io.dungeons.domain.savegame.SaveGame
+import kotlinx.datetime.LocalDate
+import kotlinx.datetime.LocalDateTime
+import kotlinx.datetime.LocalTime
+import kotlinx.datetime.TimeZone
+import kotlinx.datetime.format
+import kotlinx.datetime.format.char
+import kotlinx.datetime.toLocalDateTime
 import org.springframework.stereotype.Component
 
 @Component
@@ -29,9 +36,41 @@ class PickGameScreen(
     defaultTransition = ScreenTransition.Exit,
 ) {
     private sealed class MenuItem {
-        data object NewGame : MenuItem()
 
-        data class ExistingSave(val saveGame: SaveGame) : MenuItem()
+        abstract val label: String
+
+        data object NewGame : MenuItem() {
+            override val label: String
+                get() = "New Game"
+        }
+
+        data class ExistingSave(val saveGame: SaveGame) : MenuItem() {
+            override val label: String
+                get() {
+                    val localDateTime = saveGame.savedAt.toLocalDateTime(TimeZone.currentSystemDefault())
+                    val dateTime = localDateTime.format(
+                        LocalDateTime.Format {
+                            date(
+                                LocalDate.Format {
+                                    year()
+                                    char('-')
+                                    monthNumber()
+                                    char('-')
+                                    day()
+                                },
+                            )
+                            chars(" ")
+                            time(
+                                LocalTime.Format {
+                                    hour(); char(':'); minute()
+                                },
+                            )
+                        },
+                    )
+                    return "Continue - Save (${dateTime})"
+                }
+        }
+
     }
 
     private var menuItems: LiveList<MenuItem> by InitOnce()
@@ -43,11 +82,7 @@ class PickGameScreen(
             textLine()
             menuItems.forEachIndexed { index, item ->
                 val prefix = if (index == selectedIndex.value) "> " else "  "
-                val label = when (item) {
-                    is MenuItem.NewGame -> "New Game"
-                    is MenuItem.ExistingSave -> "Continue - Save #${item.saveGame.id}"
-                }
-                textLine("$prefix$label")
+                textLine("$prefix${item.label}")
             }
         }
 

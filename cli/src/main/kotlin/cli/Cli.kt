@@ -21,12 +21,16 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import kotlin.time.Clock
 
 typealias ScreenMap = Map<ScreenTransition, Screen<ScreenTransition>>
 
 @SpringBootApplication(scanBasePackages = ["io.dungeons"])
 class Cli {
     private val logger = LoggerFactory.getLogger(Cli::class.java)
+
+    @Bean
+    fun clock() = Clock.System
 
     @Bean
     fun screens(

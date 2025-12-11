@@ -7,4 +7,5 @@ val SOME_SAVE_GAME = SaveGame(
     playerId = Id.generate(),
     adventureId = Id.generate(),
     currentRoomId = Id.generate(),
+    savedAt = kotlinx.datetime.LocalDateTime // .of(2025,1,2,3,4,5).toInstant(ZoneOffset.UTC)
 )

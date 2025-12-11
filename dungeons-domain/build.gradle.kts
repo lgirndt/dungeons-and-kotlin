@@ -4,6 +4,7 @@ plugins {
 
 dependencies {
     implementation(libs.guava)
+    implementation("org.jetbrains.kotlinx:kotlinx-datetime")
     implementation("org.springframework:spring-context")
 }
 

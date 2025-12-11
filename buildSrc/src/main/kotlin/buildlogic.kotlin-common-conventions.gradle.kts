@@ -37,6 +37,7 @@ dependencyManagement {
         dependency("com.google.guava:guava:33.5.0-jre")
         dependency("io.mockk:mockk:1.14.6")
         dependency("dev.detekt:detekt-rules-ktlint-wrapper:2.0.0-alpha.1")
+        dependency("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
     }
 }
 
