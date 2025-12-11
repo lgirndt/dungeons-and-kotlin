@@ -17,7 +17,6 @@ import kotlin.time.Instant
 @DataMongoTest
 @CleanMongoRepositories
 class DateToKotlinInstantConverterTest {
-
     @Autowired
     private lateinit var repository: TestEntityRepository
 

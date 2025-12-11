@@ -14,10 +14,7 @@ internal interface TestEntityRepository : MongoRepository<TestEntity, String>
  * Shared test entity for converter integration tests.
  */
 @MongoDocument
-internal data class TestEntity(
-    @Id val id: String,
-    val timestamp: Instant,
-)
+internal data class TestEntity(@Id val id: String, val timestamp: Instant)
 
 /**
  * Collection name for test entities.

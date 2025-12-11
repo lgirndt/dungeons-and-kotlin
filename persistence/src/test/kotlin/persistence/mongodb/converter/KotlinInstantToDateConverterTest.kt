@@ -17,7 +17,6 @@ import kotlin.time.Instant
 @DataMongoTest
 @CleanMongoRepositories
 class KotlinInstantToDateConverterTest {
-
     @Autowired
     private lateinit var repository: TestEntityRepository
 
@@ -56,5 +55,4 @@ class KotlinInstantToDateConverterTest {
         val storedDate = storedValue as Date
         assertThat(storedDate.time).isEqualTo(testInstant.toEpochMilliseconds())
     }
-
 }

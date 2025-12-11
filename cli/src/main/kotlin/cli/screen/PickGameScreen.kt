@@ -36,7 +36,6 @@ class PickGameScreen(
     defaultTransition = ScreenTransition.Exit,
 ) {
     private sealed class MenuItem {
-
         abstract val label: String
 
         data object NewGame : MenuItem() {
@@ -62,15 +61,16 @@ class PickGameScreen(
                             chars(" ")
                             time(
                                 LocalTime.Format {
-                                    hour(); char(':'); minute()
+                                    hour()
+                                    char(':')
+                                    minute()
                                 },
                             )
                         },
                     )
-                    return "Continue - Save (${dateTime})"
+                    return "Continue - Save ($dateTime)"
                 }
         }
-
     }
 
     private var menuItems: LiveList<MenuItem> by InitOnce()

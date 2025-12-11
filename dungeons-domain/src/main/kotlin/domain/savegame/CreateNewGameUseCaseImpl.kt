@@ -8,13 +8,11 @@ import java.util.logging.Logger
 import kotlin.time.Clock
 
 @Component
-class CreateNewGameUseCaseImpl(
-    private val saveGameRepository: SaveGameRepository,
-    private val clock: Clock,
-) : CreateNewGameUseCase {
+class CreateNewGameUseCaseImpl(private val saveGameRepository: SaveGameRepository, private val clock: Clock) :
+    CreateNewGameUseCase {
     private val logger = Logger.getLogger(CreateNewGameUseCase::class.java.name)
 
-    override  fun execute(userId: Id<Player>, adventure: Adventure): Id<SaveGame> {
+    override fun execute(userId: Id<Player>, adventure: Adventure): Id<SaveGame> {
         logger.info("New game with id $userId")
         val saveGame = SaveGame(
             playerId = userId,
