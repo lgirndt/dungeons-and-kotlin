@@ -13,8 +13,8 @@ import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.core.Id
+import io.dungeons.domain.savegame.CreateNewGameUseCase
 import io.dungeons.domain.savegame.ListSaveGamesQuery
-import io.dungeons.domain.savegame.NewGameUseCase
 import io.dungeons.domain.savegame.SaveGame
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
@@ -28,7 +28,7 @@ import org.springframework.stereotype.Component
 @Component
 class PickGameScreen(
     private val listSaveGamesQuery: ListSaveGamesQuery,
-    private val newGameUseCase: NewGameUseCase,
+    private val createNewGameUseCase: CreateNewGameUseCase,
     private val adventureRepository: AdventureRepository,
     private val gameStateHolder: GameStateHolder,
 ) : Screen<ScreenTransition>(
@@ -133,7 +133,7 @@ class PickGameScreen(
         val firstAdventure = adventureRepository.findAll().firstOrNull()
             ?: error("Cannot create game: no adventures available")
 
-        val gameId = newGameUseCase.execute(player.id, firstAdventure)
+        val gameId = createNewGameUseCase.execute(player.id, firstAdventure)
         gameStateHolder.gameState = gameStateHolder.gameState.copy(currentGameId = gameId)
     }
 
