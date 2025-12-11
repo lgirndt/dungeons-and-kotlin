@@ -133,7 +133,11 @@ class PickGameScreen(
         val firstAdventure = adventureRepository.findAll().firstOrNull()
             ?: error("Cannot create game: no adventures available")
 
-        val gameId = createNewGameUseCase.execute(player.id, firstAdventure)
+        val gameId = createNewGameUseCase.execute(
+            player.id.toUUID(),
+            firstAdventure.id.toUUID(),
+            firstAdventure.initialRoomId.toUUID(),
+        )
         gameStateHolder.gameState = gameStateHolder.gameState.copy(currentGameId = gameId)
     }
 

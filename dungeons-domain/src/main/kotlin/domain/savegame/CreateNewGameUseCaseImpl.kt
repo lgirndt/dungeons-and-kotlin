@@ -1,9 +1,8 @@
 package io.dungeons.domain.savegame
 
-import io.dungeons.domain.adventure.Adventure
-import io.dungeons.domain.core.Player
 import io.dungeons.port.Id
 import org.springframework.stereotype.Component
+import java.util.*
 import java.util.logging.Logger
 import kotlin.time.Clock
 
@@ -12,12 +11,12 @@ class CreateNewGameUseCaseImpl(private val saveGameRepository: SaveGameRepositor
     CreateNewGameUseCase {
     private val logger = Logger.getLogger(CreateNewGameUseCase::class.java.name)
 
-    override fun execute(userId: Id<Player>, adventure: Adventure): Id<SaveGame> {
-        logger.info("New game with id $userId")
+    override fun execute(playerId: UUID, adventureId: UUID, initialRoomId: UUID): Id<SaveGame> {
+        logger.info("New game with id $playerId")
         val saveGame = SaveGame(
-            playerId = userId,
-            adventureId = adventure.id,
-            currentRoomId = adventure.initialRoomId,
+            playerId = Id.fromUUID(playerId),
+            adventureId = Id.fromUUID(adventureId),
+            currentRoomId = Id.fromUUID(initialRoomId),
             savedAt = clock.now(),
         )
         saveGameRepository.save(saveGame)
