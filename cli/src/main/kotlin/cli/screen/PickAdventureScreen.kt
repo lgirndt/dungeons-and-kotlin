@@ -11,7 +11,7 @@ import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
-import io.dungeons.domain.adventure.Adventure
+import io.dungeons.domain.adventure.AdventureSummaryResponse
 import io.dungeons.domain.adventure.ListAdventuresQuery
 import io.dungeons.domain.savegame.CreateNewGameUseCase
 import org.springframework.stereotype.Component
@@ -25,7 +25,7 @@ class PickAdventureScreen(
     ownTransition = ScreenTransition.PickAdventure,
     defaultTransition = ScreenTransition.Exit,
 ) {
-    private var adventures: LiveList<Adventure> by InitOnce()
+    private var adventures: LiveList<AdventureSummaryResponse> by InitOnce()
     private var selectedAdventure: LiveVar<Int> by InitOnce()
 
     override val sectionBlock: MainRenderScope.() -> Unit
@@ -68,13 +68,13 @@ class PickAdventureScreen(
         selectedAdventure = session.liveVarOf(0)
     }
 
-    private fun createNewGame(adventure: Adventure) {
+    private fun createNewGame(adventure: AdventureSummaryResponse) {
         val player = gameStateHolder.gameState.player ?: error("Cannot create game: player not initialized")
 
         val gameId = createNewGameUseCase.execute(
             player.id.toUUID(),
-            adventure.id.toUUID(),
-            adventure.initialRoomId.toUUID(),
+            adventure.id,
+            adventure.initialRoomId,
         )
         val newGameState = gameStateHolder.gameState.copy(
             currentGameId = gameId,
