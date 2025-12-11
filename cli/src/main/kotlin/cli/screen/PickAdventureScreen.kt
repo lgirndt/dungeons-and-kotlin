@@ -64,7 +64,7 @@ class PickAdventureScreen(
     }
 
     override fun init(session: Session) {
-        adventures = session.liveListOf(listAdventuresQuery.execute())
+        adventures = session.liveListOf(listAdventuresQuery.query())
         selectedAdventure = session.liveVarOf(0)
     }
 

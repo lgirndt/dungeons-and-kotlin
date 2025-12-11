@@ -6,5 +6,5 @@ import org.springframework.stereotype.Component
 
 @Component
 class ListSaveGamesQuery(private val saveGameRepository: SaveGameRepository) {
-    fun execute(userId: Id<Player>): List<SaveGame> = saveGameRepository.findAllByUserId(userId)
+    fun query(userId: Id<Player>): List<SaveGame> = saveGameRepository.findAllByUserId(userId)
 }

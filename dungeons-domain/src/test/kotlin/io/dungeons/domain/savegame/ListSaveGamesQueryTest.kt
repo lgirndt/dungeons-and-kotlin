@@ -28,7 +28,7 @@ class ListSaveGamesQueryTest {
         )
         every { repository.findAllByUserId(playerId) } returns expectedSaves
 
-        val result = query.execute(playerId)
+        val result = query.query(playerId)
 
         assertEquals(expectedSaves, result)
         verify(exactly = 1) { repository.findAllByUserId(playerId) }
@@ -39,7 +39,7 @@ class ListSaveGamesQueryTest {
         val playerId = Id.generate<Player>()
         every { repository.findAllByUserId(playerId) } returns emptyList()
 
-        val result = query.execute(playerId)
+        val result = query.query(playerId)
 
         assertEquals(emptyList(), result)
     }

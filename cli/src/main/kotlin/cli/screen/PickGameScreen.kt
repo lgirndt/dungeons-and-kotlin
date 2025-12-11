@@ -117,7 +117,7 @@ class PickGameScreen(
         val player = gameStateHolder.gameState.player
             ?: error("Cannot initialize PickGameScreen: player not initialized")
 
-        val existingSaves = listSaveGamesQuery.execute(player.id)
+        val existingSaves = listSaveGamesQuery.query(player.id)
         val items = mutableListOf<MenuItem>()
         items.add(MenuItem.NewGame)
         items.addAll(existingSaves.map { MenuItem.ExistingSave(it) })
@@ -130,7 +130,7 @@ class PickGameScreen(
         val player = gameStateHolder.gameState.player
             ?: error("Cannot create game: player not initialized")
 
-        val firstAdventure = listAdventuresQuery.execute().firstOrNull()
+        val firstAdventure = listAdventuresQuery.query().firstOrNull()
             ?: error("Cannot create game: no adventures available")
 
         val gameId = createNewGameUseCase.execute(

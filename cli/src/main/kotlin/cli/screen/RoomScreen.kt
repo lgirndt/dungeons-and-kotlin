@@ -37,7 +37,7 @@ class RoomScreen(private val narrateRoomQuery: NarrateRoomQuery, private val gam
 
     override fun init(session: Session) {
         val (playerId, gameId) = gameStateHolder.unpackIdsOrThrow()
-        val narratedRoom = narrateRoomQuery.execute(
+        val narratedRoom = narrateRoomQuery.query(
             Id.fromUUID(playerId.toUUID()),
             gameId,
         )
