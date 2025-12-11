@@ -49,7 +49,8 @@ class Cli {
     private fun login(gameStateHolder: GameStateHolder) {
         val gameState = gameStateHolder.gameState
         gameStateHolder.gameState = gameState.copy(
-            player = Player(Id.generate()),
+            // TODO: we need a proper login flow
+            player = Player(Id.fromString("609cb790-d8b5-4a97-830f-0200fee465ab")),
         )
     }
 
