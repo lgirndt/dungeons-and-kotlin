@@ -15,7 +15,12 @@ private fun Adventure.toSummaryResponse() = AdventureSummaryResponse(
     initialRoomId = this.initialRoomId.toUUID(),
 )
 
+interface ListAdventuresQuery{
+    fun query() : List<AdventureSummaryResponse>
+}
+
+
 @Component
-class ListAdventuresQuery(private val adventureRepository: AdventureRepository) {
+class ListAdventuresQueryImpl(private val adventureRepository: AdventureRepository) {
     fun query() = adventureRepository.findAll().map(Adventure::toSummaryResponse)
 }
