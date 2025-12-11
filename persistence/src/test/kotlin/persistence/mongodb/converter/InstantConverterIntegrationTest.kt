@@ -1,13 +1,14 @@
 package io.dungeons.persistence.mongodb.converter
 
+import io.dungeons.persistence.mongodb.CleanMongoRepositories
 import org.assertj.core.api.Assertions.assertThat
 import org.bson.Document
-import org.junit.jupiter.api.AfterEach
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest
 import org.springframework.data.annotation.Id
 import org.springframework.data.mongodb.core.MongoTemplate
+import org.springframework.data.mongodb.repository.MongoRepository
 import java.util.*
 import kotlin.time.Instant
 import org.springframework.data.mongodb.core.mapping.Document as MongoDocument
@@ -16,15 +17,14 @@ import org.springframework.data.mongodb.core.mapping.Document as MongoDocument
  * Integration test for kotlin.time.Instant serialization to BSON DateTime.
  */
 @DataMongoTest
+@CleanMongoRepositories
 class InstantConverterIntegrationTest {
 
     @Autowired
-    private lateinit var mongoTemplate: MongoTemplate
+    private lateinit var repository: TestInstantEntityRepository
 
-    @AfterEach
-    fun cleanup() {
-        mongoTemplate.dropCollection(TEST_COLLECTION_NAME)
-    }
+    @Autowired
+    private lateinit var mongoTemplate: MongoTemplate
 
     @Test
     fun `should serialize kotlin time Instant as BSON DateTime`() {
@@ -35,11 +35,11 @@ class InstantConverterIntegrationTest {
             createdAt = testInstant,
         )
 
-        // When: Saving the entity
-        mongoTemplate.save(entity, TEST_COLLECTION_NAME)
+        // When: Saving the entity via repository
+        repository.save(entity)
 
         // Then: The instant should be stored as BSON DateTime (java.util.Date), not as an object
-        val rawDocument = mongoTemplate.getCollection(TEST_COLLECTION_NAME)
+        val rawDocument = mongoTemplate.getCollection(COLLECTION_NAME)
             .find(Document("_id", "test-id"))
             .first()
 
@@ -50,7 +50,7 @@ class InstantConverterIntegrationTest {
         assertThat(storedValue)
             .withFailMessage(
                 "Expected createdAt to be stored as java.util.Date (BSON DateTime), " +
-                    "but was ${storedValue?.javaClass?.simpleName}: $storedValue"
+                    "but was ${storedValue?.javaClass?.simpleName}: $storedValue",
             )
             .isInstanceOf(Date::class.java)
 
@@ -67,20 +67,25 @@ class InstantConverterIntegrationTest {
             put("_id", "test-id")
             put("createdAt", Date(testInstant.toEpochMilliseconds()))
         }
-        mongoTemplate.getCollection(TEST_COLLECTION_NAME).insertOne(document)
+        mongoTemplate.getCollection(COLLECTION_NAME).insertOne(document)
 
-        // When: Reading the entity
-        val entity = mongoTemplate.findById("test-id", TestInstantEntity::class.java, TEST_COLLECTION_NAME)
+        // When: Reading the entity via repository
+        val entity = repository.findById("test-id")
 
         // Then: The instant should be correctly deserialized
-        assertThat(entity).isNotNull
-        assertThat(entity!!.createdAt).isEqualTo(testInstant)
+        assertThat(entity).isPresent
+        assertThat(entity.get().createdAt).isEqualTo(testInstant)
     }
 
     companion object {
-        private const val TEST_COLLECTION_NAME = "test_instant_entities"
+        private const val COLLECTION_NAME = "testInstantEntity"
     }
 }
+
+/**
+ * Repository for test entity.
+ */
+private interface TestInstantEntityRepository : MongoRepository<TestInstantEntity, String>
 
 /**
  * Test entity for verifying kotlin.time.Instant serialization.
