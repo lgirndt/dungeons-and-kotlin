@@ -12,10 +12,10 @@ import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
 import io.dungeons.domain.savegame.CreateNewGameUseCase
-import io.dungeons.domain.savegame.ListSaveGamesQuery
-import io.dungeons.domain.savegame.SaveGame
 import io.dungeons.port.Id
 import io.dungeons.port.ListAdventuresQuery
+import io.dungeons.port.ListSaveGamesQuery
+import io.dungeons.port.SaveGameSummaryResponse
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime
@@ -43,7 +43,7 @@ class PickGameScreen(
                 get() = "New Game"
         }
 
-        data class ExistingSave(val saveGame: SaveGame) : MenuItem() {
+        data class ExistingSave(val saveGame: SaveGameSummaryResponse) : MenuItem() {
             override val label: String
                 get() {
                     val localDateTime = saveGame.savedAt.toLocalDateTime(TimeZone.currentSystemDefault())
@@ -104,8 +104,15 @@ class PickGameScreen(
 
                 Keys.ENTER -> {
                     when (val selectedItem = menuItems[selectedIndex.value]) {
-                        is MenuItem.NewGame -> createNewGame()
-                        is MenuItem.ExistingSave -> loadExistingGame(selectedItem.saveGame.id)
+                        is MenuItem.NewGame -> {
+                            createNewGame()
+                        }
+                        is MenuItem.ExistingSave -> {
+                            val saveGameId = Id.fromUUID<io.dungeons.domain.savegame.SaveGame>(
+                                selectedItem.saveGame.id,
+                            )
+                            loadExistingGame(saveGameId)
+                        }
                     }
                     exit(scope, ScreenTransition.Room)
                 }
@@ -117,7 +124,7 @@ class PickGameScreen(
         val player = gameStateHolder.gameState.player
             ?: error("Cannot initialize PickGameScreen: player not initialized")
 
-        val existingSaves = listSaveGamesQuery.query(player.id)
+        val existingSaves = listSaveGamesQuery.query(player.id.toUUID())
         val items = mutableListOf<MenuItem>()
         items.add(MenuItem.NewGame)
         items.addAll(existingSaves.map { MenuItem.ExistingSave(it) })
@@ -141,7 +148,10 @@ class PickGameScreen(
         gameStateHolder.gameState = gameStateHolder.gameState.copy(currentGameId = gameId)
     }
 
-    private fun loadExistingGame(saveGameId: Id<SaveGame>) {
-        gameStateHolder.gameState = gameStateHolder.gameState.copy(currentGameId = saveGameId)
+    private fun loadExistingGame(saveGameId: Id<*>) {
+        @Suppress("UNCHECKED_CAST")
+        gameStateHolder.gameState = gameStateHolder.gameState.copy(
+            currentGameId = saveGameId as Id<io.dungeons.domain.savegame.SaveGame>,
+        )
     }
 }

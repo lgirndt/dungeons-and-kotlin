@@ -2,6 +2,7 @@ package io.dungeons.domain.savegame
 
 import io.dungeons.domain.core.Player
 import io.dungeons.port.Id
+import io.dungeons.port.SaveGameSummaryResponse
 import io.mockk.clearAllMocks
 import io.mockk.every
 import io.mockk.mockk
@@ -12,7 +13,7 @@ import kotlin.test.assertEquals
 
 class ListSaveGamesQueryTest {
     private val repository = mockk<SaveGameRepository>()
-    private val query = ListSaveGamesQuery(repository)
+    private val query = ListSaveGamesQueryImpl(repository)
 
     @BeforeEach
     fun setUp() {
@@ -22,15 +23,21 @@ class ListSaveGamesQueryTest {
     @Test
     fun `should delegate to repository findAllByUserId`() {
         val playerId = Id.generate<Player>()
-        val expectedSaves = listOf(
+        val saveGames = listOf(
             SOME_SAVE_GAME.copy(),
             SOME_SAVE_GAME.copy(),
         )
-        every { repository.findAllByUserId(playerId) } returns expectedSaves
+        every { repository.findAllByUserId(playerId) } returns saveGames
 
-        val result = query.query(playerId)
+        val result = query.query(playerId.toUUID())
 
-        assertEquals(expectedSaves, result)
+        val expected = saveGames.map {
+            SaveGameSummaryResponse(
+                id = it.id.toUUID(),
+                savedAt = it.savedAt,
+            )
+        }
+        assertEquals(expected, result)
         verify(exactly = 1) { repository.findAllByUserId(playerId) }
     }
 
@@ -39,7 +46,7 @@ class ListSaveGamesQueryTest {
         val playerId = Id.generate<Player>()
         every { repository.findAllByUserId(playerId) } returns emptyList()
 
-        val result = query.query(playerId)
+        val result = query.query(playerId.toUUID())
 
         assertEquals(emptyList(), result)
     }
