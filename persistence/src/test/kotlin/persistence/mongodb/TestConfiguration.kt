@@ -2,15 +2,19 @@ package io.dungeons.persistence.mongodb
 
 import com.mongodb.ConnectionString
 import com.mongodb.MongoClientSettings
+import io.dungeons.persistence.mongodb.config.MongoConfig
 import org.bson.UuidRepresentation
 import org.springframework.boot.SpringBootConfiguration
 import org.springframework.boot.testcontainers.service.connection.ServiceConnection
 import org.springframework.context.annotation.Bean
+import org.springframework.context.annotation.Import
 import org.springframework.data.mongodb.repository.config.EnableMongoRepositories
 import org.testcontainers.mongodb.MongoDBContainer
 
 // DataMongoTest are looking for this annotation
 @SpringBootConfiguration
+// Import production MongoDB configuration (converters, etc.)
+@Import(MongoConfig::class)
 // This only scans for Mongo Repositories, not other components
 // We cannot instantiate repositories on our own, since they only exist as interfaces.
 @EnableMongoRepositories(basePackages = ["io.dungeons.persistence.mongodb"])
