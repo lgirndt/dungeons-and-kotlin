@@ -12,7 +12,6 @@ dependencies {
 
     // MongoDB
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-//    implementation("org.springframework.boot:spring-boot-starter-mongodb")
 
     // Kotlin (required for Spring Data MongoDB Kotlin extensions)
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
