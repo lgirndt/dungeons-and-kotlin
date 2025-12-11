@@ -12,10 +12,14 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import kotlin.time.Clock
 
 @SpringBootApplication(scanBasePackages = ["io.dungeons"])
 class ToolApplication {
     private val logger = LoggerFactory.getLogger(ToolApplication::class.java)
+
+    @Bean
+    fun clock() = Clock.System
 
     @Bean
     fun runner(
