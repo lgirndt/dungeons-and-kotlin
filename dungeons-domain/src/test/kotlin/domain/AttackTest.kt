@@ -10,6 +10,8 @@ import io.dungeons.domain.Die.Companion.D20
 import io.dungeons.domain.Die.Companion.D8
 import io.dungeons.domain.RangeCheckers
 import io.dungeons.domain.RollModifier
+import io.dungeons.domain.SOME_DAMAGE_MODIFIERS
+import io.dungeons.domain.SOME_WEAPON
 import io.dungeons.domain.SimpleDamageRoll
 import io.dungeons.domain.StatBlock
 import io.dungeons.domain.StatQueries

@@ -30,6 +30,7 @@ class PickGameScreen(
 ) {
     private sealed class MenuItem {
         data object NewGame : MenuItem()
+
         data class ExistingSave(val saveGame: SaveGame) : MenuItem()
     }
 

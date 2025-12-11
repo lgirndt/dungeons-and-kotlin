@@ -7,6 +7,7 @@ import io.dungeons.domain.DieRoll
 import io.dungeons.domain.Druid
 import io.dungeons.domain.Fighter
 import io.dungeons.domain.Paladin
+import io.dungeons.domain.SOME_WEAPON
 import io.dungeons.domain.Weapon
 import io.dungeons.domain.WeaponCategory
 import io.dungeons.domain.WeaponCategory.Martial

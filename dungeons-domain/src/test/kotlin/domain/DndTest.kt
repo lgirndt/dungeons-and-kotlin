@@ -1,9 +1,13 @@
 package domain
 
 import io.dungeons.domain.AbilityCheckResult
+import io.dungeons.domain.DEFAULT_STAT_VALUE
 import io.dungeons.domain.Die.Companion.D20
-import io.dungeons.domain.Die.Companion.D6
+import io.dungeons.domain.Die.Compan
+import io.dungeons.domain.SOME_STAT_BOCK
+on.D6
 import io.dungeons.domain.RollModifier
+import io.dungeons.domain.SOME_STAT_BOCK
 import io.dungeons.domain.SimpleDamageRoll
 import io.dungeons.domain.Stat
 import io.mockk.mockk

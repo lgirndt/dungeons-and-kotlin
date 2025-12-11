@@ -4,22 +4,19 @@ import com.google.common.collect.ImmutableListMultimap
 import io.dungeons.domain.ClassFeatures
 import io.dungeons.domain.Creature
 import io.dungeons.domain.CreatureData
+import io.dungeons.domain.DEFAULT_STAT_VALUE
 import io.dungeons.domain.DamageModifiers
-import io.dungeons.domain.DamageType
 import io.dungeons.domain.Die
 import io.dungeons.domain.DieRoll
 import io.dungeons.domain.Fighter
 import io.dungeons.domain.PlayerCharacter
 import io.dungeons.domain.PlayerCharacterData
-import io.dungeons.domain.RangeCheckers
-import io.dungeons.domain.SimpleDamageRoll
+import io.dungeons.domain.SOME_STAT_BOCK
+import io.dungeons.domain.SOME_WEAPON
 import io.dungeons.domain.Stat
 import io.dungeons.domain.StatBlock
-import io.dungeons.domain.StatQueries
 import io.dungeons.domain.Weapon
-import io.dungeons.domain.WeaponCategory
 import io.dungeons.domain.core.Id
-import io.dungeons.domain.world.Feet
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkObject
@@ -42,17 +39,6 @@ class TestId<T> {
         }
     }
 }
-
-const val DEFAULT_STAT_VALUE = 10
-
-val SOME_STAT_BOCK = StatBlock(
-    str = Stat(DEFAULT_STAT_VALUE),
-    dex = Stat(DEFAULT_STAT_VALUE),
-    con = Stat(DEFAULT_STAT_VALUE),
-    int = Stat(DEFAULT_STAT_VALUE),
-    wis = Stat(DEFAULT_STAT_VALUE),
-    cha = Stat(DEFAULT_STAT_VALUE),
-)
 
 fun StatBlock.copyByInts(
     str: Int = this.str.toInt(),
@@ -110,21 +96,6 @@ fun aPlayerCharacter(
         weapon = weapon,
     ),
     classFeatures = classFeatures,
-)
-
-val SOME_WEAPON = Weapon(
-    name = "Surgebinder",
-    category = WeaponCategory.Martial,
-    damageType = DamageType.Slashing,
-    statQuery = StatQueries.Str,
-    damageRoll = SimpleDamageRoll(1, Die.D8),
-    rangeChecker = RangeCheckers.melee(Feet(5.0)),
-)
-
-val SOME_DAMAGE_MODIFIERS = DamageModifiers(
-    resistances = emptySet(),
-    immunities = emptySet(),
-    vulnerabilities = emptySet(),
 )
 
 infix fun Die.rolls(result: Int) = DieRoll(this, result)

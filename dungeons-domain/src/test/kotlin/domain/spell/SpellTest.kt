@@ -7,6 +7,7 @@ import io.dungeons.domain.Die.Companion.D20
 import io.dungeons.domain.Die.Companion.D4
 import io.dungeons.domain.ProficiencyBonus
 import io.dungeons.domain.RollModifier
+import io.dungeons.domain.SOME_STAT_BOCK
 import io.dungeons.domain.SimpleDamageRoll
 import io.dungeons.domain.Stat
 import io.dungeons.domain.StatBlock
@@ -42,7 +43,7 @@ class SpellTest {
             override val spellCastingAbility: Stat = Stat(14) // modifier +2
             override val proficiencyBonus: ProficiencyBonus = ProficiencyBonus.fromLevel(1) // +1
             override val position: Coordinate = Coordinate.from(0, 0)
-            override val stats: StatBlock = domain.SOME_STAT_BOCK
+            override val stats: StatBlock = SOME_STAT_BOCK
         }
 
         val spell = SOME_SPELL.copy(

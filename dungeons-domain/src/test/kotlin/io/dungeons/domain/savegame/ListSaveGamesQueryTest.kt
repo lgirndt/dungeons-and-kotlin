@@ -1,6 +1,5 @@
 package io.dungeons.domain.savegame
 
-import domain.savegame.SOME_SAVE_GAME
 import io.dungeons.domain.core.Id
 import io.dungeons.domain.core.Player
 import io.mockk.clearAllMocks

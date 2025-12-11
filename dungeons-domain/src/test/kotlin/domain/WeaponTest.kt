@@ -3,6 +3,7 @@ package domain
 import io.dungeons.domain.Die.Companion.D8
 import io.dungeons.domain.RangeCheckers
 import io.dungeons.domain.RangeClassification
+import io.dungeons.domain.SOME_STAT_BOCK
 import io.dungeons.domain.Weapons
 import io.dungeons.domain.world.Feet
 import org.junit.jupiter.api.Assertions.assertEquals

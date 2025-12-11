@@ -1,5 +1,6 @@
 package io.dungeons.persistence.mongodb
 
+import io.dungeons.domain.savegame.SOME_SAVE_GAME
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest

@@ -6,6 +6,9 @@ plugins {
 
 dependencies {
     implementation(project(":dungeons-domain"))
+    
+    // Test dependencies - access to test data from domain module  
+    testImplementation(project(path = ":dungeons-domain", configuration = "testClasses"))
 
     // MongoDB
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")

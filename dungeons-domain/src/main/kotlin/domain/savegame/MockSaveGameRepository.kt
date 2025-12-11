@@ -16,6 +16,5 @@ class MockSaveGameRepository : SaveGameRepository {
         Optional.ofNullable(storage[saveGameId])
             .filter { it.playerId == userId }
 
-    override fun findAllByUserId(userId: Id<Player>): List<SaveGame> =
-        storage.values.filter { it.playerId == userId }
+    override fun findAllByUserId(userId: Id<Player>): List<SaveGame> = storage.values.filter { it.playerId == userId }
 }
