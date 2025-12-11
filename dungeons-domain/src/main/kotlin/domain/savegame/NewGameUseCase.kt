@@ -13,7 +13,7 @@ class NewGameUseCase(private val saveGameRepository: SaveGameRepository) {
     fun execute(userId: Id<Player>, adventure: Adventure): Id<SaveGame> {
         logger.info("New game with id $userId")
         val saveGame = SaveGame(
-            userId = userId,
+            playerId = userId,
             adventureId = adventure.id,
             currentRoomId = adventure.initialRoomId,
         )

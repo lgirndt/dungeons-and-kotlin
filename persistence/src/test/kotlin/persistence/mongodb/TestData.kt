@@ -24,7 +24,7 @@ val SOME_ADVENTURE = Adventure(
 
 val SOME_SAVE_GAME = SaveGame(
     id = Id.generate(),
-    userId = Id.generate(),
+    playerId = Id.generate(),
     adventureId = Id.generate(),
     currentRoomId = Id.generate(),
 )

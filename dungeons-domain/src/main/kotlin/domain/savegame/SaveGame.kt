@@ -7,7 +7,7 @@ import io.dungeons.domain.world.Room
 
 data class SaveGame(
     val id: Id<SaveGame> = Id.generate(),
-    val userId: Id<Player>,
+    val playerId: Id<Player>,
     val adventureId: Id<Adventure>,
     val currentRoomId: Id<Room>,
 )

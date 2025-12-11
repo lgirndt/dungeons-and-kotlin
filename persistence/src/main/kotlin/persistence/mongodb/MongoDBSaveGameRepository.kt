@@ -19,13 +19,13 @@ interface MongoDBSaveGameRepository :
     @Query(
         """
         {
-            "userId": ?0,
+            "playerId": ?0,
             "_id": ?1
         }
     """,
     )
     override fun findByUserId(userId: Id<Player>, saveGameId: Id<SaveGame>): Optional<SaveGame>
 
-    @Query("{ 'userId': ?0 }")
+    @Query("{ 'playerId': ?0 }")
     override fun findAllByUserId(userId: Id<Player>): List<SaveGame>
 }
