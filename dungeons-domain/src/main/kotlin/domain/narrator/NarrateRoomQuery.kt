@@ -1,10 +1,10 @@
 package io.dungeons.domain.narrator
 
 import io.dungeons.domain.adventure.AdventureRepository
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.core.Player
 import io.dungeons.domain.savegame.SaveGame
 import io.dungeons.domain.savegame.SaveGameRepository
+import io.dungeons.port.Id
 import org.springframework.stereotype.Component
 import kotlin.jvm.optionals.getOrNull
 

@@ -2,7 +2,7 @@ package io.dungeons.domain
 
 import io.dungeons.domain.Die.Companion.D20
 import io.dungeons.domain.combat.ProvidesBoardPosition
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 
 @Suppress("DataClassShouldBeImmutable") // we are still learning how to model the creature properly
 data class CreatureData(

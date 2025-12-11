@@ -1,6 +1,6 @@
 package io.dungeons.domain.board
 
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 
 interface Token {
     val id: Id<Token>

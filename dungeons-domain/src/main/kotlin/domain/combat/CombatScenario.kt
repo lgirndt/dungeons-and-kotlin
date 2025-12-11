@@ -2,9 +2,9 @@ package io.dungeons.domain.combat
 
 import io.dungeons.domain.Creature
 import io.dungeons.domain.board.BoardPosition
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.world.Square
 import io.dungeons.domain.world.isInRange
+import io.dungeons.port.Id
 
 interface CombatScenario : ProvidesBoardPosition {
     fun listVisibleCombatants(observer: Id<Creature>): List<Combatant>

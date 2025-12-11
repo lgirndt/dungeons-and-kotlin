@@ -1,9 +1,9 @@
 package io.dungeons.persistence.mongodb
 
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.core.Player
 import io.dungeons.domain.savegame.SaveGame
 import io.dungeons.domain.savegame.SaveGameRepository
+import io.dungeons.port.Id
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
 import org.springframework.stereotype.Repository

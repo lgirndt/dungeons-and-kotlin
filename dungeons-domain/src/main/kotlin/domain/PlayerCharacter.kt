@@ -1,6 +1,6 @@
 package io.dungeons.domain
 
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 
 data class PlayerCharacterData(val level: Int, val weapon: Weapon)
 

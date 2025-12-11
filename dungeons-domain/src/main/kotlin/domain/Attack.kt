@@ -3,7 +3,7 @@ package io.dungeons.domain
 import io.dungeons.domain.board.BoardPosition
 import io.dungeons.domain.board.distance
 import io.dungeons.domain.combat.ProvidesBoardPosition
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 
 interface Attacker {
     val id: Id<Creature>

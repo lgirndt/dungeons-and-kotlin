@@ -1,6 +1,6 @@
 package io.dungeons.domain
 
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 
 open class Monster(
     id: Id<Creature> = Id.Companion.generate(),

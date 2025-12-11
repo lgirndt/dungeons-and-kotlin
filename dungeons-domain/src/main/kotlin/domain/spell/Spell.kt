@@ -19,9 +19,9 @@ import io.dungeons.domain.StatBlock
 import io.dungeons.domain.StatQuery
 import io.dungeons.domain.attack
 import io.dungeons.domain.combat.ProvidesBoardPosition
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.world.Coordinate
 import io.dungeons.domain.world.Feet
+import io.dungeons.port.Id
 
 enum class SpellSchool {
     Abjuration,

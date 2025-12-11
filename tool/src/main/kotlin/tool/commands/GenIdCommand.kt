@@ -6,7 +6,7 @@ import com.github.ajalt.clikt.parameters.options.default
 import com.github.ajalt.clikt.parameters.options.help
 import com.github.ajalt.clikt.parameters.options.option
 import com.github.ajalt.clikt.parameters.types.int
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 import org.springframework.stereotype.Component
 
 @Component
@@ -20,7 +20,7 @@ class GenIdCommand : CliktCommand(name = "gen-id") {
 
     override fun run() {
         repeat(count) {
-            val newId = Id.Companion.generate<String>()
+            val newId = Id.generate<String>()
             echo(newId.asStringRepresentation())
         }
     }

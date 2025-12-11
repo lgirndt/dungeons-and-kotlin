@@ -8,9 +8,9 @@ import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.narrator.NarrateRoomQuery
 import io.dungeons.domain.narrator.NarratedRoom
+import io.dungeons.port.Id
 import org.springframework.stereotype.Component
 
 @Component

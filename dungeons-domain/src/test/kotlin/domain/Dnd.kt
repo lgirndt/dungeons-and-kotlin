@@ -16,7 +16,7 @@ import io.dungeons.domain.SOME_WEAPON
 import io.dungeons.domain.Stat
 import io.dungeons.domain.StatBlock
 import io.dungeons.domain.Weapon
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 import io.mockk.every
 import io.mockk.mockkObject
 import io.mockk.unmockkObject

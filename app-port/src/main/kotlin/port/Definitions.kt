@@ -1,4 +1,4 @@
-package io.dungeons.domain.core
+package io.dungeons.port
 
 import java.util.*
 

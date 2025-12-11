@@ -6,6 +6,7 @@ plugins {
 
 dependencies {
     implementation(project(":dungeons-domain"))
+    implementation(project(":app-port"))
 
     // Test dependencies - access to test data from domain module
     testImplementation(project(path = ":dungeons-domain", configuration = "testClasses"))

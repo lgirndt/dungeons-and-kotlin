@@ -4,9 +4,9 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.Context
 import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.AdventureRepository
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.world.Room
 import io.dungeons.domain.world.WorldBuilder
+import io.dungeons.port.Id
 import org.springframework.stereotype.Component
 
 @Component

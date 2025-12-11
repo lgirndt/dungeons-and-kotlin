@@ -18,9 +18,9 @@ import io.dungeons.domain.StatQueries
 import io.dungeons.domain.WeaponCategory.Martial
 import io.dungeons.domain.board.BoardPosition
 import io.dungeons.domain.combat.ProvidesBoardPosition
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.world.Feet
 import io.dungeons.domain.world.Square
+import io.dungeons.port.Id
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals

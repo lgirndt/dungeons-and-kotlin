@@ -5,7 +5,7 @@ import io.dungeons.domain.board.BoardPosition
 import io.dungeons.domain.board.GameBoard
 import io.dungeons.domain.board.Token
 import io.dungeons.domain.core.GridIndex
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test

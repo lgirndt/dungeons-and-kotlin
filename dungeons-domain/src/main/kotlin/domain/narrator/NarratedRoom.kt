@@ -1,7 +1,7 @@
 package io.dungeons.domain.narrator
 
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.world.Room
+import io.dungeons.port.Id
 
 data class Hero(val name: String)
 

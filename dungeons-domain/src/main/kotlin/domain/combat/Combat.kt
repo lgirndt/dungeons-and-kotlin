@@ -3,7 +3,7 @@ package io.dungeons.domain.combat
 import io.dungeons.domain.Creature
 import io.dungeons.domain.DieRoll
 import io.dungeons.domain.board.BoardPosition
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 
 enum class FactionStance {
     Friendly,

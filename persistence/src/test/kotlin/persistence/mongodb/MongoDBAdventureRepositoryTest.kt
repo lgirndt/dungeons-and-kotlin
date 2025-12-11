@@ -1,6 +1,7 @@
 package io.dungeons.persistence.mongodb
 
 import io.dungeons.domain.adventure.SOME_ADVENTURE
+import io.dungeons.port.Id
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest
@@ -17,7 +18,7 @@ class MongoDBAdventureRepositoryTest {
     @Test
     fun `should save and retrieve an adventure`() {
         // Given
-        val adventure = SOME_ADVENTURE.copy(id = io.dungeons.domain.core.Id.generate())
+        val adventure = SOME_ADVENTURE.copy(id = Id.generate())
 
         // When
         repository.save(adventure)
@@ -33,8 +34,8 @@ class MongoDBAdventureRepositoryTest {
     @Test
     fun `should return all saved adventures`() {
         // Given
-        val adventure1 = SOME_ADVENTURE.copy(id = io.dungeons.domain.core.Id.generate())
-        val adventure2 = SOME_ADVENTURE.copy(id = io.dungeons.domain.core.Id.generate())
+        val adventure1 = SOME_ADVENTURE.copy(id = Id.generate())
+        val adventure2 = SOME_ADVENTURE.copy(id = Id.generate())
         repository.save(adventure1)
         repository.save(adventure2)
 
@@ -50,7 +51,7 @@ class MongoDBAdventureRepositoryTest {
     @Test
     fun `should delete an adventure`() {
         // Given
-        val adventure = SOME_ADVENTURE.copy(id = io.dungeons.domain.core.Id.generate())
+        val adventure = SOME_ADVENTURE.copy(id = Id.generate())
         repository.save(adventure)
 
         // When

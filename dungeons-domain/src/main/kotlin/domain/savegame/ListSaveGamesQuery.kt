@@ -1,7 +1,7 @@
 package io.dungeons.domain.savegame
 
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.core.Player
+import io.dungeons.port.Id
 import org.springframework.stereotype.Component
 
 @Component

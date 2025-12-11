@@ -1,6 +1,6 @@
 package io.dungeons.domain.adventure
 
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 import java.util.*
 
 interface AdventureRepository {

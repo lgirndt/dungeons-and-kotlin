@@ -1,8 +1,8 @@
 package io.dungeons.domain.savegame
 
 import io.dungeons.domain.adventure.Adventure
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.core.Player
+import io.dungeons.port.Id
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
 import kotlin.time.Clock

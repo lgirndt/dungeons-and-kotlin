@@ -1,6 +1,6 @@
 package io.dungeons.domain.world
 
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 
 enum class Direction {
     North,

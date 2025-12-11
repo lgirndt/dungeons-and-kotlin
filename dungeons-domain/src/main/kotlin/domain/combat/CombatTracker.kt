@@ -1,7 +1,7 @@
 package io.dungeons.domain.combat
 
 import io.dungeons.domain.Creature
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 
 interface CombatTrackerListener {
     fun rolledInitiative(combatants: List<Combatant>) {}

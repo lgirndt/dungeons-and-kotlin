@@ -4,8 +4,8 @@ import io.dungeons.domain.core.BoundedGrid
 import io.dungeons.domain.core.BoundingBox
 import io.dungeons.domain.core.Grid
 import io.dungeons.domain.core.GridIndex
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.core.UnboundedGrid
+import io.dungeons.port.Id
 import kotlin.math.abs
 
 enum class BoardLayer {

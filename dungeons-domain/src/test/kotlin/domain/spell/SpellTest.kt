@@ -12,7 +12,6 @@ import io.dungeons.domain.SimpleDamageRoll
 import io.dungeons.domain.Stat
 import io.dungeons.domain.StatBlock
 import io.dungeons.domain.board.BoardPosition
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.spell.AttackSpell
 import io.dungeons.domain.spell.Caster
 import io.dungeons.domain.spell.SpellLevel
@@ -21,6 +20,7 @@ import io.dungeons.domain.spell.castAttackSpell
 import io.dungeons.domain.world.Coordinate
 import io.dungeons.domain.world.Feet
 import io.dungeons.domain.world.Square
+import io.dungeons.port.Id
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 

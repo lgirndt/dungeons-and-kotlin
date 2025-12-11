@@ -2,8 +2,8 @@ package io.dungeons.persistence.mongodb
 
 import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.RoomRepository
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.world.Room
+import io.dungeons.port.Id
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.aggregate
 import org.springframework.data.mongodb.core.aggregation.Aggregation

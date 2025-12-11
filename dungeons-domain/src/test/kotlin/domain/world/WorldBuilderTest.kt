@@ -1,11 +1,11 @@
 package domain.world
 
 import domain.TestId
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.world.Direction
 import io.dungeons.domain.world.Room
 import io.dungeons.domain.world.World
 import io.dungeons.domain.world.WorldBuilder
+import io.dungeons.port.Id
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail

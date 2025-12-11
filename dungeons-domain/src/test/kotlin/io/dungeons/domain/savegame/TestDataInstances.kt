@@ -1,6 +1,6 @@
 package io.dungeons.domain.savegame
 
-import io.dungeons.domain.core.Id
+import io.dungeons.port.Id
 import kotlin.time.Instant
 
 val SOME_SAVE_GAME = SaveGame(

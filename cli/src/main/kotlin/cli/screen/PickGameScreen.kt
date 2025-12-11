@@ -12,10 +12,10 @@ import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
 import io.dungeons.domain.adventure.AdventureRepository
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.savegame.CreateNewGameUseCase
 import io.dungeons.domain.savegame.ListSaveGamesQuery
 import io.dungeons.domain.savegame.SaveGame
+import io.dungeons.port.Id
 import kotlinx.datetime.LocalDate
 import kotlinx.datetime.LocalDateTime
 import kotlinx.datetime.LocalTime

@@ -1,8 +1,8 @@
 package io.dungeons.cli
 
-import io.dungeons.domain.core.Id
 import io.dungeons.domain.core.Player
 import io.dungeons.domain.savegame.SaveGame
+import io.dungeons.port.Id
 import org.springframework.stereotype.Component
 
 data class GameState(val player: Player? = null, val currentGameId: Id<SaveGame>? = null)
