@@ -11,7 +11,7 @@ import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
-import io.dungeons.domain.adventure.AdventureRepository
+import io.dungeons.domain.adventure.ListAdventuresQuery
 import io.dungeons.domain.savegame.CreateNewGameUseCase
 import io.dungeons.domain.savegame.ListSaveGamesQuery
 import io.dungeons.domain.savegame.SaveGame
@@ -29,7 +29,7 @@ import org.springframework.stereotype.Component
 class PickGameScreen(
     private val listSaveGamesQuery: ListSaveGamesQuery,
     private val createNewGameUseCase: CreateNewGameUseCase,
-    private val adventureRepository: AdventureRepository,
+    private val listAdventuresQuery: ListAdventuresQuery,
     private val gameStateHolder: GameStateHolder,
 ) : Screen<ScreenTransition>(
     ownTransition = ScreenTransition.PickGame,
@@ -130,7 +130,7 @@ class PickGameScreen(
         val player = gameStateHolder.gameState.player
             ?: error("Cannot create game: player not initialized")
 
-        val firstAdventure = adventureRepository.findAll().firstOrNull()
+        val firstAdventure = listAdventuresQuery.execute().firstOrNull()
             ?: error("Cannot create game: no adventures available")
 
         val gameId = createNewGameUseCase.execute(
