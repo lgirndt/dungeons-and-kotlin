@@ -25,8 +25,8 @@ import org.springframework.context.annotation.Bean
 typealias ScreenMap = Map<ScreenTransition, Screen<ScreenTransition>>
 
 @SpringBootApplication(scanBasePackages = ["io.dungeons"])
-class KotterCli {
-    private val logger = LoggerFactory.getLogger(KotterCli::class.java)
+class Cli {
+    private val logger = LoggerFactory.getLogger(Cli::class.java)
 
     @Bean
     fun screens(
@@ -84,5 +84,5 @@ private fun Session.clearScreen() {
 fun main(args: Array<String>) {
     // Otherwise the VirtualTerminal may fail to initialize on some systems
     System.setProperty("java.awt.headless", "false")
-    runApplication<KotterCli>(*args)
+    runApplication<Cli>(*args)
 }
