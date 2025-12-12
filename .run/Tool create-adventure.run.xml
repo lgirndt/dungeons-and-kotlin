@@ -4,6 +4,7 @@
     <module name="learn-kotlin.tool.main" />
     <option name="PROGRAM_PARAMETERS" value="create-adventure" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="io.dungeons.tool.ToolApplication" />
+    <option name="WORKING_DIRECTORY" value="file://$ProjectFileDir$" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

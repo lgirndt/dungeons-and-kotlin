@@ -16,8 +16,6 @@ dependencies {
     // HTTP Client for making REST calls
     implementation("org.springframework.boot:spring-boot-starter-web-services")
 
-    implementation("org.springframework.boot:spring-boot-docker-compose")
-
     // JSON processing
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
@@ -31,8 +29,10 @@ dependencies {
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
     testImplementation("com.varabyte.kotterx:kotter-test-support-jvm:1.2.1")
-}
 
+    // Development
+    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
+}
 
 application {
     // Define the main class for the application.

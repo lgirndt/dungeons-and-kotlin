@@ -24,6 +24,9 @@ dependencies {
 
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
+
+    // Development
+    developmentOnly("org.springframework.boot:spring-boot-docker-compose")
 }
 
 application {
