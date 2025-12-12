@@ -11,6 +11,7 @@ import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
+import io.dungeons.domain.savegame.CreateNewGameRequest
 import io.dungeons.domain.savegame.CreateNewGameUseCase
 import io.dungeons.port.Id
 import io.dungeons.port.ListAdventuresQuery
@@ -107,6 +108,7 @@ class PickGameScreen(
                         is MenuItem.NewGame -> {
                             createNewGame()
                         }
+
                         is MenuItem.ExistingSave -> {
                             val saveGameId = Id.fromUUID<io.dungeons.domain.savegame.SaveGame>(
                                 selectedItem.saveGame.id,
@@ -141,8 +143,10 @@ class PickGameScreen(
             ?: error("Cannot create game: no adventures available")
 
         val gameId = createNewGameUseCase.execute(
-            player.id.toUUID(),
-            firstAdventure.id,
+            CreateNewGameRequest(
+                player.id.toUUID(),
+                firstAdventure.id,
+            ),
         )
         gameStateHolder.gameState = gameStateHolder.gameState.copy(currentGameId = gameId)
     }

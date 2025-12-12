@@ -17,7 +17,7 @@ class CreateNewGameUseCaseImpl(
 ) : CreateNewGameUseCase {
     private val logger = Logger.getLogger(CreateNewGameUseCase::class.java.name)
 
-    override fun execute(playerId: UUID, adventureId: UUID): Id<SaveGame> {
+    override fun execute(request: CreateNewGameRequest): Id<SaveGame> {
         logger.info("New game with id $playerId")
         val domainAdventureId = Id.fromUUID<Adventure>(adventureId)
         val adventure = adventureRepository.findById(domainAdventureId).getOrNull()

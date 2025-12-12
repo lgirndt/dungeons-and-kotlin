@@ -11,6 +11,7 @@ import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
+import io.dungeons.domain.savegame.CreateNewGameRequest
 import io.dungeons.domain.savegame.CreateNewGameUseCase
 import io.dungeons.port.AdventureSummaryResponse
 import io.dungeons.port.ListAdventuresQuery
@@ -72,8 +73,10 @@ class PickAdventureScreen(
         val player = gameStateHolder.gameState.player ?: error("Cannot create game: player not initialized")
 
         val gameId = createNewGameUseCase.execute(
-            player.id.toUUID(),
-            adventure.id,
+            CreateNewGameRequest(
+                player.id.toUUID(),
+                adventure.id,
+            ),
         )
         val newGameState = gameStateHolder.gameState.copy(
             currentGameId = gameId,
