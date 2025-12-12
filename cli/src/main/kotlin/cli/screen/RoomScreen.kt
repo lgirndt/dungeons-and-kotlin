@@ -8,9 +8,8 @@ import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
-import io.dungeons.domain.narrator.NarrateRoomQuery
-import io.dungeons.domain.narrator.NarratedRoom
-import io.dungeons.port.Id
+import io.dungeons.port.NarrateRoomQuery
+import io.dungeons.port.NarratedRoomResponse
 import org.springframework.stereotype.Component
 
 @Component
@@ -19,7 +18,7 @@ class RoomScreen(private val narrateRoomQuery: NarrateRoomQuery, private val gam
         ownTransition = ScreenTransition.Room,
         defaultTransition = ScreenTransition.Exit,
     ) {
-    private var room: LiveVar<NarratedRoom> by InitOnce()
+    private var room: LiveVar<NarratedRoomResponse> by InitOnce()
 
     override val sectionBlock: MainRenderScope.() -> Unit
         get() = {
@@ -38,8 +37,8 @@ class RoomScreen(private val narrateRoomQuery: NarrateRoomQuery, private val gam
     override fun init(session: Session) {
         val (playerId, gameId) = gameStateHolder.unpackIdsOrThrow()
         val narratedRoom = narrateRoomQuery.query(
-            Id.fromUUID(playerId.toUUID()),
-            gameId,
+            playerId.toUUID(),
+            gameId.toUUID(),
         )
         if (narratedRoom == null) {
             error("Cannot load room: save game or adventure not found")

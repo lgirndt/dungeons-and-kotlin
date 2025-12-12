@@ -149,6 +149,7 @@ class PickGameScreen(
     }
 
     private fun loadExistingGame(saveGameId: Id<*>) {
+        // TODO: Fix Claude
         @Suppress("UNCHECKED_CAST")
         gameStateHolder.gameState = gameStateHolder.gameState.copy(
             currentGameId = saveGameId as Id<io.dungeons.domain.savegame.SaveGame>,

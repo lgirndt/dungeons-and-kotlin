@@ -13,7 +13,6 @@ private fun SaveGame.toSummaryResponse() = SaveGameSummaryResponse(
 
 @Component
 class ListSaveGamesQueryImpl(private val saveGameRepository: SaveGameRepository) : ListSaveGamesQuery {
-
     override fun query(playerId: UUID) =
         saveGameRepository.findAllByUserId(Id.fromUUID(playerId)).map(SaveGame::toSummaryResponse)
 }

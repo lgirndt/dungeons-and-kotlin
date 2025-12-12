@@ -10,7 +10,6 @@ private fun Adventure.toSummaryResponse() = AdventureSummaryResponse(
     initialRoomId = this.initialRoomId.toUUID(),
 )
 
-
 @Component
 class ListAdventuresQueryImpl(private val adventureRepository: AdventureRepository) : ListAdventuresQuery {
     override fun query() = adventureRepository.findAll().map(Adventure::toSummaryResponse)
