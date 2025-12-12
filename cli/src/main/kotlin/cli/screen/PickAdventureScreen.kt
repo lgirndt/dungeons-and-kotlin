@@ -70,11 +70,11 @@ class PickAdventureScreen(
     }
 
     private fun createNewGame(adventure: AdventureSummaryResponse) {
-        val player = gameStateHolder.gameState.player ?: error("Cannot create game: player not initialized")
+        val playerId = gameStateHolder.gameState.playerId ?: error("Cannot create game: player not initialized")
 
         val gameId = createNewGameUseCase.execute(
             CreateNewGameRequest(
-                player.id.toUUID(),
+                playerId,
                 adventure.id,
             ),
         )

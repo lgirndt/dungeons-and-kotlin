@@ -13,6 +13,7 @@ import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
 import io.dungeons.domain.savegame.CreateNewGameRequest
 import io.dungeons.domain.savegame.CreateNewGameUseCase
+import io.dungeons.domain.savegame.SaveGame
 import io.dungeons.port.Id
 import io.dungeons.port.ListAdventuresQuery
 import io.dungeons.port.ListSaveGamesQuery
@@ -123,10 +124,10 @@ class PickGameScreen(
     }
 
     override fun init(session: Session) {
-        val player = gameStateHolder.gameState.player
+        val playerId = gameStateHolder.gameState.playerId
             ?: error("Cannot initialize PickGameScreen: player not initialized")
 
-        val existingSaves = listSaveGamesQuery.query(player.id.toUUID())
+        val existingSaves = listSaveGamesQuery.query(playerId)
         val items = mutableListOf<MenuItem>()
         items.add(MenuItem.NewGame)
         items.addAll(existingSaves.map { MenuItem.ExistingSave(it) })
@@ -136,7 +137,7 @@ class PickGameScreen(
     }
 
     private fun createNewGame() {
-        val player = gameStateHolder.gameState.player
+        val playerId = gameStateHolder.gameState.playerId
             ?: error("Cannot create game: player not initialized")
 
         val firstAdventure = listAdventuresQuery.query().firstOrNull()
@@ -144,18 +145,17 @@ class PickGameScreen(
 
         val gameId = createNewGameUseCase.execute(
             CreateNewGameRequest(
-                player.id.toUUID(),
+                playerId,
                 firstAdventure.id,
             ),
         )
         gameStateHolder.gameState = gameStateHolder.gameState.copy(currentGameId = gameId)
     }
 
-    private fun loadExistingGame(saveGameId: Id<*>) {
-        // TODO: Fix Claude
-        @Suppress("UNCHECKED_CAST")
+    private fun loadExistingGame(saveGameId: Id<SaveGame>) {
+
         gameStateHolder.gameState = gameStateHolder.gameState.copy(
-            currentGameId = saveGameId as Id<io.dungeons.domain.savegame.SaveGame>,
+            currentGameId = saveGameId,
         )
     }
 }
