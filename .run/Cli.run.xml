@@ -1,0 +1,11 @@
+<component name="ProjectRunConfigurationManager">
+  <configuration default="false" name="Cli" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot" nameIsGenerated="true">
+    <log_file alias="Log" path="$PROJECT_DIR$/logs/cli-application.log" />
+    <module name="learn-kotlin.cli.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="io.dungeons.cli.Cli" />
+    <option name="WORKING_DIRECTORY" value="file://$ProjectFileDir$/cli" />
+    <method v="2">
+      <option name="Make" enabled="true" />
+    </method>
+  </configuration>
+</component>
