@@ -74,7 +74,6 @@ class PickAdventureScreen(
         val gameId = createNewGameUseCase.execute(
             player.id.toUUID(),
             adventure.id,
-            adventure.initialRoomId,
         )
         val newGameState = gameStateHolder.gameState.copy(
             currentGameId = gameId,

@@ -7,7 +7,6 @@ import org.springframework.stereotype.Component
 private fun Adventure.toSummaryResponse() = AdventureSummaryResponse(
     id = this.id.toUUID(),
     name = this.name,
-    initialRoomId = this.initialRoomId.toUUID(),
 )
 
 @Component
