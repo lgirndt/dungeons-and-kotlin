@@ -5,8 +5,11 @@ plugins {
 
 dependencies {
     // Version managed by common conventions
-    implementation("com.google.guava:guava")
     implementation(project(":dungeons-domain"))
+    implementation(project(":persistence"))
+    implementation(project(":app-port"))
+
+    implementation("com.google.guava:guava")
 
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-security")
