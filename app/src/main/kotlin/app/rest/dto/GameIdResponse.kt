@@ -1,3 +1,5 @@
 package io.dungeons.app.rest.dto
 
-data class GameIdResponse(val id: String)
+import java.util.*
+
+data class GameIdResponse(val id: UUID)
