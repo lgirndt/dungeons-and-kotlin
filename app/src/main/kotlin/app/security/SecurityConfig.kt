@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.authentication.configurati
 import org.springframework.security.config.annotation.web.builders.HttpSecurity
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity
 import org.springframework.security.config.http.SessionCreationPolicy
-import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
@@ -68,17 +67,23 @@ class SecurityConfig {
 
     @Bean
     fun userDetailsService(): UserDetailsService {
-        val user = User.builder()
-            .username("user")
-            .password(passwordEncoder().encode("password"))
-            .roles("USER")
-            .build()
+        // TODO: Replace with real user details service
+        val user = PlayerDetails(
+            username = "user",
+            password = passwordEncoder().encode("password") ?: error("Password encoding failed"),
+            authorities = listOf(org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")),
+            playerId = UUID.fromString("00000000-0000-0000-0000-000000000001")
+        )
 
-        val admin = User.builder()
-            .username("admin")
-            .password(passwordEncoder().encode("admin"))
-            .roles("ADMIN", "USER")
-            .build()
+        val admin = PlayerDetails(
+            username = "admin",
+            password = passwordEncoder().encode("admin") ?: error("Password encoding failed"),
+            authorities = listOf(
+                org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_ADMIN"),
+                org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")
+            ),
+            playerId = UUID.fromString("00000000-0000-0000-0000-000000000002")
+        )
 
         return InMemoryUserDetailsManager(user, admin)
     }
