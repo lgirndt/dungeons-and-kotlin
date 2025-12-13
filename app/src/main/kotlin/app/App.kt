@@ -9,7 +9,7 @@ import org.springframework.context.annotation.Bean
 import org.springframework.core.env.Environment
 import kotlin.time.Clock
 
-@SpringBootApplication
+@SpringBootApplication(scanBasePackages = ["io.dungeons"])
 class App {
     private val log = LoggerFactory.getLogger(App::class.java)
 

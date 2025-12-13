@@ -1,3 +1,11 @@
 spring:
   application:
     name: demo
+  mongodb:
+    host: localhost
+    port: 27017
+    database: dungeon
+    username: dev
+    password: dev
+    representation:
+      uuid: standard
