@@ -27,27 +27,37 @@ kotlin {
 
 // Centralized dependency version management
 dependencyManagement {
+    // Version numbers
+    val junitBomVersion = "6.0.1"
+    val guavaVersion = "33.5.0-jre"
+    val mockkVersion = "1.14.6"
+    val detektKtlintVersion = "2.0.0-alpha.1"
+    val kotlinxDatetimeVersion = "0.7.1"
+    val kotterVersion = "1.2.1"
+    val cliktVersion = "5.0.3"
+    val jjwtVersion = "0.12.6"
+
     imports {
         // Import JUnit BOM for test dependencies
-        mavenBom("org.junit:junit-bom:6.0.1")
+        mavenBom("org.junit:junit-bom:$junitBomVersion")
     }
 
     dependencies {
         // Define versions for all project dependencies
-        dependency("com.google.guava:guava:33.5.0-jre")
-        dependency("io.mockk:mockk:1.14.6")
-        dependency("dev.detekt:detekt-rules-ktlint-wrapper:2.0.0-alpha.1")
-        dependency("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+        dependency("com.google.guava:guava:$guavaVersion")
+        dependency("io.mockk:mockk:$mockkVersion")
+        dependency("dev.detekt:detekt-rules-ktlint-wrapper:$detektKtlintVersion")
+        dependency("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
 
         // CLI dependencies
-        dependency("com.varabyte.kotter:kotter-jvm:1.2.1")
-        dependency("com.varabyte.kotterx:kotter-test-support-jvm:1.2.1")
-        dependency("com.github.ajalt.clikt:clikt:5.0.3")
+        dependency("com.varabyte.kotter:kotter-jvm:$kotterVersion")
+        dependency("com.varabyte.kotterx:kotter-test-support-jvm:$kotterVersion")
+        dependency("com.github.ajalt.clikt:clikt:$cliktVersion")
 
         // JWT dependencies
-        dependency("io.jsonwebtoken:jjwt-api:0.12.6")
-        dependency("io.jsonwebtoken:jjwt-impl:0.12.6")
-        dependency("io.jsonwebtoken:jjwt-jackson:0.12.6")
+        dependency("io.jsonwebtoken:jjwt-api:$jjwtVersion")
+        dependency("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
+        dependency("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
     }
 }
 
