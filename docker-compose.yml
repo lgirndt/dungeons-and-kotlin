@@ -9,5 +9,8 @@ services:
       MONGO_INITDB_ROOT_PASSWORD: devpassword
       MONGO_INITDB_DATABASE: dungeon
     volumes:
-      - ./data/mongodb:/data/db
+      - mongodb_data:/data/db
       - ./docker/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+
+volumes:
+  mongodb_data:
