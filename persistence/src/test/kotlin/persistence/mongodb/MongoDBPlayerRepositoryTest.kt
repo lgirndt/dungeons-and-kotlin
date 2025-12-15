@@ -14,7 +14,6 @@ import kotlin.test.assertEquals
 @DataMongoTest
 @CleanMongoRepositories
 class MongoDBPlayerRepositoryTest {
-
     @Autowired
     private lateinit var playerRepository: MongoDBPlayerRepository
 

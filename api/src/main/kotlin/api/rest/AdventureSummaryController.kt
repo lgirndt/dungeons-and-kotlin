@@ -7,8 +7,6 @@ import org.springframework.web.bind.annotation.RestController
 
 @RestController
 class AdventureSummaryController(private val listAdventuresQuery: ListAdventuresQuery) {
-
     @GetMapping("/adventures/summaries")
-    fun findAll() : List<AdventureSummaryResponse> = listAdventuresQuery.query()
-
+    fun findAll(): List<AdventureSummaryResponse> = listAdventuresQuery.query()
 }

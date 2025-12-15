@@ -53,7 +53,7 @@ class Cli {
         val gameState = gameStateHolder.gameState
         gameStateHolder.gameState = gameState.copy(
             // TODO: we need a proper login flow
-            playerId = UUID.fromString("609cb790-d8b5-4a97-830f-0200fee465ab")
+            playerId = UUID.fromString("609cb790-d8b5-4a97-830f-0200fee465ab"),
         )
     }
 

@@ -8,14 +8,13 @@ import org.springframework.data.mongodb.repository.Query
 import org.springframework.stereotype.Repository
 import java.util.*
 
-
 @Repository
-interface MongoDBPlayerRepository : PlayerRepository, MongoRepository<Player, Id<Player>> {
-
+interface MongoDBPlayerRepository :
+    PlayerRepository,
+    MongoRepository<Player, Id<Player>> {
     @Query("{ '_id': ?0 }")
     override fun findById(id: Id<Player>): Optional<Player>
 
     @Query("{ 'name': ?0 }")
     override fun findByName(name: String): Optional<Player>
-
 }

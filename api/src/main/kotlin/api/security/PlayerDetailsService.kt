@@ -10,7 +10,7 @@ import kotlin.jvm.optionals.getOrElse
 
 class PlayerDetailsService(private val playerRepository: PlayerRepository) : UserDetailsService {
     override fun loadUserByUsername(username: String): UserDetails {
-        val player : Player = playerRepository.findByName(username).getOrElse {
+        val player: Player = playerRepository.findByName(username).getOrElse {
             throw UsernameNotFoundException(username)
         }
         return PlayerDetails(
@@ -18,8 +18,8 @@ class PlayerDetailsService(private val playerRepository: PlayerRepository) : Use
             username = player.name,
             password = player.hashedPassword,
             authorities = listOf(
-                SimpleGrantedAuthority("ROLE_USER")
-            )
+                SimpleGrantedAuthority("ROLE_USER"),
+            ),
         )
     }
 }

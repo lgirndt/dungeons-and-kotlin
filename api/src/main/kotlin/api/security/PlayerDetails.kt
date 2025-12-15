@@ -12,13 +12,19 @@ data class PlayerDetails(
     private val enabled: Boolean = true,
     private val accountNonExpired: Boolean = true,
     private val credentialsNonExpired: Boolean = true,
-    private val accountNonLocked: Boolean = true
+    private val accountNonLocked: Boolean = true,
 ) : UserDetails {
     override fun getAuthorities() = authorities
+
     override fun getPassword() = password
+
     override fun getUsername() = username
+
     override fun isEnabled() = enabled
+
     override fun isAccountNonExpired() = accountNonExpired
+
     override fun isCredentialsNonExpired() = credentialsNonExpired
+
     override fun isAccountNonLocked() = accountNonLocked
 }

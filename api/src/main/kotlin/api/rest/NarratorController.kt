@@ -11,13 +11,10 @@ import java.util.*
 
 @RestController
 class NarratorController(private val narrateRoomQuery: NarrateRoomQuery) {
-
     @GetMapping("/game/{gameId}/narrator/room")
     fun narrateRoom(
         @PathVariable gameId: String,
-        @AuthenticationPrincipal player: PlayerDetails
-    ) : NarratedRoomResponse {
-        return narrateRoomQuery.query(player.playerId, UUID.fromString(gameId))
-            ?: error("Narrated room does not exist")
-    }
+        @AuthenticationPrincipal player: PlayerDetails,
+    ): NarratedRoomResponse = narrateRoomQuery.query(player.playerId, UUID.fromString(gameId))
+        ?: error("Narrated room does not exist")
 }

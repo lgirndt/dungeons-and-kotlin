@@ -50,22 +50,23 @@ class AuthController(
     }
 
     @PostMapping("/register")
-    fun register(@RequestBody playerRequest: PlayerRequest) : ResponseEntity<Any> {
+    fun register(@RequestBody playerRequest: PlayerRequest): ResponseEntity<Any> {
         val hashedPassword: String = passwordEncoder.encode(playerRequest.password)
             ?: return status(HttpStatus.BAD_REQUEST).build()
 
         val playerWithHashedPasswd = playerRequest.copy(password = hashedPassword)
 
         return registerPlayerUseCase.execute(playerWithHashedPasswd).fold(
-            onSuccess = { status(HttpStatus.CREATED).body(Any())},
+            onSuccess = { status(HttpStatus.CREATED).body(Any()) },
             onFailure = { exception ->
                 logger.error("Failed to register player '${playerRequest.name}'", exception)
-                when (exception) {
+                if (exception is PlayerAlreadyExistsException) {
                     // we don't expose that the player already exists for security reasons
-                    is PlayerAlreadyExistsException -> status(HttpStatus.CREATED).build()
-                    else -> status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+                    status(HttpStatus.CREATED).build()
+                } else {
+                    status(HttpStatus.INTERNAL_SERVER_ERROR).build()
                 }
-            }
+            },
         )
     }
 }

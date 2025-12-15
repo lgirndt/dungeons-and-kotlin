@@ -21,13 +21,11 @@ import java.util.*
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
-        @Bean
+    @Bean
     fun jwtAuthenticationFilter(
         jwtService: JwtService,
         userDetailsService: UserDetailsService,
-    ): JwtAuthenticationFilter {
-        return JwtAuthenticationFilter(jwtService, userDetailsService)
-    }
+    ): JwtAuthenticationFilter = JwtAuthenticationFilter(jwtService, userDetailsService)
 
     @Bean
     fun securityFilterChain(
@@ -68,15 +66,14 @@ class SecurityConfig {
         return DelegatingPasswordEncoder(
             idForEncode,
             mapOf(
-                idForEncode to BCryptPasswordEncoder(12)
-            )
+                idForEncode to BCryptPasswordEncoder(12),
+            ),
         )
     }
 
     @Bean
-    fun userDetailsService(playerRepository: PlayerRepository): UserDetailsService {
-        return PlayerDetailsService(playerRepository)
-    }
+    fun userDetailsService(playerRepository: PlayerRepository): UserDetailsService =
+        PlayerDetailsService(playerRepository)
 
     @Bean
     fun authenticationProvider(
