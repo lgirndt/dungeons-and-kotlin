@@ -23,6 +23,32 @@ We are listing all architectural and significant technical decisions made on thi
 - Instead we make sure that our domain objects comply the to the spring conventions for mapping objects
   to MongoDB documents. For example, we make sure that every domain object has a field named "id" of type
   UUID.
+- Entity IDs
+    - We strongly type entity ids. Therefore we defined io.dungeons.port.Id which is defined in
+      app-port/src/main/kotlin/port/Id.kt. This is a value class wrapping a UUID.
+    - We have a challenge to solve: We want to use the ID in the domain layer, but we also want to
+      provide in the client layers, that potentially don't depend on the domain layer.
+    - Therefore we've decided to define alias classes for each Domain Object Id. For instance, 
+      there is a domain class Player in the domain layer. In app-port/src/main/kotlin/port/Id.kt we
+      define
+```kotlin
+@JvmInline
+value class Id<T>(val value: UUID) {
+//...
+}
+
+@Suppress("ClassNaming")
+object _Player
+
+typealias PlayerId = Id<_Player>
+```
+    - This way we can use PlayerId in the domain layer as well as in the client layers without
+      introducing a dependency from the client layers to the domain layer.
+    - We may only use the typealias in all modules, we shall never use Id<_AnyType> directly.
+    - We will define an marker Type _SomeType for every Domain object that needs to have an ID.
+    - In case of using the Companion methods with type parameters, we need to make sure that we
+      never expose the marker type like `Id.generate<_Player>()`. Instead we need to solve this
+      with type inference like `val id : PlayerId = Id.generate()`
 
 # Gradle Multi Module Project
 - We realize the hexagonal architecture using a Gradle multi module project to clearly separate the different 
