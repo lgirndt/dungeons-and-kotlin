@@ -6,7 +6,7 @@ plugins {
 rootProject.name = "learn-kotlin"
 
 include("dungeons-domain")
-include("app")
+include("api")
 include("app-port")
 include("persistence")
 include("cli")

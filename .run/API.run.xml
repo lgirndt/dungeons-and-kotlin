@@ -2,9 +2,9 @@
   <configuration default="false" name="API" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
     <option name="ACTIVE_PROFILES" value="dev" />
     <option name="FRAME_DEACTIVATION_UPDATE_POLICY" value="UpdateClassesAndResources" />
-    <module name="learn-kotlin.app.main" />
-    <option name="SPRING_BOOT_MAIN_CLASS" value="io.dungeons.app.App" />
-    <option name="WORKING_DIRECTORY" value="file://$ProjectFileDir$/app" />
+    <module name="learn-kotlin.api.main" />
+    <option name="SPRING_BOOT_MAIN_CLASS" value="io.dungeons.api.Api" />
+    <option name="WORKING_DIRECTORY" value="file://$ProjectFileDir$/api" />
     <method v="2">
       <option name="Make" enabled="true" />
     </method>
