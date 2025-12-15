@@ -4,8 +4,8 @@ import io.dungeons.api.rest.dto.AuthResponse
 import io.dungeons.api.rest.dto.AuthenticationRequest
 import io.dungeons.api.security.JwtService
 import io.dungeons.domain.player.PlayerAlreadyExistsException
-import io.dungeons.domain.player.PlayerRequest
-import io.dungeons.domain.player.RegisterPlayerUseCase
+import io.dungeons.port.usecases.PlayerRequest
+import io.dungeons.port.usecases.RegisterPlayerUseCase
 import org.slf4j.LoggerFactory
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity

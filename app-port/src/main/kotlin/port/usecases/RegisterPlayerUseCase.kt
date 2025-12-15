@@ -1,4 +1,4 @@
-package io.dungeons.domain.player
+package io.dungeons.port.usecases
 
 import io.dungeons.port.PlayerId
 

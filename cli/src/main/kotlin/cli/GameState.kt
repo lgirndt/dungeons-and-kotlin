@@ -1,18 +1,16 @@
 package io.dungeons.cli
 
-import io.dungeons.domain.savegame.SaveGame
-import io.dungeons.port.Id
 import io.dungeons.port.PlayerId
+import io.dungeons.port.SaveGameId
 import org.springframework.stereotype.Component
-import java.util.*
 
-data class GameState(val playerId: PlayerId? = null, val currentGameId: Id<SaveGame>? = null)
+data class GameState(val playerId: PlayerId? = null, val currentGameId: SaveGameId? = null)
 
 @Component
 class GameStateHolder {
     var gameState: GameState = GameState()
 
-    fun unpackIdsOrThrow(): Pair<PlayerId, Id<SaveGame>> {
+    fun unpackIdsOrThrow(): Pair<PlayerId, SaveGameId> {
         val playerId = gameState.playerId
             ?: throw IllegalStateException("Player ID is not set in game state")
         val gameId = gameState.currentGameId

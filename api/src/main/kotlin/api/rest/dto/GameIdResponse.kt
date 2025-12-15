@@ -1,5 +1,5 @@
 package io.dungeons.api.rest.dto
 
-import java.util.*
+import io.dungeons.port.SaveGameId
 
-data class GameIdResponse(val id: UUID)
+data class GameIdResponse(val id: SaveGameId)

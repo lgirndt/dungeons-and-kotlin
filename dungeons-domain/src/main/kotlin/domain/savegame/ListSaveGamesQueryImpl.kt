@@ -6,7 +6,7 @@ import io.dungeons.port.SaveGameSummaryResponse
 import org.springframework.stereotype.Component
 
 private fun SaveGame.toSummaryResponse() = SaveGameSummaryResponse(
-    id = this.id.toUUID(),
+    id = this.id.castTo(),
     savedAt = this.savedAt,
 )
 

@@ -1,11 +1,11 @@
-package io.dungeons.domain.savegame
+package io.dungeons.port.usecases
 
-import io.dungeons.port.Id
 import io.dungeons.port.PlayerId
+import io.dungeons.port.SaveGameId
 import java.util.*
 
 data class CreateNewGameRequest(val playerId: PlayerId, val adventureId: UUID)
 
 interface CreateNewGameUseCase {
-    fun execute(request: CreateNewGameRequest): Id<SaveGame>
+    fun execute(request: CreateNewGameRequest): SaveGameId
 }

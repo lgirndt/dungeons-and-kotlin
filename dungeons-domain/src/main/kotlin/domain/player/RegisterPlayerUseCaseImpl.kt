@@ -1,8 +1,10 @@
 package io.dungeons.domain.player
 
-import io.dungeons.domain.UseCaseException
 import io.dungeons.port.Id
 import io.dungeons.port.PlayerId
+import io.dungeons.port.usecases.PlayerRequest
+import io.dungeons.port.usecases.RegisterPlayerUseCase
+import io.dungeons.port.usecases.UseCaseException
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Component
 

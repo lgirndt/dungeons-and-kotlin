@@ -11,10 +11,10 @@ import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
 import com.varabyte.kotter.runtime.Session
 import io.dungeons.cli.GameStateHolder
-import io.dungeons.domain.savegame.CreateNewGameRequest
-import io.dungeons.domain.savegame.CreateNewGameUseCase
 import io.dungeons.port.AdventureSummaryResponse
 import io.dungeons.port.ListAdventuresQuery
+import io.dungeons.port.usecases.CreateNewGameRequest
+import io.dungeons.port.usecases.CreateNewGameUseCase
 import org.springframework.stereotype.Component
 
 @Component

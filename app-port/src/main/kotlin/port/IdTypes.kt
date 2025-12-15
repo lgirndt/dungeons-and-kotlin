@@ -8,6 +8,8 @@ value class Id<T>(val value: UUID) {
 
     fun asStringRepresentation(): String = value.toString()
 
+    fun <S> castTo() : Id<S> = Id(value)
+
     companion object {
         fun <T> generate(): Id<T> = Id(UUID.randomUUID())
 

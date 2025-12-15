@@ -33,7 +33,7 @@ class ListSaveGamesQueryTest {
 
         val expected = saveGames.map {
             SaveGameSummaryResponse(
-                id = it.id.toUUID(),
+                id = it.id.castTo(),
                 savedAt = it.savedAt,
             )
         }

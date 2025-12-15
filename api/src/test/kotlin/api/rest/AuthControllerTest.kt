@@ -2,7 +2,7 @@ package io.dungeons.api.rest
 
 import io.dungeons.api.rest.dto.AuthenticationRequest
 import io.dungeons.api.security.JwtService
-import io.dungeons.domain.player.RegisterPlayerUseCase
+import io.dungeons.port.usecases.RegisterPlayerUseCase
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
