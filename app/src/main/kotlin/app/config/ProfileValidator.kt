@@ -1,7 +1,11 @@
 package app.config
 
+import io.dungeons.app.rest.WorldController
 import jakarta.annotation.PostConstruct
+import org.slf4j.LoggerFactory
 import org.springframework.core.env.Environment
+
+private val logger = LoggerFactory.getLogger(WorldController::class.java)
 
 class ProfileValidator(private val environment: Environment) {
     @PostConstruct
@@ -25,7 +29,7 @@ class ProfileValidator(private val environment: Environment) {
                 )
             }
             else -> {
-                println("Application started with profile: ${matchingProfiles.first()}")
+                logger.info("Application started with profile: ${matchingProfiles.first()}")
             }
         }
     }

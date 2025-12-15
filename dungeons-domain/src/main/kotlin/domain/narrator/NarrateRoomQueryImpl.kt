@@ -1,7 +1,7 @@
 package io.dungeons.domain.narrator
 
 import io.dungeons.domain.adventure.AdventureRepository
-import io.dungeons.domain.core.Player
+import io.dungeons.domain.player.Player
 import io.dungeons.domain.savegame.SaveGame
 import io.dungeons.domain.savegame.SaveGameRepository
 import io.dungeons.port.HeroResponse

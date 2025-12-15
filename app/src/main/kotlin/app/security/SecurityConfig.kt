@@ -11,22 +11,22 @@ import org.springframework.security.config.annotation.web.configuration.EnableWe
 import org.springframework.security.config.http.SessionCreationPolicy
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder
 import org.springframework.security.crypto.password.PasswordEncoder
-import org.springframework.security.provisioning.InMemoryUserDetailsManager
 import org.springframework.security.web.SecurityFilterChain
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter
-import java.util.Optional
+import java.util.*
 
 @Configuration
 @EnableWebSecurity
 class SecurityConfig {
-    //    @Bean
-//    fun jwtAuthenticationFilter(
-//        jwtService: JwtService,
-//        userDetailsService: UserDetailsService,
-//    ): JwtAuthenticationFilter {
-//        return JwtAuthenticationFilter(jwtService, userDetailsService)
-//    }
+        @Bean
+    fun jwtAuthenticationFilter(
+        jwtService: JwtService,
+        userDetailsService: UserDetailsService,
+    ): JwtAuthenticationFilter {
+        return JwtAuthenticationFilter(jwtService, userDetailsService)
+    }
 
     @Bean
     fun securityFilterChain(
@@ -39,7 +39,7 @@ class SecurityConfig {
             .csrf { it.disable() }
             .authorizeHttpRequests { authorize ->
                 authorize
-                    .requestMatchers("/api/auth/**")
+                    .requestMatchers("/auth/**")
                     .permitAll()
                     .anyRequest()
                     .authenticated()
@@ -62,31 +62,16 @@ class SecurityConfig {
     }
 
     @Bean
-    fun userDetailsService(): UserDetailsService {
-        // TODO: Replace with real user details service
-        val user = PlayerDetails(
-            username = "user",
-            password = passwordEncoder().encode("password") ?: error("Password encoding failed"),
-            authorities = listOf(org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")),
-            playerId = UUID.fromString("00000000-0000-0000-0000-000000000001")
+    fun passwordEncoder(): PasswordEncoder {
+        val idForEncode = "bcrypt"
+        return DelegatingPasswordEncoder(
+            idForEncode,
+            mapOf(
+                idForEncode to BCryptPasswordEncoder(12)
+            )
         )
-
-        val admin = PlayerDetails(
-            username = "admin",
-            password = passwordEncoder().encode("admin") ?: error("Password encoding failed"),
-            authorities = listOf(
-                org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_ADMIN"),
-                org.springframework.security.core.authority.SimpleGrantedAuthority("ROLE_USER")
-            ),
-            playerId = UUID.fromString("00000000-0000-0000-0000-000000000002")
-        )
-
-        return InMemoryUserDetailsManager(user, admin)
     }
-
-    @Bean
-    fun passwordEncoder(): PasswordEncoder = BCryptPasswordEncoder()
-
+//
     @Bean
     fun authenticationProvider(
         userDetailsService: UserDetailsService,

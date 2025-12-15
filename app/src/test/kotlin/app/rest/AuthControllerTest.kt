@@ -1,6 +1,6 @@
 package io.dungeons.app.rest
 
-import io.dungeons.app.rest.dto.LoginRequest
+import io.dungeons.app.rest.dto.AuthenticationRequest
 import io.dungeons.app.security.JwtService
 import io.mockk.every
 import io.mockk.mockk
@@ -36,7 +36,7 @@ class AuthControllerTest {
 
     @Test
     fun `login returns token for valid credentials`() {
-        val loginRequest = LoginRequest("testuser", "password")
+        val authenticationRequest = AuthenticationRequest("testuser", "password")
         val authentication = mockk<Authentication>()
 
         every {
@@ -48,7 +48,7 @@ class AuthControllerTest {
         every { userDetailsService.loadUserByUsername("testuser") } returns testUser
         every { jwtService.generateToken(testUser) } returns "valid.jwt.token"
 
-        val response = authController.login(loginRequest)
+        val response = authController.login(authenticationRequest)
 
         assertEquals(HttpStatus.OK, response.statusCode)
         assertNotNull(response.body)
@@ -62,13 +62,13 @@ class AuthControllerTest {
 
     @Test
     fun `login returns 401 for invalid credentials`() {
-        val loginRequest = LoginRequest("testuser", "wrongpassword")
+        val authenticationRequest = AuthenticationRequest("testuser", "wrongpassword")
 
         every {
             authenticationManager.authenticate(any())
         } throws BadCredentialsException("Bad credentials")
 
-        val response = authController.login(loginRequest)
+        val response = authController.login(authenticationRequest)
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
         assertEquals(null, response.body)
@@ -78,13 +78,13 @@ class AuthControllerTest {
 
     @Test
     fun `login returns 401 for non-existent user`() {
-        val loginRequest = LoginRequest("nonexistent", "password")
+        val authenticationRequest = AuthenticationRequest("nonexistent", "password")
 
         every {
             authenticationManager.authenticate(any())
         } throws BadCredentialsException("Bad credentials")
 
-        val response = authController.login(loginRequest)
+        val response = authController.login(authenticationRequest)
 
         assertEquals(HttpStatus.UNAUTHORIZED, response.statusCode)
 
@@ -93,8 +93,8 @@ class AuthControllerTest {
 
     @Test
     fun `login generates unique tokens for different users`() {
-        val user1Request = LoginRequest("user1", "password1")
-        val user2Request = LoginRequest("user2", "password2")
+        val user1Request = AuthenticationRequest("user1", "password1")
+        val user2Request = AuthenticationRequest("user2", "password2")
 
         val user1 = User.builder()
             .username("user1")

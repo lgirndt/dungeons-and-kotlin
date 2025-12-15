@@ -1,6 +1,6 @@
 package io.dungeons.persistence.mongodb
 
-import io.dungeons.domain.core.Player
+import io.dungeons.domain.player.Player
 import io.dungeons.domain.savegame.SaveGame
 import io.dungeons.domain.savegame.SaveGameRepository
 import io.dungeons.port.Id
