@@ -8,6 +8,7 @@ dependencies {
     implementation(libs.guava)
     implementation("org.jetbrains.kotlinx:kotlinx-datetime")
     implementation("org.springframework:spring-context")
+    implementation("org.springframework:spring-tx")
 }
 
 // Create a configuration to expose test classes to other modules

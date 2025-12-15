@@ -3,10 +3,12 @@ package io.dungeons.app.rest
 import io.dungeons.app.rest.dto.AuthResponse
 import io.dungeons.app.rest.dto.AuthenticationRequest
 import io.dungeons.app.security.JwtService
+import io.dungeons.domain.player.PlayerAlreadyExistsException
 import io.dungeons.domain.player.PlayerRequest
 import io.dungeons.domain.player.RegisterPlayerUseCase
 import org.springframework.http.HttpStatus
 import org.springframework.http.ResponseEntity
+import org.springframework.http.ResponseEntity.status
 import org.springframework.security.authentication.AuthenticationManager
 import org.springframework.security.authentication.BadCredentialsException
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken
@@ -40,17 +42,25 @@ class AuthController(
 
         ResponseEntity.ok(AuthResponse(accessToken = token))
     } catch (_: BadCredentialsException) {
-        ResponseEntity.status(HttpStatus.UNAUTHORIZED).build()
+        status(HttpStatus.UNAUTHORIZED).build()
     }
 
     @PostMapping("/register")
-    fun register(@RequestBody playerRequest: PlayerRequest) {
-        val hashedPassword : String = passwordEncoder.encode(playerRequest.password)
-            ?: error("Password encoding failed")
+    fun register(@RequestBody playerRequest: PlayerRequest) : ResponseEntity<Unit> {
+        val hashedPassword: String = passwordEncoder.encode(playerRequest.password)
+            ?: return status(HttpStatus.BAD_REQUEST).build()
 
-        val playerWithHashedPasswd = playerRequest.copy(
-            password = hashedPassword
+        val playerWithHashedPasswd = playerRequest.copy(password = hashedPassword)
+
+        return registerPlayerUseCase.execute(playerWithHashedPasswd).fold(
+            onSuccess = { status(HttpStatus.CREATED).body()},
+            onFailure = { exception ->
+                when (exception) {
+                    // we don't expose that the player already exists for security reasons
+                    is PlayerAlreadyExistsException -> status(HttpStatus.CREATED).build()
+                    else -> status(HttpStatus.INTERNAL_SERVER_ERROR).build()
+                }
+            }
         )
-        registerPlayerUseCase.execute(playerWithHashedPasswd)
     }
 }
