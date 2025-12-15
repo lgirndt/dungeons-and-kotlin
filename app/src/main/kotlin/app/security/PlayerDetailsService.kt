@@ -6,10 +6,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import org.springframework.security.core.userdetails.UserDetailsService
 import org.springframework.security.core.userdetails.UsernameNotFoundException
-import org.springframework.stereotype.Component
 import kotlin.jvm.optionals.getOrElse
 
-@Component
 class PlayerDetailsService(private val playerRepository: PlayerRepository) : UserDetailsService {
     override fun loadUserByUsername(username: String): UserDetails {
         val player : Player = playerRepository.findByName(username).getOrElse {

@@ -1,5 +1,6 @@
 package io.dungeons.app.security
 
+import io.dungeons.domain.player.PlayerRepository
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.security.authentication.AuthenticationManager
@@ -71,7 +72,12 @@ class SecurityConfig {
             )
         )
     }
-//
+
+    @Bean
+    fun userDetailsService(playerRepository: PlayerRepository): UserDetailsService {
+        return PlayerDetailsService(playerRepository)
+    }
+
     @Bean
     fun authenticationProvider(
         userDetailsService: UserDetailsService,
