@@ -1,6 +1,5 @@
 package io.dungeons.domain.spell
 
-import com.google.common.base.MoreObjects
 import io.dungeons.domain.AttackOutcome
 import io.dungeons.domain.AttackSource
 import io.dungeons.domain.Attackable
@@ -33,10 +32,7 @@ enum class SpellSchool {
 sealed class SpellLevel(val level: Int) : Comparable<SpellLevel> {
     override fun compareTo(other: SpellLevel): Int = compareBy(SpellLevel::level).compare(this, other)
 
-    override fun toString(): String = MoreObjects
-        .toStringHelper(this)
-        .add("level", level)
-        .toString()
+    override fun toString(): String = "${this::class.simpleName}(level=$level)"
 
     object Cantrip : SpellLevel(0)
 

@@ -2,6 +2,7 @@ package io.dungeons.api.rest
 
 import io.dungeons.api.rest.dto.AuthenticationRequest
 import io.dungeons.api.security.JwtService
+import io.dungeons.domain.player.RegisterPlayerUseCase
 import io.mockk.every
 import io.mockk.mockk
 import io.mockk.verify
@@ -16,16 +17,21 @@ import org.springframework.security.core.Authentication
 import org.springframework.security.core.authority.SimpleGrantedAuthority
 import org.springframework.security.core.userdetails.User
 import org.springframework.security.core.userdetails.UserDetailsService
+import org.springframework.security.crypto.password.PasswordEncoder
 
 class AuthControllerTest {
     private val authenticationManager = mockk<AuthenticationManager>()
     private val userDetailsService = mockk<UserDetailsService>()
     private val jwtService = mockk<JwtService>()
+    private val passwordEncoder = mockk<PasswordEncoder>()
+    private val registerPlayerUseCase = mockk<RegisterPlayerUseCase>()
 
     private val authController = AuthController(
         authenticationManager,
         userDetailsService,
         jwtService,
+        passwordEncoder,
+        registerPlayerUseCase,
     )
 
     private val testUser = User.builder()

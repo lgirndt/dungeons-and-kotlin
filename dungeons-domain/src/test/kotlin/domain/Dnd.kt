@@ -1,6 +1,5 @@
 package domain
 
-import com.google.common.collect.ImmutableListMultimap
 import io.dungeons.domain.ClassFeatures
 import io.dungeons.domain.Creature
 import io.dungeons.domain.CreatureData
@@ -101,14 +100,10 @@ fun aPlayerCharacter(
 infix fun Die.rolls(result: Int) = DieRoll(this, result)
 
 inline fun withFixedDice(vararg expectedRolls: DieRoll, runWithFixedDice: () -> Unit) {
-    val multimap = ImmutableListMultimap
-        .builder<Die, Int>()
-        .apply {
-            expectedRolls.forEach { put(it.die, it.value) }
-        }
-        .build()
+    val rollsByDie: Map<Die, List<Int>> = expectedRolls
+        .groupBy({ it.die }, { it.value })
 
-    val mockedDice = multimap.asMap().map { (die, allRolls) ->
+    val mockedDice = rollsByDie.map { (die, allRolls) ->
         // TODO more functional
         val allDieRolls = allRolls.map { DieRoll(die, it) }
         die.also {
@@ -121,7 +116,7 @@ inline fun withFixedDice(vararg expectedRolls: DieRoll, runWithFixedDice: () -> 
         runWithFixedDice()
     } finally {
         // verify
-        multimap.asMap().forEach { (die, allRolls) ->
+        rollsByDie.forEach { (die, allRolls) ->
             verify(exactly = allRolls.size) { die.roll() }
         }
 

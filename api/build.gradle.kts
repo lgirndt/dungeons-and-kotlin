@@ -9,8 +9,6 @@ dependencies {
     implementation(project(":persistence"))
     implementation(project(":app-port"))
 
-    implementation("com.google.guava:guava")
-
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-security")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")

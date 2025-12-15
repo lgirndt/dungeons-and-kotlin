@@ -29,7 +29,6 @@ kotlin {
 dependencyManagement {
     // Version numbers
     val junitBomVersion = "6.0.1"
-    val guavaVersion = "33.5.0-jre"
     val mockkVersion = "1.14.6"
     val detektKtlintVersion = "2.0.0-alpha.1"
     val kotlinxDatetimeVersion = "0.7.1"
@@ -44,7 +43,6 @@ dependencyManagement {
 
     dependencies {
         // Define versions for all project dependencies
-        dependency("com.google.guava:guava:$guavaVersion")
         dependency("io.mockk:mockk:$mockkVersion")
         dependency("dev.detekt:detekt-rules-ktlint-wrapper:$detektKtlintVersion")
         dependency("org.jetbrains.kotlinx:kotlinx-datetime:$kotlinxDatetimeVersion")
