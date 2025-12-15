@@ -2,7 +2,7 @@ package io.dungeons.domain
 
 import io.dungeons.domain.Die.Companion.D20
 import io.dungeons.domain.combat.ProvidesBoardPosition
-import io.dungeons.port.Id
+import io.dungeons.port.CreatureId
 
 @Suppress("DataClassShouldBeImmutable") // we are still learning how to model the creature properly
 data class CreatureData(
@@ -15,7 +15,7 @@ data class CreatureData(
     val maxHitPoints: Int = hitPoints
 }
 
-abstract class Creature(override val id: Id<Creature>, protected val core: CreatureData) : Attackable {
+abstract class Creature(override val id: CreatureId, protected val core: CreatureData) : Attackable {
     val name: String
         get() = core.name
 
@@ -46,7 +46,7 @@ abstract class Creature(override val id: Id<Creature>, protected val core: Creat
     internal fun asPhysicalAttacker(): Attacker {
         val creature = this
         return object : Attacker {
-            override val id: Id<Creature>
+            override val id: CreatureId
                 get() = creature.id
             override val attackSource = creature.weapon
             override val stats: StatBlock

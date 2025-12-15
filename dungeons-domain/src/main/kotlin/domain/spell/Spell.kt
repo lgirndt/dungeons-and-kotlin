@@ -4,7 +4,6 @@ import io.dungeons.domain.AttackOutcome
 import io.dungeons.domain.AttackSource
 import io.dungeons.domain.Attackable
 import io.dungeons.domain.Attacker
-import io.dungeons.domain.Creature
 import io.dungeons.domain.DamageRoll
 import io.dungeons.domain.DamageType
 import io.dungeons.domain.DieRoll
@@ -20,7 +19,7 @@ import io.dungeons.domain.attack
 import io.dungeons.domain.combat.ProvidesBoardPosition
 import io.dungeons.domain.world.Coordinate
 import io.dungeons.domain.world.Feet
-import io.dungeons.port.Id
+import io.dungeons.port.CreatureId
 
 enum class SpellSchool {
     Abjuration,
@@ -40,7 +39,7 @@ sealed class SpellLevel(val level: Int) : Comparable<SpellLevel> {
 }
 
 interface Caster {
-    val id: Id<Creature>
+    val id: CreatureId
     val spellCastingAbility: Stat
     val proficiencyBonus: ProficiencyBonus
     val position: Coordinate
@@ -61,7 +60,7 @@ fun castAttackSpell(
     val attackSource = spell.asAttackSource(caster)
     return attack(
         object : Attacker {
-            override val id: Id<Creature>
+            override val id: CreatureId
                 get() = caster.id
             override val attackSource = attackSource
             override val stats = caster.stats

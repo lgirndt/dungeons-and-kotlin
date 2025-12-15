@@ -3,6 +3,8 @@ package io.dungeons.domain.combat
 import io.dungeons.domain.Creature
 import io.dungeons.domain.DieRoll
 import io.dungeons.domain.board.BoardPosition
+import io.dungeons.port.CreatureId
+import io.dungeons.port.FactionId
 import io.dungeons.port.Id
 
 enum class FactionStance {
@@ -11,13 +13,13 @@ enum class FactionStance {
     Hostile,
 }
 
-data class Faction(val id: Id<Faction> = Id.Companion.generate(), val name: String)
+data class Faction(val id: FactionId = Id.generate(), val name: String)
 
 data class FactionRelationship(val first: Faction, val second: Faction, val stance: FactionStance) {
     internal fun toLookupKey(): FactionRelationsLookupKey = setOf(first.id, second.id)
 }
 
-private typealias FactionRelationsLookupKey = Set<Id<Faction>>
+private typealias FactionRelationsLookupKey = Set<FactionId>
 
 class FactionRelations private constructor(private val relationships: Map<FactionRelationsLookupKey, FactionStance>) {
     fun queryStance(factionA: Faction, factionB: Faction): FactionStance {
@@ -96,7 +98,7 @@ internal class NoopTurnActor : TurnActor {
 }
 
 data class Combatant(val creature: Creature, val faction: Faction, val actor: TurnActor) {
-    val id: Id<Creature>
+    val id: CreatureId
         get() = creature.id
 
     val initiative: DieRoll by lazy {
@@ -108,5 +110,5 @@ data class Combatant(val creature: Creature, val faction: Faction, val actor: Tu
 }
 
 interface ProvidesBoardPosition {
-    fun getBoardPosition(creatureId: Id<Creature>): BoardPosition?
+    fun getBoardPosition(creatureId: CreatureId): BoardPosition?
 }

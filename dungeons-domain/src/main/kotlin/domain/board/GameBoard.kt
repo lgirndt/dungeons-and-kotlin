@@ -5,7 +5,7 @@ import io.dungeons.domain.core.BoundingBox
 import io.dungeons.domain.core.Grid
 import io.dungeons.domain.core.GridIndex
 import io.dungeons.domain.core.UnboundedGrid
-import io.dungeons.port.Id
+import io.dungeons.port.TokenId
 import kotlin.math.abs
 
 enum class BoardLayer {
@@ -18,7 +18,7 @@ class GameBoard(val width: Int, val height: Int) {
     private val layers: Map<BoardLayer, Grid<Token>> =
         BoardLayer.entries.associateWith { BoundedGrid.fromDimensions<Token>(width, height) }
 
-    private val tokenToIndex = mutableMapOf<Id<Token>, GridIndex>()
+    private val tokenToIndex = mutableMapOf<TokenId, GridIndex>()
 
     private val boundingBox: BoundingBox
         get() = gridOnLayer(BoardLayer.GROUND).boundingBox

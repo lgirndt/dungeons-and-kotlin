@@ -1,6 +1,7 @@
 package io.dungeons.domain.adventure
 
 import io.dungeons.domain.world.Room
-import io.dungeons.port.Id
+import io.dungeons.port.AdventureId
+import io.dungeons.port.RoomId
 
-data class Adventure(val id: Id<Adventure>, val name: String, val initialRoomId: Id<Room>, val rooms: List<Room>)
+data class Adventure(val id: AdventureId, val name: String, val initialRoomId: RoomId, val rooms: List<Room>)

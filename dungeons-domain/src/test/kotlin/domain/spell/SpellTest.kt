@@ -1,7 +1,6 @@
 package domain.spell
 
 import domain.rolls
-import io.dungeons.domain.Creature
 import io.dungeons.domain.DamageType
 import io.dungeons.domain.Die.Companion.D20
 import io.dungeons.domain.Die.Companion.D4
@@ -20,7 +19,8 @@ import io.dungeons.domain.spell.castAttackSpell
 import io.dungeons.domain.world.Coordinate
 import io.dungeons.domain.world.Feet
 import io.dungeons.domain.world.Square
-import io.dungeons.port.Id
+import io.dungeons.port.CreatureId
+import io.dungeons.port._Creature
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 
@@ -33,13 +33,13 @@ private val SOME_SPELL = AttackSpell(
     range = Feet(120.0),
 )
 
-private val ID = domain.TestId<Creature>()
+private val ID = domain.TestId<_Creature>()
 
 class SpellTest {
     @Test
     fun `a spell attack that meets AC hits the target`() {
         val caster = object : Caster {
-            override val id: Id<Creature> get() = ID[0]
+            override val id: CreatureId get() = ID[0]
             override val spellCastingAbility: Stat = Stat(14) // modifier +2
             override val proficiencyBonus: ProficiencyBonus = ProficiencyBonus.fromLevel(1) // +1
             override val position: Coordinate = Coordinate.from(0, 0)

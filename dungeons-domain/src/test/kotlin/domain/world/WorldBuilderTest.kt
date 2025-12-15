@@ -5,17 +5,18 @@ import io.dungeons.domain.world.Direction
 import io.dungeons.domain.world.Room
 import io.dungeons.domain.world.World
 import io.dungeons.domain.world.WorldBuilder
-import io.dungeons.port.Id
+import io.dungeons.port.RoomId
+import io.dungeons.port._Room
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.fail
 
-private val ROOM_ID = TestId<Room>()
+private val ROOM_ID = TestId<_Room>()
 
-private fun World.roomOrFail(id: Id<Room>): Room = this.getRoomById(id)
+private fun World.roomOrFail(id: RoomId): Room = this.getRoomById(id)
     ?: fail { "room with id $id should exist in the world" }
 
-private fun Room.connectionSet(): Set<Pair<Direction, Id<Room>>> =
+private fun Room.connectionSet(): Set<Pair<Direction, RoomId>> =
     this.connections.map { (key, value) -> key to value }.toSet()
 
 class WorldBuilderTest {

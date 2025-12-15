@@ -1,7 +1,6 @@
 package domain
 
 import io.dungeons.domain.ClassFeatures
-import io.dungeons.domain.Creature
 import io.dungeons.domain.CreatureData
 import io.dungeons.domain.DEFAULT_STAT_VALUE
 import io.dungeons.domain.DamageModifiers
@@ -15,6 +14,7 @@ import io.dungeons.domain.SOME_WEAPON
 import io.dungeons.domain.Stat
 import io.dungeons.domain.StatBlock
 import io.dungeons.domain.Weapon
+import io.dungeons.port.CreatureId
 import io.dungeons.port.Id
 import io.mockk.every
 import io.mockk.mockkObject
@@ -72,7 +72,7 @@ fun StatBlock.Companion.fromModifiers(
 )
 
 fun aPlayerCharacter(
-    id: Id<Creature> = Id.generate(),
+    id: CreatureId = Id.generate(),
     name: String = "My Name",
     stats: StatBlock = SOME_STAT_BOCK.copy(),
     hitPoints: Int = 10,

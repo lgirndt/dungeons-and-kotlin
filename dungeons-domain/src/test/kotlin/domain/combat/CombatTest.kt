@@ -2,7 +2,6 @@ package domain.combat
 
 import domain.fromModifiers
 import domain.rolls
-import io.dungeons.domain.Creature
 import io.dungeons.domain.Die.Companion.D20
 import io.dungeons.domain.combat.Combatant
 import io.dungeons.domain.combat.CombatantsCollection
@@ -11,6 +10,7 @@ import io.dungeons.domain.combat.FactionRelations
 import io.dungeons.domain.combat.FactionRelationship
 import io.dungeons.domain.combat.FactionStance
 import io.dungeons.domain.combat.NoopTurnActor
+import io.dungeons.port._Creature
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
@@ -32,7 +32,7 @@ private val SOME_RELATIONSHIP = FactionRelationship(
     FactionStance.Friendly,
 )
 
-private val ID: domain.TestId<Creature> = domain.TestId()
+private val ID = domain.TestId<_Creature>()
 
 class FactionRelationsTest {
     @Test

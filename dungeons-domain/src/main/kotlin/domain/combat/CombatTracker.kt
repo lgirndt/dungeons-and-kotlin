@@ -1,7 +1,6 @@
 package io.dungeons.domain.combat
 
-import io.dungeons.domain.Creature
-import io.dungeons.port.Id
+import io.dungeons.port.CreatureId
 
 interface CombatTrackerListener {
     fun rolledInitiative(combatants: List<Combatant>) {}
@@ -26,8 +25,8 @@ class CombatTracker(
         .sortedByDescending { it.initiative }
         .also { listener.rolledInitiative(it) }
 
-    private val actors: Map<Id<Creature>, TurnActor> = combatants.associate { it.id to it.actor }
-    private val turnTable: MutableMap<Id<Creature>, Turn> = mutableMapOf()
+    private val actors: Map<CreatureId, TurnActor> = combatants.associate { it.id to it.actor }
+    private val turnTable: MutableMap<CreatureId, Turn> = mutableMapOf()
 
     init {
         require(combatants.count() >= 2) { "At least two combatants are required to start combat." }

@@ -1,9 +1,9 @@
 package io.dungeons.persistence.mongodb
 
-import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.RoomRepository
 import io.dungeons.domain.world.Room
-import io.dungeons.port.Id
+import io.dungeons.port.AdventureId
+import io.dungeons.port.RoomId
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.data.mongodb.core.aggregate
 import org.springframework.data.mongodb.core.aggregation.Aggregation
@@ -17,7 +17,7 @@ import org.springframework.stereotype.Repository
 
 @Repository
 class MongoDBRoomRepository(private val mongoTemplate: MongoTemplate) : RoomRepository {
-    override fun find(adventureId: Id<Adventure>, roomId: Id<Room>): Room? {
+    override fun find(adventureId: AdventureId, roomId: RoomId): Room? {
         @Suppress("StringLiteralDuplication")
         val aggregation = Aggregation.newAggregation(
             match(Criteria.where("_id").isEqualTo(adventureId.value)),

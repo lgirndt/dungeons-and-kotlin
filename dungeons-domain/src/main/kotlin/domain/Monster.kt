@@ -1,9 +1,10 @@
 package io.dungeons.domain
 
+import io.dungeons.port.CreatureId
 import io.dungeons.port.Id
 
 open class Monster(
-    id: Id<Creature> = Id.Companion.generate(),
+    id: CreatureId = Id.generate(),
     core: CreatureData,
     override val weapon: Weapon,
     override val attackModifier: Int,
@@ -13,7 +14,7 @@ open class Monster(
 )
 
 class Goblin(
-    id: Id<Creature> = Id.Companion.generate(),
+    id: CreatureId = Id.generate(),
     core: CreatureData = CreatureData(
         name = "Goblin",
         stats = StatBlock(
@@ -33,7 +34,7 @@ class Goblin(
 ) : Monster(id, core, weapon, attackModifier)
 
 class KoboldWarrior(
-    id: Id<Creature> = Id.Companion.generate(),
+    id: CreatureId = Id.generate(),
     core: CreatureData = CreatureData(
         name = "Kobold Warrior",
         stats = StatBlock(

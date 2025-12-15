@@ -1,11 +1,12 @@
 package io.dungeons.domain
 
+import io.dungeons.port.CreatureId
 import io.dungeons.port.Id
 
 data class PlayerCharacterData(val level: Int, val weapon: Weapon)
 
 class PlayerCharacter(
-    id: Id<Creature> = Id.Companion.generate(),
+    id: CreatureId = Id.generate(),
     private val data: PlayerCharacterData,
     private val classFeatures: ClassFeatures,
     core: CreatureData,

@@ -1,10 +1,10 @@
 package io.dungeons.persistence.mongodb
 
-import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.SOME_ADVENTURE
-import io.dungeons.domain.world.Room
 import io.dungeons.domain.world.SOME_ROOM
+import io.dungeons.port.AdventureId
 import io.dungeons.port.Id
+import io.dungeons.port.RoomId
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest
@@ -54,7 +54,7 @@ class MongoDBRoomRepositoryTest {
         adventureRepository.save(adventure)
 
         // When - Try to find a room that doesn't exist
-        val nonExistentRoomId = Id.generate<Room>()
+        val nonExistentRoomId: RoomId = Id.generate()
         val foundRoom = roomRepository.find(adventure.id, nonExistentRoomId)
 
         // Then
@@ -64,8 +64,8 @@ class MongoDBRoomRepositoryTest {
     @Test
     fun `should return null when adventure does not exist`() {
         // Given - No adventure created
-        val nonExistentAdventureId = Id.generate<Adventure>()
-        val nonExistentRoomId = Id.generate<Room>()
+        val nonExistentAdventureId: AdventureId = Id.generate()
+        val nonExistentRoomId: RoomId = Id.generate()
 
         // When
         val foundRoom = roomRepository.find(nonExistentAdventureId, nonExistentRoomId)

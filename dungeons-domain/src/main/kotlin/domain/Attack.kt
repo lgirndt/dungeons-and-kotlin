@@ -3,10 +3,10 @@ package io.dungeons.domain
 import io.dungeons.domain.board.BoardPosition
 import io.dungeons.domain.board.distance
 import io.dungeons.domain.combat.ProvidesBoardPosition
-import io.dungeons.port.Id
+import io.dungeons.port.CreatureId
 
 interface Attacker {
-    val id: Id<Creature>
+    val id: CreatureId
     val attackSource: AttackSource
     val stats: StatBlock
 
@@ -16,7 +16,7 @@ interface Attacker {
 }
 
 interface Attackable {
-    val id: Id<Creature>
+    val id: CreatureId
     val armourClass: Int
     val damageModifiers: DamageModifiers
     var hitPoints: Int

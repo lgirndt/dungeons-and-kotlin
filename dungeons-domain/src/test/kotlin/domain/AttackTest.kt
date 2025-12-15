@@ -3,7 +3,6 @@ package domain
 import io.dungeons.domain.AttackOutcome
 import io.dungeons.domain.Attackable
 import io.dungeons.domain.Cleric
-import io.dungeons.domain.Creature
 import io.dungeons.domain.DamageType
 import io.dungeons.domain.Die.Companion.D10
 import io.dungeons.domain.Die.Companion.D20
@@ -20,21 +19,22 @@ import io.dungeons.domain.board.BoardPosition
 import io.dungeons.domain.combat.ProvidesBoardPosition
 import io.dungeons.domain.world.Feet
 import io.dungeons.domain.world.Square
-import io.dungeons.port.Id
+import io.dungeons.port.CreatureId
+import io.dungeons.port._Creature
 import io.mockk.every
 import io.mockk.mockk
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.BeforeEach
 import org.junit.jupiter.api.Test
 
-class ProvidesBoardPositionMock(val positions: Map<Id<Creature>, BoardPosition>) : ProvidesBoardPosition {
-    override fun getBoardPosition(creatureId: Id<Creature>): BoardPosition? = positions[creatureId]
+class ProvidesBoardPositionMock(val positions: Map<CreatureId, BoardPosition>) : ProvidesBoardPosition {
+    override fun getBoardPosition(creatureId: CreatureId): BoardPosition? = positions[creatureId]
 }
 
 class AttackTest {
     lateinit var providesBoardPosition: ProvidesBoardPosition
 
-    val id = TestId<Creature>()
+    val id = TestId<_Creature>()
 
     @BeforeEach
     fun beforeEach() {

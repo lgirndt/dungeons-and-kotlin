@@ -6,6 +6,7 @@ import io.dungeons.domain.board.GameBoard
 import io.dungeons.domain.board.Token
 import io.dungeons.domain.core.GridIndex
 import io.dungeons.port.Id
+import io.dungeons.port.TokenId
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Nested
 import org.junit.jupiter.api.Test
@@ -13,28 +14,28 @@ import org.junit.jupiter.api.assertThrows
 
 class GameBoardTest {
     // Test token that blocks movement
-    private data class BlockingToken(override val id: Id<Token> = Id.generate()) : Token {
+    private data class BlockingToken(override val id: TokenId = Id.generate()) : Token {
         override val allowsMovement: Boolean = false
     }
 
     // Test token that allows movement through it
-    private data class PassableToken(override val id: Id<Token> = Id.generate()) : Token {
+    private data class PassableToken(override val id: TokenId = Id.generate()) : Token {
         override val allowsMovement: Boolean = true
     }
 
     // Test token that blocks sight
-    private data class OpaqueToken(override val id: Id<Token> = Id.generate()) : Token {
+    private data class OpaqueToken(override val id: TokenId = Id.generate()) : Token {
         override val allowsSight: Boolean = false
     }
 
     // Test token that allows sight
-    private data class TransparentToken(override val id: Id<Token> = Id.generate()) : Token {
+    private data class TransparentToken(override val id: TokenId = Id.generate()) : Token {
         override val allowsSight: Boolean = true
     }
 
     // Test tokens for different layers
     private data class GroundToken(
-        override val id: Id<Token> = Id.generate(),
+        override val id: TokenId = Id.generate(),
         override val allowsMovement: Boolean = true,
         override val allowsSight: Boolean = true,
     ) : Token {
@@ -42,7 +43,7 @@ class GameBoardTest {
     }
 
     private data class ObjectToken(
-        override val id: Id<Token> = Id.generate(),
+        override val id: TokenId = Id.generate(),
         override val allowsMovement: Boolean = false,
         override val allowsSight: Boolean = false,
     ) : Token {
@@ -50,7 +51,7 @@ class GameBoardTest {
     }
 
     private data class CreatureToken(
-        override val id: Id<Token> = Id.generate(),
+        override val id: TokenId = Id.generate(),
         override val allowsMovement: Boolean = false,
         override val allowsSight: Boolean = true,
     ) : Token {
