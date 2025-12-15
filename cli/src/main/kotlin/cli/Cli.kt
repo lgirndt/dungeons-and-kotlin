@@ -14,6 +14,7 @@ import io.dungeons.cli.screen.PickGameScreen
 import io.dungeons.cli.screen.RoomScreen
 import io.dungeons.cli.screen.Screen
 import io.dungeons.cli.screen.ScreenTransition
+import io.dungeons.port.Id
 import org.slf4j.LoggerFactory
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -53,7 +54,7 @@ class Cli {
         val gameState = gameStateHolder.gameState
         gameStateHolder.gameState = gameState.copy(
             // TODO: we need a proper login flow
-            playerId = UUID.fromString("609cb790-d8b5-4a97-830f-0200fee465ab"),
+            playerId = Id.fromString("609cb790-d8b5-4a97-830f-0200fee465ab"),
         )
     }
 

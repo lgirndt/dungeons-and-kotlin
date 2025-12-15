@@ -23,7 +23,7 @@ class CreateNewGameUseCaseImpl(
             val adventure = adventureRepository.findById(domainAdventureId).getOrNull()
                 ?: error("Cannot find adventure with id $adventureId")
             val saveGame = SaveGame(
-                playerId = Id.fromUUID(playerId),
+                playerId = playerId,
                 adventureId = domainAdventureId,
                 currentRoomId = adventure.initialRoomId,
                 savedAt = clock.now(),

@@ -1,7 +1,7 @@
 package io.dungeons.domain.savegame
 
-import io.dungeons.domain.player.Player
 import io.dungeons.port.Id
+import io.dungeons.port.PlayerId
 import io.dungeons.port.SaveGameSummaryResponse
 import io.mockk.clearAllMocks
 import io.mockk.every
@@ -22,14 +22,14 @@ class ListSaveGamesQueryTest {
 
     @Test
     fun `should delegate to repository findAllByUserId`() {
-        val playerId = Id.generate<Player>()
+        val playerId: PlayerId = Id.generate()
         val saveGames = listOf(
             SOME_SAVE_GAME.copy(),
             SOME_SAVE_GAME.copy(),
         )
         every { repository.findAllByUserId(playerId) } returns saveGames
 
-        val result = query.query(playerId.toUUID())
+        val result = query.query(playerId)
 
         val expected = saveGames.map {
             SaveGameSummaryResponse(
@@ -43,10 +43,10 @@ class ListSaveGamesQueryTest {
 
     @Test
     fun `should return empty list when player has no saves`() {
-        val playerId = Id.generate<Player>()
+        val playerId: PlayerId = Id.generate()
         every { repository.findAllByUserId(playerId) } returns emptyList()
 
-        val result = query.query(playerId.toUUID())
+        val result = query.query(playerId)
 
         assertEquals(emptyList(), result)
     }

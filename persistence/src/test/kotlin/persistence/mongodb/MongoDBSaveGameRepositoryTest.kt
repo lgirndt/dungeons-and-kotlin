@@ -1,8 +1,8 @@
 package io.dungeons.persistence.mongodb
 
-import io.dungeons.domain.player.Player
 import io.dungeons.domain.savegame.SOME_SAVE_GAME
 import io.dungeons.port.Id
+import io.dungeons.port.PlayerId
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest
@@ -52,7 +52,7 @@ class MongoDBSaveGameRepositoryTest {
         val saveGame = SOME_SAVE_GAME.copy()
         repository.save(saveGame)
 
-        val differentPlayerId = Id.generate<Player>()
+        val differentPlayerId: PlayerId = Id.generate()
 
         // When
         val found = repository.findByUserId(differentPlayerId, saveGame.id).getOrNull()
@@ -64,7 +64,7 @@ class MongoDBSaveGameRepositoryTest {
     @Test
     fun `should find all save games for a user`() {
         // Given
-        val userId = Id.generate<Player>()
+        val userId: PlayerId = Id.generate()
         val saveGame1 = SOME_SAVE_GAME.copy(
             id = Id.generate(),
             playerId = userId,
@@ -95,8 +95,8 @@ class MongoDBSaveGameRepositoryTest {
     @Test
     fun `should return only save games for specified user`() {
         // Given
-        val userId1 = Id.generate<Player>()
-        val userId2 = Id.generate<Player>()
+        val userId1: PlayerId = Id.generate()
+        val userId2: PlayerId = Id.generate()
 
         val user1SaveGame1 = SOME_SAVE_GAME.copy(
             id = Id.generate(),
@@ -128,7 +128,7 @@ class MongoDBSaveGameRepositoryTest {
     @Test
     fun `should return empty list when user has no save games`() {
         // Given
-        val userId = Id.generate<Player>()
+        val userId: PlayerId = Id.generate()
 
         // When
         val found = repository.findAllByUserId(userId)

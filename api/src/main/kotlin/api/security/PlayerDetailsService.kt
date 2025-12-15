@@ -8,7 +8,7 @@ import org.springframework.security.core.userdetails.UsernameNotFoundException
 import kotlin.jvm.optionals.getOrElse
 
 private fun Player.toPlayerDetails() = PlayerDetails(
-    playerId = this.id.toUUID(),
+    playerId = this.id,
     username = this.name,
     password = this.hashedPassword,
     authorities = listOf(

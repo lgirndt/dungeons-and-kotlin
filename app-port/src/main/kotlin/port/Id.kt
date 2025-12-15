@@ -16,3 +16,12 @@ value class Id<T>(val value: UUID) {
         fun <T> fromString(idString: String): Id<T> = Id(UUID.fromString(idString))
     }
 }
+
+@Suppress("ClassNaming")
+object _Player
+
+@Suppress("ClassNaming")
+object _SaveGame
+
+typealias PlayerId = Id<_Player>
+typealias SaveGameId = Id<_SaveGame>

@@ -1,5 +1,5 @@
 package io.dungeons.domain.player
 
-import io.dungeons.port.Id
+import io.dungeons.port.PlayerId
 
-data class Player(val id: Id<Player>, val name: String, val hashedPassword: String)
+data class Player(val id: PlayerId, val name: String, val hashedPassword: String)

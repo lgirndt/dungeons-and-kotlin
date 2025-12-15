@@ -9,5 +9,5 @@ data class PartyResponse(val heroes: List<HeroResponse>)
 data class NarratedRoomResponse(val roomId: UUID, val readOut: String, val party: PartyResponse)
 
 interface NarrateRoomQuery {
-    fun query(userId: UUID, saveGameId: UUID): NarratedRoomResponse?
+    fun query(userId: PlayerId, saveGameId: UUID): NarratedRoomResponse?
 }

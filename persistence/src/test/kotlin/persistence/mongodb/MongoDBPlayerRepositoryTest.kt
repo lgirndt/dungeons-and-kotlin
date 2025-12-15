@@ -1,8 +1,8 @@
 package io.dungeons.persistence.mongodb
 
-import io.dungeons.domain.player.Player
 import io.dungeons.domain.player.SOME_PLAYER
 import io.dungeons.port.Id
+import io.dungeons.port.PlayerId
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.springframework.beans.factory.annotation.Autowired
@@ -19,7 +19,7 @@ class MongoDBPlayerRepositoryTest {
 
     @Test
     fun `insert should insert player into database if it does not yet exist`() {
-        val id = Id.generate<Player>()
+        val id: PlayerId = Id.generate()
         val player = SOME_PLAYER.copy(id = id)
         playerRepository.insert(player)
 
@@ -29,7 +29,7 @@ class MongoDBPlayerRepositoryTest {
 
     @Test
     fun `insert should fail to insert player into database if it already exists`() {
-        val id = Id.generate<Player>()
+        val id: PlayerId = Id.generate()
         val player = SOME_PLAYER.copy(id = id)
         playerRepository.insert(player)
 
@@ -40,7 +40,7 @@ class MongoDBPlayerRepositoryTest {
 
     @Test
     fun `findByName should return player when found`() {
-        val id = Id.generate<Player>()
+        val id: PlayerId = Id.generate()
         val name = "UniqueName"
         val player = SOME_PLAYER.copy(id = id, name = name)
         playerRepository.insert(player)

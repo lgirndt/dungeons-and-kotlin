@@ -1,11 +1,12 @@
 package io.dungeons.api.security
 
+import io.dungeons.port.PlayerId
 import org.springframework.security.core.GrantedAuthority
 import org.springframework.security.core.userdetails.UserDetails
 import java.util.*
 
 data class PlayerDetails(
-    val playerId: UUID,
+    val playerId: PlayerId,
     private val username: String,
     private val password: String,
     private val authorities: Collection<GrantedAuthority>,

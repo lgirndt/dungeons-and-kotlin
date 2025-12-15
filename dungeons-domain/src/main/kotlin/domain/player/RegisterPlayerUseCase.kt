@@ -2,6 +2,7 @@ package io.dungeons.domain.player
 
 import io.dungeons.domain.UseCaseException
 import io.dungeons.port.Id
+import io.dungeons.port.PlayerId
 import org.springframework.dao.DuplicateKeyException
 import org.springframework.stereotype.Component
 
@@ -11,7 +12,7 @@ class PlayerAlreadyExistsException(message: String) : UseCaseException(message)
 
 @Component
 class RegisterPlayerUseCase(private val playerRepository: PlayerRepository) {
-    fun execute(request: PlayerRequest): Result<Id<Player>> {
+    fun execute(request: PlayerRequest): Result<PlayerId> {
         try {
             val player = Player(
                 id = Id.generate(),

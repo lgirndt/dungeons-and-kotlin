@@ -1,9 +1,9 @@
 package io.dungeons.persistence.mongodb
 
-import io.dungeons.domain.player.Player
 import io.dungeons.domain.savegame.SaveGame
 import io.dungeons.domain.savegame.SaveGameRepository
 import io.dungeons.port.Id
+import io.dungeons.port.PlayerId
 import org.springframework.data.mongodb.repository.MongoRepository
 import org.springframework.data.mongodb.repository.Query
 import org.springframework.stereotype.Repository
@@ -24,8 +24,8 @@ interface MongoDBSaveGameRepository :
         }
     """,
     )
-    override fun findByUserId(userId: Id<Player>, saveGameId: Id<SaveGame>): Optional<SaveGame>
+    override fun findByUserId(userId: PlayerId, saveGameId: Id<SaveGame>): Optional<SaveGame>
 
     @Query("{ 'playerId': ?0 }")
-    override fun findAllByUserId(userId: Id<Player>): List<SaveGame>
+    override fun findAllByUserId(userId: PlayerId): List<SaveGame>
 }
