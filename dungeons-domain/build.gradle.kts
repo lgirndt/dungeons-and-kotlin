@@ -5,7 +5,7 @@ plugins {
 dependencies {
 
     implementation(project(":app-port"))
-    implementation(libs.guava)
+    implementation("com.google.guava:guava")
     implementation("org.jetbrains.kotlinx:kotlinx-datetime")
     implementation("org.springframework:spring-context")
     implementation("org.springframework:spring-tx")

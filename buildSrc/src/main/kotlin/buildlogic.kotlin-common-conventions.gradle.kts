@@ -38,6 +38,16 @@ dependencyManagement {
         dependency("io.mockk:mockk:1.14.6")
         dependency("dev.detekt:detekt-rules-ktlint-wrapper:2.0.0-alpha.1")
         dependency("org.jetbrains.kotlinx:kotlinx-datetime:0.7.1")
+
+        // CLI dependencies
+        dependency("com.varabyte.kotter:kotter-jvm:1.2.1")
+        dependency("com.varabyte.kotterx:kotter-test-support-jvm:1.2.1")
+        dependency("com.github.ajalt.clikt:clikt:5.0.3")
+
+        // JWT dependencies
+        dependency("io.jsonwebtoken:jjwt-api:0.12.6")
+        dependency("io.jsonwebtoken:jjwt-impl:0.12.6")
+        dependency("io.jsonwebtoken:jjwt-jackson:0.12.6")
     }
 }
 

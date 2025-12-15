@@ -23,12 +23,12 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
 
-    implementation("com.varabyte.kotter:kotter-jvm:1.2.1")
-//    implementation("com.varabyte.kotterx:kotter-grid-jvm:1.2.1")
+    implementation("com.varabyte.kotter:kotter-jvm")
+//    implementation("com.varabyte.kotterx:kotter-grid-jvm")
 
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
-    testImplementation("com.varabyte.kotterx:kotter-test-support-jvm:1.2.1")
+    testImplementation("com.varabyte.kotterx:kotter-test-support-jvm")
 
     // Development
     developmentOnly("org.springframework.boot:spring-boot-docker-compose")
