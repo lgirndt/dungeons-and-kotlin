@@ -38,7 +38,7 @@ class RoomScreen(private val narrateRoomQuery: NarrateRoomQuery, private val gam
         val (playerId, gameId) = gameStateHolder.unpackIdsOrThrow()
         val narratedRoom = narrateRoomQuery.query(
             playerId,
-            gameId.toUUID(),
+            gameId,
         )
         if (narratedRoom == null) {
             error("Cannot load room: save game or adventure not found")

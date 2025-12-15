@@ -1,16 +1,14 @@
 package io.dungeons.domain.narrator
 
 import io.dungeons.domain.adventure.AdventureRepository
-import io.dungeons.domain.savegame.SaveGame
 import io.dungeons.domain.savegame.SaveGameRepository
 import io.dungeons.port.HeroResponse
-import io.dungeons.port.Id
 import io.dungeons.port.NarrateRoomQuery
 import io.dungeons.port.NarratedRoomResponse
 import io.dungeons.port.PartyResponse
 import io.dungeons.port.PlayerId
+import io.dungeons.port.SaveGameId
 import org.springframework.stereotype.Component
-import java.util.*
 import kotlin.jvm.optionals.getOrNull
 
 private fun Hero.toResponse() = HeroResponse(name = this.name)
@@ -28,8 +26,8 @@ class NarrateRoomQueryImpl(
     private val saveGameRepository: SaveGameRepository,
     private val adventureRepository: AdventureRepository,
 ) : NarrateRoomQuery {
-    override fun query(userId: PlayerId, saveGameId: UUID): NarratedRoomResponse? {
-        val saveGameIdTyped = Id.fromUUID<SaveGame>(saveGameId)
+    override fun query(userId: PlayerId, saveGameId: SaveGameId): NarratedRoomResponse? {
+        val saveGameIdTyped = saveGameId
         val saveGame = saveGameRepository.findByUserId(userId, saveGameIdTyped).getOrNull()
             ?: error("Cannot find game with id $saveGameId")
 
