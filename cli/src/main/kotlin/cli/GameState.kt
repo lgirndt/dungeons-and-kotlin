@@ -1,10 +1,10 @@
 package io.dungeons.cli
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.readValue
 import io.dungeons.port.PlayerId
 import io.dungeons.port.SaveGameId
 import org.springframework.stereotype.Component
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.module.kotlin.readValue
 import java.nio.file.Path
 import kotlin.io.path.exists
 import kotlin.io.path.readText
@@ -13,12 +13,10 @@ import kotlin.io.path.writeText
 data class GameState(
     val playerId: PlayerId? = null,
     val currentGameId: SaveGameId? = null,
-    val authToken: String? = null) {
-
-}
+    val authToken: String? = null)
 
 @Component
-class GameStateHolder(private val objectMapper: ObjectMapper) {
+class GameStateHolder(private val objectMapper: JsonMapper) {
     var gameState: GameState = GameState()
 
     fun unpackIdsOrThrow(): Pair<PlayerId, SaveGameId> {

@@ -1,6 +1,5 @@
 package io.dungeons.cli
 
-import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
 import com.github.ajalt.clikt.core.main
 import io.dungeons.cli.screen.DetailsScreen
 import io.dungeons.cli.screen.MyScreen
@@ -9,7 +8,6 @@ import io.dungeons.cli.screen.PickGameScreen
 import io.dungeons.cli.screen.RoomScreen
 import io.dungeons.cli.screen.Screen
 import io.dungeons.cli.screen.ScreenTransition
-import org.slf4j.LoggerFactory
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
@@ -20,19 +18,21 @@ import org.springframework.http.client.ClientHttpRequestExecution
 import org.springframework.http.client.ClientHttpRequestInterceptor
 import org.springframework.http.client.ClientHttpResponse
 import org.springframework.web.client.RestClient
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.module.kotlin.kotlinModule
 import kotlin.time.Clock
 
 typealias ScreenMap = Map<ScreenTransition, Screen<ScreenTransition>>
 
 @SpringBootApplication(scanBasePackages = ["io.dungeons"])
 class Cli {
-    private val logger = LoggerFactory.getLogger(Cli::class.java)
-
     @Bean
     fun clock() = Clock.System
 
     @Bean
-    fun objectMapper() = jacksonObjectMapper()
+    fun objectMapper(): JsonMapper = JsonMapper.builder()
+        .addModule(kotlinModule())
+        .build()
 
     @Bean
     fun screens(

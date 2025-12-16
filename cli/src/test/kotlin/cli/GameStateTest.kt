@@ -1,16 +1,16 @@
 package io.dungeons.cli
 
-import com.fasterxml.jackson.databind.ObjectMapper
-import com.fasterxml.jackson.module.kotlin.registerKotlinModule
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
 import org.junit.jupiter.api.assertThrows
 import org.junit.jupiter.api.io.TempDir
+import tools.jackson.databind.json.JsonMapper
+import tools.jackson.module.kotlin.kotlinModule
 import java.nio.file.Path
 import kotlin.io.path.exists
 
 class GameStateTest {
-    private val objectMapper = ObjectMapper().registerKotlinModule()
+    private val objectMapper = JsonMapper.builder().addModule(kotlinModule()).build()
     private val gameStateHolder = GameStateHolder(objectMapper)
 
     @Test
