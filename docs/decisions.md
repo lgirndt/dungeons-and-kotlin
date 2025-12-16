@@ -67,3 +67,19 @@ typealias PlayerId = Id<_Player>
 - This ensures test data lives close to the code it supports while remaining in the test scope.
 - Modules that need test data from other modules (e.g., persistence tests using domain test data) include the test package as a dependency via Gradle's `testClasses` configuration.
 - This approach maintains DRY principles while respecting module boundaries and avoiding circular dependencies.
+
+# Logging with KotlinLogging
+- We use the kotlin-logging library (io.github.oshai:kotlin-logging-jvm) for all logging in the project.
+- Logger declaration: Use top-level private logger declaration instead of companion objects or class properties.
+  ```kotlin
+  private val logger = KotlinLogging.logger {}
+  ```
+- This approach is preferred over companion objects as they are heavyweight constructs in Kotlin.
+- Lazy evaluation: Always use lambda syntax for log messages to ensure they are only constructed when the log level is enabled.
+  ```kotlin
+  logger.info { "Processing user: ${user.name}" }
+  logger.error(exception) { "Failed to register player '${name}'" }
+  ```
+- The lambda syntax provides better performance by avoiding string construction when logging is disabled.
+- For error logging with exceptions, pass the exception as the first parameter followed by the lambda message.
+- Avoid eager evaluation like `logger.info("message")` as it constructs the string even when logging is disabled.
