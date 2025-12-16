@@ -1,3 +1,5 @@
+@file:Suppress("ClassNaming")
+
 package io.dungeons.port
 
 import java.util.*
@@ -19,31 +21,22 @@ value class Id<T>(val value: UUID) {
     }
 }
 
-@Suppress("ClassNaming")
 object _Player
 
-@Suppress("ClassNaming")
 object _SaveGame
 
-@Suppress("ClassNaming")
 object _Creature
 
-@Suppress("ClassNaming")
 object _Adventure
 
-@Suppress("ClassNaming")
 object _Room
 
-@Suppress("ClassNaming")
 object _World
 
-@Suppress("ClassNaming")
 object _WorldState
 
-@Suppress("ClassNaming")
 object _Faction
 
-@Suppress("ClassNaming")
 object _Token
 
 typealias PlayerId = Id<_Player>
