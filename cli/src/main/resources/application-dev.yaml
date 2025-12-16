@@ -1,0 +1,19 @@
+spring:
+  # MongoDB Configuration
+  mongodb:
+    host: localhost
+    port: 27017
+    database: dungeon
+    username: dev
+    password: dev
+    representation:
+      uuid: standard
+
+  # Docker Compose
+  docker:
+    compose:
+      file: ../docker-compose.yml
+
+dungeons:
+  api:
+    base_url: http://localhost:8080

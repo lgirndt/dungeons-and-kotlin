@@ -1,0 +1,19 @@
+# CLI Application Configuration
+spring:
+  main:
+    web-application-type: none
+    banner-mode: off
+  application:
+    name: dungeons-cli
+
+# Logging - file only, no console
+logging:
+  level:
+    root: INFO
+    cli: DEBUG
+#    org:
+#      springframework: DEBUG
+  file:
+    name: logs/cli-application.log
+  pattern:
+    file: "%d{yyyy-MM-dd HH:mm:ss} - %logger{36} - %msg%n"
