@@ -3,6 +3,7 @@
     <option name="ACTIVE_PROFILES" value="dev" />
     <log_file alias="Log" path="$PROJECT_DIR$/cli/logs/cli-application.log" />
     <module name="learn-kotlin.cli.main" />
+    <option name="PROGRAM_PARAMETERS" value="--game-state-file $ProjectFileDir$/.developmentGameState.json" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="io.dungeons.cli.Cli" />
     <option name="WORKING_DIRECTORY" value="file://$ProjectFileDir$/cli" />
     <method v="2">
