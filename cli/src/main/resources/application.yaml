@@ -11,8 +11,8 @@ logging:
   level:
     root: INFO
     cli: DEBUG
-#    org:
-#      springframework: DEBUG
+    org:
+      springframework: DEBUG
   file:
     name: logs/cli-application.log
   pattern:
