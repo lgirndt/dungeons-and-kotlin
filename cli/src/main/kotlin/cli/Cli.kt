@@ -10,10 +10,15 @@ import io.dungeons.cli.screen.RoomScreen
 import io.dungeons.cli.screen.Screen
 import io.dungeons.cli.screen.ScreenTransition
 import org.slf4j.LoggerFactory
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.http.HttpRequest
+import org.springframework.http.client.ClientHttpRequestExecution
+import org.springframework.http.client.ClientHttpRequestInterceptor
+import org.springframework.http.client.ClientHttpResponse
 import org.springframework.web.client.RestClient
 import kotlin.time.Clock
 
@@ -37,7 +42,7 @@ class Cli {
         pickGameScreen: PickGameScreen,
         roomScreen: RoomScreen,
     ): ScreenMap {
-        // It makes much more sense to build this lazy
+        // It makes much more sense to build this lazily
         return listOf(
             myScreen,
             detailsScreen,
@@ -48,11 +53,14 @@ class Cli {
     }
 
     @Bean
-    fun restClient() =
+    fun restClient(
+        gameStateHolder: GameStateHolder,
+        @Value("\${dungeons.api.base_url}") baseUrl: String
+    ): RestClient =
         RestClient
             .builder()
-            .baseUrl("TODO")
-            .requestInterceptor { request, bytes, execution ->  execution.execute(request, bytes) }
+            .baseUrl(baseUrl)
+            .requestInterceptor(TokenProvidingInterceptor(gameStateHolder))
             .build()
 
     @Bean
@@ -68,6 +76,19 @@ class Cli {
     }
 
 
+}
+
+class TokenProvidingInterceptor(private val gameStateHolder: GameStateHolder) : ClientHttpRequestInterceptor {
+    override fun intercept(
+        request: HttpRequest,
+        body: ByteArray,
+        execution: ClientHttpRequestExecution
+    ): ClientHttpResponse {
+        if(gameStateHolder.gameState.authToken != null) {
+            request.headers.add("Authorization", "Bearer ${gameStateHolder.gameState.authToken}")
+        }
+        return execution.execute(request, body)
+    }
 }
 
 fun main(args: Array<String>) {

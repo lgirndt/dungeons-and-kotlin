@@ -14,6 +14,9 @@ spring:
     compose:
       file: ../docker-compose.yml
 
+# Dungeons API Configuration
 dungeons:
   api:
     base_url: http://localhost:8080
+
+

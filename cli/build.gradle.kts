@@ -4,8 +4,8 @@ plugins {
 }
 
 dependencies {
-    implementation(project(":dungeons-domain"))
-    implementation(project(":persistence"))
+//    implementation(project(":dungeons-domain"))
+//    implementation(project(":persistence"))
     implementation(project(":app-port"))
 
     // Spring Boot (without web)
