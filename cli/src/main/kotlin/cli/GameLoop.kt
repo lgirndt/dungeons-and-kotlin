@@ -8,7 +8,7 @@ import com.varabyte.kotter.runtime.terminal.TerminalSize
 import com.varabyte.kotter.terminal.system.SystemTerminal
 import com.varabyte.kotter.terminal.virtual.VirtualTerminal
 import io.dungeons.cli.screen.ScreenTransition
-import io.dungeons.port.Id
+import java.nio.file.Path
 
 private fun Session.clearScreen() {
     section {
@@ -20,8 +20,8 @@ private fun Session.clearScreen() {
 
 class GameLoop(private val screens: ScreenMap, private val gameStateHolder: GameStateHolder) {
 
-    fun run() {
-        login(gameStateHolder)
+    fun run(stateFile: Path?) {
+        login(gameStateHolder,stateFile)
 
         session(
             terminal = listOf(
@@ -38,11 +38,11 @@ class GameLoop(private val screens: ScreenMap, private val gameStateHolder: Game
         }
     }
 
-    private fun login(gameStateHolder: GameStateHolder) {
-        val gameState = gameStateHolder.gameState
-        gameStateHolder.gameState = gameState.copy(
-            // TODO: we need a proper login flow
-            playerId = Id.fromString("609cb790-d8b5-4a97-830f-0200fee465ab"),
-        )
+    private fun login(gameStateHolder: GameStateHolder, stateFile: Path?) {
+
+        if (stateFile != null) {
+            gameStateHolder.syncFromFile(stateFile)
+        }
+
     }
 }

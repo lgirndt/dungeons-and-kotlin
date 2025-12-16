@@ -22,6 +22,8 @@ dependencies {
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
+    // Clikt for CLI
+    implementation("com.github.ajalt.clikt:clikt")
 
     implementation("com.varabyte.kotter:kotter-jvm")
 //    implementation("com.varabyte.kotterx:kotter-grid-jvm")

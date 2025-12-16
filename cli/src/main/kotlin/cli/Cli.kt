@@ -1,6 +1,7 @@
 package io.dungeons.cli
 
 import com.fasterxml.jackson.module.kotlin.jacksonObjectMapper
+import com.github.ajalt.clikt.core.main
 import io.dungeons.cli.screen.DetailsScreen
 import io.dungeons.cli.screen.MyScreen
 import io.dungeons.cli.screen.PickAdventureScreen
@@ -62,9 +63,10 @@ class Cli {
         )
 
     @Bean
-    fun runner(gameLoop: GameLoop) = CommandLineRunner {
-        gameLoop.run()
+    fun commandLineRunner(mainCommand: MainCommand) = CommandLineRunner { args ->
+        mainCommand.main(args)
     }
+
 
 }
 
