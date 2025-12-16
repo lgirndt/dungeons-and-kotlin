@@ -11,11 +11,16 @@ dependencies {
 
     implementation("org.springframework.boot:spring-boot-starter-webmvc")
     implementation("org.springframework.boot:spring-boot-starter-security")
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    // JSON processing - Jackson 3.x for Spring Boot 4.0+
+    implementation("tools.jackson.module:jackson-module-kotlin")
+
     implementation("org.jetbrains.kotlin:kotlin-reflect")
 
     // JWT dependencies
     implementation("io.jsonwebtoken:jjwt-api")
+    implementation("ch.qos.logback:logback-classic")
+    implementation("io.github.oshai:kotlin-logging-jvm")
+
     runtimeOnly("io.jsonwebtoken:jjwt-impl")
     runtimeOnly("io.jsonwebtoken:jjwt-jackson")
 

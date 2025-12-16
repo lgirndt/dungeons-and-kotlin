@@ -16,8 +16,8 @@ dependencies {
     // HTTP Client for making REST calls
     implementation("org.springframework.boot:spring-boot-starter-web-services")
 
-    // JSON processing
-    implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    // JSON processing - Jackson 3.x for Spring Boot 4.0+
+    implementation("tools.jackson.module:jackson-module-kotlin")
 
     implementation("org.jetbrains.kotlin:kotlin-stdlib")
     implementation("org.jetbrains.kotlin:kotlin-reflect")
@@ -26,6 +26,10 @@ dependencies {
     implementation("com.github.ajalt.clikt:clikt")
 
     implementation("com.varabyte.kotter:kotter-jvm")
+
+    implementation("ch.qos.logback:logback-classic")
+    implementation("io.github.oshai:kotlin-logging-jvm")
+
 //    implementation("com.varabyte.kotterx:kotter-grid-jvm")
 
     // Testing

@@ -22,6 +22,9 @@ dependencies {
     // Clikt for CLI
     implementation("com.github.ajalt.clikt:clikt")
 
+    implementation("ch.qos.logback:logback-classic")
+    implementation("io.github.oshai:kotlin-logging-jvm")
+
     // Testing
     testImplementation("org.springframework.boot:spring-boot-starter-test")
 

@@ -8,6 +8,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime")
     implementation("org.springframework:spring-context")
     implementation("org.springframework:spring-tx")
+    implementation("ch.qos.logback:logback-classic")
+    implementation("io.github.oshai:kotlin-logging-jvm")
 }
 
 // Create a configuration to expose test classes to other modules
