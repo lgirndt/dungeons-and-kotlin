@@ -12,7 +12,7 @@ logging:
     root: INFO
     cli: DEBUG
     org:
-      springframework: DEBUG
+      springframework: INFO
   file:
     name: logs/cli-application.log
   pattern:

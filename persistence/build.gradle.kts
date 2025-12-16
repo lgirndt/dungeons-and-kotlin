@@ -11,7 +11,8 @@ dependencies {
 
     // MongoDB
     implementation("org.springframework.boot:spring-boot-starter-data-mongodb")
-    implementation("ch.qos.logback:logback-classic")
+
+    // Logging (logback-classic already provided by spring-boot-starter)
     implementation("io.github.oshai:kotlin-logging-jvm")
 
     // Kotlin (required for Spring Data MongoDB Kotlin extensions)

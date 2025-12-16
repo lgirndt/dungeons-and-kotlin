@@ -18,7 +18,8 @@ dependencies {
 
     // JWT dependencies
     implementation("io.jsonwebtoken:jjwt-api")
-    implementation("ch.qos.logback:logback-classic")
+
+    // Logging (logback-classic already provided by spring-boot-starter)
     implementation("io.github.oshai:kotlin-logging-jvm")
 
     runtimeOnly("io.jsonwebtoken:jjwt-impl")

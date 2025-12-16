@@ -8,6 +8,8 @@ dependencies {
     implementation("org.jetbrains.kotlinx:kotlinx-datetime")
     implementation("org.springframework:spring-context")
     implementation("org.springframework:spring-tx")
+
+    // Logging
     implementation("ch.qos.logback:logback-classic")
     implementation("io.github.oshai:kotlin-logging-jvm")
 }

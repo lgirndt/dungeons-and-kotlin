@@ -8,7 +8,10 @@ import com.varabyte.kotter.runtime.terminal.TerminalSize
 import com.varabyte.kotter.terminal.system.SystemTerminal
 import com.varabyte.kotter.terminal.virtual.VirtualTerminal
 import io.dungeons.cli.screen.ScreenTransition
+import io.github.oshai.kotlinlogging.KotlinLogging
 import java.nio.file.Path
+
+private val logger = KotlinLogging.logger {}
 
 private fun Session.clearScreen() {
     section {
@@ -21,6 +24,7 @@ private fun Session.clearScreen() {
 class GameLoop(private val screens: ScreenMap, private val gameStateHolder: GameStateHolder) {
 
     fun run(stateFile: Path?) {
+        logger.debug { "Starting game loop" }
         login(gameStateHolder,stateFile)
 
         session(
@@ -41,6 +45,7 @@ class GameLoop(private val screens: ScreenMap, private val gameStateHolder: Game
     private fun login(gameStateHolder: GameStateHolder, stateFile: Path?) {
 
         if (stateFile != null) {
+            logger.debug { "State file provided: $stateFile, loading game state from file." }
             gameStateHolder.syncFromFile(stateFile)
         }
 

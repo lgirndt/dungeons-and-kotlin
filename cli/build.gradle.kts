@@ -27,7 +27,7 @@ dependencies {
 
     implementation("com.varabyte.kotter:kotter-jvm")
 
-    implementation("ch.qos.logback:logback-classic")
+    // Logging (logback-classic already provided by spring-boot-starter)
     implementation("io.github.oshai:kotlin-logging-jvm")
 
 //    implementation("com.varabyte.kotterx:kotter-grid-jvm")

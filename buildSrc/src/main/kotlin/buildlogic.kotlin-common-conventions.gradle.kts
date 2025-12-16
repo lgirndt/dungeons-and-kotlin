@@ -57,7 +57,6 @@ dependencyManagement {
         dependency("io.jsonwebtoken:jjwt-impl:$jjwtVersion")
         dependency("io.jsonwebtoken:jjwt-jackson:$jjwtVersion")
 
-        dependency("ch.qos.logback:logback-classic:1.5.22")
         dependency("io.github.oshai:kotlin-logging-jvm:5.1.0")
     }
 }
