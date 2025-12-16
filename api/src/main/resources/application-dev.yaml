@@ -8,3 +8,8 @@ spring:
   docker:
     compose:
       file: ../docker-compose.yml
+
+logging:
+  level:
+    io:
+      dungeons: DEBUG
