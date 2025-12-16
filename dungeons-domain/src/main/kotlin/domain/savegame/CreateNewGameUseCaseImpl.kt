@@ -1,8 +1,6 @@
 package io.dungeons.domain.savegame
 
 import io.dungeons.domain.adventure.AdventureRepository
-import io.dungeons.port.AdventureId
-import io.dungeons.port.Id
 import io.dungeons.port.SaveGameId
 import io.dungeons.port.usecases.CreateNewGameRequest
 import io.dungeons.port.usecases.CreateNewGameUseCase
@@ -22,12 +20,11 @@ class CreateNewGameUseCaseImpl(
     override fun execute(request: CreateNewGameRequest): SaveGameId {
         with(request) {
             logger.info("New game with id $playerId")
-            val domainAdventureId: AdventureId = Id.fromUUID(adventureId)
-            val adventure = adventureRepository.findById(domainAdventureId).getOrNull()
+            val adventure = adventureRepository.findById(adventureId).getOrNull()
                 ?: error("Cannot find adventure with id $adventureId")
             val saveGame = SaveGame(
                 playerId = playerId,
-                adventureId = domainAdventureId,
+                adventureId = adventureId,
                 currentRoomId = adventure.initialRoomId,
                 savedAt = clock.now(),
             )
