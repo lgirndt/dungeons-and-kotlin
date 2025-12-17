@@ -14,5 +14,3 @@ db.createUser({
 
 print('✅ Created dev user with readWrite access to dungeon database');
 
-db.player.createIndex( { "name": 1 }, { unique: true } )
-
