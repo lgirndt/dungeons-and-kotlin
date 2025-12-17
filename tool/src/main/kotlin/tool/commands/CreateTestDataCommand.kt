@@ -30,10 +30,16 @@ class CreateTestDataCommand(
     override fun help(context: Context) = "Say hello"
 
     override fun run() {
+        dropDatabase()
         logger.info { "Creating test data..." }
-//        createAdventure()
+        createAdventure()
         createPlayers()
         logger.info { "Test data creation complete." }
+    }
+
+    private fun dropDatabase() {
+        logger.info { "Dropping database" }
+        mongoOperations.execute { db -> db.drop() }
     }
 
     private fun createPlayers() {
@@ -105,6 +111,6 @@ class CreateTestDataCommand(
             rooms = world.rooms,
         )
         val result = adventureRepository.save(adventure)
-        logger.info { "Created adventure: $result" }
+        logger.info { "Created adventure: ${result?.name}" }
     }
 }
