@@ -14,10 +14,13 @@ import org.springframework.data.mongodb.core.aggregation.Aggregation.unwind
 import org.springframework.data.mongodb.core.query.Criteria
 import org.springframework.data.mongodb.core.query.isEqualTo
 import org.springframework.stereotype.Repository
+import java.util.*
+import java.util.Optional.ofNullable
 
 @Repository
 class MongoDBRoomRepository(private val mongoTemplate: MongoTemplate) : RoomRepository {
-    override fun find(adventureId: AdventureId, roomId: RoomId): Room? {
+    override fun find(adventureId: AdventureId, roomId: RoomId): Optional<Room> {
+
         @Suppress("StringLiteralDuplication")
         val aggregation = Aggregation.newAggregation(
             match(Criteria.where("_id").isEqualTo(adventureId.value)),
@@ -27,6 +30,10 @@ class MongoDBRoomRepository(private val mongoTemplate: MongoTemplate) : RoomRepo
             replaceRoot("rooms"),
         )
 
-        return mongoTemplate.aggregate<Room>(aggregation, "adventure").uniqueMappedResult
+        return ofNullable(
+            mongoTemplate
+                .aggregate<Room>(aggregation, "adventure")
+                .uniqueMappedResult,
+        )
     }
 }

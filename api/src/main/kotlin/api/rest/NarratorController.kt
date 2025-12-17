@@ -15,6 +15,6 @@ class NarratorController(private val narrateRoomQuery: NarrateRoomQuery) {
     fun narrateRoom(
         @PathVariable gameId: String,
         @AuthenticationPrincipal player: PlayerDetails,
-    ): NarratedRoomResponse = narrateRoomQuery.query(player.playerId, PlayerId.fromString(gameId))
-        ?: error("Narrated room does not exist")
+    ): NarratedRoomResponse =
+        narrateRoomQuery.query(player.playerId, PlayerId.fromString(gameId)).getOrThrow()
 }

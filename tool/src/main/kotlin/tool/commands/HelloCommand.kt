@@ -7,6 +7,7 @@ import com.github.ajalt.clikt.parameters.options.option
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.adventure.RoomRepository
 import org.springframework.stereotype.Component
+import kotlin.jvm.optionals.getOrNull
 
 @Component
 class HelloCommand(private val adventureRepository: AdventureRepository, private val roomRepository: RoomRepository) :
@@ -37,7 +38,7 @@ class HelloCommand(private val adventureRepository: AdventureRepository, private
         val room = roomRepository.find(
             adventureId = adventure.id,
             roomId = adventure.initialRoomId,
-        )
+        ).getOrNull()
         echo("I found the room '${room?.name ?: "<not found>"}' in the adventure.")
     }
 }

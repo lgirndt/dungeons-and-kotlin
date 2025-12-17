@@ -9,6 +9,7 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.boot.data.mongodb.test.autoconfigure.DataMongoTest
 import org.springframework.context.annotation.Import
+import kotlin.jvm.optionals.getOrNull
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
 import kotlin.test.assertNull
@@ -35,7 +36,7 @@ class MongoDBRoomRepositoryTest {
         adventureRepository.save(adventure)
 
         // When
-        val foundRoom = roomRepository.find(adventure.id, room1.id)
+        val foundRoom = roomRepository.find(adventure.id, room1.id).getOrNull()
 
         // Then
         assertNotNull(foundRoom)
@@ -55,7 +56,7 @@ class MongoDBRoomRepositoryTest {
 
         // When - Try to find a room that doesn't exist
         val nonExistentRoomId: RoomId = Id.generate()
-        val foundRoom = roomRepository.find(adventure.id, nonExistentRoomId)
+        val foundRoom = roomRepository.find(adventure.id, nonExistentRoomId).getOrNull()
 
         // Then
         assertNull(foundRoom)
@@ -68,7 +69,7 @@ class MongoDBRoomRepositoryTest {
         val nonExistentRoomId: RoomId = Id.generate()
 
         // When
-        val foundRoom = roomRepository.find(nonExistentAdventureId, nonExistentRoomId)
+        val foundRoom = roomRepository.find(nonExistentAdventureId, nonExistentRoomId).getOrNull()
 
         // Then
         assertNull(foundRoom)
@@ -92,7 +93,7 @@ class MongoDBRoomRepositoryTest {
         adventureRepository.save(adventure2)
 
         // When - Try to find room2 in adventure1
-        val foundRoom = roomRepository.find(adventure1.id, room2.id)
+        val foundRoom = roomRepository.find(adventure1.id, room2.id).getOrNull()
 
         // Then
         assertNull(foundRoom)
