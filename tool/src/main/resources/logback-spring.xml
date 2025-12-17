@@ -3,7 +3,7 @@
     <!-- Console appender -->
     <appender name="CONSOLE" class="ch.qos.logback.core.ConsoleAppender">
         <encoder>
-            <pattern>%-5level %msg%n</pattern>
+            <pattern>%highlight(%-5level) %msg%n</pattern>
         </encoder>
     </appender>
 
