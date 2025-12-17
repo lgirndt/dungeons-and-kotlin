@@ -44,7 +44,7 @@ class GameLoop(private val screens: ScreenMap, private val gameStateHolder: Game
                     Exception,
                 ) {
                     logger.error(e) { "Error during screen transition: $transition" }
-                    return@session
+                    throw e
                 }
             }
         }

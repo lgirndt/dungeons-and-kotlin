@@ -10,12 +10,11 @@ import org.springframework.web.client.body
 
 @Component
 class RestNarrateRoomQuery(private val restClient: RestClient) : NarrateRoomQuery {
-    override fun query(playerId: PlayerId, saveGameId: SaveGameId): Result<NarratedRoomResponse> =
-        restClient
-            .get()
-            .uri("/game/{gameId}/narrator/room", saveGameId.value)
-            .retrieve()
-            .body<NarratedRoomResponse>()
-            ?.let { Result.success(it) }
-            ?: Result.failure(Exception("Could not narrate room for game $saveGameId"))
+    override fun query(playerId: PlayerId, saveGameId: SaveGameId): Result<NarratedRoomResponse> = restClient
+        .get()
+        .uri("/game/{gameId}/narrator/room", saveGameId.value)
+        .retrieve()
+        .body<NarratedRoomResponse>()
+        ?.let { Result.success(it) }
+        ?: Result.failure(Exception("Could not narrate room for game $saveGameId"))
 }

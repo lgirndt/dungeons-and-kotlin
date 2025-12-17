@@ -20,7 +20,6 @@ import java.util.Optional.ofNullable
 @Repository
 class MongoDBRoomRepository(private val mongoTemplate: MongoTemplate) : RoomRepository {
     override fun find(adventureId: AdventureId, roomId: RoomId): Optional<Room> {
-
         @Suppress("StringLiteralDuplication")
         val aggregation = Aggregation.newAggregation(
             match(Criteria.where("_id").isEqualTo(adventureId.value)),

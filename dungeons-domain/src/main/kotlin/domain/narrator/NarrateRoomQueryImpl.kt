@@ -34,7 +34,9 @@ class NarrateRoomQueryImpl(
     override fun query(playerId: PlayerId, saveGameId: SaveGameId): Result<NarratedRoomResponse> {
         val saveGameIdTyped = saveGameId
         val saveGame = saveGameRepository.findByUserId(playerId, saveGameIdTyped).getOrNull()
-            ?: return Result.failure(NarrateRoomException("Cannot find save game with id $saveGameId for player $playerId"))
+            ?: return Result.failure(
+                NarrateRoomException("Cannot find save game with id $saveGameId for player $playerId"),
+            )
 
         val adventure = adventureRepository.findById(saveGame.adventureId).getOrNull()
             ?: return Result.failure(NarrateRoomException("Cannot find adventure with id ${saveGame.adventureId}"))
@@ -51,7 +53,7 @@ class NarrateRoomQueryImpl(
                     Hero(name = "Legolas"),
                 ),
             ),
-            readOut = currentRoom.description
+            readOut = currentRoom.description,
         )
         return narratedRoom.toResponse().let { Result.success(it) }
     }
