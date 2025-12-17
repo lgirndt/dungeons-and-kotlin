@@ -4,7 +4,7 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.Context
 import com.github.ajalt.clikt.core.main
 import com.github.ajalt.clikt.core.subcommands
-import io.dungeons.tool.commands.CreateAdventureCommand
+import io.dungeons.tool.commands.CreateTestDataCommand
 import io.dungeons.tool.commands.GenIdCommand
 import io.dungeons.tool.commands.HelloCommand
 import io.github.oshai.kotlinlogging.KotlinLogging
@@ -12,6 +12,9 @@ import org.springframework.boot.CommandLineRunner
 import org.springframework.boot.autoconfigure.SpringBootApplication
 import org.springframework.boot.runApplication
 import org.springframework.context.annotation.Bean
+import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder
+import org.springframework.security.crypto.password.DelegatingPasswordEncoder
+import org.springframework.security.crypto.password.PasswordEncoder
 import kotlin.time.Clock
 
 private val logger = KotlinLogging.logger {}
@@ -22,17 +25,28 @@ class ToolApplication {
     fun clock() = Clock.System
 
     @Bean
+    fun passwordEncoder(): PasswordEncoder {
+        val idForEncode = "bcrypt"
+        return DelegatingPasswordEncoder(
+            idForEncode,
+            mapOf(
+                idForEncode to BCryptPasswordEncoder(12),
+            ),
+        )
+    }
+
+    @Bean
     fun runner(
         genIdCommand: GenIdCommand,
         helloCommand: HelloCommand,
-        createAdventureCommand: CreateAdventureCommand,
+        createTestDataCommand: CreateTestDataCommand,
     ) = CommandLineRunner { args ->
         logger.info { "Starting tool application with arguments: ${args.joinToString()}" }
         ToolCli()
             .subcommands(
                 genIdCommand,
                 helloCommand,
-                createAdventureCommand,
+                createTestDataCommand,
             )
             .main(args)
     }

@@ -1,12 +1,10 @@
 <component name="ProjectRunConfigurationManager">
-  <configuration default="false" name="Tool create-adventure" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
-    <log_file alias="Log" path="$PROJECT_DIR$/logs/tool.log" />
+  <configuration default="false" name="Tool create-test-data" type="SpringBootApplicationConfigurationType" factoryName="Spring Boot">
+    <log_file alias="Log" path="$PROJECT_DIR$/tool/logs/tool.log" />
     <module name="learn-kotlin.tool.main" />
-    <option name="PROGRAM_PARAMETERS" value="create-adventure" />
+    <option name="PROGRAM_PARAMETERS" value="create-test-data" />
     <option name="SPRING_BOOT_MAIN_CLASS" value="io.dungeons.tool.ToolApplication" />
     <option name="WORKING_DIRECTORY" value="file://$ProjectFileDir$/tool" />
-<!--    <option name="ACTIVE_PROFILES" />-->
-<!--    <option name="VM_PARAMETERS" value="" />-->
     <method v="2">
       <option name="Make" enabled="true" />
     </method>

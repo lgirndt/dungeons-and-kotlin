@@ -4,17 +4,70 @@ import com.github.ajalt.clikt.core.CliktCommand
 import com.github.ajalt.clikt.core.Context
 import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.AdventureRepository
+import io.dungeons.domain.player.Player
+import io.dungeons.domain.player.PlayerRepository
 import io.dungeons.domain.world.Room
 import io.dungeons.domain.world.WorldBuilder
 import io.dungeons.port.Id
+import io.github.oshai.kotlinlogging.KotlinLogging
+import org.springframework.data.domain.Sort
+import org.springframework.data.mongodb.core.MongoOperations
+import org.springframework.data.mongodb.core.index.Index
+import org.springframework.data.mongodb.core.indexOps
+import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 
+private val logger = KotlinLogging.logger {}
+
 @Component
-class CreateAdventureCommand(private val adventureRepository: AdventureRepository) :
-    CliktCommand(name = "create-adventure") {
+class CreateTestDataCommand(
+    private val adventureRepository: AdventureRepository,
+    private val playerRepository: PlayerRepository,
+    private val passwordEncoder: PasswordEncoder,
+    private val mongoOperations: MongoOperations,
+) :
+    CliktCommand(name = "create-test-data") {
     override fun help(context: Context) = "Say hello"
 
     override fun run() {
+        logger.info { "Creating test data..." }
+//        createAdventure()
+        createPlayers()
+        logger.info { "Test data creation complete." }
+    }
+
+    private fun createPlayers() {
+        mongoOperations
+            .indexOps<Player>()
+            .createIndex(
+                Index()
+                    .on("name", Sort.Direction.ASC)
+                    .unique(),
+            )
+
+        val players = listOf(
+            Player(
+                id = Id.fromString("609cb790-d8b5-4a97-830f-0200fee465ab"),
+                name = "user",
+                hashedPassword = "password",
+            ),
+        )
+        players.forEach {
+            val actuallyHashedPassword = passwordEncoder.encode(it.hashedPassword) ?: error("Failure")
+            logger.info { "Create Player ${it.name}" }
+            playerRepository.insert(
+                Player(
+                    id = it.id,
+                    name = it.name,
+                    hashedPassword = actuallyHashedPassword,
+                ),
+            )
+        }
+
+
+    }
+
+    private fun createAdventure() {
         val world = WorldBuilder()
             .room(
                 x = 1,
@@ -52,6 +105,6 @@ class CreateAdventureCommand(private val adventureRepository: AdventureRepositor
             rooms = world.rooms,
         )
         val result = adventureRepository.save(adventure)
-        echo("Created adventure: $result")
+        logger.info { "Created adventure: $result" }
     }
 }
