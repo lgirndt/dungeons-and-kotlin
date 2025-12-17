@@ -22,10 +22,9 @@ private fun Session.clearScreen() {
 }
 
 class GameLoop(private val screens: ScreenMap, private val gameStateHolder: GameStateHolder) {
-
     fun run(stateFile: Path?) {
         logger.debug { "Starting game loop" }
-        login(gameStateHolder,stateFile)
+        login(gameStateHolder, stateFile)
 
         session(
             terminal = listOf(
@@ -35,19 +34,26 @@ class GameLoop(private val screens: ScreenMap, private val gameStateHolder: Game
         ) {
             var transition = ScreenTransition.PickGame
             while (transition != ScreenTransition.Exit) {
-                clearScreen()
-                val screen = screens[transition] ?: break
-                transition = screen.run(this)
+                try {
+                    clearScreen()
+                    val screen = screens[transition] ?: break
+                    transition = screen.run(this)
+                } catch (
+                    e:
+                    @Suppress("TooGenericExceptionCaught")
+                    Exception,
+                ) {
+                    logger.error(e) { "Error during screen transition: $transition" }
+                    return@session
+                }
             }
         }
     }
 
     private fun login(gameStateHolder: GameStateHolder, stateFile: Path?) {
-
         if (stateFile != null) {
             logger.debug { "State file provided: $stateFile, loading game state from file." }
             gameStateHolder.syncFromFile(stateFile)
         }
-
     }
 }

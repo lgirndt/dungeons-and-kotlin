@@ -13,7 +13,8 @@ import kotlin.io.path.writeText
 data class GameState(
     val playerId: PlayerId? = null,
     val currentGameId: SaveGameId? = null,
-    val authToken: String? = null)
+    val authToken: String? = null,
+)
 
 @Component
 class GameStateHolder(private val objectMapper: JsonMapper) {
@@ -35,9 +36,6 @@ class GameStateHolder(private val objectMapper: JsonMapper) {
         filePath.writeText(json)
     }
 
-    /**
-     * Load game state from a JSON file and return it
-     */
     private fun loadFromFile(filePath: Path): GameState {
         require(filePath.exists()) { "File does not exist: $filePath" }
         val json = filePath.readText()

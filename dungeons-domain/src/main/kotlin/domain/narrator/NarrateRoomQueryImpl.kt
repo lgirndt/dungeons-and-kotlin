@@ -26,9 +26,9 @@ class NarrateRoomQueryImpl(
     private val saveGameRepository: SaveGameRepository,
     private val adventureRepository: AdventureRepository,
 ) : NarrateRoomQuery {
-    override fun query(userId: PlayerId, saveGameId: SaveGameId): NarratedRoomResponse? {
+    override fun query(playerId: PlayerId, saveGameId: SaveGameId): NarratedRoomResponse? {
         val saveGameIdTyped = saveGameId
-        val saveGame = saveGameRepository.findByUserId(userId, saveGameIdTyped).getOrNull()
+        val saveGame = saveGameRepository.findByUserId(playerId, saveGameIdTyped).getOrNull()
             ?: error("Cannot find game with id $saveGameId")
 
         val adventure = adventureRepository.findById(saveGame.adventureId).getOrNull()

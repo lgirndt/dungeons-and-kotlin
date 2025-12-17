@@ -25,8 +25,7 @@ class CreateTestDataCommand(
     private val playerRepository: PlayerRepository,
     private val passwordEncoder: PasswordEncoder,
     private val mongoOperations: MongoOperations,
-) :
-    CliktCommand(name = "create-test-data") {
+) : CliktCommand(name = "create-test-data") {
     override fun help(context: Context) = "Say hello"
 
     override fun run() {
@@ -69,8 +68,6 @@ class CreateTestDataCommand(
                 ),
             )
         }
-
-
     }
 
     private fun createAdventure() {

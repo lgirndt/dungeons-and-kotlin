@@ -53,10 +53,7 @@ class Cli {
     }
 
     @Bean
-    fun restClient(
-        gameStateHolder: GameStateHolder,
-        @Value("\${dungeons.api.base_url}") baseUrl: String
-    ): RestClient =
+    fun restClient(gameStateHolder: GameStateHolder, @Value("\${dungeons.api.base_url}") baseUrl: String): RestClient =
         RestClient
             .builder()
             .baseUrl(baseUrl)
@@ -64,27 +61,24 @@ class Cli {
             .build()
 
     @Bean
-    fun gameLoop(screens: ScreenMap, gameStateHolder: GameStateHolder) =
-        GameLoop(
-            screens = screens,
-            gameStateHolder = gameStateHolder,
-        )
+    fun gameLoop(screens: ScreenMap, gameStateHolder: GameStateHolder) = GameLoop(
+        screens = screens,
+        gameStateHolder = gameStateHolder,
+    )
 
     @Bean
     fun commandLineRunner(mainCommand: MainCommand) = CommandLineRunner { args ->
         mainCommand.main(args)
     }
-
-
 }
 
 class TokenProvidingInterceptor(private val gameStateHolder: GameStateHolder) : ClientHttpRequestInterceptor {
     override fun intercept(
         request: HttpRequest,
         body: ByteArray,
-        execution: ClientHttpRequestExecution
+        execution: ClientHttpRequestExecution,
     ): ClientHttpResponse {
-        if(gameStateHolder.gameState.authToken != null) {
+        if (gameStateHolder.gameState.authToken != null) {
             request.headers.add("Authorization", "Bearer ${gameStateHolder.gameState.authToken}")
         }
         return execution.execute(request, body)

@@ -1,11 +1,11 @@
 package io.dungeons.api.rest
 
-import io.dungeons.api.rest.dto.GameIdResponse
 import io.dungeons.api.security.PlayerDetails
 import io.dungeons.port.ListSaveGamesQuery
 import io.dungeons.port.SaveGameSummaryResponse
 import io.dungeons.port.usecases.CreateNewGameRequest
 import io.dungeons.port.usecases.CreateNewGameUseCase
+import io.dungeons.port.usecases.GameIdResponse
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.web.bind.annotation.GetMapping
 import org.springframework.web.bind.annotation.PostMapping
@@ -18,8 +18,7 @@ class GameController(
     private val listSaveGamesQuery: ListSaveGamesQuery,
 ) {
     @PostMapping("/game")
-    fun createGame(@RequestBody request: CreateNewGameRequest): GameIdResponse =
-        GameIdResponse(createNewGameUseCase.execute(request))
+    fun createGame(@RequestBody request: CreateNewGameRequest): GameIdResponse = createNewGameUseCase.execute(request)
 
     @GetMapping("/games")
     fun listAll(@AuthenticationPrincipal player: PlayerDetails?): List<SaveGameSummaryResponse> =

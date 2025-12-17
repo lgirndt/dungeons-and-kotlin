@@ -36,20 +36,17 @@ class ToolApplication {
     }
 
     @Bean
-    fun runner(
-        genIdCommand: GenIdCommand,
-        helloCommand: HelloCommand,
-        createTestDataCommand: CreateTestDataCommand,
-    ) = CommandLineRunner { args ->
-        logger.info { "Starting tool application with arguments: ${args.joinToString()}" }
-        ToolCli()
-            .subcommands(
-                genIdCommand,
-                helloCommand,
-                createTestDataCommand,
-            )
-            .main(args)
-    }
+    fun runner(genIdCommand: GenIdCommand, helloCommand: HelloCommand, createTestDataCommand: CreateTestDataCommand) =
+        CommandLineRunner { args ->
+            logger.info { "Starting tool application with arguments: ${args.joinToString()}" }
+            ToolCli()
+                .subcommands(
+                    genIdCommand,
+                    helloCommand,
+                    createTestDataCommand,
+                )
+                .main(args)
+        }
 }
 
 class ToolCli : CliktCommand(name = "tool") {

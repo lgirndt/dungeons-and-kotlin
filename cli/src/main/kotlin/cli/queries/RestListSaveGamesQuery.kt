@@ -12,7 +12,6 @@ private val logger = KotlinLogging.logger {}
 
 @Component
 class RestListSaveGamesQuery(private val restClient: RestClient) : ListSaveGamesQuery {
-
     override fun query(playerId: PlayerId): List<SaveGameSummaryResponse> {
         val result = restClient
             .get()

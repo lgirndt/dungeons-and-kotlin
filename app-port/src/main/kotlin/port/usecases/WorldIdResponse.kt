@@ -1,3 +1,3 @@
-package io.dungeons.api.rest.dto
+package io.dungeons.port.usecases
 
 data class WorldIdResponse(val id: String)

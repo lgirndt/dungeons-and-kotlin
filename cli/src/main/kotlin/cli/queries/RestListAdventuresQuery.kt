@@ -8,18 +8,16 @@ import org.springframework.web.client.RestClient
 import org.springframework.web.client.body
 
 private val logger = KotlinLogging.logger {}
+
 @Component
 class RestListAdventuresQuery(private val restClient: RestClient) : ListAdventuresQuery {
-
-    override fun query(): List<AdventureSummaryResponse> {
-        return restClient
-            .get()
-            .uri("/adventures/summaries")
-            .retrieve()
-            .body<List<AdventureSummaryResponse>>()
-            .also {
-                logger.debug { "Found ${it?.size} adventures" }
-            }
-            .orEmpty()
-    }
+    override fun query(): List<AdventureSummaryResponse> = restClient
+        .get()
+        .uri("/adventures/summaries")
+        .retrieve()
+        .body<List<AdventureSummaryResponse>>()
+        .also {
+            logger.debug { "Found ${it?.size} adventures" }
+        }
+        .orEmpty()
 }

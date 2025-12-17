@@ -79,7 +79,7 @@ class PickAdventureScreen(
             ),
         )
         val newGameState = gameStateHolder.gameState.copy(
-            currentGameId = gameId,
+            currentGameId = gameId.id,
         )
         gameStateHolder.gameState = newGameState
     }

@@ -1,6 +1,6 @@
 package io.dungeons.api.rest
 
-import io.dungeons.api.rest.dto.WorldIdResponse
+import io.dungeons.port.usecases.WorldIdResponse
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.security.core.annotation.AuthenticationPrincipal
 import org.springframework.security.core.userdetails.User

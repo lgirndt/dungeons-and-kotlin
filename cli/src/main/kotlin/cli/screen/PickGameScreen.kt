@@ -146,7 +146,7 @@ class PickGameScreen(
                 firstAdventure.id,
             ),
         )
-        gameStateHolder.gameState = gameStateHolder.gameState.copy(currentGameId = gameId)
+        gameStateHolder.gameState = gameStateHolder.gameState.copy(currentGameId = gameId.id)
     }
 
     private fun loadExistingGame(saveGameId: SaveGameId) {

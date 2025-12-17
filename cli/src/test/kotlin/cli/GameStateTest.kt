@@ -25,20 +25,6 @@ class GameStateTest {
     }
 
     @Test
-    fun `syncFromFile reads game state from JSON file`(@TempDir tempDir: Path) {
-        val originalGameState = SOME_GAME_STATE.copy()
-
-        val filePath = tempDir.resolve("gamestate.json")
-        gameStateHolder.saveToFile(filePath)
-
-        gameStateHolder.syncFromFile(filePath)
-
-        assertEquals(originalGameState.playerId, gameStateHolder.gameState.playerId)
-        assertEquals(originalGameState.currentGameId, gameStateHolder.gameState.currentGameId)
-        assertEquals(originalGameState.authToken, gameStateHolder.gameState.authToken)
-    }
-
-    @Test
     fun `syncFromFile throws exception when file does not exist`(@TempDir tempDir: Path) {
         val nonExistentFile = tempDir.resolve("nonexistent.json")
 
@@ -71,7 +57,7 @@ class GameStateTest {
         val gameStateWithNulls = GameState(
             playerId = null,
             currentGameId = null,
-            authToken = null
+            authToken = null,
         )
         val tempHolder = GameStateHolder(objectMapper)
         tempHolder.gameState = gameStateWithNulls

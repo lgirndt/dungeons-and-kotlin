@@ -1,4 +1,4 @@
-package io.dungeons.api.rest.dto
+package io.dungeons.port.usecases
 
 import io.dungeons.port.SaveGameId
 
