@@ -26,5 +26,5 @@ class Api {
 }
 
 fun main(args: Array<String>) {
-    runApplication<Api>()
+    runApplication<Api>(*args)
 }
