@@ -8,7 +8,6 @@ import io.mockk.mockk
 import io.mockk.verify
 import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Test
-import java.util.*
 
 class AdventureSummaryControllerTest {
     private val listAdventuresQuery = mockk<ListAdventuresQuery>()
@@ -18,11 +17,11 @@ class AdventureSummaryControllerTest {
     @Test
     fun `findAll returns list of adventure summaries`() {
         val adventure1 = AdventureSummaryResponse(
-            id = Id.fromUUID(UUID.randomUUID()),
+            id = Id.generate(),
             name = "Dragon's Lair",
         )
         val adventure2 = AdventureSummaryResponse(
-            id = Id.fromUUID(UUID.randomUUID()),
+            id = Id.generate(),
             name = "Goblin Camp",
         )
         val expectedAdventures = listOf(adventure1, adventure2)
@@ -52,7 +51,7 @@ class AdventureSummaryControllerTest {
     fun `findAll delegates to query exactly once`() {
         val expectedAdventures = listOf(
             AdventureSummaryResponse(
-                id = Id.fromUUID(UUID.randomUUID()),
+                id = Id.generate(),
                 name = "Test Adventure",
             ),
         )
@@ -64,22 +63,4 @@ class AdventureSummaryControllerTest {
         verify(exactly = 1) { listAdventuresQuery.query() }
     }
 
-    @Test
-    fun `findAll returns adventures with correct structure`() {
-        val adventureId = Id.fromUUID<io.dungeons.port._Adventure>(UUID.randomUUID())
-        val adventure = AdventureSummaryResponse(
-            id = adventureId,
-            name = "The Lost Temple",
-        )
-
-        every { listAdventuresQuery.query() } returns listOf(adventure)
-
-        val result = adventureSummaryController.findAll()
-
-        assertEquals(1, result.size)
-        assertEquals(adventureId, result[0].id)
-        assertEquals("The Lost Temple", result[0].name)
-
-        verify { listAdventuresQuery.query() }
-    }
 }

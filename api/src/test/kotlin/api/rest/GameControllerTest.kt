@@ -1,8 +1,11 @@
 package io.dungeons.api.rest
 
 import io.dungeons.api.security.PlayerDetails
+import io.dungeons.port.AdventureId
 import io.dungeons.port.Id
 import io.dungeons.port.ListSaveGamesQuery
+import io.dungeons.port.PlayerId
+import io.dungeons.port.SaveGameId
 import io.dungeons.port.SaveGameSummaryResponse
 import io.dungeons.port.usecases.CreateNewGameRequest
 import io.dungeons.port.usecases.CreateNewGameUseCase
@@ -14,7 +17,6 @@ import org.junit.jupiter.api.Assertions.assertEquals
 import org.junit.jupiter.api.Assertions.assertThrows
 import org.junit.jupiter.api.Test
 import org.springframework.security.core.authority.SimpleGrantedAuthority
-import java.util.*
 import kotlin.time.Instant
 
 class
@@ -27,9 +29,9 @@ GameControllerTest {
         listSaveGamesQuery,
     )
 
-    private val playerId = Id.fromUUID<io.dungeons.port._Player>(UUID.randomUUID())
-    private val testAdventureId = Id.fromUUID<io.dungeons.port._Adventure>(UUID.randomUUID())
-    private val testSaveGameId = Id.fromUUID<io.dungeons.port._SaveGame>(UUID.randomUUID())
+    private val playerId : PlayerId = Id.generate()
+    private val adventureId : AdventureId = Id.generate()
+    private val saveGameId : SaveGameId= Id.generate()
 
     private val playerDetails = PlayerDetails(
         playerId = playerId,
@@ -40,8 +42,8 @@ GameControllerTest {
 
     @Test
     fun `createGame returns GameCreatedResponse for valid request`() {
-        val request = CreateNewGameRequest(playerId, testAdventureId)
-        val expectedResponse = GameCreatedResponse(testSaveGameId)
+        val request = CreateNewGameRequest(playerId, adventureId)
+        val expectedResponse = GameCreatedResponse(saveGameId)
 
         every { createNewGameUseCase.execute(request) } returns expectedResponse
 
