@@ -1,0 +1,7 @@
+spring:
+  main:
+    allow-bean-definition-overriding: true
+  data:
+    mongodb:
+      # Connection string will be set dynamically by testcontainers
+      uri: mongodb://localhost:27017/test

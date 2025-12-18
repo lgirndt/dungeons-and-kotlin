@@ -83,3 +83,27 @@ typealias PlayerId = Id<_Player>
 - The lambda syntax provides better performance by avoiding string construction when logging is disabled.
 - For error logging with exceptions, pass the exception as the first parameter followed by the lambda message.
 - Avoid eager evaluation like `logger.info("message")` as it constructs the string even when logging is disabled.
+
+# Integration Testing
+- Integration tests verify complete user workflows across the entire application stack (REST API → Use Cases → Domain Logic → Persistence).
+- A dedicated `integration` Gradle module contains all integration tests, separate from any specific adapter module.
+- Integration tests use `@SpringBootTest` with a dedicated `IntegrationTestConfiguration` class that explicitly scans only the required packages (api, domain, persistence).
+- The `integration` module depends on: api, dungeons-domain, persistence, and app-port modules (CLI is excluded to avoid bean conflicts from its REST client implementations).
+- The module also includes test classes from dungeons-domain to access SOME_X test data instances.
+- MongoDB is provided via Testcontainers, ensuring tests run against a real MongoDB instance.
+- The `AbstractIntegrationTest` base class provides:
+  - Automatic database cleanup between tests via MongoTemplate
+  - Helper methods for authentication and HTTP calls
+  - RestTestClient (Spring Framework 7) for making REST API calls with fluent assertions
+  - Access to MongoTemplate for direct database operations when needed
+  - Configures dev profile to satisfy ProfileValidator requirements
+- Integration tests use the modern RestTestClient API (Spring Boot 4.0+) instead of deprecated TestRestTemplate:
+  - Fluent API: `.post().uri().body().exchange().expectStatus().expectBody()`
+  - Better integration with Spring's testing infrastructure
+  - Cleaner assertions and response handling
+- Integration tests focus on:
+  - Cross-module interactions (end-to-end workflows)
+  - Security integration (JWT authentication/authorization)
+  - Data consistency across layers
+- Integration tests do NOT duplicate unit test coverage - they verify integration points, not individual component behavior.
+- Test naming convention: Tests are suffixed with `IntegrationTest` (e.g., `GameFlowIntegrationTest`).
