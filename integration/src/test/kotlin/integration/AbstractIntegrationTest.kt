@@ -36,6 +36,7 @@ private val logger = KotlinLogging.logger {}
     properties = [
         "spring.main.allow-bean-definition-overriding=true",
         "spring.profiles.active=dev",  // Required by ProfileValidator
+        "spring.docker.compose.enabled=false",  // Disable Docker Compose support, use Testcontainers
     ],
 )
 @AutoConfigureRestTestClient
@@ -51,13 +52,21 @@ abstract class AbstractIntegrationTest {
 
     companion object {
         private val mongoDBContainer = MongoDBContainer("mongo:8").apply {
+            withReuse(true)  // Reuse container across test runs for faster execution
             start()
+            logger.info { "Started MongoDB Testcontainer at: $connectionString" }
         }
 
         @JvmStatic
         @DynamicPropertySource
         fun setProperties(registry: DynamicPropertyRegistry) {
-            registry.add("spring.data.mongodb.uri") { mongoDBContainer.connectionString }
+            // Override MongoDB connection to use Testcontainers (Spring Boot 4.0 uses spring.mongodb)
+            registry.add("spring.mongodb.uri") { mongoDBContainer.connectionString }
+
+            // Configure connection timeout for fast failure in tests
+            registry.add("spring.mongodb.connect-timeout") { "5s" }  // 5 seconds
+            registry.add("spring.mongodb.server-selection-timeout") { "5s" }  // 5 seconds
+            registry.add("spring.mongodb.socket-timeout") { "5s" }  // 5 seconds
         }
     }
 
