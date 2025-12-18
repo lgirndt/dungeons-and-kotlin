@@ -1,7 +1,5 @@
 package io.dungeons.integration
 
-import io.dungeons.api.rest.dto.AuthResponse
-import io.dungeons.api.rest.dto.AuthenticationRequest
 import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.adventure.SOME_ADVENTURE
@@ -20,7 +18,6 @@ import io.dungeons.port.usecases.CreateNewGameRequest
 import io.dungeons.port.usecases.GameCreatedResponse
 import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
-import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
 import org.springframework.security.crypto.password.PasswordEncoder
 import kotlin.test.assertEquals
@@ -71,14 +68,8 @@ class GameFlowIntegrationTest(
         ).expectOkAndExtract(GameCreatedResponse::class.java)
 
         // Then: The game appears in the player's game list
-        val typeReference = typeReference<SaveGameSummaryResponse>()
         val games = authenticatedGet(endpoint = "/games", token = token)
-            .expectStatus()
-            .isOk
-            .expectBody(typeReference)
-            .returnResult()
-            .responseBody
-            ?: error("No response body")
+            .expectOkAndExtractList<SaveGameSummaryResponse>()
 
         assertEquals(1, games.size, "Player should have exactly one game")
 
@@ -128,7 +119,7 @@ class GameFlowIntegrationTest(
         saveGameRepository.save(saveGame)
 
         // When: Player logs in (player already exists, so we just authenticate)
-        val token = authenticateExistingPlayer(playerName, playerPassword)
+        val token = authenticate(playerName, playerPassword)
 
         // And: Gets the room narration for their current room
         val narration = authenticatedGet(
@@ -150,21 +141,6 @@ class GameFlowIntegrationTest(
         )
         playerRepository.insert(player)
         return player
-    }
-
-    /**
-     * Authenticate an existing player (doesn't register, just logs in)
-     */
-    private fun authenticateExistingPlayer(playerName: String, password: String): String {
-        val loginResponse = restTestClient
-            .post()
-            .uri(url("/auth/login"))
-            .contentType(MediaType.APPLICATION_JSON)
-            .body(AuthenticationRequest(username = playerName, password = password))
-            .exchange()
-            .expectOkAndExtract(AuthResponse::class.java)
-
-        return loginResponse.accessToken
     }
 
     private fun getPlayerIdByName(playerName: String): PlayerId =
@@ -201,7 +177,4 @@ class GameFlowIntegrationTest(
         adventureRepository.save(adventure)
         return adventure
     }
-
-    private inline fun <reified T> typeReference() = object : ParameterizedTypeReference<List<T>>(){}
-
 }

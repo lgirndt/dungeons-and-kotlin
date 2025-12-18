@@ -10,12 +10,25 @@ import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTe
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
 import org.springframework.test.web.servlet.client.RestTestClient
 
 private val logger = KotlinLogging.logger {}
+
+/**
+ * Extension function to extract list response body with type safety
+ */
+inline fun <reified T : Any> RestTestClient.ResponseSpec.expectOkAndExtractList(): List<T> {
+    expectStatus().isOk
+    val typeReference = object : ParameterizedTypeReference<List<T>>() {}
+    return expectBody(typeReference)
+        .returnResult()
+        .responseBody
+        ?: error("No response body of type List<${T::class.simpleName}>")
+}
 
 /**
  * Base class for integration tests that bootstrap the full Spring Boot application context.
@@ -62,13 +75,12 @@ abstract class AbstractIntegrationTest {
     protected fun url(endpoint: String): String = "http://localhost:$port$endpoint"
 
     /**
-     * Register a new player and return the access token
+     * Register a new player via API
      */
-    protected fun registerAndAuthenticate(
+    protected fun registerPlayer(
         playerName: String = "testplayer",
         password: String = "testpassword",
-    ): String {
-        // Register
+    ) {
         restTestClient
             .post()
             .uri(url("/auth/register"))
@@ -77,22 +89,35 @@ abstract class AbstractIntegrationTest {
             .exchange()
             .expectStatus()
             .isCreated
+    }
 
-        // Login
+    /**
+     * Authenticate an existing player and return the access token
+     */
+    protected fun authenticate(
+        playerName: String = "testplayer",
+        password: String = "testpassword",
+    ): String {
         val loginResponse = restTestClient
             .post()
             .uri(url("/auth/login"))
             .contentType(MediaType.APPLICATION_JSON)
             .body(AuthenticationRequest(username = playerName, password = password))
             .exchange()
-            .expectStatus()
-            .isOk
-            .expectBody(AuthResponse::class.java)
-            .returnResult()
-            .responseBody
+            .expectOkAndExtract(AuthResponse::class.java)
 
-        return loginResponse?.accessToken
-            ?: error("Failed to authenticate: no token in response")
+        return loginResponse.accessToken
+    }
+
+    /**
+     * Register a new player and return the access token (convenience method)
+     */
+    protected fun registerAndAuthenticate(
+        playerName: String = "testplayer",
+        password: String = "testpassword",
+    ): String {
+        registerPlayer(playerName, password)
+        return authenticate(playerName, password)
     }
 
     /**
