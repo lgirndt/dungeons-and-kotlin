@@ -19,6 +19,7 @@ import org.springframework.context.annotation.ComponentScan
         "io.dungeons.api", // API REST controllers and configuration
         "io.dungeons.domain", // Domain services and use cases
         "io.dungeons.persistence", // Persistence layer
+        "io.dungeons.integration", // Integration test utilities
     ],
 )
 class IntegrationTestConfiguration

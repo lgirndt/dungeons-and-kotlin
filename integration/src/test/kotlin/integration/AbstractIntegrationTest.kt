@@ -10,6 +10,7 @@ import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTe
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.boot.test.web.server.LocalServerPort
+import org.springframework.core.ParameterizedTypeReference
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
@@ -49,6 +50,9 @@ abstract class AbstractIntegrationTest {
 
     @Autowired
     protected lateinit var mongoTemplate: MongoTemplate
+
+    @Autowired
+    protected lateinit var testData: TestDataBuilder
 
     @BeforeEach
     fun cleanDatabase() {
@@ -101,7 +105,7 @@ abstract class AbstractIntegrationTest {
     /**
      * Make an authenticated GET request
      */
-    protected fun <T : Any> authenticatedGet(endpoint: String, token: String): RestTestClient.ResponseSpec =
+    protected fun authenticatedGet(endpoint: String, token: String): RestTestClient.ResponseSpec =
         restTestClient
             .get()
             .uri(url(endpoint))
@@ -119,6 +123,30 @@ abstract class AbstractIntegrationTest {
             .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
             .body(body)
             .exchange()
+
+    /**
+     * Extension function to extract response body with type safety and null handling
+     */
+    protected fun <T : Any> RestTestClient.ResponseSpec.expectOkAndExtract(type: Class<T>): T {
+        expectStatus().isOk
+        return expectBody(type)
+            .returnResult()
+            .responseBody
+            ?: error("No response body of type ${type.simpleName}")
+    }
+
+    /**
+     * Extension function to extract a list response
+     */
+    protected fun <T> RestTestClient.ResponseSpec.expectOkAndExtractList(
+        typeReference: ParameterizedTypeReference<List<T>>,
+    ): List<T> {
+        expectStatus().isOk
+        return expectBody(typeReference)
+            .returnResult()
+            .responseBody
+            ?: error("No response body")
+    }
 
     companion object {
         private val mongoDBContainer = MongoDBContainer("mongo:8").apply {
