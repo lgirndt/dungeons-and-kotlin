@@ -1,0 +1,9 @@
+###
+GET http://localhost:8080/games
+Authorization: Bearer this-is-our-dev-token
+Content-Type: application/json
+
+{
+  "playerId": "",
+  "adventureId": ""
+}
