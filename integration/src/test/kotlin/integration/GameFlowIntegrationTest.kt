@@ -71,10 +71,14 @@ class GameFlowIntegrationTest(
         ).expectOkAndExtract(GameCreatedResponse::class.java)
 
         // Then: The game appears in the player's game list
-        val games = authenticatedGet(
-            endpoint = "/games",
-            token = token,
-        ).expectOkAndExtractList(object : ParameterizedTypeReference<List<SaveGameSummaryResponse>>() {})
+        val typeReference = typeReference<SaveGameSummaryResponse>()
+        val games = authenticatedGet(endpoint = "/games", token = token)
+            .expectStatus()
+            .isOk
+            .expectBody(typeReference)
+            .returnResult()
+            .responseBody
+            ?: error("No response body")
 
         assertEquals(1, games.size, "Player should have exactly one game")
 
@@ -197,4 +201,7 @@ class GameFlowIntegrationTest(
         adventureRepository.save(adventure)
         return adventure
     }
+
+    private inline fun <reified T> typeReference() = object : ParameterizedTypeReference<List<T>>(){}
+
 }

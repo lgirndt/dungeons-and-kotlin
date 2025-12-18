@@ -10,14 +10,10 @@ import org.springframework.boot.resttestclient.autoconfigure.AutoConfigureRestTe
 import org.springframework.boot.test.context.SpringBootTest
 import org.springframework.boot.test.context.SpringBootTest.WebEnvironment
 import org.springframework.boot.test.web.server.LocalServerPort
-import org.springframework.core.ParameterizedTypeReference
 import org.springframework.data.mongodb.core.MongoTemplate
 import org.springframework.http.HttpHeaders
 import org.springframework.http.MediaType
-import org.springframework.test.context.DynamicPropertyRegistry
-import org.springframework.test.context.DynamicPropertySource
 import org.springframework.test.web.servlet.client.RestTestClient
-import org.testcontainers.mongodb.MongoDBContainer
 
 private val logger = KotlinLogging.logger {}
 
@@ -130,38 +126,5 @@ abstract class AbstractIntegrationTest {
             .returnResult()
             .responseBody
             ?: error("No response body of type ${type.simpleName}")
-    }
-
-    /**
-     * Extension function to extract a list response
-     */
-    protected fun <T> RestTestClient.ResponseSpec.expectOkAndExtractList(
-        typeReference: ParameterizedTypeReference<List<T>>,
-    ): List<T> {
-        expectStatus().isOk
-        return expectBody(typeReference)
-            .returnResult()
-            .responseBody
-            ?: error("No response body")
-    }
-
-    companion object {
-        private val mongoDBContainer = MongoDBContainer("mongo:8").apply {
-            withReuse(true) // Reuse container across test runs for faster execution
-            start()
-            logger.info { "Started MongoDB Testcontainer at: $connectionString" }
-        }
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun setProperties(registry: DynamicPropertyRegistry) {
-            // Override MongoDB connection to use Testcontainers (Spring Boot 4.0 uses spring.mongodb)
-            registry.add("spring.mongodb.uri") { mongoDBContainer.connectionString }
-
-            // Configure connection timeout for fast failure in tests
-            registry.add("spring.mongodb.connect-timeout") { "5s" } // 5 seconds
-            registry.add("spring.mongodb.server-selection-timeout") { "5s" } // 5 seconds
-            registry.add("spring.mongodb.socket-timeout") { "5s" } // 5 seconds
-        }
     }
 }
