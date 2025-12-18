@@ -17,7 +17,8 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority
 import java.util.*
 import kotlin.time.Instant
 
-class GameControllerTest {
+class
+GameControllerTest {
     private val createNewGameUseCase = mockk<CreateNewGameUseCase>()
     private val listSaveGamesQuery = mockk<ListSaveGamesQuery>()
 
@@ -26,12 +27,12 @@ class GameControllerTest {
         listSaveGamesQuery,
     )
 
-    private val testPlayerId = Id.fromUUID<io.dungeons.port._Player>(UUID.randomUUID())
+    private val playerId = Id.fromUUID<io.dungeons.port._Player>(UUID.randomUUID())
     private val testAdventureId = Id.fromUUID<io.dungeons.port._Adventure>(UUID.randomUUID())
     private val testSaveGameId = Id.fromUUID<io.dungeons.port._SaveGame>(UUID.randomUUID())
 
-    private val testPlayerDetails = PlayerDetails(
-        playerId = testPlayerId,
+    private val playerDetails = PlayerDetails(
+        playerId = playerId,
         username = "testplayer",
         password = "password",
         authorities = listOf(SimpleGrantedAuthority("ROLE_USER")),
@@ -39,7 +40,7 @@ class GameControllerTest {
 
     @Test
     fun `createGame returns GameCreatedResponse for valid request`() {
-        val request = CreateNewGameRequest(testPlayerId, testAdventureId)
+        val request = CreateNewGameRequest(playerId, testAdventureId)
         val expectedResponse = GameCreatedResponse(testSaveGameId)
 
         every { createNewGameUseCase.execute(request) } returns expectedResponse
@@ -47,19 +48,6 @@ class GameControllerTest {
         val response = gameController.createGame(request)
 
         assertEquals(expectedResponse, response)
-        assertEquals(testSaveGameId, response.id)
-
-        verify { createNewGameUseCase.execute(request) }
-    }
-
-    @Test
-    fun `createGame delegates to use case with correct request`() {
-        val request = CreateNewGameRequest(testPlayerId, testAdventureId)
-        val expectedResponse = GameCreatedResponse(testSaveGameId)
-
-        every { createNewGameUseCase.execute(request) } returns expectedResponse
-
-        gameController.createGame(request)
 
         verify(exactly = 1) { createNewGameUseCase.execute(request) }
     }
@@ -68,34 +56,33 @@ class GameControllerTest {
     fun `listAll returns list of save games for authenticated player`() {
         val now = Instant.fromEpochMilliseconds(1704151445000)
         val saveGame1 = SaveGameSummaryResponse(
-            id = Id.fromUUID(UUID.randomUUID()),
+            id = Id.generate(),
             savedAt = now,
         )
         val saveGame2 = SaveGameSummaryResponse(
-            id = Id.fromUUID(UUID.randomUUID()),
+            id = Id.generate(),
             savedAt = now,
         )
         val expectedGames = listOf(saveGame1, saveGame2)
 
-        every { listSaveGamesQuery.query(testPlayerId) } returns expectedGames
+        every { listSaveGamesQuery.query(playerId) } returns expectedGames
 
-        val result = gameController.listAll(testPlayerDetails)
+        val result = gameController.listAll(playerDetails)
 
         assertEquals(expectedGames, result)
-        assertEquals(2, result.size)
 
-        verify { listSaveGamesQuery.query(testPlayerId) }
+        verify { listSaveGamesQuery.query(playerId) }
     }
 
     @Test
     fun `listAll returns empty list when player has no save games`() {
-        every { listSaveGamesQuery.query(testPlayerId) } returns emptyList()
+        every { listSaveGamesQuery.query(playerId) } returns emptyList()
 
-        val result = gameController.listAll(testPlayerDetails)
+        val result = gameController.listAll(playerDetails)
 
         assertEquals(emptyList<SaveGameSummaryResponse>(), result)
 
-        verify { listSaveGamesQuery.query(testPlayerId) }
+        verify { listSaveGamesQuery.query(playerId) }
     }
 
     @Test
@@ -111,15 +98,15 @@ class GameControllerTest {
     fun `listAll queries with correct player id`() {
         val expectedGames = listOf(
             SaveGameSummaryResponse(
-                id = Id.fromUUID(UUID.randomUUID()),
+                id = Id.generate(),
                 savedAt = Instant.fromEpochMilliseconds(1704151445000),
             ),
         )
 
-        every { listSaveGamesQuery.query(testPlayerId) } returns expectedGames
+        every { listSaveGamesQuery.query(playerId) } returns expectedGames
 
-        gameController.listAll(testPlayerDetails)
+        gameController.listAll(playerDetails)
 
-        verify(exactly = 1) { listSaveGamesQuery.query(testPlayerId) }
+        verify(exactly = 1) { listSaveGamesQuery.query(playerId) }
     }
 }
