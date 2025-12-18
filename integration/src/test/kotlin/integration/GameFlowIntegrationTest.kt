@@ -1,6 +1,5 @@
 package io.dungeons.integration
 
-import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.player.PlayerRepository
 import io.dungeons.port.Id
@@ -39,7 +38,7 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
         val token = registerAndAuthenticate(playerName = playerName, password = "secret123")
 
         // And: An adventure exists in the database
-        val adventure = seedAdventure()
+        val adventure = testData.adventure()
         val playerId = getPlayerIdByName(playerName)
 
         // When: Creating a new game
@@ -70,7 +69,7 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `cannot create game without authentication`() {
         // Given: An adventure exists
-        val adventure = seedAdventure()
+        val adventure = testData.adventure()
         val playerId: PlayerId = Id.generate()
 
         // When: Attempting to create a game without authentication
@@ -99,7 +98,7 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
         val player1Id = getPlayerIdByName("player1")
         val player2Id = getPlayerIdByName("player2")
 
-        val adventure = seedAdventure()
+        val adventure = testData.adventure()
 
         // When: Each player creates a game
         authenticatedPost(
@@ -132,8 +131,6 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
             "Players should have different games",
         )
     }
-
-    private fun seedAdventure(): Adventure = testData.adventure()
 
     private fun getPlayerIdByName(playerName: String): PlayerId =
         playerRepository.findByName(playerName)
