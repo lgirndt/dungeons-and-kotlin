@@ -6,9 +6,14 @@ import io.dungeons.domain.adventure.Adventure
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.player.Player
 import io.dungeons.domain.player.PlayerRepository
+import io.dungeons.domain.savegame.SaveGame
+import io.dungeons.domain.savegame.SaveGameRepository
 import io.dungeons.domain.world.Room
 import io.dungeons.domain.world.WorldBuilder
+import io.dungeons.port.AdventureId
 import io.dungeons.port.Id
+import io.dungeons.port.PlayerId
+import io.dungeons.port.RoomId
 import io.github.oshai.kotlinlogging.KotlinLogging
 import org.springframework.data.domain.Sort
 import org.springframework.data.mongodb.core.MongoOperations
@@ -16,8 +21,14 @@ import org.springframework.data.mongodb.core.index.Index
 import org.springframework.data.mongodb.core.indexOps
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
+import kotlin.time.Clock
 
 private val logger = KotlinLogging.logger {}
+
+private val ADVENTURE_ID : AdventureId = Id.fromString("8b4dc8c3-c3d5-4484-8d4e-0b7fe85bafd4")
+
+private val PLAYER_ID : PlayerId = Id.fromString("609cb790-d8b5-4a97-830f-0200fee465ab")
+private val INITIAL_ROOM_ID : RoomId = Id.fromString("ae894d71-b501-42fd-b1a3-213e2e82f79c")
 
 @Component
 class CreateTestDataCommand(
@@ -25,7 +36,11 @@ class CreateTestDataCommand(
     private val playerRepository: PlayerRepository,
     private val passwordEncoder: PasswordEncoder,
     private val mongoOperations: MongoOperations,
+    private val saveGameRepository: SaveGameRepository,
 ) : CliktCommand(name = "create-test-data") {
+
+    private val clock = Clock.System
+
     override fun help(context: Context) = "Say hello"
 
     override fun run() {
@@ -33,6 +48,7 @@ class CreateTestDataCommand(
         logger.info { "Creating test data..." }
         createAdventure()
         createPlayers()
+        createSaveGames()
         logger.info { "Test data creation complete." }
     }
 
@@ -52,7 +68,7 @@ class CreateTestDataCommand(
 
         val players = listOf(
             Player(
-                id = Id.fromString("609cb790-d8b5-4a97-830f-0200fee465ab"),
+                id = PLAYER_ID,
                 name = "user",
                 hashedPassword = "password",
             ),
@@ -102,12 +118,28 @@ class CreateTestDataCommand(
             .build()
 
         val adventure = Adventure(
-            id = Id.fromString("8b4dc8c3-c3d5-4484-8d4e-0b7fe85bafd4"),
+            id = ADVENTURE_ID,
             name = "New Adventure",
-            initialRoomId = Id.fromString("ae894d71-b501-42fd-b1a3-213e2e82f79c"),
+            initialRoomId = INITIAL_ROOM_ID,
             rooms = world.rooms,
         )
         val result = adventureRepository.save(adventure)
         logger.info { "Created adventure: ${result?.name}" }
+    }
+
+    private fun createSaveGames() {
+        val saveGames = listOf(
+            SaveGame(
+                id = Id.fromString("d1f5e8c2-3c4b-4f5a-9e6d-7c8b9a0b1c2d"),
+                playerId = PLAYER_ID,
+                adventureId = ADVENTURE_ID,
+                currentRoomId = INITIAL_ROOM_ID,
+                savedAt = clock.now(),
+            )
+        )
+        saveGames.forEach {
+            logger.info { "Creating SaveGame for player ${it.playerId}" }
+            saveGameRepository.save(it)
+        }
     }
 }
