@@ -22,8 +22,8 @@ class NarratorControllerTest {
 
     private val narratorController = NarratorController(narrateRoomQuery)
 
-    private val testPlayerId : PlayerId = Id.generate()
-    private val testGameId : SaveGameId = Id.generate()
+    private val testPlayerId: PlayerId = Id.generate()
+    private val testGameId: SaveGameId = Id.generate()
 
     private val testPlayerDetails = PlayerDetails(
         playerId = testPlayerId,
@@ -90,5 +90,4 @@ class NarratorControllerTest {
 
         verify { narrateRoomQuery.query(testPlayerId, testGameId) }
     }
-
 }

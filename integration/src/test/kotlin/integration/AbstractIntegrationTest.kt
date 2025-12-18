@@ -77,10 +77,7 @@ abstract class AbstractIntegrationTest {
     /**
      * Register a new player via API
      */
-    protected fun registerPlayer(
-        playerName: String = "testplayer",
-        password: String = "testpassword",
-    ) {
+    protected fun registerPlayer(playerName: String = "testplayer", password: String = "testpassword") {
         restTestClient
             .post()
             .uri(url("/auth/register"))
@@ -94,10 +91,7 @@ abstract class AbstractIntegrationTest {
     /**
      * Authenticate an existing player and return the access token
      */
-    protected fun authenticate(
-        playerName: String = "testplayer",
-        password: String = "testpassword",
-    ): String {
+    protected fun authenticate(playerName: String = "testplayer", password: String = "testpassword"): String {
         val loginResponse = restTestClient
             .post()
             .uri(url("/auth/login"))
@@ -123,12 +117,11 @@ abstract class AbstractIntegrationTest {
     /**
      * Make an authenticated GET request
      */
-    protected fun authenticatedGet(endpoint: String, token: String): RestTestClient.ResponseSpec =
-        restTestClient
-            .get()
-            .uri(url(endpoint))
-            .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
-            .exchange()
+    protected fun authenticatedGet(endpoint: String, token: String): RestTestClient.ResponseSpec = restTestClient
+        .get()
+        .uri(url(endpoint))
+        .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
+        .exchange()
 
     /**
      * Make an authenticated POST request

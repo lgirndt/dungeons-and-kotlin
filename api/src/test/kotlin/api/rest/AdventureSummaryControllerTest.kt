@@ -62,5 +62,4 @@ class AdventureSummaryControllerTest {
 
         verify(exactly = 1) { listAdventuresQuery.query() }
     }
-
 }

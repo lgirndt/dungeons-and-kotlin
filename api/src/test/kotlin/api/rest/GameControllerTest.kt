@@ -29,9 +29,9 @@ GameControllerTest {
         listSaveGamesQuery,
     )
 
-    private val playerId : PlayerId = Id.generate()
-    private val adventureId : AdventureId = Id.generate()
-    private val saveGameId : SaveGameId= Id.generate()
+    private val playerId: PlayerId = Id.generate()
+    private val adventureId: AdventureId = Id.generate()
+    private val saveGameId: SaveGameId = Id.generate()
 
     private val playerDetails = PlayerDetails(
         playerId = playerId,

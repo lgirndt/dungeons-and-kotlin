@@ -25,10 +25,10 @@ import kotlin.time.Clock
 
 private val logger = KotlinLogging.logger {}
 
-private val ADVENTURE_ID : AdventureId = Id.fromString("8b4dc8c3-c3d5-4484-8d4e-0b7fe85bafd4")
+private val ADVENTURE_ID: AdventureId = Id.fromString("8b4dc8c3-c3d5-4484-8d4e-0b7fe85bafd4")
 
-private val PLAYER_ID : PlayerId = Id.fromString("609cb790-d8b5-4a97-830f-0200fee465ab")
-private val INITIAL_ROOM_ID : RoomId = Id.fromString("ae894d71-b501-42fd-b1a3-213e2e82f79c")
+private val PLAYER_ID: PlayerId = Id.fromString("609cb790-d8b5-4a97-830f-0200fee465ab")
+private val INITIAL_ROOM_ID: RoomId = Id.fromString("ae894d71-b501-42fd-b1a3-213e2e82f79c")
 
 @Component
 class CreateTestDataCommand(
@@ -38,7 +38,6 @@ class CreateTestDataCommand(
     private val mongoOperations: MongoOperations,
     private val saveGameRepository: SaveGameRepository,
 ) : CliktCommand(name = "create-test-data") {
-
     private val clock = Clock.System
 
     override fun help(context: Context) = "Say hello"
@@ -135,7 +134,7 @@ class CreateTestDataCommand(
                 adventureId = ADVENTURE_ID,
                 currentRoomId = INITIAL_ROOM_ID,
                 savedAt = clock.now(),
-            )
+            ),
         )
         saveGames.forEach {
             logger.info { "Creating SaveGame for player ${it.playerId}" }

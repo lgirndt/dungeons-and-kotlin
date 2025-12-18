@@ -32,10 +32,7 @@ import kotlin.test.assertNotNull
  * - Use cases (business logic)
  * - Persistence layer (MongoDB repositories)
  */
-class GameFlowIntegrationTest(
-
-) : AbstractIntegrationTest() {
-
+class GameFlowIntegrationTest : AbstractIntegrationTest() {
     @Autowired
     private lateinit var playerRepository: PlayerRepository
 
@@ -143,10 +140,9 @@ class GameFlowIntegrationTest(
         return player
     }
 
-    private fun getPlayerIdByName(playerName: String): PlayerId =
-        playerRepository.findByName(playerName)
-            .orElseThrow { IllegalStateException("Player '$playerName' not found in database") }
-            .id
+    private fun getPlayerIdByName(playerName: String): PlayerId = playerRepository.findByName(playerName)
+        .orElseThrow { IllegalStateException("Player '$playerName' not found in database") }
+        .id
 
     private fun anAdventure(roomCount: Int = 1): Adventure {
         require(roomCount >= 1) { "Room count must be greater than 1" }
@@ -167,8 +163,7 @@ class GameFlowIntegrationTest(
             id = Id.generate(),
             rooms = rooms,
             initialRoomId = rooms.first().id,
-
-            )
+        )
         return adventure
     }
 
