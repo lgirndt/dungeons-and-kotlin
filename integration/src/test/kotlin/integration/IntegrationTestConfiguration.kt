@@ -16,9 +16,9 @@ import org.springframework.context.annotation.ComponentScan
 @EnableAutoConfiguration
 @ComponentScan(
     basePackages = [
-        "io.dungeons.api",           // API REST controllers and configuration
-        "io.dungeons.domain",         // Domain services and use cases
-        "io.dungeons.persistence",    // Persistence layer
+        "io.dungeons.api", // API REST controllers and configuration
+        "io.dungeons.domain", // Domain services and use cases
+        "io.dungeons.persistence", // Persistence layer
     ],
 )
 class IntegrationTestConfiguration

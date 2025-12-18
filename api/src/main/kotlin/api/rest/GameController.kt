@@ -18,7 +18,9 @@ class GameController(
     private val listSaveGamesQuery: ListSaveGamesQuery,
 ) {
     @PostMapping("/game")
-    fun createGame(@RequestBody request: CreateNewGameRequest): GameCreatedResponse = createNewGameUseCase.execute(request)
+    fun createGame(@RequestBody request: CreateNewGameRequest): GameCreatedResponse = createNewGameUseCase.execute(
+        request,
+    )
 
     @GetMapping("/games")
     fun listAll(@AuthenticationPrincipal player: PlayerDetails?): List<SaveGameSummaryResponse> =

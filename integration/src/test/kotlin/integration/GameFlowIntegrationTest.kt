@@ -50,21 +50,25 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
             body = createGameRequest,
             token = token,
         )
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody(GameCreatedResponse::class.java)
             .returnResult()
             .responseBody
-            ?.id ?: error("No game ID in response")
+            ?.id
+            ?: error("No game ID in response")
 
         // Then: The game appears in the player's game list
         val games = authenticatedGet<List<SaveGameSummaryResponse>>(
             endpoint = "/games",
             token = token,
         )
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody(object : ParameterizedTypeReference<List<SaveGameSummaryResponse>>() {})
             .returnResult()
-            .responseBody ?: error("No games in response")
+            .responseBody
+            ?: error("No games in response")
 
         assertEquals(1, games.size, "Player should have exactly one game")
 
@@ -92,7 +96,8 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
             .body(createGameRequest)
             .exchange()
             // Then: Request is rejected
-            .expectStatus().isForbidden
+            .expectStatus()
+            .isForbidden
     }
 
     @Test
@@ -111,20 +116,25 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
             endpoint = "/game",
             body = CreateNewGameRequest(playerId = player1Id, adventureId = adventure.id),
             token = player1Token,
-        ).expectStatus().isOk
+        )
+            .expectStatus()
+            .isOk
 
         authenticatedPost<CreateNewGameRequest>(
             endpoint = "/game",
             body = CreateNewGameRequest(playerId = player2Id, adventureId = adventure.id),
             token = player2Token,
-        ).expectStatus().isOk
+        )
+            .expectStatus()
+            .isOk
 
         // Then: Each player sees only their own game
         val player1Games = authenticatedGet<List<SaveGameSummaryResponse>>(
             endpoint = "/games",
             token = player1Token,
         )
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody(object : ParameterizedTypeReference<List<SaveGameSummaryResponse>>() {})
             .returnResult()
             .responseBody!!
@@ -133,7 +143,8 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
             endpoint = "/games",
             token = player2Token,
         )
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody(object : ParameterizedTypeReference<List<SaveGameSummaryResponse>>() {})
             .returnResult()
             .responseBody!!
@@ -146,20 +157,12 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
         )
     }
 
-    /**
-     * Seeds an adventure in the database for testing
-     */
     private fun seedAdventure(): Adventure {
         val adventure = SOME_ADVENTURE.copy(id = Id.generate())
         adventureRepository.save(adventure)
         return adventure
     }
 
-    /**
-     * Helper to get player ID by name.
-     * In a real application, you might have a proper API endpoint for this.
-     * For testing, we query the database directly.
-     */
     private fun getPlayerIdByName(playerName: String): PlayerId {
         // Query MongoDB directly to get player ID
         val player = mongoTemplate.findOne(

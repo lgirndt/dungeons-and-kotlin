@@ -35,8 +35,8 @@ private val logger = KotlinLogging.logger {}
     webEnvironment = WebEnvironment.RANDOM_PORT,
     properties = [
         "spring.main.allow-bean-definition-overriding=true",
-        "spring.profiles.active=dev",  // Required by ProfileValidator
-        "spring.docker.compose.enabled=false",  // Disable Docker Compose support, use Testcontainers
+        "spring.profiles.active=dev", // Required by ProfileValidator
+        "spring.docker.compose.enabled=false", // Disable Docker Compose support, use Testcontainers
     ],
 )
 @AutoConfigureRestTestClient
@@ -49,26 +49,6 @@ abstract class AbstractIntegrationTest {
 
     @Autowired
     protected lateinit var mongoTemplate: MongoTemplate
-
-    companion object {
-        private val mongoDBContainer = MongoDBContainer("mongo:8").apply {
-            withReuse(true)  // Reuse container across test runs for faster execution
-            start()
-            logger.info { "Started MongoDB Testcontainer at: $connectionString" }
-        }
-
-        @JvmStatic
-        @DynamicPropertySource
-        fun setProperties(registry: DynamicPropertyRegistry) {
-            // Override MongoDB connection to use Testcontainers (Spring Boot 4.0 uses spring.mongodb)
-            registry.add("spring.mongodb.uri") { mongoDBContainer.connectionString }
-
-            // Configure connection timeout for fast failure in tests
-            registry.add("spring.mongodb.connect-timeout") { "5s" }  // 5 seconds
-            registry.add("spring.mongodb.server-selection-timeout") { "5s" }  // 5 seconds
-            registry.add("spring.mongodb.socket-timeout") { "5s" }  // 5 seconds
-        }
-    }
 
     @BeforeEach
     fun cleanDatabase() {
@@ -98,7 +78,8 @@ abstract class AbstractIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(PlayerRequest(name = playerName, password = password))
             .exchange()
-            .expectStatus().isCreated
+            .expectStatus()
+            .isCreated
 
         // Login
         val loginResponse = restTestClient
@@ -107,7 +88,8 @@ abstract class AbstractIntegrationTest {
             .contentType(MediaType.APPLICATION_JSON)
             .body(AuthenticationRequest(username = playerName, password = password))
             .exchange()
-            .expectStatus().isOk
+            .expectStatus()
+            .isOk
             .expectBody(AuthResponse::class.java)
             .returnResult()
             .responseBody
@@ -119,10 +101,7 @@ abstract class AbstractIntegrationTest {
     /**
      * Make an authenticated GET request
      */
-    protected fun <T : Any> authenticatedGet(
-        endpoint: String,
-        token: String,
-    ): RestTestClient.ResponseSpec =
+    protected fun <T : Any> authenticatedGet(endpoint: String, token: String): RestTestClient.ResponseSpec =
         restTestClient
             .get()
             .uri(url(endpoint))
@@ -132,11 +111,7 @@ abstract class AbstractIntegrationTest {
     /**
      * Make an authenticated POST request
      */
-    protected fun <T : Any> authenticatedPost(
-        endpoint: String,
-        body: T,
-        token: String,
-    ): RestTestClient.ResponseSpec =
+    protected fun <T : Any> authenticatedPost(endpoint: String, body: T, token: String): RestTestClient.ResponseSpec =
         restTestClient
             .post()
             .uri(url(endpoint))
@@ -144,4 +119,24 @@ abstract class AbstractIntegrationTest {
             .header(HttpHeaders.AUTHORIZATION, "Bearer $token")
             .body(body)
             .exchange()
+
+    companion object {
+        private val mongoDBContainer = MongoDBContainer("mongo:8").apply {
+            withReuse(true) // Reuse container across test runs for faster execution
+            start()
+            logger.info { "Started MongoDB Testcontainer at: $connectionString" }
+        }
+
+        @JvmStatic
+        @DynamicPropertySource
+        fun setProperties(registry: DynamicPropertyRegistry) {
+            // Override MongoDB connection to use Testcontainers (Spring Boot 4.0 uses spring.mongodb)
+            registry.add("spring.mongodb.uri") { mongoDBContainer.connectionString }
+
+            // Configure connection timeout for fast failure in tests
+            registry.add("spring.mongodb.connect-timeout") { "5s" } // 5 seconds
+            registry.add("spring.mongodb.server-selection-timeout") { "5s" } // 5 seconds
+            registry.add("spring.mongodb.socket-timeout") { "5s" } // 5 seconds
+        }
+    }
 }
