@@ -1,8 +1,10 @@
 package io.dungeons.integration
 
-import io.dungeons.domain.adventure.AdventureRepository
+import io.dungeons.api.rest.dto.AuthResponse
+import io.dungeons.api.rest.dto.AuthenticationRequest
 import io.dungeons.domain.player.PlayerRepository
 import io.dungeons.port.Id
+import io.dungeons.port.NarratedRoomResponse
 import io.dungeons.port.PlayerId
 import io.dungeons.port.SaveGameSummaryResponse
 import io.dungeons.port.usecases.CreateNewGameRequest
@@ -25,8 +27,6 @@ import kotlin.test.assertTrue
  * - Persistence layer (MongoDB repositories)
  */
 class GameFlowIntegrationTest : AbstractIntegrationTest() {
-    @Autowired
-    private lateinit var adventureRepository: AdventureRepository
 
     @Autowired
     private lateinit var playerRepository: PlayerRepository
@@ -130,6 +130,48 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
             player1Games.first().id != player2Games.first().id,
             "Players should have different games",
         )
+    }
+
+    @Test
+    fun `player can login and get room narration for their saved game`() {
+        // Given: A player, adventure, and save game exist
+        val playerName = "hero"
+        val playerPassword = "heropassword"
+        val player = testData.player(name = playerName, password = playerPassword)
+        val adventure = testData.adventure(name = "The Dark Cave")
+        val saveGame = testData.saveGame(
+            playerId = player.id,
+            adventureId = adventure.id,
+        )
+
+        // When: Player logs in (player already exists, so we just authenticate)
+        val token = authenticateExistingPlayer(playerName, playerPassword)
+
+        // And: Gets the room narration for their current room
+        val narration = authenticatedGet(
+            endpoint = "/game/${saveGame.id.asStringRepresentation()}/narrator/room",
+            token = token,
+        ).expectOkAndExtract(NarratedRoomResponse::class.java)
+
+        // Then: The narration contains the room information
+        assertNotNull(narration.readOut, "Narration should have a readOut")
+        assertEquals(adventure.initialRoomId.value, narration.roomId, "Narration should be for the current room")
+        assertNotNull(narration.party, "Narration should include party information")
+    }
+
+    /**
+     * Authenticate an existing player (doesn't register, just logs in)
+     */
+    private fun authenticateExistingPlayer(playerName: String, password: String): String {
+        val loginResponse = restTestClient
+            .post()
+            .uri(url("/auth/login"))
+            .contentType(MediaType.APPLICATION_JSON)
+            .body(AuthenticationRequest(username = playerName, password = password))
+            .exchange()
+            .expectOkAndExtract(AuthResponse::class.java)
+
+        return loginResponse.accessToken
     }
 
     private fun getPlayerIdByName(playerName: String): PlayerId =

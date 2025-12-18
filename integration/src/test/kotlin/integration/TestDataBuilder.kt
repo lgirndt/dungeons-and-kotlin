@@ -5,7 +5,13 @@ import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.adventure.SOME_ADVENTURE
 import io.dungeons.domain.player.Player
 import io.dungeons.domain.player.PlayerRepository
+import io.dungeons.domain.savegame.SOME_SAVE_GAME
+import io.dungeons.domain.savegame.SaveGame
+import io.dungeons.domain.savegame.SaveGameRepository
+import io.dungeons.port.AdventureId
 import io.dungeons.port.Id
+import io.dungeons.port.PlayerId
+import io.dungeons.port.RoomId
 import org.springframework.security.crypto.password.PasswordEncoder
 import org.springframework.stereotype.Component
 
@@ -19,6 +25,7 @@ import org.springframework.stereotype.Component
 class TestDataBuilder(
     private val adventureRepository: AdventureRepository,
     private val playerRepository: PlayerRepository,
+    private val saveGameRepository: SaveGameRepository,
     private val passwordEncoder: PasswordEncoder,
 ) {
     /**
@@ -64,5 +71,38 @@ class TestDataBuilder(
         ).customizer()
 
         return playerRepository.insert(player)
+    }
+
+    /**
+     * Creates and persists a save game with optional customization.
+     * 
+     * @param playerId The player ID
+     * @param adventureId The adventure ID
+     * @param currentRoomId The current room ID (defaults to adventure's initial room if not specified)
+     * @param customizer Optional lambda to customize the save game before persisting
+     * @return The persisted save game with generated ID
+     */
+    fun saveGame(
+        playerId: PlayerId,
+        adventureId: AdventureId,
+        currentRoomId: RoomId? = null,
+        customizer: SaveGame.() -> SaveGame = { this },
+    ): SaveGame {
+        val roomId = currentRoomId ?: run {
+            // If no room ID provided, use the adventure's initial room
+            val adventure = adventureRepository.findById(adventureId)
+                .orElseThrow { IllegalStateException("Adventure not found: $adventureId") }
+            adventure.initialRoomId
+        }
+
+        val saveGame = SOME_SAVE_GAME.copy(
+            id = Id.generate(),
+            playerId = playerId,
+            adventureId = adventureId,
+            currentRoomId = roomId,
+        ).customizer()
+
+        saveGameRepository.save(saveGame)
+        return saveGame
     }
 }
