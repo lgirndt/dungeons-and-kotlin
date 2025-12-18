@@ -36,6 +36,12 @@ Navigate to worktree and work using absolute paths:
 - Edit files in `/Users/lars/devel/playground/dungeons-kotlin-worktree/{feature-name}/...`
 - Run commands with appropriate working directory context
 
+**Permission Strategy:**
+- Request permissions based on the **worktree root directory**: `../dungeons-kotlin-worktree/{feature-name}`
+- Do NOT request permissions for subdirectories (e.g., `src/main/kotlin/`, `src/test/kotlin/`)
+- This is more efficient - one root-level approval covers all work in the worktree
+- Example: Ask for permission to work in `../dungeons-kotlin-worktree/character-validation` not `../dungeons-kotlin-worktree/character-validation/src/main/kotlin/io/dungeons/...`
+
 ### 3. Implement Feature
 
 1. Make code changes
@@ -100,6 +106,7 @@ git branch -d {branch-name}
 - Worktrees share the same repository and branches
 - Don't create worktree for same branch twice
 - Clean up worktrees when feature is complete/merged
+- **CRITICAL**: Request permissions at worktree root level only (e.g., `../dungeons-kotlin-worktree/{feature-name}`), NOT for subdirectories - this is much more efficient
 
 ## Tool Limitations in Worktrees
 
