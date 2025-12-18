@@ -3,7 +3,7 @@ package io.dungeons.domain.savegame
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.port.usecases.CreateNewGameRequest
 import io.dungeons.port.usecases.CreateNewGameUseCase
-import io.dungeons.port.usecases.GameIdResponse
+import io.dungeons.port.usecases.GameCreatedResponse
 import org.springframework.stereotype.Component
 import java.util.logging.Logger
 import kotlin.jvm.optionals.getOrNull
@@ -17,7 +17,7 @@ class CreateNewGameUseCaseImpl(
 ) : CreateNewGameUseCase {
     private val logger = Logger.getLogger(CreateNewGameUseCase::class.java.name)
 
-    override fun execute(request: CreateNewGameRequest): GameIdResponse {
+    override fun execute(request: CreateNewGameRequest): GameCreatedResponse {
         with(request) {
             logger.info("New game with id $playerId")
             val adventure = adventureRepository.findById(adventureId).getOrNull()
@@ -29,7 +29,7 @@ class CreateNewGameUseCaseImpl(
                 savedAt = clock.now(),
             )
             saveGameRepository.save(saveGame)
-            return GameIdResponse(saveGame.id)
+            return GameCreatedResponse(saveGame.id)
         }
     }
 }
