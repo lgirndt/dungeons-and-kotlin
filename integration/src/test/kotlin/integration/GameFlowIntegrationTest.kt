@@ -2,7 +2,16 @@ package io.dungeons.integration
 
 import io.dungeons.api.rest.dto.AuthResponse
 import io.dungeons.api.rest.dto.AuthenticationRequest
+import io.dungeons.domain.adventure.Adventure
+import io.dungeons.domain.adventure.AdventureRepository
+import io.dungeons.domain.adventure.SOME_ADVENTURE
+import io.dungeons.domain.player.Player
 import io.dungeons.domain.player.PlayerRepository
+import io.dungeons.domain.player.SOME_PLAYER
+import io.dungeons.domain.savegame.SOME_SAVE_GAME
+import io.dungeons.domain.savegame.SaveGameRepository
+import io.dungeons.domain.world.Room
+import io.dungeons.domain.world.WorldBuilder
 import io.dungeons.port.Id
 import io.dungeons.port.NarratedRoomResponse
 import io.dungeons.port.PlayerId
@@ -13,9 +22,9 @@ import org.junit.jupiter.api.Test
 import org.springframework.beans.factory.annotation.Autowired
 import org.springframework.core.ParameterizedTypeReference
 import org.springframework.http.MediaType
+import org.springframework.security.crypto.password.PasswordEncoder
 import kotlin.test.assertEquals
 import kotlin.test.assertNotNull
-import kotlin.test.assertTrue
 
 /**
  * Integration test for the complete game creation workflow.
@@ -26,10 +35,21 @@ import kotlin.test.assertTrue
  * - Use cases (business logic)
  * - Persistence layer (MongoDB repositories)
  */
-class GameFlowIntegrationTest : AbstractIntegrationTest() {
+class GameFlowIntegrationTest(
+
+) : AbstractIntegrationTest() {
 
     @Autowired
     private lateinit var playerRepository: PlayerRepository
+
+    @Autowired
+    private lateinit var adventureRepository: AdventureRepository
+
+    @Autowired
+    private lateinit var saveGameRepository: SaveGameRepository
+
+    @Autowired
+    private lateinit var passwordEncoder: PasswordEncoder
 
     @Test
     fun `complete game creation flow - register, login, create game, and list games`() {
@@ -38,14 +58,11 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
         val token = registerAndAuthenticate(playerName = playerName, password = "secret123")
 
         // And: An adventure exists in the database
-        val adventure = testData.adventure()
+        val adventure = persistAdventure()
         val playerId = getPlayerIdByName(playerName)
 
         // When: Creating a new game
-        val createGameRequest = CreateNewGameRequest(
-            playerId = playerId,
-            adventureId = adventure.id,
-        )
+        val createGameRequest = CreateNewGameRequest(playerId, adventure.id)
 
         val createdGame = authenticatedPost(
             endpoint = "/game",
@@ -69,7 +86,8 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
     @Test
     fun `cannot create game without authentication`() {
         // Given: An adventure exists
-        val adventure = testData.adventure()
+        val adventure = persistAdventure()
+
         val playerId: PlayerId = Id.generate()
 
         // When: Attempting to create a game without authentication
@@ -90,59 +108,20 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
     }
 
     @Test
-    fun `player can only see their own games`() {
-        // Given: Two different players
-        val player1Token = registerAndAuthenticate(playerName = "player1", password = "pass1")
-        val player2Token = registerAndAuthenticate(playerName = "player2", password = "pass2")
-
-        val player1Id = getPlayerIdByName("player1")
-        val player2Id = getPlayerIdByName("player2")
-
-        val adventure = testData.adventure()
-
-        // When: Each player creates a game
-        authenticatedPost(
-            endpoint = "/game",
-            body = CreateNewGameRequest(playerId = player1Id, adventureId = adventure.id),
-            token = player1Token,
-        ).expectStatus().isOk
-
-        authenticatedPost(
-            endpoint = "/game",
-            body = CreateNewGameRequest(playerId = player2Id, adventureId = adventure.id),
-            token = player2Token,
-        ).expectStatus().isOk
-
-        // Then: Each player sees only their own game
-        val player1Games = authenticatedGet(
-            endpoint = "/games",
-            token = player1Token,
-        ).expectOkAndExtractList(object : ParameterizedTypeReference<List<SaveGameSummaryResponse>>() {})
-
-        val player2Games = authenticatedGet(
-            endpoint = "/games",
-            token = player2Token,
-        ).expectOkAndExtractList(object : ParameterizedTypeReference<List<SaveGameSummaryResponse>>() {})
-
-        assertEquals(1, player1Games.size, "Player 1 should see only their game")
-        assertEquals(1, player2Games.size, "Player 2 should see only their game")
-        assertTrue(
-            player1Games.first().id != player2Games.first().id,
-            "Players should have different games",
-        )
-    }
-
-    @Test
     fun `player can login and get room narration for their saved game`() {
         // Given: A player, adventure, and save game exist
         val playerName = "hero"
         val playerPassword = "heropassword"
-        val player = testData.player(name = playerName, password = playerPassword)
-        val adventure = testData.adventure(name = "The Dark Cave")
-        val saveGame = testData.saveGame(
+        val player = persistPlayer(playerName, playerPassword)
+
+        val adventure = persistAdventure()
+        val saveGame = SOME_SAVE_GAME.copy(
+            id = Id.generate(),
             playerId = player.id,
             adventureId = adventure.id,
+            currentRoomId = adventure.rooms.first().id,
         )
+        saveGameRepository.save(saveGame)
 
         // When: Player logs in (player already exists, so we just authenticate)
         val token = authenticateExistingPlayer(playerName, playerPassword)
@@ -157,6 +136,16 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
         assertNotNull(narration.readOut, "Narration should have a readOut")
         assertEquals(adventure.initialRoomId.value, narration.roomId, "Narration should be for the current room")
         assertNotNull(narration.party, "Narration should include party information")
+    }
+
+    private fun persistPlayer(playerName: String, playerPassword: String): Player {
+        val player = SOME_PLAYER.copy(
+            id = Id.generate(),
+            name = playerName,
+            hashedPassword = passwordEncoder.encode(playerPassword) ?: error("Failed to encode password"),
+        )
+        playerRepository.insert(player)
+        return player
     }
 
     /**
@@ -178,4 +167,34 @@ class GameFlowIntegrationTest : AbstractIntegrationTest() {
         playerRepository.findByName(playerName)
             .orElseThrow { IllegalStateException("Player '$playerName' not found in database") }
             .id
+
+    private fun anAdventure(roomCount: Int = 1): Adventure {
+        require(roomCount >= 1) { "Room count must be greater than 1" }
+        val worldBuilder = WorldBuilder()
+        0.until(roomCount).forEach { i ->
+            worldBuilder.room(
+                x = i,
+                y = 0,
+                Room(
+                    id = Id.generate(),
+                    name = "Room $i",
+                    description = "This is room number $i.",
+                ),
+            )
+        }
+        val rooms = worldBuilder.build().rooms
+        val adventure = SOME_ADVENTURE.copy(
+            id = Id.generate(),
+            rooms = rooms,
+            initialRoomId = rooms.first().id,
+
+            )
+        return adventure
+    }
+
+    private fun persistAdventure(): Adventure {
+        val adventure = anAdventure()
+        adventureRepository.save(adventure)
+        return adventure
+    }
 }

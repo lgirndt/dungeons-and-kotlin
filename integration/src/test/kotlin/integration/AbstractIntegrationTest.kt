@@ -51,9 +51,6 @@ abstract class AbstractIntegrationTest {
     @Autowired
     protected lateinit var mongoTemplate: MongoTemplate
 
-    @Autowired
-    protected lateinit var testData: TestDataBuilder
-
     @BeforeEach
     fun cleanDatabase() {
         // Clean all collections before each test
