@@ -17,7 +17,7 @@ private fun World.roomOrFail(id: RoomId): Room = this.getRoomById(id)
     ?: fail { "room with id $id should exist in the world" }
 
 private fun Room.connectionSet(): Set<Pair<Direction, RoomId>> =
-    this.connections.map { (key, value) -> key to value }.toSet()
+    this.doors.map { door -> door.direction to door.leadsTo }.toSet()
 
 class WorldBuilderTest {
     @Test

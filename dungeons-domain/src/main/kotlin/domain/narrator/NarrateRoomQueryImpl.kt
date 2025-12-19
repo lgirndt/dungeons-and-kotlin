@@ -3,11 +3,14 @@ package io.dungeons.domain.narrator
 import io.dungeons.domain.adventure.AdventureRepository
 import io.dungeons.domain.adventure.RoomRepository
 import io.dungeons.domain.savegame.SaveGameRepository
+import io.dungeons.domain.world.Room
 import io.dungeons.port.HeroResponse
+import io.dungeons.port.LeaveRoomAction
 import io.dungeons.port.NarrateRoomQuery
 import io.dungeons.port.NarratedRoomResponse
 import io.dungeons.port.PartyResponse
 import io.dungeons.port.PlayerId
+import io.dungeons.port.RoomAction
 import io.dungeons.port.SaveGameId
 import io.dungeons.port.usecases.UseCaseException
 import org.springframework.stereotype.Component
@@ -21,7 +24,7 @@ private fun NarratedRoom.toResponse() = NarratedRoomResponse(
     roomId = this.roomId.toUUID(),
     readOut = this.readOut,
     party = this.party.toResponse(),
-    availableActions = emptyList()
+    availableActions = this.availableActions
 )
 
 class NarrateRoomException(message: String) : UseCaseException(message)
@@ -39,8 +42,8 @@ class NarrateRoomQueryImpl(
                 NarrateRoomException("Cannot find save game with id $saveGameId for player $playerId"),
             )
 
-        val adventure = adventureRepository.findById(saveGame.adventureId).getOrNull()
-            ?: return Result.failure(NarrateRoomException("Cannot find adventure with id ${saveGame.adventureId}"))
+//        val adventure = adventureRepository.findById(saveGame.adventureId).getOrNull()
+//            ?: return Result.failure(NarrateRoomException("Cannot find adventure with id ${saveGame.adventureId}"))
 
         val currentRoom = roomRepository.find(saveGame.adventureId, saveGame.currentRoomId).getOrNull()
             ?: return Result.failure(NarrateRoomException("Cannot find room with id ${saveGame.currentRoomId}"))
@@ -55,7 +58,17 @@ class NarrateRoomQueryImpl(
                 ),
             ),
             readOut = currentRoom.description,
+            availableActions = createLeaveActions(currentRoom),
         )
         return narratedRoom.toResponse().let { Result.success(it) }
+    }
+
+    private fun createLeaveActions(currentRoom: Room): List<RoomAction> {
+        return currentRoom.doors.map { door ->
+            LeaveRoomAction(
+                targetDoorId = door.id,
+                description = "The door in the ${door.direction}",
+            )
+        }
     }
 }

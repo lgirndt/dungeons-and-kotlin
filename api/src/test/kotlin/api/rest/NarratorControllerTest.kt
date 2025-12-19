@@ -41,6 +41,7 @@ class NarratorControllerTest {
             roomId = roomId,
             readOut = readOut,
             party = party,
+            availableActions = emptyList(),
         )
 
         every {
@@ -63,6 +64,7 @@ class NarratorControllerTest {
             roomId = UUID.randomUUID(),
             readOut = "A bright room",
             party = party,
+            availableActions = emptyList(),
         )
 
         every {

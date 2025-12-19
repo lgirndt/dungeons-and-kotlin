@@ -1,5 +1,6 @@
 package io.dungeons.domain.world
 
+import io.dungeons.port.DoorId
 import io.dungeons.port.Id
 import io.dungeons.port.RoomId
 import io.dungeons.port.WorldId
@@ -11,11 +12,18 @@ enum class Direction {
     West,
 }
 
+data class Door(
+    val id: DoorId,
+    val direction: Direction,
+    val leadsTo: RoomId,
+)
+
 data class Room(
     val id: RoomId = Id.generate(),
     val name: String,
     val description: String,
-    val connections: Map<Direction, RoomId> = emptyMap(),
+    val doors : List<Door> = emptyList(),
+
 )
 
 class World(val id: WorldId, val name: String, val description: String, val rooms: List<Room>) {
@@ -41,13 +49,19 @@ class WorldBuilder {
 
     fun build(): World {
         val connectedRooms = rooms.map { (coord, room) ->
-            val connectedTo: Map<Direction, RoomId> = coord
+            val connectedTo: List<Door> = coord
                 .toAdjacentDirections()
                 .mapNotNull { (direction, coord) ->
-                    rooms[coord]?.let { adjacentRoom -> direction to adjacentRoom.id }
+                    rooms[coord]?.let {
+                        adjacentRoom ->
+                        Door(
+                            id = Id.generate(),
+                            direction = direction,
+                            leadsTo = adjacentRoom.id,
+                        )
+                    }
                 }
-                .toMap()
-            room.copy(connections = connectedTo)
+            room.copy(doors = connectedTo)
         }
 
         return World(

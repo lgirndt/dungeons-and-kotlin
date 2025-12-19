@@ -39,6 +39,8 @@ object _Faction
 
 object _Token
 
+object _Door
+
 typealias PlayerId = Id<_Player>
 typealias SaveGameId = Id<_SaveGame>
 typealias CreatureId = Id<_Creature>
@@ -48,3 +50,4 @@ typealias WorldId = Id<_World>
 typealias WorldStateId = Id<_WorldState>
 typealias FactionId = Id<_Faction>
 typealias TokenId = Id<_Token>
+typealias DoorId = Id<_Door>

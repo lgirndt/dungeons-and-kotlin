@@ -3,5 +3,6 @@ plugins {
 }
 
 dependencies {
-
+    // JSON processing - Jackson annotations for polymorphic types
+    implementation("com.fasterxml.jackson.core:jackson-annotations")
 }
