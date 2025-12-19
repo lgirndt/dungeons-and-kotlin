@@ -21,6 +21,7 @@ private fun NarratedRoom.toResponse() = NarratedRoomResponse(
     roomId = this.roomId.toUUID(),
     readOut = this.readOut,
     party = this.party.toResponse(),
+    availableActions = emptyList()
 )
 
 class NarrateRoomException(message: String) : UseCaseException(message)

@@ -3,7 +3,6 @@ package io.dungeons.domain.world
 import io.dungeons.port.Id
 import io.dungeons.port.RoomId
 import io.dungeons.port.WorldId
-import io.dungeons.port.WorldStateId
 
 enum class Direction {
     North,
@@ -22,8 +21,6 @@ data class Room(
 class World(val id: WorldId, val name: String, val description: String, val rooms: List<Room>) {
     fun getRoomById(roomId: RoomId): Room? = rooms.find { it.id == roomId }
 }
-
-data class WorldState(val id: WorldStateId, val worldId: WorldId, val currentRoom: RoomId)
 
 data class WorldCoord(val x: Int, val y: Int) {
     fun toAdjacentDirections(): Map<Direction, WorldCoord> = mapOf(

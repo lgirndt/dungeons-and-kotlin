@@ -1,9 +1,15 @@
 package io.dungeons.domain.narrator
 
+import io.dungeons.port.RoomAction
 import io.dungeons.port.RoomId
 
 data class Hero(val name: String)
 
 data class Party(val heroes: List<Hero>)
 
-data class NarratedRoom(val roomId: RoomId, val readOut: String, val party: Party)
+data class NarratedRoom(
+    val roomId: RoomId,
+    val readOut: String,
+    val party: Party,
+    val availableActions: List<RoomAction>,
+)
