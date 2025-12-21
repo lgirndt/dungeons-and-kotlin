@@ -1,11 +1,7 @@
 package io.dungeons.cli.screen
 
-import com.varabyte.kotter.foundation.LiveVar
-import com.varabyte.kotter.foundation.collections.LiveList
-import com.varabyte.kotter.foundation.collections.liveListOf
-import com.varabyte.kotter.foundation.input.Keys
-import com.varabyte.kotter.foundation.input.onKeyPressed
-import com.varabyte.kotter.foundation.liveVarOf
+import cli.ui.MenuComponent
+import cli.ui.MenuConfig
 import com.varabyte.kotter.foundation.text.textLine
 import com.varabyte.kotter.runtime.MainRenderScope
 import com.varabyte.kotter.runtime.RunScope
@@ -36,88 +32,25 @@ class PickGameScreen(
     ownTransition = ScreenTransition.PickGame,
     defaultTransition = ScreenTransition.Exit,
 ) {
-    private sealed class MenuItem {
-        abstract val label: String
+    private sealed class GameChoice {
+        data object NewGame : GameChoice()
 
-        data object NewGame : MenuItem() {
-            override val label: String
-                get() = "New Game"
-        }
-
-        data class ExistingSave(val saveGame: SaveGameSummaryResponse) : MenuItem() {
-            override val label: String
-                get() {
-                    val localDateTime = saveGame.savedAt.toLocalDateTime(TimeZone.currentSystemDefault())
-                    val dateTime = localDateTime.format(
-                        LocalDateTime.Format {
-                            date(
-                                LocalDate.Format {
-                                    year()
-                                    char('-')
-                                    monthNumber()
-                                    char('-')
-                                    day()
-                                },
-                            )
-                            chars(" ")
-                            time(
-                                LocalTime.Format {
-                                    hour()
-                                    char(':')
-                                    minute()
-                                },
-                            )
-                        },
-                    )
-                    return "Continue - Save ($dateTime)"
-                }
-        }
+        data class ExistingSave(val saveGame: SaveGameSummaryResponse) : GameChoice()
     }
 
-    private var menuItems: LiveList<MenuItem> by InitOnce()
-    private var selectedIndex: LiveVar<Int> by InitOnce()
+    private var menu: MenuComponent<GameChoice> by InitOnce()
+    private var currentRunScope: RunScope by InitOnce()
 
     override val sectionBlock: MainRenderScope.() -> Unit
         get() = {
             textLine("Select a game:")
             textLine()
-            menuItems.forEachIndexed { index, item ->
-                val prefix = if (index == selectedIndex.value) "> " else "  "
-                textLine("$prefix${item.label}")
-            }
+            menu.render(this)
         }
 
     override val runBlock: RunScope.() -> Unit = {
-        val scope = this
-        onKeyPressed {
-            when (key) {
-                Keys.UP -> {
-                    if (selectedIndex.value > 0) {
-                        selectedIndex.value -= 1
-                    }
-                }
-
-                Keys.DOWN -> {
-                    if (selectedIndex.value < menuItems.size - 1) {
-                        selectedIndex.value += 1
-                    }
-                }
-
-                Keys.ENTER -> {
-                    when (val selectedItem = menuItems[selectedIndex.value]) {
-                        is MenuItem.NewGame -> {
-                            createNewGame()
-                        }
-
-                        is MenuItem.ExistingSave -> {
-                            val saveGameId = selectedItem.saveGame.id
-                            loadExistingGame(saveGameId)
-                        }
-                    }
-                    exit(scope, ScreenTransition.Room)
-                }
-            }
-        }
+        currentRunScope = this
+        menu.handleInput(this)
     }
 
     override fun init(session: Session) {
@@ -125,12 +58,64 @@ class PickGameScreen(
             ?: error("Cannot initialize PickGameScreen: player not initialized")
 
         val existingSaves = listSaveGamesQuery.query(playerId)
-        val items = mutableListOf<MenuItem>()
-        items.add(MenuItem.NewGame)
-        items.addAll(existingSaves.map { MenuItem.ExistingSave(it) })
 
-        menuItems = session.liveListOf(items)
-        selectedIndex = session.liveVarOf(0)
+        menu = MenuComponent.create(
+            session = session,
+            config = MenuConfig(
+                showBreadcrumb = false,
+                backKey = null, // Disable back navigation for top-level menu
+            ),
+            onActivate = { choice ->
+                when (choice) {
+                    is GameChoice.NewGame -> {
+                        createNewGame()
+                    }
+                    is GameChoice.ExistingSave -> {
+                        loadExistingGame(choice.saveGame.id)
+                    }
+                }
+                exit(currentRunScope, ScreenTransition.Room)
+            },
+        ) {
+            branch("Game Selection") {
+                val items = mutableListOf<cli.ui.MenuItem<GameChoice>>()
+
+                items.add(leaf("New Game", GameChoice.NewGame))
+
+                existingSaves.forEach { save ->
+                    val label = formatSaveGameLabel(save)
+                    items.add(leaf(label, GameChoice.ExistingSave(save)))
+                }
+
+                items
+            }
+        }
+    }
+
+    private fun formatSaveGameLabel(save: SaveGameSummaryResponse): String {
+        val localDateTime = save.savedAt.toLocalDateTime(TimeZone.currentSystemDefault())
+        val dateTime = localDateTime.format(
+            LocalDateTime.Format {
+                date(
+                    LocalDate.Format {
+                        year()
+                        char('-')
+                        monthNumber()
+                        char('-')
+                        day()
+                    },
+                )
+                chars(" ")
+                time(
+                    LocalTime.Format {
+                        hour()
+                        char(':')
+                        minute()
+                    },
+                )
+            },
+        )
+        return "Continue - Save ($dateTime)"
     }
 
     private fun createNewGame() {
