@@ -24,7 +24,7 @@ private fun NarratedRoom.toResponse() = NarratedRoomResponse(
     roomId = this.roomId.toUUID(),
     readOut = this.readOut,
     party = this.party.toResponse(),
-    availableActions = this.availableActions
+    availableActions = this.availableActions,
 )
 
 class NarrateRoomException(message: String) : UseCaseException(message)
@@ -63,12 +63,10 @@ class NarrateRoomQueryImpl(
         return narratedRoom.toResponse().let { Result.success(it) }
     }
 
-    private fun createLeaveActions(currentRoom: Room): List<RoomAction> {
-        return currentRoom.doors.map { door ->
-            LeaveRoomAction(
-                targetDoorId = door.id,
-                description = "The door in the ${door.direction}",
-            )
-        }
+    private fun createLeaveActions(currentRoom: Room): List<RoomAction> = currentRoom.doors.map { door ->
+        LeaveRoomAction(
+            targetDoorId = door.id,
+            description = "The door in the ${door.direction}",
+        )
     }
 }

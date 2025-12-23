@@ -12,18 +12,13 @@ enum class Direction {
     West,
 }
 
-data class Door(
-    val id: DoorId,
-    val direction: Direction,
-    val leadsTo: RoomId,
-)
+data class Door(val id: DoorId, val direction: Direction, val leadsTo: RoomId)
 
 data class Room(
     val id: RoomId = Id.generate(),
     val name: String,
     val description: String,
-    val doors : List<Door> = emptyList(),
-
+    val doors: List<Door> = emptyList(),
 )
 
 class World(val id: WorldId, val name: String, val description: String, val rooms: List<Room>) {
@@ -52,8 +47,7 @@ class WorldBuilder {
             val connectedTo: List<Door> = coord
                 .toAdjacentDirections()
                 .mapNotNull { (direction, coord) ->
-                    rooms[coord]?.let {
-                        adjacentRoom ->
+                    rooms[coord]?.let { adjacentRoom ->
                         Door(
                             id = Id.generate(),
                             direction = direction,
